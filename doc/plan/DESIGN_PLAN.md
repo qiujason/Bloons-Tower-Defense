@@ -2,7 +2,7 @@
 
 We plan on designing a well-known classic game called Bloons Tower Defense. It is a tower defense based game, and the concept of the game is that the user tries to place down towers that shoots and pops balloons before the balloons are able to escape. Our overall design goal is to make it as easy as possible to implement new features based on the existing code framework, which is particularly important for our project, since there could potentially be a large variety of towers, balloons, levels, etc. We also would like to try to make the user interface as aesthetic and easy to use as possible in order to improve the game experience. In general, we want to make the design open to adding more features that build off of existing features (i.e new towers, new balloon types, new levels), but closed to modification. At a high level, we want to have the backend handle the rules of the game and the interactions between objects, and we want the front-end to simply be a visualization of the backend work. One note is that the front-end will have to communicate with the back end to determine the coordinates of towers and balloons so that the game can function correctly, and this can be done through APIs. The controller will take in user input (i.e drag-and-drop towers, mouse click actions, etc).
 
-### Overview: Everyone writes the stuff they plan to implement themselves
+### Overview
 
 https://app.creately.com/diagram/3aOXPhZFpez/edit
 
