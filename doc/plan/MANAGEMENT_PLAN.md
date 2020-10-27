@@ -15,7 +15,7 @@ Jack: Front-end for layout
 Eddie: Buttons stuff: side bar for drag and drop, play, pause, fast-forward
 
 ## Sprint 2
-Overall Goal: Integrate the components
+* Overall Goal: Integrate the components
     * Backend:
         * Physics worked out (balloon moving along track)
         * Shooting mechanics
@@ -28,14 +28,14 @@ Overall Goal: Integrate the components
         * Display (lives, money )
         * Click tower to show range
     
-Franklin: physics, shooting mechanics
-Jason: physics, shooting mechanics
-Annshine: implement economy
-Jack: front-end animations (shooting, turning monkeys)
+Franklin: physics, shooting mechanics  
+Jason: physics, shooting mechanics  
+Annshine: implement economy  
+Jack: front-end animations (shooting, turning monkeys)  
 Eddie: rules of the game, display, click tower to show range
 
 ## Sprint 3
-Overall: Enhance the game
+* Overall: Enhance the game
     * Backend:
         * Upgrade towers (one-track)
         * Different types of game modes - easy/medium/hard, infinite waves, capped money
@@ -46,8 +46,8 @@ Overall: Enhance the game
         * Descriptions of towers
         * Splashscreen for home page
       
-Franklin: Different types of game modes, level progression
-Jason: upgrade tower
-Annshine: sell tower
-Jack: splashscreen, menu in-game
+Franklin: Different types of game modes, level progression  
+Jason: upgrade tower  
+Annshine: sell tower  
+Jack: splashscreen, menu in-game  
 Eddie: front end implementation for upgrading towers, clicking stuff
