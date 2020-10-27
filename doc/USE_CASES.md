@@ -63,9 +63,6 @@
 * Precondition: The game level is active
 * Primary Actor: Player clicks on the pause button
 
-
-can also make use cases for upgrades they can afford, upgrade changes some sort of graphic, and do use cases for game mechanics 
-
 ## Jack
 
 ### Bloon reaches the end of a level

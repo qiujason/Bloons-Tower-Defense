@@ -9,8 +9,8 @@
         * Balloon movement (hopefully popping)?
 
 Franklin: Layout + physics
-Jason: Balloons (include different ones) + physics
-Annshine: Towers + make sure they can be put in valid postions
+Jason: Bloons (include different ones) + physics
+Annshine: Towers + make sure they can be put in valid positions
 Jack: Front-end for layout
 Eddie: Buttons stuff: side bar for drag and drop, play, pause, fast-forward
 
