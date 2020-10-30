@@ -20,7 +20,7 @@ public class BloonsApplication extends Application {
   Scene myScene;
 
   @Override
-  public void start(Stage mainStage) throws Exception {
+  public void start(Stage mainStage) {
     myStage = mainStage;
     BorderPane menuLayout = new BorderPane();
     setupMenuLayout(menuLayout);
