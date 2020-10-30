@@ -12,7 +12,6 @@ Franklin Wu, Jason Qiu, Jack Ellwood, Eddie Kong, Annshine WU
  * have a team meeting and ask the person to follow this agreement.
  * report the issue in the Team Sprint Report.
 
-
 ### Team Procedures:
  * Everyone is on the East coast -- same time zone
  * Communication works through group iMessage (already established), Zoom
