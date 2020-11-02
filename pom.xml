@@ -37,7 +37,6 @@
 
 <build>
     <sourceDirectory>src</sourceDirectory>
-    <testSourceDirectory>test</testSourceDirectory>
     <resources>
         <!-- external data files -->
         <resource>
@@ -48,12 +47,6 @@
             <directory>src</directory>
         </resource>
     </resources>
-    <testResources>
-        <!-- internal resource files for testing, again not directly -->
-        <testResource>
-            <directory>test</directory>
-        </testResource>
-    </testResources>
     <plugins>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
