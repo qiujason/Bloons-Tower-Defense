@@ -1,31 +1,14 @@
 package ooga.backend.bloons;
 
-import ooga.backend.API.Bloons;
+public class CamoBloons extends Bloons {
 
-public class CamoBloons implements Bloons {
-
-  @Override
-  public void shotAt() {
-
+  public CamoBloons(int lives, int xPosition, int yPosition, int xVelocity, int yVelocity) {
+    super(lives, xPosition, yPosition, xVelocity, yVelocity);
   }
 
   @Override
-  public void popBloon() {
+  public void handleDeath() {
 
   }
 
-  @Override
-  public void setXVelocity(int newVelocity) {
-
-  }
-
-  @Override
-  public void setYVelocity(int newVelocity) {
-
-  }
-
-  @Override
-  public void updateHitsLeft(int update) {
-
-  }
 }

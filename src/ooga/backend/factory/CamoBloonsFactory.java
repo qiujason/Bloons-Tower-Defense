@@ -1,6 +1,6 @@
 package ooga.backend.factory;
 
-import ooga.backend.API.Bloons;
+import ooga.backend.bloons.Bloons;
 
 public class CamoBloonsFactory implements BloonsFactory {
 
