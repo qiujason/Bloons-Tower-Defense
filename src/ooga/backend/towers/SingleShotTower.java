@@ -15,13 +15,23 @@ public abstract class SingleShotTower extends Tower{
     Bloons closestBloon = null;
     double minDistance = Integer.MAX_VALUE;
     for(Bloons bloon : bloonsList){
-      double distance = getDistance(bloon.getXPosition(), bloon.getYPosition());
+      double distance = getDistance(bloon);
       if(minDistance > distance){
         minDistance = distance;
         closestBloon = bloon;
       }
     }
     return closestBloon;
+  }
+
+  public double findShootXVelocity(Bloons target){
+    double distance = getDistance(target);
+    return (getXPosition()-target.getXPosition())/distance*getShootingSpeed();
+  }
+
+  public double findShootYVelocity(Bloons target){
+    double distance = getDistance(target);
+    return (getYPosition()-target.getYPosition())/distance*getShootingSpeed();
   }
 
 }

@@ -1,5 +1,8 @@
 package ooga.backend.towers;
 
+import java.util.List;
+import ooga.backend.bloons.Bloons;
+
 public class TackShooter extends SpreadShotTower{
 
   public TackShooter(int myXPosition, int myYPosition, int myRadius) {
@@ -7,7 +10,7 @@ public class TackShooter extends SpreadShotTower{
   }
 
   @Override
-  public void shoot() {
+  public void shoot(List<Bloons> bloonsList) {
 
   }
 }

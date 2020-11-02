@@ -5,14 +5,19 @@ import ooga.backend.API.Placeable;
 import ooga.backend.bloons.Bloons;
 
 public abstract class Tower implements Placeable {
+
+  private static final double defaultShootingSpeed = 20.0;
+
   private int xPosition;
   private int yPosition;
   private int radius;
+  private double shootingSpeed;
 
   public Tower(int myXPosition, int myYPosition, int myRadius){
     setXPosition(myXPosition);
     setYPosition(myYPosition);
     radius = myRadius;
+    shootingSpeed = defaultShootingSpeed;
   }
 
   public void setXPosition(int updateXPos){
@@ -27,10 +32,13 @@ public abstract class Tower implements Placeable {
   public int getYPosition(){
     return yPosition;
   }
+  public double getShootingSpeed(){
+    return shootingSpeed;
+  }
 
   public boolean checkBalloonInRange(List<Bloons> bloonsList){
     for(Bloons bloon : bloonsList){
-      double distance = getDistance(bloon.getXPosition(), bloon.getYPosition());
+      double distance = getDistance(bloon);
       if(distance <= radius){
         return true;
       }
@@ -38,10 +46,10 @@ public abstract class Tower implements Placeable {
     return false;
   }
 
-  public abstract void shoot();
+  public abstract void shoot(List<Bloons> bloonsList);
 
-  public double getDistance(int bloonX, int bloonY){
-    return Math.sqrt(Math.pow(xPosition-bloonX, 2) + Math.pow(yPosition-bloonY, 2));
+  public double getDistance(Bloons target){
+    return Math.sqrt(Math.pow(xPosition-target.getXPosition(), 2) + Math.pow(yPosition-target.getYPosition(), 2));
   }
 
 }
