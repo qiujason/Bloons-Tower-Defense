@@ -1,5 +1,5 @@
 package ooga.backend.darts;
-import ooga.backend.API.Moveable;
+import ooga.backend.API.Movable;
 
 public abstract class Dart implements Movable {
   private int xPosition;
