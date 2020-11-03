@@ -64,38 +64,40 @@ public class BloonsApplication extends Application {
     myStage.setScene(myScene);
   }
 
-  private void visualizeGameScreen(Group level){
-    visualizeMap(level);
+  private void visualizeGameScreen(Group level) {
+    //visualizeLayout(level);
     visualizePlayerGUI(level);
   }
 
   // FIXME: Mostly pseudocode for now
-  private void visualizeMap(Group level){
-    Layout layout = getLayoutOrSomething();
-    double currentBlockX = 0;
-    double currentBlockY = 0;
-    int numberOfRows = layout.size();
-    int numberOfColumns = layout.get(0).size();
-    double blockWidth = GAME_WIDTH / numberOfColumns;
-    double blockHeight = GAME_HEIGHT / numberOfRows;
-
-    for(List<LayoutBlock> row : layout){
-      for(LayoutBlock block : row) {
-        Rectangle newBlock = createBlock(block, currentBlockX, currentBlockY, blockWidth, blockHeight);
-        level.getChildren().add(newBlock);
-        currentBlockX += blockWidth;
-      }
-      currentBlockX = 0;
-      currentBlockY += blockHeight;
-    }
-  }
-
-  // FIXME: Pseudocode here too
-  private Rectangle createBlock(LayoutBlock block, double currentBlockX, double currentBlockY, double blockWidth, double blockHeight){
-    String blockColorAsString = blockMappings.getString(block.getValueOrSomething());
-    Color blockColor = Color.valueOf(blockColorAsString);
-    return new Rectangle(currentBlockX, currentBlockY, blockWidth, blockHeight);
-  }
+//  private void visualizeLayout(Group level) {
+//    Layout layout = getLayoutOrSomething();
+//    double currentBlockX = 0;
+//    double currentBlockY = 0;
+//    int numberOfRows = layout.size();
+//    int numberOfColumns = layout.get(0).size();
+//    double blockWidth = GAME_WIDTH / numberOfColumns;
+//    double blockHeight = GAME_HEIGHT / numberOfRows;
+//
+//    for (List<LayoutBlock> row : layout) {
+//      for (LayoutBlock block : row) {
+//        Rectangle newBlock = createBlock(block, currentBlockX, currentBlockY, blockWidth,
+//            blockHeight);
+//        level.getChildren().add(newBlock);
+//        currentBlockX += blockWidth;
+//      }
+//      currentBlockX = 0;
+//      currentBlockY += blockHeight;
+//    }
+//  }
+//
+//  // FIXME: Pseudocode here too
+//  private Rectangle createBlock(LayoutBlock block, double currentBlockX, double currentBlockY,
+//      double blockWidth, double blockHeight) {
+//    String blockColorAsString = blockMappings.getString(block.getValueOrSomething());
+//    Color blockColor = Color.valueOf(blockColorAsString);
+//    return new Rectangle(currentBlockX, currentBlockY, blockWidth, blockHeight);
+//  }
 
   private void visualizePlayerGUI(Group level) {
     // TODO: Fill in with appropriate buttons
