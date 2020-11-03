@@ -1,37 +1,17 @@
-package ooga.backend.bloons;
-
-import ooga.backend.API.Hittable;
+package ooga.backend.darts;
 import ooga.backend.API.Movable;
 
-public abstract class Bloons implements Movable, Hittable {
-
-  private int lives;
+public abstract class Dart implements Movable {
   private int xPosition;
   private int yPosition;
-  private int xVelocity;
-  private int yVelocity;
+  private double xVelocity;
+  private double yVelocity;
 
-  public Bloons(int lives, int xPosition, int yPosition, int xVelocity, int yVelocity) {
-    this.lives = lives;
+  public Dart(int xPosition, int yPosition, double xVelocity, double yVelocity){
     this.xPosition = xPosition;
     this.yPosition = yPosition;
     this.xVelocity = xVelocity;
     this.yVelocity = yVelocity;
-  }
-
-  @Override
-  public void decrementLives(int hits) {
-    lives -= hits;
-    if (lives <= 0) {
-      handleDeath();
-    }
-  }
-
-  public abstract void handleDeath();
-
-  @Override
-  public void updateLivesLeft(int update) {
-    lives = update;
   }
 
   @Override
@@ -50,10 +30,6 @@ public abstract class Bloons implements Movable, Hittable {
     yVelocity = newYVelocity;
   }
 
-  public int getLives() {
-    return lives;
-  }
-
   @Override
   public int getXPosition() {
     return xPosition;
@@ -64,4 +40,11 @@ public abstract class Bloons implements Movable, Hittable {
     return yPosition;
   }
 
+  public double getXVelocity(){
+    return xVelocity;
+  }
+
+  public double getYVelocity(){
+    return yVelocity;
+  }
 }

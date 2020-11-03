@@ -1,6 +1,6 @@
 package ooga.backend.API;
 
-public interface Moveable {
+public interface Movable {
 
   /**
    * Update the position of the object
