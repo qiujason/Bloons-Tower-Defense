@@ -1,7 +1,10 @@
 package ooga.backend.towers;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import ooga.backend.bloons.Bloons;
+import ooga.backend.darts.Dart;
 import ooga.backend.factory.DartFactory;
 import ooga.backend.factory.SingleDartFactory;
 
@@ -12,13 +15,15 @@ public class DartTower extends SingleShotTower {
   }
 
   @Override
-  public void shoot(List<Bloons> bloonsList) {
+  public List<Dart> shoot(List<Bloons> bloonsList) {
+    List<Dart> shot = new ArrayList<>();
     if(checkBalloonInRange(bloonsList)){
       Bloons target = findClosestBloon(bloonsList);
       DartFactory dartFactory = new SingleDartFactory();
       double dartXVelocity = findShootXVelocity(target);
       double dartYVelocity = findShootYVelocity(target);
-      dartFactory.createDart(getXPosition(), getYPosition(), dartXVelocity, dartYVelocity);
+      shot.add(dartFactory.createDart(getXPosition(), getYPosition(), dartXVelocity, dartYVelocity));
     }
+    return shot;
   }
 }

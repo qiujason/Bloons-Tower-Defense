@@ -3,6 +3,7 @@ package ooga.backend.towers;
 import java.util.List;
 import ooga.backend.API.Placeable;
 import ooga.backend.bloons.Bloons;
+import ooga.backend.darts.Dart;
 
 public abstract class Tower implements Placeable {
 
@@ -46,7 +47,7 @@ public abstract class Tower implements Placeable {
     return false;
   }
 
-  public abstract void shoot(List<Bloons> bloonsList);
+  public abstract List<Dart> shoot(List<Bloons> bloonsList);
 
   public double getDistance(Bloons target){
     return Math.sqrt(Math.pow(xPosition-target.getXPosition(), 2) + Math.pow(yPosition-target.getYPosition(), 2));
