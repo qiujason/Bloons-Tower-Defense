@@ -2,7 +2,6 @@ package ooga.backend.towers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import ooga.backend.bloons.Bloons;
 import ooga.backend.darts.Dart;
 import ooga.backend.factory.DartFactory;

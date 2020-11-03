@@ -1,15 +1,13 @@
 package ooga.backend.darts;
-
-import java.lang.module.ModuleFinder;
 import ooga.backend.API.Moveable;
 
 public abstract class Dart implements Moveable {
   private int xPosition;
   private int yPosition;
-  private int xVelocity;
-  private int yVelocity;
+  private double xVelocity;
+  private double yVelocity;
 
-  public Dart(int xPosition, int yPosition, int xVelocity, int yVelocity){
+  public Dart(int xPosition, int yPosition, double xVelocity, double yVelocity){
     this.xPosition = xPosition;
     this.yPosition = yPosition;
     this.xVelocity = xVelocity;
@@ -40,5 +38,13 @@ public abstract class Dart implements Moveable {
   @Override
   public int getYPosition() {
     return yPosition;
+  }
+
+  public double getXVelocity(){
+    return xVelocity;
+  }
+
+  public double getYVelocity(){
+    return yVelocity;
   }
 }
