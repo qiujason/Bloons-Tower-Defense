@@ -24,6 +24,12 @@ public class BloonsApplicationTest extends DukeApplicationTest {
     assertEquals("Start", myStartButton.getText());
   }
 
+  @Test
+  public void testStartButton(){
+    clickOn(myStartButton);
+    // TODO: Add assertion
+  }
+
 
 
 }
