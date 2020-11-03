@@ -15,6 +15,8 @@ public class BloonsApplication extends Application {
 
   public static final double HEIGHT = 500;
   public static final double WIDTH = 800;
+  public static final double GAME_HEIGHT = 0.875 * HEIGHT;
+  public static final double GAME_WIDTH = 0.75 * WIDTH;
 
   Stage myStage;
   Scene myScene;
@@ -37,17 +39,21 @@ public class BloonsApplication extends Application {
     Button startButton = new Button();
     startButton.setOnAction(e -> loadLevel());
     startButton.setText("Start");
+    startButton.setId("Start");
     BorderPane.setAlignment(startButton, Pos.CENTER);
     menu.setBottom(startButton);
   }
 
   private void loadLevel() {
     Group levelExample = new Group();
-    Rectangle gameSpace = new Rectangle(0, 0,3 * WIDTH / 4, 7 * HEIGHT / 8);
-    gameSpace.setFill(Color.GREENYELLOW);
-    levelExample.getChildren().add(gameSpace);
+    visualizeGameScreen();
     myScene = new Scene(levelExample, WIDTH, HEIGHT);
     myScene.setFill(Color.LIGHTGRAY);
     myStage.setScene(myScene);
   }
+
+  private void visualizeGameScreen(){
+
+  }
+
 }
