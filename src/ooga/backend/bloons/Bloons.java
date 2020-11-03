@@ -1,9 +1,9 @@
 package ooga.backend.bloons;
 
 import ooga.backend.API.Hittable;
-import ooga.backend.API.Moveable;
+import ooga.backend.API.Movable;
 
-public abstract class Bloons implements Moveable, Hittable {
+public abstract class Bloons implements Movable, Hittable {
 
   private int lives;
   private int xPosition;
@@ -48,6 +48,10 @@ public abstract class Bloons implements Moveable, Hittable {
   @Override
   public void setYVelocity(int newYVelocity) {
     yVelocity = newYVelocity;
+  }
+
+  public int getLives() {
+    return lives;
   }
 
   @Override
