@@ -9,11 +9,13 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import ooga.controller.MenuInterface;
 
 public class BloonsApplication extends Application {
 
@@ -28,6 +30,8 @@ public class BloonsApplication extends Application {
 
   private Stage myStage;
   private Scene myScene;
+  private GameMenu myMenu;
+  private MenuInterface menuController;
   private AnimationHandler myAnimationHandler;
   private final ResourceBundle blockMappings = ResourceBundle
       .getBundle(getClass().getPackageName() + ".resources.blockMappings");
@@ -101,7 +105,9 @@ public class BloonsApplication extends Application {
 
   private void visualizePlayerGUI(Group level) {
     // TODO: Fill in with appropriate buttons
+    VBox menuPane = new VBox();
+    menuPane.setSpacing(10); //magic num
+    myMenu = new GameMenu(menuPane, menuController);
+    level.getChildren().add(menuPane);
   }
-
-
 }

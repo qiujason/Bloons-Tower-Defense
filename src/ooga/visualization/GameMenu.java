@@ -3,7 +3,7 @@ package ooga.visualization;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import ooga.controller.MenuInterface;
 import javafx.scene.control.Button;
 
@@ -13,7 +13,7 @@ public class GameMenu {
   private final ResourceBundle menuProperties = ResourceBundle
       .getBundle(getClass().getPackageName() + ".resources.menu" + LANGUAGE);
 
-  private BorderPane myMenuPane;
+  private VBox myMenuPane;
 
   private Button playButton;
   private Button pauseButton;
@@ -24,7 +24,9 @@ public class GameMenu {
   private static final String SPEEDUP_TEXT = "SpeedUpButton";
   private static final String SLOWDOWN_TEXT = "SlowDownButton";
 
-  public GameMenu(BorderPane MenuPane, MenuInterface controller) {
+  private static Double BUTTON_WIDTH = 120.0;
+
+  public GameMenu(VBox MenuPane, MenuInterface controller) {
     myMenuPane = MenuPane;
 
     playButton = makeButton(menuProperties.getString(PLAY_TEXT), event -> controller.play());
@@ -41,6 +43,7 @@ public class GameMenu {
     button.setText(name);
     button.setOnAction(handler);
     button.setId(name);
+    button.setMaxWidth(BUTTON_WIDTH);
     myMenuPane.getChildren().add(button);
     return button;
   }
