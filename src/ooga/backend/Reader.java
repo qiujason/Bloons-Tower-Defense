@@ -34,7 +34,7 @@ public abstract class Reader {
     return fileData;
   }
 
-  public abstract String[][] getStatesFromFile(String fileName);
+  public abstract List<List<String>> getLayoutFromFile(String fileName);
 
 
 }
