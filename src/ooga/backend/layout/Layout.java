@@ -27,5 +27,8 @@ public class Layout {
     return layoutBlocks;
   }
 
+  public LayoutBlock getBlock(int row, int col){
+    return layoutConfig.get(row).get(col);
+  }
 
 }
