@@ -1,20 +1,27 @@
 package ooga.visualization;
 
+import java.net.URISyntaxException;
+import java.util.List;
 import java.util.ResourceBundle;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Duration;
+import ooga.backend.readers.LayoutReader;
 import ooga.controller.MenuInterface;
 
 public class BloonsApplication extends Application {
@@ -23,17 +30,21 @@ public class BloonsApplication extends Application {
   public static final double WIDTH = 800;
   public static final double GAME_HEIGHT = 0.875 * HEIGHT;
   public static final double GAME_WIDTH = 0.75 * WIDTH;
-  public static final double BUTTON_VBOX_HEIGHT = HEIGHT;
-  public static final double BUTTON_VBOX_WIDTH = WIDTH - GAME_WIDTH;
-  public static final double STATS_HBOX_HEIGHT = HEIGHT - GAME_HEIGHT;
-  public static final double STATS_HBOX_WIDTH = GAME_WIDTH;
+  public static final String LAYOUTS_PATH = "layouts/";
+  public static final String LEVEL_FILE = LAYOUTS_PATH + "example_level1.csv";
+  public static final String TOWER_IMAGE = "/gamePhotos/dartmonkey.png";
+//  public static final double BUTTON_VBOX_HEIGHT = HEIGHT;
+//  public static final double BUTTON_VBOX_WIDTH = WIDTH - GAME_WIDTH;
+//  public static final double STATS_HBOX_HEIGHT = HEIGHT - GAME_HEIGHT;
+//  public static final double STATS_HBOX_WIDTH = GAME_WIDTH;
 
   private Stage myStage;
   private Scene myScene;
+  private LayoutReader myLayoutReader;
   private GameMenu myMenu;
   private MenuInterface menuController;
   private AnimationHandler myAnimationHandler;
-  private final ResourceBundle blockMappings = ResourceBundle
+  private final ResourceBundle myBlockMappings = ResourceBundle
       .getBundle(getClass().getPackageName() + ".resources.blockMappings");
 
   @Override
@@ -60,54 +71,95 @@ public class BloonsApplication extends Application {
   }
 
   private void loadLevel() {
-    Group levelExample = new Group();
-    visualizeGameScreen(levelExample);
+    BorderPane level = new BorderPane();
+    myLayoutReader = new LayoutReader();
+    visualizeGameScreen(level);
     myAnimationHandler = new AnimationHandler();
-    myScene = new Scene(levelExample, WIDTH, HEIGHT);
-    myScene.setFill(Color.LIGHTGRAY);
+    level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+    myScene = new Scene(level, WIDTH, HEIGHT);
     myStage.setScene(myScene);
   }
 
-  private void visualizeGameScreen(Group level) {
-    //visualizeLayout(level);
+  private void visualizeGameScreen(BorderPane level) {
+    visualizeLayout(level);
     visualizePlayerGUI(level);
   }
 
-  // FIXME: Mostly pseudocode for now
-//  private void visualizeLayout(Group level) {
-//    Layout layout = getLayoutOrSomething();
-//    double currentBlockX = 0;
-//    double currentBlockY = 0;
-//    int numberOfRows = layout.size();
-//    int numberOfColumns = layout.get(0).size();
-//    double blockWidth = GAME_WIDTH / numberOfColumns;
-//    double blockHeight = GAME_HEIGHT / numberOfRows;
-//
-//    for (List<LayoutBlock> row : layout) {
-//      for (LayoutBlock block : row) {
-//        Rectangle newBlock = createBlock(block, currentBlockX, currentBlockY, blockWidth,
-//            blockHeight);
-//        level.getChildren().add(newBlock);
-//        currentBlockX += blockWidth;
-//      }
-//      currentBlockX = 0;
-//      currentBlockY += blockHeight;
-//    }
-//  }
-//
-//  // FIXME: Pseudocode here too
-//  private Rectangle createBlock(LayoutBlock block, double currentBlockX, double currentBlockY,
-//      double blockWidth, double blockHeight) {
-//    String blockColorAsString = blockMappings.getString(block.getValueOrSomething());
-//    Color blockColor = Color.valueOf(blockColorAsString);
-//    return new Rectangle(currentBlockX, currentBlockY, blockWidth, blockHeight);
-//  }
+  private void visualizeLayout(BorderPane level) {
+    Group layoutDisplay = new Group();
+    level.setLeft(layoutDisplay);
 
-  private void visualizePlayerGUI(Group level) {
-    // TODO: Fill in with appropriate buttons
+    List<List<String>> layout = myLayoutReader.getDataFromFile(LEVEL_FILE);
+
+    int numberOfRows = layout.size();
+    int numberOfColumns = layout.get(0).size();
+    double blockWidth = GAME_WIDTH / numberOfColumns;
+    double blockHeight = GAME_HEIGHT / numberOfRows;
+    double blockSize = Math.min(blockWidth, blockHeight);
+
+    double currentBlockX = 0;
+    double currentBlockY = 0;
+
+    for (List<String> row : layout) {
+      for (String block : row) {
+        Rectangle newBlock = createBlock(block, currentBlockX, currentBlockY, blockSize);
+        layoutDisplay.getChildren().add(newBlock);
+        currentBlockX += blockSize;
+      }
+      currentBlockX = 0;
+      currentBlockY += blockSize;
+    }
+  }
+
+  private Rectangle createBlock(String block, double currentBlockX, double currentBlockY,
+      double blockSize) {
+    Rectangle blockRectangle = new Rectangle(currentBlockX, currentBlockY, blockSize, blockSize);
+    String blockColorAsString = myBlockMappings.getString(block);
+    Color blockColor = Color.valueOf(blockColorAsString);
+    blockRectangle.setFill(blockColor);
+    blockRectangle.setOnMouseClicked(e -> putTower(blockRectangle));
+    blockRectangle.setId("LayoutBlock" + (int) currentBlockX
+        + (int) currentBlockY); // Should find better way to setId
+    return blockRectangle;
+  }
+
+  // FIXME: handle exception
+  private void putTower(Rectangle blockRectangle) {
+    Color playableBlock = Color.valueOf(myBlockMappings.getString("0"));
+    Color nonPlayableBlock = Color.valueOf(myBlockMappings.getString(">"));
+    if (blockRectangle.getFill().equals(playableBlock)) {
+      Image towerImage = null;
+      try {
+        towerImage = new Image(String.valueOf(getClass().getResource(TOWER_IMAGE).toURI()));
+      } catch (URISyntaxException e) {
+        e.printStackTrace();
+      }
+      assert towerImage != null;
+      ImagePattern towerImagePattern = new ImagePattern(towerImage);
+      blockRectangle.setFill(towerImagePattern);
+    } else if (!blockRectangle.getFill().equals(nonPlayableBlock)) {
+      blockRectangle.setFill(playableBlock);
+    }
+  }
+
+  private void visualizePlayerGUI(BorderPane level) {
     VBox menuPane = new VBox();
     menuPane.setSpacing(10); //magic num
     myMenu = new GameMenu(menuPane, menuController);
-    level.getChildren().add(menuPane);
+    level.setRight(menuPane);
+  }
+
+  /**
+   * This class makes a new alert message when there is an error.
+   * @param header
+   * @param message
+   */
+  public void makeAlert(String header, String message) {
+    Alert a = new Alert(Alert.AlertType.NONE);
+    ButtonType close = new ButtonType(":(", ButtonBar.ButtonData.CANCEL_CLOSE);
+    a.getButtonTypes().addAll(close);
+    a.setHeaderText(header);
+    a.setContentText(message);
+    a.show();
   }
 }

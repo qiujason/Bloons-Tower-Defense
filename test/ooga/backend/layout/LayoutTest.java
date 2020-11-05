@@ -1,7 +1,7 @@
 package ooga.backend.layout;
 
 import java.util.List;
-import ooga.backend.LayoutReader;
+import ooga.backend.readers.LayoutReader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +15,7 @@ public class LayoutTest {
   @BeforeEach
   void setUpLayout(){
     LayoutReader reader = new LayoutReader();
-    List<List<String>> layoutConfig = reader.getLayoutFromFile("test_layouts/updownleftright.csv");
+    List<List<String>> layoutConfig = reader.getDataFromFile("test_layouts/updownleftright.csv");
     layout = new Layout(layoutConfig);
   }
 
