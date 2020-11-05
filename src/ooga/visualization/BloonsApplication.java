@@ -6,9 +6,12 @@ import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -25,13 +28,13 @@ public class BloonsApplication extends Application {
   public static final double WIDTH = 800;
   public static final double GAME_HEIGHT = 0.875 * HEIGHT;
   public static final double GAME_WIDTH = 0.75 * WIDTH;
-  public static final double BUTTON_VBOX_HEIGHT = HEIGHT;
-  public static final double BUTTON_VBOX_WIDTH = WIDTH - GAME_WIDTH;
-  public static final double STATS_HBOX_HEIGHT = HEIGHT - GAME_HEIGHT;
-  public static final double STATS_HBOX_WIDTH = GAME_WIDTH;
   public static final String LAYOUTS_PATH = "layouts/";
   public static final String LEVEL_FILE = LAYOUTS_PATH + "example_level1.csv";
   public static final String TOWER_IMAGE = "/gamePhotos/monkey.jpg";
+//  public static final double BUTTON_VBOX_HEIGHT = HEIGHT;
+//  public static final double BUTTON_VBOX_WIDTH = WIDTH - GAME_WIDTH;
+//  public static final double STATS_HBOX_HEIGHT = HEIGHT - GAME_HEIGHT;
+//  public static final double STATS_HBOX_WIDTH = GAME_WIDTH;
 
   private Stage myStage;
   private Scene myScene;
@@ -66,21 +69,24 @@ public class BloonsApplication extends Application {
   }
 
   private void loadLevel() {
-    Group levelExample = new Group();
+    BorderPane level = new BorderPane();
     myLayoutReader = new LayoutReader();
-    visualizeGameScreen(levelExample);
+    visualizeGameScreen(level);
     myAnimationHandler = new AnimationHandler();
-    myScene = new Scene(levelExample, WIDTH, HEIGHT);
-    myScene.setFill(Color.LIGHTGRAY);
+    level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+    myScene = new Scene(level, WIDTH, HEIGHT);
     myStage.setScene(myScene);
   }
 
-  private void visualizeGameScreen(Group level) {
+  private void visualizeGameScreen(BorderPane level) {
     visualizeLayout(level);
     visualizePlayerGUI(level);
   }
 
-  private void visualizeLayout(Group level) {
+  private void visualizeLayout(BorderPane level) {
+    Group layoutDisplay = new Group();
+    level.setLeft(layoutDisplay);
+
     List<List<String>> layout = myLayoutReader.getLayoutFromFile(LEVEL_FILE);
 
     int numberOfRows = layout.size();
@@ -95,7 +101,7 @@ public class BloonsApplication extends Application {
     for (List<String> row : layout) {
       for (String block : row) {
         Rectangle newBlock = createBlock(block, currentBlockX, currentBlockY, blockSize);
-        level.getChildren().add(newBlock);
+        layoutDisplay.getChildren().add(newBlock);
         currentBlockX += blockSize;
       }
       currentBlockX = 0;
@@ -110,34 +116,34 @@ public class BloonsApplication extends Application {
     Color blockColor = Color.valueOf(blockColorAsString);
     blockRectangle.setFill(blockColor);
     blockRectangle.setOnMouseClicked(e -> putTower(blockRectangle));
-    blockRectangle.setId("LayoutBlock" + (int) currentBlockX + (int) currentBlockY); // Should find better way to setId
-//    System.out.println(blockRectangle.getId());
+    blockRectangle.setId("LayoutBlock" + (int) currentBlockX
+        + (int) currentBlockY); // Should find better way to setId
     return blockRectangle;
   }
 
   // FIXME: handle exception
-  private void putTower(Rectangle blockRectangle){
+  private void putTower(Rectangle blockRectangle) {
     Color playableBlock = Color.valueOf(myBlockMappings.getString("0"));
     Color nonPlayableBlock = Color.valueOf(myBlockMappings.getString(">"));
-    if(blockRectangle.getFill().equals(playableBlock)){
+    if (blockRectangle.getFill().equals(playableBlock)) {
       Image towerImage = null;
       try {
         towerImage = new Image(String.valueOf(getClass().getResource(TOWER_IMAGE).toURI()));
       } catch (URISyntaxException e) {
-        System.out.println("Invalid Image");
+        e.printStackTrace();
       }
+      assert towerImage != null;
       ImagePattern towerImagePattern = new ImagePattern(towerImage);
       blockRectangle.setFill(towerImagePattern);
-    }
-    else if (!blockRectangle.getFill().equals(nonPlayableBlock)){
+    } else if (!blockRectangle.getFill().equals(nonPlayableBlock)) {
       blockRectangle.setFill(playableBlock);
     }
   }
 
-  private void visualizePlayerGUI(Group level) {
+  private void visualizePlayerGUI(BorderPane level) {
     VBox menuPane = new VBox();
     menuPane.setSpacing(10); //magic num
     myMenu = new GameMenu(menuPane, menuController);
-    level.getChildren().add(menuPane);
+    level.setRight(menuPane);
   }
 }

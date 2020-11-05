@@ -19,19 +19,19 @@ public class BloonsApplicationTest extends DukeApplicationTest {
   Button mySpeedUpButton;
 
   @Override
-  public void start(Stage testStage){
+  public void start(Stage testStage) {
     BloonsApplication myBloonsApplication = new BloonsApplication();
     myBloonsApplication.start(testStage);
     myStartButton = lookup("#Start").query();
   }
 
   @Test
-  public void testStartMenu(){
+  public void testStartMenu() {
     assertEquals("Start", myStartButton.getText());
   }
 
   @Test // Not general: text
-  public void testStartButton(){
+  public void testStartButton() {
     clickOn(myStartButton);
     myPlayButton = lookup("#Play").query();
     myPauseButton = lookup("#Pause").query();
@@ -42,18 +42,20 @@ public class BloonsApplicationTest extends DukeApplicationTest {
   }
 
   @Test // Not general
-  public void testLayoutDisplay(){
+  public void testLayoutDisplay() {
     clickOn(myStartButton);
     Rectangle myRectangle = lookup("#LayoutBlock00").query();
     assertEquals(Color.GREEN, myRectangle.getFill());
   }
 
   @Test // Not general
-  public void testPutTower(){
+  public void testPutTower() {
     clickOn(myStartButton);
-    Rectangle myRectangle = lookup("#LayoutBlock1280").query();
+    Rectangle myRectangle = lookup("#LayoutBlock00").query();
     clickOn(myRectangle);
     assertNotEquals(Color.GREEN, myRectangle.getFill());
+    clickOn(myRectangle);
+    assertEquals(Color.GREEN, myRectangle.getFill());
   }
 
 }
