@@ -1,7 +1,9 @@
 package visualization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import ooga.visualization.BloonsApplication;
@@ -20,9 +22,6 @@ public class BloonsApplicationTest extends DukeApplicationTest {
     BloonsApplication myBloonsApplication = new BloonsApplication();
     myBloonsApplication.start(testStage);
     myStartButton = lookup("#Start").query();
-    myPlayButton = lookup("#Play").query();
-    myPauseButton = lookup("#Pause").query();
-    mySpeedUpButton = lookup("#SpeedUp").query();
   }
 
   @Test
@@ -30,15 +29,22 @@ public class BloonsApplicationTest extends DukeApplicationTest {
     assertEquals("Start", myStartButton.getText());
   }
 
-  @Test
+  @Test // Not general: text
   public void testStartButton(){
     clickOn(myStartButton);
-    // TODO: Add assertion
+    myPlayButton = lookup("#Play").query();
+    myPauseButton = lookup("#Pause").query();
+    mySpeedUpButton = lookup("#SpeedUp").query();
     assertEquals("Play", myPlayButton.getText());
     assertEquals("Pause", myPauseButton.getText());
     assertEquals("SpeedUp", mySpeedUpButton.getText());
   }
 
-
+  @Test // Not general
+  public void testLayoutDisplay(){
+    clickOn(myStartButton);
+    Node myRectangle = lookup("#LayoutBlock00").query();
+    assertNotNull(myRectangle);
+  }
 
 }

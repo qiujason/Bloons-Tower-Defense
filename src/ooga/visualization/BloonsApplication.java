@@ -1,8 +1,7 @@
 package ooga.visualization;
 
+import java.util.List;
 import java.util.ResourceBundle;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -14,7 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Duration;
+import ooga.backend.LayoutReader;
 import ooga.controller.MenuInterface;
 
 public class BloonsApplication extends Application {
@@ -27,9 +26,12 @@ public class BloonsApplication extends Application {
   public static final double BUTTON_VBOX_WIDTH = WIDTH - GAME_WIDTH;
   public static final double STATS_HBOX_HEIGHT = HEIGHT - GAME_HEIGHT;
   public static final double STATS_HBOX_WIDTH = GAME_WIDTH;
+  public static final String LAYOUTS_PATH = "layouts/";
+  public static final String LEVEL_FILE = LAYOUTS_PATH + "example_level1.csv";
 
   private Stage myStage;
   private Scene myScene;
+  private LayoutReader myLayoutReader;
   private GameMenu myMenu;
   private MenuInterface menuController;
   private AnimationHandler myAnimationHandler;
@@ -61,6 +63,7 @@ public class BloonsApplication extends Application {
 
   private void loadLevel() {
     Group levelExample = new Group();
+    myLayoutReader = new LayoutReader();
     visualizeGameScreen(levelExample);
     myAnimationHandler = new AnimationHandler();
     myScene = new Scene(levelExample, WIDTH, HEIGHT);
@@ -69,42 +72,43 @@ public class BloonsApplication extends Application {
   }
 
   private void visualizeGameScreen(Group level) {
-    //visualizeLayout(level);
+    visualizeLayout(level);
     visualizePlayerGUI(level);
   }
 
-  // FIXME: Mostly pseudocode for now
-//  private void visualizeLayout(Group level) {
-//    Layout layout = getLayoutOrSomething();
-//    double currentBlockX = 0;
-//    double currentBlockY = 0;
-//    int numberOfRows = layout.size();
-//    int numberOfColumns = layout.get(0).size();
-//    double blockWidth = GAME_WIDTH / numberOfColumns;
-//    double blockHeight = GAME_HEIGHT / numberOfRows;
-//
-//    for (List<LayoutBlock> row : layout) {
-//      for (LayoutBlock block : row) {
-//        Rectangle newBlock = createBlock(block, currentBlockX, currentBlockY, blockWidth,
-//            blockHeight);
-//        level.getChildren().add(newBlock);
-//        currentBlockX += blockWidth;
-//      }
-//      currentBlockX = 0;
-//      currentBlockY += blockHeight;
-//    }
-//  }
-//
-//  // FIXME: Pseudocode here too
-//  private Rectangle createBlock(LayoutBlock block, double currentBlockX, double currentBlockY,
-//      double blockWidth, double blockHeight) {
-//    String blockColorAsString = blockMappings.getString(block.getValueOrSomething());
-//    Color blockColor = Color.valueOf(blockColorAsString);
-//    return new Rectangle(currentBlockX, currentBlockY, blockWidth, blockHeight);
-//  }
+  private void visualizeLayout(Group level) {
+    List<List<String>> layout = myLayoutReader.getLayoutFromFile(LEVEL_FILE);
+    double currentBlockX = 0;
+    double currentBlockY = 0;
+    int numberOfRows = layout.size();
+    int numberOfColumns = layout.get(0).size();
+    double blockWidth = GAME_WIDTH / numberOfColumns;
+    double blockHeight = GAME_HEIGHT / numberOfRows;
+
+    for (List<String> row : layout) {
+      for (String block : row) {
+        Rectangle newBlock = createBlock(block, currentBlockX, currentBlockY, blockWidth,
+            blockHeight);
+        level.getChildren().add(newBlock);
+        currentBlockX += blockWidth;
+      }
+      currentBlockX = 0;
+      currentBlockY += blockHeight;
+    }
+  }
+
+  private Rectangle createBlock(String block, double currentBlockX, double currentBlockY,
+      double blockWidth, double blockHeight) {
+    Rectangle blockRectangle = new Rectangle(currentBlockX, currentBlockY, blockWidth, blockHeight);
+    String blockColorAsString = blockMappings.getString(block);
+    Color blockColor = Color.valueOf(blockColorAsString);
+    blockRectangle.setFill(blockColor);
+    blockRectangle.setId("LayoutBlock" + (int) currentBlockX + (int) currentBlockY); // Should find better way to set Id
+    System.out.println(blockRectangle.getId());
+    return blockRectangle;
+  }
 
   private void visualizePlayerGUI(Group level) {
-    // TODO: Fill in with appropriate buttons
     VBox menuPane = new VBox();
     menuPane.setSpacing(10); //magic num
     myMenu = new GameMenu(menuPane, menuController);
