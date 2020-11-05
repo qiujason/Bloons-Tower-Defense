@@ -103,7 +103,7 @@ public class BloonsApplication extends Application {
     String blockColorAsString = blockMappings.getString(block);
     Color blockColor = Color.valueOf(blockColorAsString);
     blockRectangle.setFill(blockColor);
-    blockRectangle.setId("LayoutBlock" + (int) currentBlockX + (int) currentBlockY); // Should find better way to set Id
+    blockRectangle.setId("LayoutBlock" + (int) currentBlockX + (int) currentBlockY); // Should find better way to setId
     System.out.println(blockRectangle.getId());
     return blockRectangle;
   }
