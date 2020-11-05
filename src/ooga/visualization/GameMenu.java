@@ -17,7 +17,8 @@ public class GameMenu {
 
   private Button playButton;
   private Button pauseButton;
-  private Button speedButton;
+  private Button speedUpButton;
+  private Button slowDownButton;
 
   private static final String PLAY_TEXT = "PlayButton";
   private static final String PAUSE_TEXT = "PauseButton";
@@ -31,7 +32,8 @@ public class GameMenu {
 
     playButton = makeButton(menuProperties.getString(PLAY_TEXT), event -> controller.play());
     pauseButton = makeButton(menuProperties.getString(PAUSE_TEXT), event -> controller.pause());
-    speedButton = makeButton(menuProperties.getString(SPEEDUP_TEXT), event -> controller.speedUp());
+    speedUpButton = makeButton(menuProperties.getString(SPEEDUP_TEXT), event -> controller.speedUp());
+    slowDownButton = makeButton(menuProperties.getString(SLOWDOWN_TEXT), event -> controller.slowDown());
   }
 
   /**
