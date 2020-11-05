@@ -1,5 +1,6 @@
 package ooga.visualization;
 
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Application;
@@ -7,9 +8,11 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -28,6 +31,7 @@ public class BloonsApplication extends Application {
   public static final double STATS_HBOX_WIDTH = GAME_WIDTH;
   public static final String LAYOUTS_PATH = "layouts/";
   public static final String LEVEL_FILE = LAYOUTS_PATH + "example_level1.csv";
+  public static final String TOWER_IMAGE = "/gamePhotos/monkey.jpg";
 
   private Stage myStage;
   private Scene myScene;
@@ -35,7 +39,7 @@ public class BloonsApplication extends Application {
   private GameMenu myMenu;
   private MenuInterface menuController;
   private AnimationHandler myAnimationHandler;
-  private final ResourceBundle blockMappings = ResourceBundle
+  private final ResourceBundle myBlockMappings = ResourceBundle
       .getBundle(getClass().getPackageName() + ".resources.blockMappings");
 
   @Override
@@ -78,34 +82,56 @@ public class BloonsApplication extends Application {
 
   private void visualizeLayout(Group level) {
     List<List<String>> layout = myLayoutReader.getLayoutFromFile(LEVEL_FILE);
-    double currentBlockX = 0;
-    double currentBlockY = 0;
+
     int numberOfRows = layout.size();
     int numberOfColumns = layout.get(0).size();
     double blockWidth = GAME_WIDTH / numberOfColumns;
     double blockHeight = GAME_HEIGHT / numberOfRows;
+    double blockSize = Math.min(blockWidth, blockHeight);
+
+    double currentBlockX = 0;
+    double currentBlockY = 0;
 
     for (List<String> row : layout) {
       for (String block : row) {
-        Rectangle newBlock = createBlock(block, currentBlockX, currentBlockY, blockWidth,
-            blockHeight);
+        Rectangle newBlock = createBlock(block, currentBlockX, currentBlockY, blockSize);
         level.getChildren().add(newBlock);
-        currentBlockX += blockWidth;
+        currentBlockX += blockSize;
       }
       currentBlockX = 0;
-      currentBlockY += blockHeight;
+      currentBlockY += blockSize;
     }
   }
 
   private Rectangle createBlock(String block, double currentBlockX, double currentBlockY,
-      double blockWidth, double blockHeight) {
-    Rectangle blockRectangle = new Rectangle(currentBlockX, currentBlockY, blockWidth, blockHeight);
-    String blockColorAsString = blockMappings.getString(block);
+      double blockSize) {
+    Rectangle blockRectangle = new Rectangle(currentBlockX, currentBlockY, blockSize, blockSize);
+    String blockColorAsString = myBlockMappings.getString(block);
     Color blockColor = Color.valueOf(blockColorAsString);
     blockRectangle.setFill(blockColor);
+    blockRectangle.setOnMouseClicked(e -> putTower(blockRectangle));
     blockRectangle.setId("LayoutBlock" + (int) currentBlockX + (int) currentBlockY); // Should find better way to setId
-    System.out.println(blockRectangle.getId());
+//    System.out.println(blockRectangle.getId());
     return blockRectangle;
+  }
+
+  // FIXME: handle exception
+  private void putTower(Rectangle blockRectangle){
+    Color playableBlock = Color.valueOf(myBlockMappings.getString("0"));
+    Color nonPlayableBlock = Color.valueOf(myBlockMappings.getString(">"));
+    if(blockRectangle.getFill().equals(playableBlock)){
+      Image towerImage = null;
+      try {
+        towerImage = new Image(String.valueOf(getClass().getResource(TOWER_IMAGE).toURI()));
+      } catch (URISyntaxException e) {
+        System.out.println("Invalid Image");
+      }
+      ImagePattern towerImagePattern = new ImagePattern(towerImage);
+      blockRectangle.setFill(towerImagePattern);
+    }
+    else if (!blockRectangle.getFill().equals(nonPlayableBlock)){
+      blockRectangle.setFill(playableBlock);
+    }
   }
 
   private void visualizePlayerGUI(Group level) {

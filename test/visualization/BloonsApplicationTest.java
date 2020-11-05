@@ -1,10 +1,11 @@
 package visualization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import ooga.visualization.BloonsApplication;
 import org.junit.jupiter.api.Test;
@@ -43,8 +44,16 @@ public class BloonsApplicationTest extends DukeApplicationTest {
   @Test // Not general
   public void testLayoutDisplay(){
     clickOn(myStartButton);
-    Node myRectangle = lookup("#LayoutBlock00").query();
-    assertNotNull(myRectangle);
+    Rectangle myRectangle = lookup("#LayoutBlock00").query();
+    assertEquals(Color.GREEN, myRectangle.getFill());
+  }
+
+  @Test // Not general
+  public void testPutTower(){
+    clickOn(myStartButton);
+    Rectangle myRectangle = lookup("#LayoutBlock1280").query();
+    clickOn(myRectangle);
+    assertNotEquals(Color.GREEN, myRectangle.getFill());
   }
 
 }
