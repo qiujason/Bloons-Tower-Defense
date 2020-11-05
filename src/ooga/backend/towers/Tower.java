@@ -1,11 +1,11 @@
 package ooga.backend.towers;
 
 import java.util.List;
-import ooga.backend.API.Placeable;
+import ooga.backend.API.GamePiece;
 import ooga.backend.bloons.Bloons;
 import ooga.backend.darts.Dart;
 
-public abstract class Tower implements Placeable {
+public abstract class Tower implements GamePiece {
 
   private static final double defaultShootingSpeed = 20.0;
 
@@ -21,18 +21,26 @@ public abstract class Tower implements Placeable {
     shootingSpeed = defaultShootingSpeed;
   }
 
+  @Override
   public void setXPosition(int updateXPos){
     xPosition = updateXPos;
   }
+
+  @Override
   public void setYPosition(int updateYPos){
     yPosition = updateYPos;
   }
+
+  @Override
   public int getXPosition(){
     return xPosition;
   }
+
+  @Override
   public int getYPosition(){
     return yPosition;
   }
+
   public double getShootingSpeed(){
     return shootingSpeed;
   }
