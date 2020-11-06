@@ -2,7 +2,7 @@ package ooga.backend.towers;
 
 import java.util.ArrayList;
 import java.util.List;
-import ooga.backend.bloons.Bloons;
+import ooga.backend.bloons.Bloon;
 import ooga.backend.darts.Dart;
 import ooga.backend.darts.factory.DartFactory;
 import ooga.backend.darts.factory.SingleDartFactory;
@@ -18,7 +18,7 @@ public class TackShooter extends SpreadShotTower{
   }
 
   @Override
-  public List<Dart> shoot(List<Bloons> bloonsList) {
+  public List<Dart> shoot(List<Bloon> bloonsList) {
     List<Dart> shot = new ArrayList<>();
     if(checkBalloonInRange(bloonsList)){
       for(int i = 0; i < numberOfShots; i++){

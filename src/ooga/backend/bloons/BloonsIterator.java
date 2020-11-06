@@ -7,9 +7,9 @@ import ooga.backend.collections.Iterator;
 public class BloonsIterator implements Iterator {
 
   private int index;
-  private final List<Bloons> bloons;
+  private final List<Bloon> bloons;
 
-  public BloonsIterator(List<Bloons> bloons) {
+  public BloonsIterator(List<Bloon> bloons) {
     index = 0;
     this.bloons = bloons;
   }

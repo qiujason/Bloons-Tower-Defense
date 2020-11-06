@@ -1,7 +1,7 @@
 package ooga.backend.towers;
 
 import java.util.List;
-import ooga.backend.bloons.Bloons;
+import ooga.backend.bloons.Bloon;
 
 public abstract class SingleShotTower extends Tower{
 
@@ -11,10 +11,10 @@ public abstract class SingleShotTower extends Tower{
   }
 
   // should only be called IF known that there is a bloon in range
-  public Bloons findClosestBloon(List<Bloons> bloonsList){
-    Bloons closestBloon = null;
+  public Bloon findClosestBloon(List<Bloon> bloonsList){
+    Bloon closestBloon = null;
     double minDistance = Integer.MAX_VALUE;
-    for(Bloons bloon : bloonsList){
+    for(Bloon bloon : bloonsList){
       double distance = getDistance(bloon);
       if(minDistance > distance){
         minDistance = distance;
@@ -24,12 +24,12 @@ public abstract class SingleShotTower extends Tower{
     return closestBloon;
   }
 
-  public double findShootXVelocity(Bloons target){
+  public double findShootXVelocity(Bloon target){
     double distance = getDistance(target);
     return (getXPosition()-target.getXPosition())/distance*getShootingSpeed();
   }
 
-  public double findShootYVelocity(Bloons target){
+  public double findShootYVelocity(Bloon target){
     double distance = getDistance(target);
     return (getYPosition()-target.getYPosition())/distance*getShootingSpeed();
   }
