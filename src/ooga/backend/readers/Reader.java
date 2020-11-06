@@ -1,4 +1,4 @@
-package ooga.backend;
+package ooga.backend.readers;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,7 +34,7 @@ public abstract class Reader {
     return fileData;
   }
 
-  public abstract List<List<String>> getLayoutFromFile(String fileName);
+  public abstract List<List<String>> getDataFromFile(String fileName);
 
 
 }

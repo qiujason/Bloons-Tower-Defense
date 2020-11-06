@@ -28,7 +28,6 @@ public class GameMenu {
 
   public GameMenu(VBox MenuPane, MenuInterface controller) {
     myMenuPane = MenuPane;
-
     playButton = makeButton(menuProperties.getString(PLAY_TEXT), event -> controller.play());
     pauseButton = makeButton(menuProperties.getString(PAUSE_TEXT), event -> controller.pause());
     speedButton = makeButton(menuProperties.getString(SPEEDUP_TEXT), event -> controller.speedUp());

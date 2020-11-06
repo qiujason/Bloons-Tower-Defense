@@ -6,9 +6,11 @@ import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -19,7 +21,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import ooga.backend.LayoutReader;
+import ooga.backend.readers.LayoutReader;
 import ooga.controller.MenuInterface;
 
 public class BloonsApplication extends Application {
@@ -30,7 +32,7 @@ public class BloonsApplication extends Application {
   public static final double GAME_WIDTH = 0.75 * WIDTH;
   public static final String LAYOUTS_PATH = "layouts/";
   public static final String LEVEL_FILE = LAYOUTS_PATH + "example_level1.csv";
-  public static final String TOWER_IMAGE = "/gamePhotos/monkey.jpg";
+  public static final String TOWER_IMAGE = "/gamePhotos/dartmonkey.png";
 //  public static final double BUTTON_VBOX_HEIGHT = HEIGHT;
 //  public static final double BUTTON_VBOX_WIDTH = WIDTH - GAME_WIDTH;
 //  public static final double STATS_HBOX_HEIGHT = HEIGHT - GAME_HEIGHT;
@@ -88,7 +90,7 @@ public class BloonsApplication extends Application {
     myLevelLayout = new Group();
     level.setLeft(myLevelLayout);
 
-    List<List<String>> layout = myLayoutReader.getLayoutFromFile(LEVEL_FILE);
+    List<List<String>> layout = myLayoutReader.getDataFromFile(LEVEL_FILE);
 
     int numberOfRows = layout.size();
     int numberOfColumns = layout.get(0).size();
@@ -146,5 +148,19 @@ public class BloonsApplication extends Application {
     menuPane.setSpacing(10); //magic num
     myMenu = new GameMenu(menuPane, menuController);
     level.setRight(menuPane);
+  }
+
+  /**
+   * This class makes a new alert message when there is an error.
+   * @param header
+   * @param message
+   */
+  public void makeAlert(String header, String message) {
+    Alert a = new Alert(Alert.AlertType.NONE);
+    ButtonType close = new ButtonType(":(", ButtonBar.ButtonData.CANCEL_CLOSE);
+    a.getButtonTypes().addAll(close);
+    a.setHeaderText(header);
+    a.setContentText(message);
+    a.show();
   }
 }
