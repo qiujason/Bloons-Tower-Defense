@@ -70,6 +70,7 @@ public class BloonsApplication extends Application {
     startButton.setId("Start");
     BorderPane.setAlignment(startButton, Pos.CENTER);
     menu.setBottom(startButton);
+    menu.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
   }
 
   private void loadLevel() {
@@ -137,7 +138,7 @@ public class BloonsApplication extends Application {
     return blockRectangle;
   }
 
-  // FIXME: handle exception
+  // TODO: handle exception/refactor
   private void putTower(Rectangle blockRectangle) {
     Color playableBlock = Color.valueOf(myBlockMappings.getString("0"));
     Color nonPlayableBlock = Color.valueOf(myBlockMappings.getString(">"));

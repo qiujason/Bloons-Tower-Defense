@@ -37,7 +37,7 @@ public class AnimationHandler {
     myStartingY = startingY;
     myBlockSize = blockSize;
 
-    myTestCircle = new Circle(myStartingX, myStartingY, myBlockSize / 2, Color.RED);
+    myTestCircle = new Circle(myStartingX, myStartingY, myBlockSize / 2.5, Color.RED);
     myTestCircle.setId("TestCircle");
     myLevelLayout.getChildren().add(myTestCircle);
   }
@@ -47,6 +47,7 @@ public class AnimationHandler {
     animateTowers();
   }
 
+  // TODO: Refactor
   private void animateBloons() {
     String currentBlockString = myLayout
         .get((int) ((myTestCircle.getCenterY() + myCircleSideY) / myBlockSize))
@@ -54,23 +55,23 @@ public class AnimationHandler {
     switch(currentBlockString) {
       case "*", ">" -> {
         myTestCircle.setCenterX(myTestCircle.getCenterX() + SPEED);
-        myCircleSideX = -myTestCircle.getRadius();
+        myCircleSideX = -myBlockSize/2;
         myCircleSideY = 0;
       }
       case "<" -> {
         myTestCircle.setCenterX(myTestCircle.getCenterX() - SPEED);
-        myCircleSideX = myTestCircle.getRadius();
+        myCircleSideX = myBlockSize/2;
         myCircleSideY = 0;
       }
       case "v" -> {
         myTestCircle.setCenterY(myTestCircle.getCenterY() + SPEED);
         myCircleSideX = 0;
-        myCircleSideY = -myTestCircle.getRadius();
+        myCircleSideY = -myBlockSize/2;
       }
       case "^" -> {
         myTestCircle.setCenterY(myTestCircle.getCenterY() - SPEED);
         myCircleSideX = 0;
-        myCircleSideY = myTestCircle.getRadius();
+        myCircleSideY = myBlockSize/2;
       }
       case "@" -> myLevelLayout.getChildren().remove(myTestCircle);
     }
