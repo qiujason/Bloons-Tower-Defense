@@ -62,6 +62,7 @@ public class BloonsApplicationTest extends DukeApplicationTest {
   public void testPutTowerFail() {
     clickOn(myStartButton);
     Rectangle myRectangle = lookup("#LayoutBlock01").query();
+    clickOn(myRectangle);
     assertEquals(Color.TAN, myRectangle.getFill());
   }
 
@@ -82,7 +83,7 @@ public class BloonsApplicationTest extends DukeApplicationTest {
     assertEquals(21, (int) myTestCircle.getCenterX());
     assertEquals(64, (int) myTestCircle.getCenterY());
     clickOn(myPlayButton);
-    assertEquals(27, (int) myTestCircle.getCenterX());
+    assertEquals(30, (int) myTestCircle.getCenterX());
     assertEquals(64, (int) myTestCircle.getCenterY());
   }
 
@@ -108,7 +109,7 @@ public class BloonsApplicationTest extends DukeApplicationTest {
     assertEquals(21, (int) myTestCircle.getCenterX());
     assertEquals(64, (int) myTestCircle.getCenterY());
     clickOn(myPlayButton);
-    assertEquals(29, (int) myTestCircle.getCenterX());
+    assertNotEquals(30, (int) myTestCircle.getCenterX());
     assertEquals(64, (int) myTestCircle.getCenterY());
   }
 
@@ -123,7 +124,19 @@ public class BloonsApplicationTest extends DukeApplicationTest {
     assertEquals(21, (int) myTestCircle.getCenterX());
     assertEquals(64, (int) myTestCircle.getCenterY());
     clickOn(myPlayButton);
-    assertEquals(25, (int) myTestCircle.getCenterX());
+    assertNotEquals(30, (int) myTestCircle.getCenterX());
     assertEquals(64, (int) myTestCircle.getCenterY());
+  }
+
+  @Test
+  public void testTurn(){
+    clickOn(myStartButton);
+    Button myPlayButton = lookup("#Play").query();
+    clickOn(myPlayButton);
+    Circle myTestCircle = lookup("#TestCircle").query();
+    while((int) myTestCircle.getCenterY() == 64){
+      assertEquals(64, (int) myTestCircle.getCenterY());
+    }
+    assertNotEquals(64, (int) myTestCircle.getCenterY());
   }
 }

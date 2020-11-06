@@ -32,15 +32,12 @@ public class BloonsApplication extends Application {
   public static final double GAME_HEIGHT = 0.875 * HEIGHT;
   public static final double GAME_WIDTH = 0.75 * WIDTH;
   public static final String LAYOUTS_PATH = "layouts/";
-  public static final String LEVEL_FILE = LAYOUTS_PATH + "example_level1.csv";
-  public static final String TOWER_IMAGE = "/gamePhotos/monkey.jpg";
-//  public static final double BUTTON_VBOX_HEIGHT = HEIGHT;
-//  public static final double BUTTON_VBOX_WIDTH = WIDTH - GAME_WIDTH;
-//  public static final double STATS_HBOX_HEIGHT = HEIGHT - GAME_HEIGHT;
-//  public static final double STATS_HBOX_WIDTH = GAME_WIDTH;
+  public static final String LEVEL_FILE = LAYOUTS_PATH + "level1.csv";
+  public static final String TOWER_IMAGE = "/gamePhotos/dartmonkey.png";
 
   private Stage myStage;
   private Scene myScene;
+  private List<List<String>> myLayout;
   private LayoutReader myLayoutReader;
   private Group myLevelLayout;
   private GameMenu myMenu;
@@ -80,7 +77,7 @@ public class BloonsApplication extends Application {
     myLayoutReader = new LayoutReader();
 //    visualizeGameScreen(level);
     visualizeLayout(level);
-    myAnimationHandler = new AnimationHandler(myLevelLayout, myStartingX, myStartingY, myBlockSize);
+    myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myStartingX, myStartingY, myBlockSize);
     gameMenuController = new GameMenuController(myAnimationHandler.getAnimation());
     visualizePlayerGUI(level);
     level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
@@ -98,10 +95,10 @@ public class BloonsApplication extends Application {
     myLevelLayout = new Group();
     level.setLeft(myLevelLayout);
 
-    List<List<String>> layout = myLayoutReader.getDataFromFile(LEVEL_FILE);
+    myLayout = myLayoutReader.getDataFromFile(LEVEL_FILE);
 
-    int numberOfRows = layout.size();
-    int numberOfColumns = layout.get(0).size();
+    int numberOfRows = myLayout.size();
+    int numberOfColumns = myLayout.get(0).size();
     double blockWidth = GAME_WIDTH / numberOfColumns;
     double blockHeight = GAME_HEIGHT / numberOfRows;
     myBlockSize = Math.min(blockWidth, blockHeight);
@@ -111,7 +108,7 @@ public class BloonsApplication extends Application {
     int blockNumberX = 0;
     int blockNumberY = 0;
 
-    for (List<String> row : layout) {
+    for (List<String> row : myLayout) {
       for (String block : row) {
         Rectangle newBlock = createBlock(block, currentBlockX, currentBlockY, myBlockSize);
         newBlock.setId("LayoutBlock" + blockNumberX + blockNumberY);
@@ -158,6 +155,7 @@ public class BloonsApplication extends Application {
       blockRectangle.setFill(playableBlock);
     }
     else {
+      myAnimationHandler.getAnimation().pause();
       makeAlert("Invalid Tower Space", "You cannot place a tower there :(");
     }
   }
