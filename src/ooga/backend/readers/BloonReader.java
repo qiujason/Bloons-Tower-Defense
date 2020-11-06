@@ -3,7 +3,7 @@ package ooga.backend.readers;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import ooga.backend.bloons.Bloons;
+import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.BloonsType;
 import ooga.backend.layout.Layout;
@@ -30,21 +30,21 @@ public class BloonReader extends Reader{
         currentCollection = new BloonsCollection();
       }
       for (String bloon : row){
-        Bloons bloons = createBloon(bloon, layout);
+        Bloon bloons = createBloon(bloon, layout);
         currentCollection.add(bloons);
       }
     }
     return listOfBloons;
   }
 
-  private Bloons createBloon(String bloon, Layout layout) {
+  private Bloon createBloon(String bloon, Layout layout) {
     int bloonLives = Integer.parseInt(bloon);
     BloonsType bloonType = BloonsType.values()[bloonLives];
     double startRow = layout.getStartBlockCoordinates()[0];
     double startCol = layout.getStartBlockCoordinates()[1];
     double dx = layout.getBlock((int)startRow, (int)startCol).getDx();
     double dy = layout.getBlock((int)startRow, (int)startCol).getDy();
-    return new Bloons(bloonType, startRow, startCol, dx, dy);
+    return new Bloon(bloonType, startRow, startCol, dx, dy);
   }
 
 }

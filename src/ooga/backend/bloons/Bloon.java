@@ -4,7 +4,7 @@ package ooga.backend.bloons;
 import ooga.backend.API.BloonsAPI;
 import ooga.backend.API.GamePiece;
 
-public class Bloons implements BloonsAPI, GamePiece {
+public class Bloon implements BloonsAPI, GamePiece {
 
   private BloonsType bloonsType;
   private double xPosition;
@@ -14,7 +14,7 @@ public class Bloons implements BloonsAPI, GamePiece {
   private double distanceTraveled;
   private double relativeSpeed;
 
-  public Bloons(BloonsType bloonsType, double xPosition, double yPosition, double xVelocity, double yVelocity) {
+  public Bloon(BloonsType bloonsType, double xPosition, double yPosition, double xVelocity, double yVelocity) {
     this.bloonsType = bloonsType;
     this.xPosition = xPosition;
     this.yPosition = yPosition;

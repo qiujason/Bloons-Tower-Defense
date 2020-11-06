@@ -2,7 +2,7 @@ package ooga.backend.towers;
 
 import java.util.List;
 import ooga.backend.API.GamePiece;
-import ooga.backend.bloons.Bloons;
+import ooga.backend.bloons.Bloon;
 import ooga.backend.darts.Dart;
 
 public abstract class Tower implements GamePiece {
@@ -50,8 +50,8 @@ public abstract class Tower implements GamePiece {
     return shootingSpeed;
   }
 
-  public boolean checkBalloonInRange(List<Bloons> bloonsList){
-    for(Bloons bloon : bloonsList){
+  public boolean checkBalloonInRange(List<Bloon> bloonsList){
+    for(Bloon bloon : bloonsList){
       double distance = getDistance(bloon);
       if(distance <= radius){
         return true;
@@ -60,9 +60,9 @@ public abstract class Tower implements GamePiece {
     return false;
   }
 
-  public abstract List<Dart> shoot(List<Bloons> bloonsList);
+  public abstract List<Dart> shoot(List<Bloon> bloonsList);
 
-  public double getDistance(Bloons target){
+  public double getDistance(Bloon target){
     return Math.sqrt(Math.pow(xPosition-target.getXPosition(), 2) + Math.pow(yPosition-target.getYPosition(), 2));
   }
 
