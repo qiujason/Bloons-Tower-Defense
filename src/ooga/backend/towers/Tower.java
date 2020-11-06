@@ -2,10 +2,11 @@ package ooga.backend.towers;
 
 import java.util.List;
 import ooga.backend.API.GamePiece;
+import ooga.backend.API.TowersAPI;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.darts.Dart;
 
-public abstract class Tower implements GamePiece {
+public abstract class Tower implements GamePiece, TowersAPI {
 
   private static final double defaultShootingSpeed = 20.0;
 
