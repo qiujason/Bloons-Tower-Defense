@@ -14,7 +14,6 @@ public class GameMenuController implements GameMenuInterface {
 
   private double currentRate;
 
-
   public GameMenuController(Timeline timeline){
     myTimeline = timeline;
     currentRate = DEFAULT_RATE;
