@@ -2,8 +2,9 @@ package ooga.backend.layout;
 
 import java.util.ArrayList;
 import java.util.List;
+import ooga.backend.API.LayoutAPI;
 
-public class Layout {
+public class Layout implements LayoutAPI {
 
   int width;
   int height;
@@ -27,5 +28,19 @@ public class Layout {
     return layoutBlocks;
   }
 
+  @Override
+  public LayoutBlock getBlock(int row, int col){
+    return layoutConfig.get(row).get(col);
+  }
+
+  @Override
+  public double getBlockDx(int row, int col) {
+    return getBlock(row, col).getDx();
+  }
+
+  @Override
+  public double getBlockDy(int row, int col) {
+    return getBlock(row, col).getDy();
+  }
 
 }
