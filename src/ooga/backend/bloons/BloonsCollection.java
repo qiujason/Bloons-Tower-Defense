@@ -8,7 +8,7 @@ import ooga.backend.collections.Iterator;
 
 public class BloonsCollection implements GamePieceCollection {
 
-  List<Bloons> bloons;
+  List<Bloon> bloons;
 
   public BloonsCollection() {
     bloons = new ArrayList<>();
@@ -16,8 +16,8 @@ public class BloonsCollection implements GamePieceCollection {
 
   @Override
   public boolean add(GamePiece bloon) {
-    if (bloon instanceof Bloons) {
-      bloons.add((Bloons)bloon);
+    if (bloon instanceof Bloon) {
+      bloons.add((Bloon)bloon);
       sort();
       return true;
     }
@@ -26,7 +26,7 @@ public class BloonsCollection implements GamePieceCollection {
 
   @Override
   public boolean remove(GamePiece bloon) {
-    if (bloon instanceof Bloons) {
+    if (bloon instanceof Bloon) {
       return bloons.remove(bloon);
     }
     return false;
@@ -34,7 +34,7 @@ public class BloonsCollection implements GamePieceCollection {
 
   @Override
   public void updateAll() {
-    for (Bloons bloon : bloons) {
+    for (Bloon bloon : bloons) {
       bloon.update();
     }
     sort();
@@ -51,7 +51,7 @@ public class BloonsCollection implements GamePieceCollection {
   }
 
   public void sort() {
-    bloons.sort((a,b) -> b.getDistanceTraveled() - a.getDistanceTraveled());
+    bloons.sort((a,b) -> (int)(b.getDistanceTraveled()*10) - (int)(a.getDistanceTraveled() * 10));
   }
 
 }
