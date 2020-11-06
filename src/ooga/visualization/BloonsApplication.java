@@ -39,6 +39,7 @@ public class BloonsApplication extends Application {
   private Stage myStage;
   private Scene myScene;
   private LayoutReader myLayoutReader;
+  private Group myLevelLayout;
   private GameMenu myMenu;
   private MenuInterface menuController;
   private AnimationHandler myAnimationHandler;
@@ -84,8 +85,8 @@ public class BloonsApplication extends Application {
   }
 
   private void visualizeLayout(BorderPane level) {
-    Group layoutDisplay = new Group();
-    level.setLeft(layoutDisplay);
+    myLevelLayout = new Group();
+    level.setLeft(myLevelLayout);
 
     List<List<String>> layout = myLayoutReader.getLayoutFromFile(LEVEL_FILE);
 
@@ -101,7 +102,7 @@ public class BloonsApplication extends Application {
     for (List<String> row : layout) {
       for (String block : row) {
         Rectangle newBlock = createBlock(block, currentBlockX, currentBlockY, blockSize);
-        layoutDisplay.getChildren().add(newBlock);
+        myLevelLayout.getChildren().add(newBlock);
         currentBlockX += blockSize;
       }
       currentBlockX = 0;
