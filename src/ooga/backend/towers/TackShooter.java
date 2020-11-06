@@ -10,8 +10,7 @@ import ooga.backend.darts.factory.SingleDartFactory;
 public class TackShooter extends SpreadShotTower{
 
   private static final int numberOfShots = 8;
-  private static final int[] dartXVelocity = {};
-  private static final int[] dartYVelocity = {};
+  private static final int degreeIncrementPerShot = 45;
 
   public TackShooter(int myXPosition, int myYPosition, int myRadius) {
     super(myXPosition, myYPosition, myRadius);
@@ -23,12 +22,10 @@ public class TackShooter extends SpreadShotTower{
     if(checkBalloonInRange(bloonsList)){
       for(int i = 0; i < numberOfShots; i++){
         DartFactory dartFactory = new SingleDartFactory();
-        //shot.add(dartFactory.createDart(getXPosition(), getYPosition(), dartXVelocity[i], dartYVelocity[i]));
+        double dartXVelocity = Math.cos(i*degreeIncrementPerShot);
+        double dartYVelocity = Math.sin(i*degreeIncrementPerShot);;
+        shot.add(dartFactory.createDart(getXPosition(), getYPosition(), dartXVelocity, dartYVelocity));
       }
-      //DartFactory dartFactory = new SingleDartFactory();
-      //double dartXVelocity = findShootXVelocity(target);
-      //double dartYVelocity = findShootYVelocity(target);
-      //shot.add(dartFactory.createDart(getXPosition(), getYPosition(), dartXVelocity, dartYVelocity));
     }
     return shot;
   }
