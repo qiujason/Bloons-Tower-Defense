@@ -1,15 +1,17 @@
 package ooga.backend.bloons;
 
-import ooga.backend.API.Hittable;
-import ooga.backend.API.Movable;
 
-public abstract class Bloons implements Movable, Hittable {
+import ooga.backend.API.BloonsAPI;
+import ooga.backend.API.GamePiece;
+
+public class Bloons implements BloonsAPI, GamePiece {
 
   private int lives;
   private int xPosition;
   private int yPosition;
   private int xVelocity;
   private int yVelocity;
+  private int distanceTraveled;
 
   public Bloons(int lives, int xPosition, int yPosition, int xVelocity, int yVelocity) {
     this.lives = lives;
@@ -17,6 +19,7 @@ public abstract class Bloons implements Movable, Hittable {
     this.yPosition = yPosition;
     this.xVelocity = xVelocity;
     this.yVelocity = yVelocity;
+    distanceTraveled = 0;
   }
 
   @Override
@@ -27,17 +30,17 @@ public abstract class Bloons implements Movable, Hittable {
     }
   }
 
-  public abstract void handleDeath();
+  public void handleDeath() {
+
+  }
 
   @Override
   public void updateLivesLeft(int update) {
     lives = update;
   }
 
-  @Override
-  public void updatePosition() {
-    xPosition += xVelocity;
-    yPosition += yVelocity;
+  public int getLives() {
+    return lives;
   }
 
   @Override
@@ -50,10 +53,6 @@ public abstract class Bloons implements Movable, Hittable {
     yVelocity = newYVelocity;
   }
 
-  public int getLives() {
-    return lives;
-  }
-
   @Override
   public int getXPosition() {
     return xPosition;
@@ -62,6 +61,35 @@ public abstract class Bloons implements Movable, Hittable {
   @Override
   public int getYPosition() {
     return yPosition;
+  }
+
+  @Override
+  public void update() {
+    updatePosition();
+  }
+
+  @Override
+  public void setXPosition(int updateXPos) {
+    xPosition = updateXPos;
+  }
+
+  @Override
+  public void setYPosition(int updateYPos) {
+    yPosition = updateYPos;
+  }
+
+  public int getDistanceTraveled() {
+    return distanceTraveled;
+  }
+
+  private void updateDistanceTraveled() {
+    distanceTraveled += Math.abs(xVelocity) + Math.abs(yVelocity);
+  }
+
+  private void updatePosition() {
+    xPosition += xVelocity;
+    yPosition += yVelocity;
+    updateDistanceTraveled();
   }
 
 }

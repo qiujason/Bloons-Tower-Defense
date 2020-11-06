@@ -1,6 +1,6 @@
 package ooga.backend.API;
 
-public interface Hittable {
+public interface BloonsAPI {
 
   /**
    * Performs the reaction of the object being shot at
@@ -12,5 +12,15 @@ public interface Hittable {
    * @param update the number of lives left
    */
   void updateLivesLeft(int update);
+
+  /** Update the x velocity
+   * @param newXVelocity to update the x velocity
+   */
+  void setXVelocity(int newXVelocity);
+
+  /** Update the y velocity
+   * @param newYVelocity to update the y velocity
+   */
+  void setYVelocity(int newYVelocity);
 
 }
