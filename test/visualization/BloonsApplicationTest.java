@@ -58,4 +58,11 @@ public class BloonsApplicationTest extends DukeApplicationTest {
     assertEquals(Color.GREEN, myRectangle.getFill());
   }
 
+  @Test
+  public void testPutTowerFail() {
+    clickOn(myStartButton);
+    Rectangle myRectangle = lookup("#LayoutBlock01").query();
+    assertEquals(Color.TAN, myRectangle.getFill());
+  }
+
 }

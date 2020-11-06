@@ -6,7 +6,6 @@ public class BloonReader extends Reader{
 
   @Override
   public List<List<String>> getDataFromFile(String fileName) {
-
-
+    return null;
   }
 }

@@ -31,7 +31,7 @@ public class BloonsApplication extends Application {
   public static final double GAME_HEIGHT = 0.875 * HEIGHT;
   public static final double GAME_WIDTH = 0.75 * WIDTH;
   public static final String LAYOUTS_PATH = "layouts/";
-  public static final String LEVEL_FILE = LAYOUTS_PATH + "example_level1.csv";
+  public static final String LEVEL_FILE = LAYOUTS_PATH + "level1.csv";
   public static final String TOWER_IMAGE = "/gamePhotos/dartmonkey.png";
 //  public static final double BUTTON_VBOX_HEIGHT = HEIGHT;
 //  public static final double BUTTON_VBOX_WIDTH = WIDTH - GAME_WIDTH;
@@ -45,6 +45,9 @@ public class BloonsApplication extends Application {
   private GameMenu myMenu;
   private MenuInterface menuController;
   private AnimationHandler myAnimationHandler;
+  private double myStartingX;
+  private double myStartingY;
+  private double myBlockSize;
   private final ResourceBundle myBlockMappings = ResourceBundle
       .getBundle(getClass().getPackageName() + ".resources.blockMappings");
 
@@ -75,7 +78,7 @@ public class BloonsApplication extends Application {
     BorderPane level = new BorderPane();
     myLayoutReader = new LayoutReader();
     visualizeGameScreen(level);
-    myAnimationHandler = new AnimationHandler();
+    myAnimationHandler = new AnimationHandler(myLevelLayout, myStartingX, myStartingY, myBlockSize);
     level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
     myScene = new Scene(level, WIDTH, HEIGHT);
     myStage.setScene(myScene);
@@ -86,6 +89,7 @@ public class BloonsApplication extends Application {
     visualizePlayerGUI(level);
   }
 
+  // TODO: Refactor
   private void visualizeLayout(BorderPane level) {
     myLevelLayout = new Group();
     level.setLeft(myLevelLayout);
@@ -96,19 +100,25 @@ public class BloonsApplication extends Application {
     int numberOfColumns = layout.get(0).size();
     double blockWidth = GAME_WIDTH / numberOfColumns;
     double blockHeight = GAME_HEIGHT / numberOfRows;
-    double blockSize = Math.min(blockWidth, blockHeight);
+    myBlockSize = Math.min(blockWidth, blockHeight);
 
     double currentBlockX = 0;
     double currentBlockY = 0;
+    int blockNumberX = 0;
+    int blockNumberY = 0;
 
     for (List<String> row : layout) {
       for (String block : row) {
-        Rectangle newBlock = createBlock(block, currentBlockX, currentBlockY, blockSize);
+        Rectangle newBlock = createBlock(block, currentBlockX, currentBlockY, myBlockSize);
+        newBlock.setId("LayoutBlock" + blockNumberX + blockNumberY);
         myLevelLayout.getChildren().add(newBlock);
-        currentBlockX += blockSize;
+        currentBlockX += myBlockSize;
+        blockNumberX++;
       }
       currentBlockX = 0;
-      currentBlockY += blockSize;
+      blockNumberX = 0;
+      currentBlockY += myBlockSize;
+      blockNumberY++;
     }
   }
 
@@ -119,8 +129,10 @@ public class BloonsApplication extends Application {
     Color blockColor = Color.valueOf(blockColorAsString);
     blockRectangle.setFill(blockColor);
     blockRectangle.setOnMouseClicked(e -> putTower(blockRectangle));
-    blockRectangle.setId("LayoutBlock" + (int) currentBlockX
-        + (int) currentBlockY); // Should find better way to setId
+    if(block.charAt(0) == '*') {
+      myStartingX = currentBlockX + blockSize / 2;
+      myStartingY = currentBlockY + blockSize / 2;
+    }
     return blockRectangle;
   }
 
@@ -140,6 +152,9 @@ public class BloonsApplication extends Application {
       blockRectangle.setFill(towerImagePattern);
     } else if (!blockRectangle.getFill().equals(nonPlayableBlock)) {
       blockRectangle.setFill(playableBlock);
+    }
+    else {
+      makeAlert("Invalid Tower Space", "You cannot place a tower there :(");
     }
   }
 
