@@ -109,7 +109,7 @@ public class BloonsApplicationTest extends DukeApplicationTest {
     assertEquals(21, (int) myTestCircle.getCenterX());
     assertEquals(64, (int) myTestCircle.getCenterY());
     clickOn(myPlayButton);
-    assertNotEquals(30, (int) myTestCircle.getCenterX());
+    assertNotEquals(31, (int) myTestCircle.getCenterX());
     assertEquals(64, (int) myTestCircle.getCenterY());
   }
 
