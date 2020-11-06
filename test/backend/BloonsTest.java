@@ -177,22 +177,22 @@ public class BloonsTest {
     assertEquals(fastBloon, bloonsIterator.getNext());
   }
 
-  @Test
-  void testSortCollection() {
-    BloonsCollection list = new BloonsCollection();
-    Iterator bloonsIterator = list.createIterator();
-    Bloons slowBloon = new Bloons(0, 0, 0, 10, 0);
-    assertTrue(list.add(slowBloon));
-    slowBloon.update();
-
-    Bloons fastBloon = new Bloons(0, 0, 0, 16, 0);
-    assertTrue(list.add(fastBloon));
-    for (int i = 0; i < 2; i++) {
-      bloonsIterator.updateAll();
-      assertEquals(slowBloon, bloonsIterator.getNext());
-      list.sort();
-      bloonsIterator.reset();
-    }
-    assertEquals(fastBloon, bloonsIterator.getNext());
-  }
+//  @Test
+//  void testSortCollection() {
+//    BloonsCollection list = new BloonsCollection();
+//    Iterator bloonsIterator = list.createIterator();
+//    Bloons slowBloon = new Bloons(0, 0, 0, 10, 0);
+//    assertTrue(list.add(slowBloon));
+//    slowBloon.update();
+//
+//    Bloons fastBloon = new Bloons(0, 0, 0, 16, 0);
+//    assertTrue(list.add(fastBloon));
+//    for (int i = 0; i < 2; i++) {
+//      bloonsIterator.updateAll();
+//      assertEquals(slowBloon, bloonsIterator.getNext());
+//      list.sort();
+//      bloonsIterator.reset();
+//    }
+//    assertEquals(fastBloon, bloonsIterator.getNext());
+//  }
 }

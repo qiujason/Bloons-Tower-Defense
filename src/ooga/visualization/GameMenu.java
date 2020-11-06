@@ -26,7 +26,7 @@ public class GameMenu {
   private static final String SPEEDUP_TEXT = "SpeedUpButton";
   private static final String SLOWDOWN_TEXT = "SlowDownButton";
 
-  private static Double BUTTON_WIDTH = 120.0;
+  private static Double BUTTON_WIDTH = 100.0;
 
   public GameMenu(VBox MenuPane, GameMenuInterface controller) {
     myMenuPane = MenuPane;
@@ -55,7 +55,7 @@ public class GameMenu {
     button.setText(name);
     button.setOnAction(handler);
     button.setId(name);
-    button.setMaxWidth(BUTTON_WIDTH);
+    button.setMinWidth(BUTTON_WIDTH);
     return button;
   }
 }
