@@ -1,44 +1,57 @@
 package ooga.backend.towers;
 
 import java.util.List;
-import ooga.backend.API.Placeable;
-import ooga.backend.bloons.Bloons;
+import ooga.backend.API.GamePiece;
+import ooga.backend.bloons.Bloon;
 import ooga.backend.darts.Dart;
 
-public abstract class Tower implements Placeable {
+public abstract class Tower implements GamePiece {
 
   private static final double defaultShootingSpeed = 20.0;
 
-  private int xPosition;
-  private int yPosition;
+  private double xPosition;
+  private double yPosition;
   private int radius;
   private double shootingSpeed;
 
-  public Tower(int myXPosition, int myYPosition, int myRadius){
+  public Tower(double myXPosition, double myYPosition, int myRadius){
     setXPosition(myXPosition);
     setYPosition(myYPosition);
     radius = myRadius;
     shootingSpeed = defaultShootingSpeed;
   }
 
-  public void setXPosition(int updateXPos){
+  @Override
+  public void setXPosition(double updateXPos){
     xPosition = updateXPos;
   }
-  public void setYPosition(int updateYPos){
+
+  @Override
+  public void setYPosition(double updateYPos){
     yPosition = updateYPos;
   }
-  public int getXPosition(){
+
+  @Override
+  public double getXPosition(){
     return xPosition;
   }
-  public int getYPosition(){
+
+  @Override
+  public double getYPosition(){
     return yPosition;
   }
+
+  @Override
+  public void update() {
+
+  }
+
   public double getShootingSpeed(){
     return shootingSpeed;
   }
 
-  public boolean checkBalloonInRange(List<Bloons> bloonsList){
-    for(Bloons bloon : bloonsList){
+  public boolean checkBalloonInRange(List<Bloon> bloonsList){
+    for(Bloon bloon : bloonsList){
       double distance = getDistance(bloon);
       if(distance <= radius){
         return true;
@@ -47,9 +60,9 @@ public abstract class Tower implements Placeable {
     return false;
   }
 
-  public abstract List<Dart> shoot(List<Bloons> bloonsList);
+  public abstract List<Dart> shoot(List<Bloon> bloonsList);
 
-  public double getDistance(Bloons target){
+  public double getDistance(Bloon target){
     return Math.sqrt(Math.pow(xPosition-target.getXPosition(), 2) + Math.pow(yPosition-target.getYPosition(), 2));
   }
 
