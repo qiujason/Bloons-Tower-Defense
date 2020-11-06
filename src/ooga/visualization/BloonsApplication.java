@@ -6,7 +6,6 @@ import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -20,7 +19,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ooga.backend.LayoutReader;
-import ooga.controller.MenuInterface;
+import ooga.controller.GameMenuInterface;
 
 public class BloonsApplication extends Application {
 
@@ -40,7 +39,7 @@ public class BloonsApplication extends Application {
   private Scene myScene;
   private LayoutReader myLayoutReader;
   private GameMenu myMenu;
-  private MenuInterface menuController;
+  private GameMenuInterface menuController;
   private AnimationHandler myAnimationHandler;
   private final ResourceBundle myBlockMappings = ResourceBundle
       .getBundle(getClass().getPackageName() + ".resources.blockMappings");

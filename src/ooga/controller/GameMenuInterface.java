@@ -1,6 +1,6 @@
 package ooga.controller;
 
-public interface MenuInterface {
+public interface GameMenuInterface {
 
   void play();
 

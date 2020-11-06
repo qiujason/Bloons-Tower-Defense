@@ -4,7 +4,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.layout.VBox;
-import ooga.controller.MenuInterface;
+import ooga.controller.GameMenuInterface;
 import javafx.scene.control.Button;
 
 public class GameMenu {
@@ -27,7 +27,7 @@ public class GameMenu {
 
   private static Double BUTTON_WIDTH = 120.0;
 
-  public GameMenu(VBox MenuPane, MenuInterface controller) {
+  public GameMenu(VBox MenuPane, GameMenuInterface controller) {
     myMenuPane = MenuPane;
 
     playButton = makeButton(menuProperties.getString(PLAY_TEXT), event -> controller.play());
