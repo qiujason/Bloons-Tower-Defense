@@ -40,8 +40,21 @@ visualization and relevant GUI buttons.  Didn't quite get to physics.
 * describe what worked regarding your teamwork and communication, what did not, and something specific
 that is planned for improvement next Sprint
 
+We adhered pretty closely to our design plan and used many APIs, making it easy for us to interface
+with each other's classes.  We met multiple times throughout the week and communicated well about major
+design decisions.
 
+One thing that didn't work as well was waiting on each other's code, since we did a lot of integration to get
+started this sprint.  Going forward, we can communicate deadlines better and if someone is holding someone
+else up, make that piece of code/issue a priority. 
 
 * what features are planned to be completed during the next Sprint (taking into account what was, or
 was not, done this Sprint), who will work on each feature, and any concerns that may complicate the plan
 
+More physics, shooting mechanics, and game rules/economy are some of the major features to be implemented.
+
+Franklin: physics, shooting mechanics  
+Jason: physics, shooting mechanics  
+Annshine: implement economy  
+Jack: front-end animations (shooting, turning monkeys)  
+Eddie: rules of the game, display, click tower to show range
