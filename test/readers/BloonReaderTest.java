@@ -26,7 +26,7 @@ public class BloonReaderTest {
   }
 
   void generateBloonsCollectionMapTest(){
-
+    Reader reader = new BloonReader();
 
   }
 }

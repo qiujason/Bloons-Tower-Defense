@@ -18,7 +18,7 @@ public class LayoutBlock {
     setDxDy(blockType);
   }
 
-  private void initializeVelocityMap() {
+  private void initializeVelocityMap() { // pathing characters in properties file
     velocityMap.put(">", new double[]{1,0});
     velocityMap.put("<", new double[]{-1,0});
     velocityMap.put("v", new double[]{0,1});

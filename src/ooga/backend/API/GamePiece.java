@@ -3,12 +3,14 @@ package ooga.backend.API;
 
 public interface GamePiece {
 
-  void setXPosition(int updateXPos);
+  void setXPosition(double updateXPos);
 
-  void setYPosition(int updateYPos);
+  void setYPosition(double updateYPos);
 
-  int getXPosition();
+  double getXPosition();
 
-  int getYPosition();
+  double getYPosition();
+
+  void update();
 
 }

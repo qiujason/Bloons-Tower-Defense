@@ -6,86 +6,71 @@ import ooga.backend.API.GamePiece;
 
 public class Bloons implements BloonsAPI, GamePiece {
 
-  private int lives;
+  private BloonsType bloonsType;
   private double xPosition;
   private double yPosition;
   private double xVelocity;
   private double yVelocity;
   private double distanceTraveled;
+  private double relativeSpeed;
 
   public Bloons(BloonsType bloonsType, double xPosition, double yPosition, double xVelocity, double yVelocity) {
-    this.lives = lives;
+    this.bloonsType = bloonsType;
     this.xPosition = xPosition;
     this.yPosition = yPosition;
     this.xVelocity = xVelocity;
     this.yVelocity = yVelocity;
     distanceTraveled = 0;
+    relativeSpeed = bloonsType.getRelativeSpeed();
   }
 
   @Override
-  public void decrementLives(int hits) {
-    lives -= hits;
-    if (lives <= 0) {
-      handleDeath();
-    }
-  }
-
-  public void handleDeath() {
-
-  }
-
-  @Override
-  public void updateLivesLeft(int update) {
-    lives = update;
-  }
-
-  public int getLives() {
-    return lives;
-  }
-
-  @Override
-  public void updatePosition() {
-    xPosition += xVelocity;
-    yPosition += yVelocity;
-    updateDistanceTraveled();
-  }
-
-  @Override
-  public void setXVelocity(int newXVelocity) {
+  public void setXVelocity(double newXVelocity) {
     xVelocity = newXVelocity;
   }
 
   @Override
-  public void setYVelocity(int newYVelocity) {
+  public void setYVelocity(double newYVelocity) {
     yVelocity = newYVelocity;
   }
 
   @Override
-  public int getXPosition() {
+  public double getXPosition() {
     return xPosition;
   }
 
   @Override
-  public int getYPosition() {
+  public double getYPosition() {
     return yPosition;
   }
 
   @Override
-  public void setXPosition(int updateXPos) {
+  public void update() {
+    updatePosition();
+  }
+
+  @Override
+  public void setXPosition(double updateXPos) {
     xPosition = updateXPos;
   }
 
   @Override
-  public void setYPosition(int updateYPos) {
+  public void setYPosition(double updateYPos) {
     yPosition = updateYPos;
   }
 
-  public int getDistanceTraveled() {
+  public double getDistanceTraveled() {
     return distanceTraveled;
   }
 
   private void updateDistanceTraveled() {
     distanceTraveled += Math.abs(xVelocity) + Math.abs(yVelocity);
+  }
+
+  private void updatePosition() {
+    xPosition += xVelocity;
+    yPosition += yVelocity;
+    updateDistanceTraveled();
   }
 
 }

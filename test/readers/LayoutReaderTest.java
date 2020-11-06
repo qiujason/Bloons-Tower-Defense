@@ -41,6 +41,6 @@ class LayoutReaderTest {
   @Test
   void generateLayoutTest(){
     Layout layout = layoutReader.generateLayout("tests/test_layouts/straightRight.csv");
-    assertEquals(layout.getStartBlockCoordinates(), new int[]{0,1});
+    assertEquals(Arrays.toString(layout.getStartBlockCoordinates()), Arrays.toString(new int[]{1,0}));
   }
 }

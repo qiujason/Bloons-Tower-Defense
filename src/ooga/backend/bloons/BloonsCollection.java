@@ -33,12 +33,25 @@ public class BloonsCollection implements GamePieceCollection {
   }
 
   @Override
+  public void updateAll() {
+    for (Bloons bloon : bloons) {
+      bloon.update();
+    }
+    sort();
+  }
+
+  @Override
+  public void clear() {
+    bloons = new ArrayList<>();
+  }
+
+  @Override
   public Iterator createIterator() {
     return new BloonsIterator(bloons);
   }
 
   public void sort() {
-    bloons.sort((a,b) -> b.getDistanceTraveled() - a.getDistanceTraveled());
+    bloons.sort((a,b) -> (int)(b.getDistanceTraveled()*10) - (int)(a.getDistanceTraveled() * 10));
   }
 
 }

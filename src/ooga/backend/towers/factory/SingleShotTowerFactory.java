@@ -1,4 +1,4 @@
-package ooga.backend.factory;
+package ooga.backend.towers.factory;
 
 import java.lang.reflect.Constructor;
 import ooga.backend.ConfigurationException;
