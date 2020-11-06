@@ -1,24 +1,25 @@
 package ooga.backend.bloons;
 
 public enum BloonsType {
-  DEAD, RED(1, 1, DEAD), BLUE(1, 2, RED), GREEN(1, 3, BLUE),
-  YELLOW(1, 4, GREEN), PINK(1, 5, YELLOW), BLACK(2, 11, PINK),
-  WHITE(2, 11, PINK);
 
-  private final int numBloonsInside;
+  DEAD(0), RED(1, DEAD), BLUE(2, RED), GREEN(3, BLUE),
+  YELLOW(4, GREEN), PINK(5, YELLOW), BLACK(11, PINK, PINK),
+  WHITE( 11, PINK, PINK), ZEBRA(23, BLACK, WHITE), RAINBOW(47, ZEBRA, ZEBRA);
+
   private final int redBloonEquivalent;
-  private final BloonsType nextBloon;
+  private final BloonsType[] nextBloons;
 
-  BloonsType() {
-    numBloonsInside = 0;
-    redBloonEquivalent = 0;
-    nextBloon = null;
+  BloonsType(int RBE, BloonsType... bloons) {
+    redBloonEquivalent = RBE;
+    nextBloons = bloons;
   }
 
-  BloonsType(int num, int RBE, BloonsType bloon) {
-    numBloonsInside = num;
-    redBloonEquivalent = RBE;
-    nextBloon = bloon;
+  int getRBE() {
+    return redBloonEquivalent;
+  }
+
+  BloonsType[] getNextBloons() {
+    return nextBloons;
   }
 
 }
