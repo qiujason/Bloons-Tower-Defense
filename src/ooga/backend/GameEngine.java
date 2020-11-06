@@ -1,25 +1,47 @@
 package ooga.backend;
 
-import java.util.ArrayList;
-import java.util.List;
-import ooga.backend.towers.Tower;
+import ooga.backend.API.GameEngineAPI;
+import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.collections.Iterator;
+import ooga.backend.towers.TowersCollection;
 
-public class GameEngine {
+public class GameEngine implements GameEngineAPI {
 
-//  List<BloonsAPI> bloons;
-  List<Tower> towers;
+  private final BloonsCollection bloons;
+  private final Iterator bloonsIterator;
+  private final TowersCollection towers;
+  private final Iterator towersIterator;
+
+  private int wave;
 
   public GameEngine() {
-//    bloons = new ArrayList<>();
-    towers = new ArrayList<>();
+    bloons = new BloonsCollection();
+    bloonsIterator = bloons.createIterator();
+    towers = new TowersCollection();
+    towersIterator = towers.createIterator();
+    wave = 1;
   }
 
+  @Override
   public void moveBloons() {
-
+    bloons.updateAll();
   }
 
+  @Override
   public void shootBloons() {
+    towers.updateAll();
+  }
 
+  @Override
+  public void nextWave() {
+    wave++;
+  }
+
+  @Override
+  public void resetGame() {
+    wave = 1;
+    bloons.clear();
+    towers.clear();
   }
 
 }

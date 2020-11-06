@@ -8,6 +8,10 @@ public interface GamePieceCollection {
 
   boolean remove(GamePiece gamePiece);
 
+  void updateAll();
+
+  void clear();
+
   Iterator createIterator();
 
 }

@@ -44,13 +44,6 @@ public class Bloons implements BloonsAPI, GamePiece {
   }
 
   @Override
-  public void updatePosition() {
-    xPosition += xVelocity;
-    yPosition += yVelocity;
-    updateDistanceTraveled();
-  }
-
-  @Override
   public void setXVelocity(int newXVelocity) {
     xVelocity = newXVelocity;
   }
@@ -71,6 +64,11 @@ public class Bloons implements BloonsAPI, GamePiece {
   }
 
   @Override
+  public void update() {
+    updatePosition();
+  }
+
+  @Override
   public void setXPosition(int updateXPos) {
     xPosition = updateXPos;
   }
@@ -86,6 +84,12 @@ public class Bloons implements BloonsAPI, GamePiece {
 
   private void updateDistanceTraveled() {
     distanceTraveled += Math.abs(xVelocity) + Math.abs(yVelocity);
+  }
+
+  private void updatePosition() {
+    xPosition += xVelocity;
+    yPosition += yVelocity;
+    updateDistanceTraveled();
   }
 
 }

@@ -27,7 +27,7 @@ public class BloonsTest {
   @Test
   void testBloonsPositionUpdate() {
     Bloons bloon = new BasicBloonsFactory().createBloons(0, 10, 10, 10, 10);
-    bloon.updatePosition();
+    bloon.update();
     assertEquals(20, bloon.getXPosition());
     assertEquals(20, bloon.getYPosition());
   }
@@ -35,22 +35,22 @@ public class BloonsTest {
   @Test
   void testBloonsDistanceTraveled() {
     Bloons bloon = new BasicBloonsFactory().createBloons(0, 10, 10, 10, 10);
-    bloon.updatePosition();
+    bloon.update();
     assertEquals(20, bloon.getDistanceTraveled());
   }
 
   @Test
   void testBloonsChangedVelocityPositionUpdate() {
     Bloons bloon = new BasicBloonsFactory().createBloons(0, 10, 10, 10, 10);
-    bloon.updatePosition();
+    bloon.update();
     assertEquals(20, bloon.getXPosition());
     assertEquals(20, bloon.getYPosition());
     bloon.setXVelocity(-5);
-    bloon.updatePosition();
+    bloon.update();
     assertEquals(15, bloon.getXPosition());
     assertEquals(30, bloon.getYPosition());
     bloon.setYVelocity(20);
-    bloon.updatePosition();
+    bloon.update();
     assertEquals(10, bloon.getXPosition());
     assertEquals(50, bloon.getYPosition());
   }
@@ -168,11 +168,11 @@ public class BloonsTest {
     Iterator bloonsIterator = list.createIterator();
     Bloons slowBloon = new Bloons(0, 0, 0, 10, 0);
     assertTrue(list.add(slowBloon));
-    slowBloon.updatePosition();
+    slowBloon.update();
     assertEquals(slowBloon, bloonsIterator.getNext());
     bloonsIterator.reset();
     Bloons fastBloon = new Bloons(0, 0, 0, 16, 0);
-    fastBloon.updatePosition();
+    fastBloon.update();
     list.add(fastBloon);
     assertEquals(fastBloon, bloonsIterator.getNext());
   }
@@ -183,13 +183,12 @@ public class BloonsTest {
     Iterator bloonsIterator = list.createIterator();
     Bloons slowBloon = new Bloons(0, 0, 0, 10, 0);
     assertTrue(list.add(slowBloon));
-    slowBloon.updatePosition();
+    slowBloon.update();
 
     Bloons fastBloon = new Bloons(0, 0, 0, 16, 0);
     assertTrue(list.add(fastBloon));
     for (int i = 0; i < 2; i++) {
-      slowBloon.updatePosition();
-      fastBloon.updatePosition();
+      bloonsIterator.updateAll();
       assertEquals(slowBloon, bloonsIterator.getNext());
       list.sort();
       bloonsIterator.reset();

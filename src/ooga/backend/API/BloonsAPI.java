@@ -13,11 +13,6 @@ public interface BloonsAPI {
    */
   void updateLivesLeft(int update);
 
-  /**
-   * Update the position of the object
-   */
-  void updatePosition();
-
   /** Update the x velocity
    * @param newXVelocity to update the x velocity
    */

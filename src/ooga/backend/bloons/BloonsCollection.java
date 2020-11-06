@@ -33,6 +33,19 @@ public class BloonsCollection implements GamePieceCollection {
   }
 
   @Override
+  public void updateAll() {
+    for (Bloons bloon : bloons) {
+      bloon.update();
+    }
+    sort();
+  }
+
+  @Override
+  public void clear() {
+    bloons = new ArrayList<>();
+  }
+
+  @Override
   public Iterator createIterator() {
     return new BloonsIterator(bloons);
   }

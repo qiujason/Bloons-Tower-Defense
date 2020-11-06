@@ -47,6 +47,11 @@ public abstract class Dart implements GamePiece {
     return yPosition;
   }
 
+  @Override
+  public void update() {
+
+  }
+
   public double getXVelocity(){
     return xVelocity;
   }

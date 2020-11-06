@@ -41,6 +41,11 @@ public abstract class Tower implements GamePiece {
     return yPosition;
   }
 
+  @Override
+  public void update() {
+
+  }
+
   public double getShootingSpeed(){
     return shootingSpeed;
   }
