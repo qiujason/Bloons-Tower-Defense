@@ -6,7 +6,7 @@ import ooga.backend.bloons.Bloons;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.collections.Iterator;
 import ooga.backend.darts.SingleDart;
-import ooga.backend.factory.BasicBloonsFactory;
+import ooga.backend.bloons.factory.BasicBloonsFactory;
 import org.junit.jupiter.api.Test;
 
 
@@ -187,12 +187,10 @@ public class BloonsTest {
 
     Bloons fastBloon = new Bloons(0, 0, 0, 16, 0);
     assertTrue(list.add(fastBloon));
-    for (int i = 0; i < 2; i++) {
-      bloonsIterator.updateAll();
-      assertEquals(slowBloon, bloonsIterator.getNext());
-      list.sort();
-      bloonsIterator.reset();
-    }
+    list.updateAll();
+    assertEquals(slowBloon, bloonsIterator.getNext());
+    bloonsIterator.reset();
+    list.updateAll();
     assertEquals(fastBloon, bloonsIterator.getNext());
   }
 }

@@ -51,7 +51,7 @@ public class BloonsCollection implements GamePieceCollection {
   }
 
   public void sort() {
-    bloons.sort((a,b) -> b.getDistanceTraveled() - a.getDistanceTraveled());
+    bloons.sort((a,b) -> (int)(b.getDistanceTraveled()*10) - (int)(a.getDistanceTraveled() * 10));
   }
 
 }

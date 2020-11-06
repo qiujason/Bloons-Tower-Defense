@@ -1,4 +1,4 @@
-package ooga.backend.factory;
+package ooga.backend.towers.factory;
 
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;

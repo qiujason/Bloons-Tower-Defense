@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import ooga.backend.bloons.Bloons;
 import ooga.backend.darts.Dart;
-import ooga.backend.factory.DartFactory;
-import ooga.backend.factory.SingleDartFactory;
+import ooga.backend.darts.factory.DartFactory;
+import ooga.backend.darts.factory.SingleDartFactory;
 
 public class DartTower extends SingleShotTower {
 
-  public DartTower(int myXPosition, int myYPosition, int myRadius) {
+  public DartTower(double myXPosition, double myYPosition, int myRadius) {
     super(myXPosition, myYPosition, myRadius);
   }
 

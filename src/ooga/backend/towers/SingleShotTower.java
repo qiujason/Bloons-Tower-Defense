@@ -6,7 +6,7 @@ import ooga.backend.bloons.Bloons;
 public abstract class SingleShotTower extends Tower{
 
 
-  public SingleShotTower(int myXPosition, int myYPosition, int myRadius) {
+  public SingleShotTower(double myXPosition, double myYPosition, int myRadius) {
     super(myXPosition, myYPosition, myRadius);
   }
 

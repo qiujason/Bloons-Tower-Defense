@@ -9,12 +9,12 @@ public abstract class Tower implements GamePiece {
 
   private static final double defaultShootingSpeed = 20.0;
 
-  private int xPosition;
-  private int yPosition;
+  private double xPosition;
+  private double yPosition;
   private int radius;
   private double shootingSpeed;
 
-  public Tower(int myXPosition, int myYPosition, int myRadius){
+  public Tower(double myXPosition, double myYPosition, int myRadius){
     setXPosition(myXPosition);
     setYPosition(myYPosition);
     radius = myRadius;
@@ -22,22 +22,22 @@ public abstract class Tower implements GamePiece {
   }
 
   @Override
-  public void setXPosition(int updateXPos){
+  public void setXPosition(double updateXPos){
     xPosition = updateXPos;
   }
 
   @Override
-  public void setYPosition(int updateYPos){
+  public void setYPosition(double updateYPos){
     yPosition = updateYPos;
   }
 
   @Override
-  public int getXPosition(){
+  public double getXPosition(){
     return xPosition;
   }
 
   @Override
-  public int getYPosition(){
+  public double getYPosition(){
     return yPosition;
   }
 
