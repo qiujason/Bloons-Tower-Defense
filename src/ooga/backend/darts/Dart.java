@@ -1,7 +1,7 @@
 package ooga.backend.darts;
-import ooga.backend.API.Movable;
+import ooga.backend.API.GamePiece;
 
-public abstract class Dart implements Movable {
+public abstract class Dart implements GamePiece {
   private int xPosition;
   private int yPosition;
   private double xVelocity;
@@ -14,20 +14,27 @@ public abstract class Dart implements Movable {
     this.yVelocity = yVelocity;
   }
 
-  @Override
   public void updatePosition() {
     xPosition += xVelocity;
     yPosition += yVelocity;
   }
 
-  @Override
   public void setXVelocity(int newXVelocity) {
     xVelocity = newXVelocity;
   }
 
-  @Override
   public void setYVelocity(int newYVelocity) {
     yVelocity = newYVelocity;
+  }
+
+  @Override
+  public void setXPosition(int updateXPos) {
+
+  }
+
+  @Override
+  public void setYPosition(int updateYPos) {
+
   }
 
   @Override
@@ -47,4 +54,5 @@ public abstract class Dart implements Movable {
   public double getYVelocity(){
     return yVelocity;
   }
+
 }
