@@ -8,15 +8,22 @@ public class LayoutBlock {
   private String blockType;
   private double dx;
   private double dy;
-  private Map<String, double[]> velocityMap = new HashMap<>(){{put(">", new double[]{1,0});
-                                                                put("<", new double[]{-1,0});
-                                                                put("v", new double[]{0,1});
-                                                                put("^", new double[]{0,-1});}};
+  private Map<String, double[]> velocityMap;
 
 
   public LayoutBlock(String blockType){
     this.blockType = blockType;
+    velocityMap = new HashMap<>();
+    initializeVelocityMap();
     setDxDy(blockType);
+  }
+
+  private void initializeVelocityMap() {
+    velocityMap.put(">", new double[]{1,0});
+    velocityMap.put("<", new double[]{-1,0});
+    velocityMap.put("v", new double[]{0,1});
+    velocityMap.put("^", new double[]{0,-1});
+    velocityMap.put("*", new double[]{1,0});
   }
 
   private void setDxDy(String blockType) {
@@ -37,5 +44,9 @@ public class LayoutBlock {
 
   public double getDy() {
     return dy;
+  }
+
+  public String getBlockType() {
+    return blockType;
   }
 }

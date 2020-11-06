@@ -15,7 +15,8 @@ public class LayoutTest {
   @BeforeEach
   void setUpLayout(){
     LayoutReader reader = new LayoutReader();
-    List<List<String>> layoutConfig = reader.getDataFromFile("test_layouts/updownleftright.csv");
+    List<List<String>> layoutConfig = reader.getDataFromFile(
+        "tests/test_layouts/updownleftright.csv");
     layout = new Layout(layoutConfig);
   }
 
@@ -42,8 +43,8 @@ public class LayoutTest {
   }
 
   @Test
-  void DownBlockDxTest(){
-    LayoutBlock downBlock = layout.getBlock(0,3);
+  void DownBlockDxTest() {
+    LayoutBlock downBlock = layout.getBlock(0, 3);
     assertEquals(downBlock.getDx(), 0);
     assertEquals(downBlock.getDy(), 1);
   }

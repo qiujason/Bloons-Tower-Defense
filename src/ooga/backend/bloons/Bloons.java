@@ -7,13 +7,13 @@ import ooga.backend.API.GamePiece;
 public class Bloons implements BloonsAPI, GamePiece {
 
   private int lives;
-  private int xPosition;
-  private int yPosition;
-  private int xVelocity;
-  private int yVelocity;
-  private int distanceTraveled;
+  private double xPosition;
+  private double yPosition;
+  private double xVelocity;
+  private double yVelocity;
+  private double distanceTraveled;
 
-  public Bloons(int lives, int xPosition, int yPosition, int xVelocity, int yVelocity) {
+  public Bloons(BloonsType bloonsType, double xPosition, double yPosition, double xVelocity, double yVelocity) {
     this.lives = lives;
     this.xPosition = xPosition;
     this.yPosition = yPosition;

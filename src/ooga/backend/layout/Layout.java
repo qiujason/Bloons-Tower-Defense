@@ -6,9 +6,9 @@ import ooga.backend.API.LayoutAPI;
 
 public class Layout implements LayoutAPI {
 
-  int width;
-  int height;
-  List<List<LayoutBlock>> layoutConfig;
+  private int width;
+  private int height;
+  private List<List<LayoutBlock>> layoutConfig;
 
   public Layout(List<List<String>> layoutConfig){
     this.width = layoutConfig.get(0).size();
@@ -41,6 +41,17 @@ public class Layout implements LayoutAPI {
   @Override
   public double getBlockDy(int row, int col) {
     return getBlock(row, col).getDy();
+  }
+
+  public int[] getStartBlockCoordinates(){
+    for (int i = 0; i < height; i++){
+      for (int j = 0; j < width; j++){
+        if (layoutConfig.get(i).get(j).getBlockType().equals("*")){
+          return new int[]{i,j};
+        }
+      }
+    }
+    return new int[2];
   }
 
 }
