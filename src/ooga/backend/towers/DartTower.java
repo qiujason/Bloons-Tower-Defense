@@ -18,16 +18,7 @@ public class DartTower extends SingleShotTower {
   public List<Dart> shoot(List<Bloon> bloonsList) {
     List<Dart> shot = new ArrayList<>();
     if(checkBalloonInRange(bloonsList)){
-      Bloon target = null;
-      if(getShootingChoice() == ShootingChoice.ClosestBloon){
-        target = findClosestBloon(bloonsList);
-      } else if(getShootingChoice() == ShootingChoice.StrongestBloon){
-        target = findStrongestBloon(bloonsList);
-      } else if(getShootingChoice() == ShootingChoice.FirstBloon){
-        target = findFirstBloon(bloonsList);
-      } else if(getShootingChoice() == ShootingChoice.LastBloon) {
-        target = findLastBloon(bloonsList);
-      }
+      Bloon target = getTarget(bloonsList);
       DartFactory dartFactory = new SingleDartFactory();
       double dartXVelocity = findShootXVelocity(target);
       double dartYVelocity = findShootYVelocity(target);

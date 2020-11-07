@@ -23,6 +23,16 @@ public abstract class SingleShotTower extends Tower{
   }
 
   // should only be called IF known that there is a bloon in range OR ELSE will return null
+  public Bloon getTarget(List<Bloon> bloonsList){
+    switch(getShootingChoice()){
+      case StrongestBloon: return findStrongestBloon(bloonsList);
+      case FirstBloon: return findFirstBloon(bloonsList);
+      case LastBloon: return findLastBloon(bloonsList);
+      default: return findClosestBloon(bloonsList);
+    }
+  }
+
+  // should only be called IF known that there is a bloon in range OR ELSE will return null
   public Bloon findClosestBloon(List<Bloon> bloonsList){
     Bloon closestBloon = null;
     double minDistance = Integer.MAX_VALUE;
