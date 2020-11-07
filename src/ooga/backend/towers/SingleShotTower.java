@@ -42,14 +42,14 @@ public abstract class SingleShotTower extends Tower{
   // should only be called IF known that there is a bloon in range OR ELSE will return null
   public Bloon findStrongestBloon(List<Bloon> bloonsList){
     Bloon strongestBloon = null;
-    double minStrength = Integer.MAX_VALUE;
+    double maxStrength = Integer.MIN_VALUE;
     for(Bloon bloon : bloonsList){
       if(getDistance(bloon) > getRadius()){
         continue;
       }
       double strength = bloon.getBloonsType().getRBE();
-      if(minStrength > strength){
-        minStrength = strength;
+      if(maxStrength < strength){
+        maxStrength = strength;
         strongestBloon = bloon;
       }
     }
