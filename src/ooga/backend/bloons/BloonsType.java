@@ -22,7 +22,7 @@ public enum BloonsType {
     nextBloons = bloons;
   }
 
-  int getRBE() {
+  public int getRBE() {
     return redBloonEquivalent;
   }
 

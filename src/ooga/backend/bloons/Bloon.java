@@ -24,6 +24,10 @@ public class Bloon implements BloonsAPI, GamePiece {
     relativeSpeed = bloonsType.getRelativeSpeed();
   }
 
+  public BloonsType getBloonsType(){
+    return bloonsType;
+  }
+
   @Override
   public void setXVelocity(double newXVelocity) {
     xVelocity = newXVelocity;
