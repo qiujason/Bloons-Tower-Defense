@@ -22,6 +22,10 @@ public abstract class Tower implements GamePiece, TowersAPI {
     shootingSpeed = defaultShootingSpeed;
   }
 
+  public int getRadius(){
+    return radius;
+  }
+
   @Override
   public void setXPosition(double updateXPos){
     xPosition = updateXPos;

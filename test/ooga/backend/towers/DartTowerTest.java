@@ -41,6 +41,40 @@ class DartTowerTest {
   }
 
   @org.junit.jupiter.api.Test
+  void testFindStrongestBloon() {
+    DartTower testTower = new DartTower(10,20,5);
+    List<Bloon> bloonsList = new ArrayList<>();
+    bloonsList.add(new Bloon(BloonsType.RED, 10,21,5,5));
+    bloonsList.add(new Bloon(BloonsType.RED, 10,22,5,5));
+    Bloon expected = new Bloon(BloonsType.BLACK, 13,23,5,5);
+    bloonsList.add(expected);
+    assertEquals(expected, testTower.findStrongestBloon(bloonsList));
+  }
+
+  @org.junit.jupiter.api.Test
+  void testFindFirstBloon() {
+    DartTower testTower = new DartTower(10,20,5);
+    List<Bloon> bloonsList = new ArrayList<>();
+    Bloon expected = new Bloon(BloonsType.RED, 11,22,5,5);
+    bloonsList.add(expected);
+    bloonsList.add(new Bloon(BloonsType.RED, 13,23,5,5));
+    bloonsList.add(new Bloon(BloonsType.RED, 14,24,5,5));
+    assertEquals(expected, testTower.findFirstBloon(bloonsList));
+  }
+
+  @org.junit.jupiter.api.Test
+  void testFindLastBloon() {
+    DartTower testTower = new DartTower(10,20,5);
+    List<Bloon> bloonsList = new ArrayList<>();
+    bloonsList.add(new Bloon(BloonsType.RED, 11,22,5,5));
+    bloonsList.add(new Bloon(BloonsType.RED, 13,24,5,5));
+    Bloon expected = new Bloon(BloonsType.RED, 14,23,5,5);
+    bloonsList.add(expected);
+    assertEquals(expected, testTower.findLastBloon(bloonsList));
+  }
+
+
+  @org.junit.jupiter.api.Test
   void testGetDistance() {
     DartTower testTower = new DartTower(0,0,5);
     Bloon target = new Bloon(BloonsType.RED, 3,4,5,5);
@@ -62,7 +96,7 @@ class DartTowerTest {
   }
 
   @org.junit.jupiter.api.Test
-  void shoot() {
+  void testShootAtBloon() {
     DartTower testTower = new DartTower(0,0,5);
     Bloon target = new Bloon(BloonsType.RED, 3,4,5,5);
     List<Bloon> bloonsList = new ArrayList<>();

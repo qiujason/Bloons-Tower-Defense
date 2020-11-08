@@ -18,7 +18,7 @@ public class DartTower extends SingleShotTower {
   public List<Dart> shoot(List<Bloon> bloonsList) {
     List<Dart> shot = new ArrayList<>();
     if(checkBalloonInRange(bloonsList)){
-      Bloon target = findClosestBloon(bloonsList);
+      Bloon target = getTarget(bloonsList);
       DartFactory dartFactory = new SingleDartFactory();
       double dartXVelocity = findShootXVelocity(target);
       double dartYVelocity = findShootYVelocity(target);
