@@ -25,11 +25,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import ooga.backend.bloons.Bloon;
-import ooga.backend.darts.Dart;
 import ooga.backend.readers.LayoutReader;
-import ooga.backend.towers.DartTower;
-import ooga.backend.towers.Tower;
+import ooga.backend.towers.singleshottowers.SingleProjectileShooter;
 import ooga.controller.GameMenuController;
 import ooga.controller.GameMenuInterface;
 
@@ -166,7 +163,7 @@ public class BloonsApplication extends Application {
       towerInGame.setId(blockRectangle.getId() + "Tower");
       towerInGame.setOnMouseClicked(e -> myAnimationHandler.removeTower(towerInGame));
       blockToTower.put(blockRectangle, towerInGame);
-      myAnimationHandler.addTower(new DartTower(blockRectangle.getX() + myBlockSize / 2, blockRectangle.getY() + myBlockSize / 2, (int) myBlockSize*2), towerInGame);
+      myAnimationHandler.addTower(new SingleProjectileShooter(blockRectangle.getX() + myBlockSize / 2, blockRectangle.getY() + myBlockSize / 2, (int) myBlockSize*2, 5, 5), towerInGame);
     } else if (!blockRectangle.getFill().equals(nonPlayableBlock)) {
       blockToTower.remove(blockRectangle);
     }
