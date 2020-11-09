@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 import ooga.backend.bloons.Bloon;
+import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.BloonsType;
 import ooga.backend.darts.Dart;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,8 @@ class TackShooterTest {
     Bloon target = new Bloon(BloonsType.RED, 3,4,5,5);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
-    List<Dart> dart = testTower.shoot(bloonsList);
+    BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
+    List<Dart> dart = testTower.shoot(bloonsCollection);
     assertEquals(0, dart.get(0).getXPosition());
     assertEquals(0, dart.get(0).getYPosition());
     assertEquals(1, dart.get(0).getXVelocity());
@@ -65,7 +67,8 @@ class TackShooterTest {
     Bloon target = new Bloon(BloonsType.RED, 20,20,5,5);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
-    List<Dart> dart = testTower.shoot(bloonsList);
+    BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
+    List<Dart> dart = testTower.shoot(bloonsCollection);
     assertEquals(0, dart.size());
   }
 }

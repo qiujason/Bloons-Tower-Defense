@@ -1,7 +1,13 @@
 package ooga.backend.towers;
 
+import java.util.ArrayList;
 import java.util.List;
 import ooga.backend.bloons.Bloon;
+import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.collections.Iterator;
+import ooga.backend.darts.Dart;
+import ooga.backend.darts.factory.DartFactory;
+import ooga.backend.darts.factory.SingleDartFactory;
 
 public abstract class SingleShotTower extends Tower{
 
@@ -23,20 +29,22 @@ public abstract class SingleShotTower extends Tower{
   }
 
   // should only be called IF known that there is a bloon in range OR ELSE will return null
-  public Bloon getTarget(List<Bloon> bloonsList){
+  public Bloon getTarget(BloonsCollection bloonsCollection){
     switch(getShootingChoice()){
-      case StrongestBloon: return findStrongestBloon(bloonsList);
-      case FirstBloon: return findFirstBloon(bloonsList);
-      case LastBloon: return findLastBloon(bloonsList);
-      default: return findClosestBloon(bloonsList);
+      case StrongestBloon: return findStrongestBloon(bloonsCollection);
+      case FirstBloon: return findFirstBloon(bloonsCollection);
+      case LastBloon: return findLastBloon(bloonsCollection);
+      default: return findClosestBloon(bloonsCollection);
     }
   }
 
   // should only be called IF known that there is a bloon in range OR ELSE will return null
-  public Bloon findClosestBloon(List<Bloon> bloonsList){
+  public Bloon findClosestBloon(BloonsCollection bloonsCollection){
+    Iterator iterator = bloonsCollection.createIterator();
     Bloon closestBloon = null;
     double minDistance = Integer.MAX_VALUE;
-    for(Bloon bloon : bloonsList){
+    while(iterator.hasMore()){
+      Bloon bloon = (Bloon) iterator.getNext();
       double distance = getDistance(bloon);
       if(distance > getRadius()){
         continue;
@@ -50,10 +58,12 @@ public abstract class SingleShotTower extends Tower{
   }
 
   // should only be called IF known that there is a bloon in range OR ELSE will return null
-  public Bloon findStrongestBloon(List<Bloon> bloonsList){
+  public Bloon findStrongestBloon(BloonsCollection bloonsCollection){
+    Iterator iterator = bloonsCollection.createIterator();
     Bloon strongestBloon = null;
     double maxStrength = Integer.MIN_VALUE;
-    for(Bloon bloon : bloonsList){
+    while(iterator.hasMore()){
+      Bloon bloon = (Bloon) iterator.getNext();
       if(getDistance(bloon) > getRadius()){
         continue;
       }
@@ -67,9 +77,11 @@ public abstract class SingleShotTower extends Tower{
   }
 
   // should only be called IF known that there is a bloon in range OR ELSE will return null
-  public Bloon findFirstBloon(List<Bloon> bloonsList){
+  public Bloon findFirstBloon(BloonsCollection bloonsCollection){
+    Iterator iterator = bloonsCollection.createIterator();
     Bloon firstBloon = null;
-    for(Bloon bloon : bloonsList){
+    while(iterator.hasMore()){
+      Bloon bloon = (Bloon) iterator.getNext();
       if(getDistance(bloon) <= getRadius()){
         firstBloon = bloon;
         break;
@@ -79,9 +91,11 @@ public abstract class SingleShotTower extends Tower{
   }
 
   // should only be called IF known that there is a bloon in range OR ELSE will return null
-  public Bloon findLastBloon(List<Bloon> bloonsList){
+  public Bloon findLastBloon(BloonsCollection bloonsCollection){
+    Iterator iterator = bloonsCollection.createIterator();
     Bloon lastBloon = null;
-    for(Bloon bloon : bloonsList){
+    while(iterator.hasMore()){
+      Bloon bloon = (Bloon) iterator.getNext();
       if(getDistance(bloon) <= getRadius()){
         lastBloon = bloon;
       }
@@ -97,6 +111,19 @@ public abstract class SingleShotTower extends Tower{
   public double findShootYVelocity(Bloon target){
     double distance = getDistance(target);
     return (getYPosition()-target.getYPosition())/distance*getShootingSpeed();
+  }
+
+  @Override
+  public List<Dart> shoot(BloonsCollection bloonsCollection) {
+    List<Dart> shot = new ArrayList<>();
+    if(checkBalloonInRange(bloonsCollection)){
+      Bloon target = getTarget(bloonsCollection);
+      DartFactory dartFactory = new SingleDartFactory();
+      double dartXVelocity = findShootXVelocity(target);
+      double dartYVelocity = findShootYVelocity(target);
+      shot.add(dartFactory.createDart(getXPosition(), getYPosition(), dartXVelocity, dartYVelocity));
+    }
+    return shot;
   }
 
 }

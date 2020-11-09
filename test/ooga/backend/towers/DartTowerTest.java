@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 import ooga.backend.bloons.Bloon;
+import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.BloonsType;
 import ooga.backend.darts.Dart;
 
@@ -17,7 +18,8 @@ class DartTowerTest {
     bloonsList.add(new Bloon(BloonsType.RED, 10,10,5,5));
     bloonsList.add(new Bloon(BloonsType.RED, 15,30,5,5));
     bloonsList.add(new Bloon(BloonsType.RED, 12,22,5,5));
-    assertTrue(testTower.checkBalloonInRange(bloonsList));
+    BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
+    assertTrue(testTower.checkBalloonInRange(bloonsCollection));
   }
 
   @org.junit.jupiter.api.Test
@@ -26,7 +28,8 @@ class DartTowerTest {
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(new Bloon(BloonsType.RED, 10,10,5,5));
     bloonsList.add(new Bloon(BloonsType.RED, 15,30,5,5));
-    assertFalse(testTower.checkBalloonInRange(bloonsList));
+    BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
+    assertFalse(testTower.checkBalloonInRange(bloonsCollection));
   }
 
   @org.junit.jupiter.api.Test
@@ -37,7 +40,8 @@ class DartTowerTest {
     bloonsList.add(new Bloon(BloonsType.RED, 15,30,5,5));
     Bloon expected = new Bloon(BloonsType.RED, 12,22,5,5);
     bloonsList.add(expected);
-    assertEquals(expected, testTower.findClosestBloon(bloonsList));
+    BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
+    assertEquals(expected, testTower.findClosestBloon(bloonsCollection));
   }
 
   @org.junit.jupiter.api.Test
@@ -48,7 +52,8 @@ class DartTowerTest {
     bloonsList.add(new Bloon(BloonsType.RED, 10,22,5,5));
     Bloon expected = new Bloon(BloonsType.BLACK, 13,23,5,5);
     bloonsList.add(expected);
-    assertEquals(expected, testTower.findStrongestBloon(bloonsList));
+    BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
+    assertEquals(expected, testTower.findStrongestBloon(bloonsCollection));
   }
 
   @org.junit.jupiter.api.Test
@@ -59,7 +64,8 @@ class DartTowerTest {
     bloonsList.add(expected);
     bloonsList.add(new Bloon(BloonsType.RED, 13,23,5,5));
     bloonsList.add(new Bloon(BloonsType.RED, 14,24,5,5));
-    assertEquals(expected, testTower.findFirstBloon(bloonsList));
+    BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
+    assertEquals(expected, testTower.findFirstBloon(bloonsCollection));
   }
 
   @org.junit.jupiter.api.Test
@@ -70,7 +76,8 @@ class DartTowerTest {
     bloonsList.add(new Bloon(BloonsType.RED, 13,24,5,5));
     Bloon expected = new Bloon(BloonsType.RED, 14,23,5,5);
     bloonsList.add(expected);
-    assertEquals(expected, testTower.findLastBloon(bloonsList));
+    BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
+    assertEquals(expected, testTower.findLastBloon(bloonsCollection));
   }
 
 
@@ -101,7 +108,8 @@ class DartTowerTest {
     Bloon target = new Bloon(BloonsType.RED, 3,4,5,5);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
-    List<Dart> dart = testTower.shoot(bloonsList);
+    BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
+    List<Dart> dart = testTower.shoot(bloonsCollection);
     assertEquals(0, dart.get(0).getXPosition());
     assertEquals(0, dart.get(0).getYPosition());
     assertEquals(-12, dart.get(0).getXVelocity());

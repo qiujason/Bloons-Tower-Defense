@@ -4,7 +4,7 @@ public enum TowerType {
   DartTower(10),
   TackShooter(5),
   IceTower(5),
-  SniperTower(300);
+  UnlimitedRangeDartTower(800);
 
   private int radius;
 

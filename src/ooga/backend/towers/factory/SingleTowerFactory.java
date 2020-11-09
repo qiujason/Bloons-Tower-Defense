@@ -10,11 +10,11 @@ public class SingleTowerFactory implements TowerFactory {
   private static String TOWER_PATH = "ooga.backend.towers.";
 
   @Override
-  public Tower createTower(TowerType type, int xPosition, int yPosition) {
+  public Tower createTower(TowerType type, double xPosition, double yPosition) {
     try {
-      Class<?> towerClass = Class.forName(TOWER_PATH + type.name());
+      Class<?> towerClass = Class.forName(TOWER_PATH + type.toString());
       Constructor<?> towerConstructor = towerClass
-          .getDeclaredConstructor(int.class, int.class, int.class);
+          .getDeclaredConstructor(double.class, double.class, int.class);
       return (Tower) towerConstructor.newInstance(xPosition, yPosition, type.getRadius());
     } catch (Exception e) {
       throw new ConfigurationException("No tower class found for selected type of tower.");
