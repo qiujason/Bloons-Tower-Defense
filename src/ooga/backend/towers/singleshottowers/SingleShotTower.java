@@ -1,24 +1,29 @@
-package ooga.backend.towers;
+package ooga.backend.towers.singleshottowers;
 
 import java.util.ArrayList;
 import java.util.List;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.collections.Iterator;
-import ooga.backend.darts.Dart;
-import ooga.backend.darts.factory.DartFactory;
-import ooga.backend.darts.factory.SingleDartFactory;
+import ooga.backend.projectile.Projectile;
+import ooga.backend.projectile.ProjectileType;
+import ooga.backend.projectile.factory.ProjectileFactory;
+import ooga.backend.projectile.factory.SingleProjectileFactory;
+import ooga.backend.towers.ShootingChoice;
+import ooga.backend.towers.Tower;
 
-public abstract class SingleShotTower extends Tower{
+public abstract class SingleShotTower extends Tower {
 
   private static final ShootingChoice defaultShootingChoice = ShootingChoice.ClosestBloon;
 
   private ShootingChoice shootingChoice;
 
-  public SingleShotTower(double myXPosition, double myYPosition, int myRadius) {
-    super(myXPosition, myYPosition, myRadius);
+  public SingleShotTower(double myXPosition, double myYPosition, double myRadius,
+      double myShootingSpeed, double myShootingRestRate) {
+    super(myXPosition, myYPosition, myRadius, myShootingSpeed, myShootingRestRate);
     shootingChoice = defaultShootingChoice;
   }
+
 
   public ShootingChoice getShootingChoice(){
     return shootingChoice;
@@ -114,14 +119,16 @@ public abstract class SingleShotTower extends Tower{
   }
 
   @Override
-  public List<Dart> shoot(BloonsCollection bloonsCollection) {
-    List<Dart> shot = new ArrayList<>();
+  public List<Projectile> shoot(BloonsCollection bloonsCollection) {
+    List<Projectile> shot = new ArrayList<>();
     if(checkBalloonInRange(bloonsCollection)){
       Bloon target = getTarget(bloonsCollection);
-      DartFactory dartFactory = new SingleDartFactory();
-      double dartXVelocity = findShootXVelocity(target);
-      double dartYVelocity = findShootYVelocity(target);
-      shot.add(dartFactory.createDart(getXPosition(), getYPosition(), dartXVelocity, dartYVelocity));
+      ProjectileFactory projectileFactory = new SingleProjectileFactory();
+      double projectileXVelocity = findShootXVelocity(target);
+      double projectileYVelocity = findShootYVelocity(target);
+      shot.add(
+          projectileFactory.createDart(ProjectileType.SingleTargetProjectile, getXPosition(),
+              getYPosition(), projectileXVelocity, projectileYVelocity));
     }
     return shot;
   }

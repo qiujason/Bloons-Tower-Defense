@@ -1,4 +1,4 @@
-package ooga.backend.towers;
+package ooga.backend.towers.singleshottowers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -7,13 +7,18 @@ import java.util.List;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.BloonsType;
-import ooga.backend.darts.Dart;
+import ooga.backend.projectile.Projectile;
+import ooga.backend.towers.Tower;
+import ooga.backend.towers.TowerType;
+import ooga.backend.towers.factory.SingleTowerFactory;
+import ooga.backend.towers.factory.TowerFactory;
 
-class DartTowerTest {
+class SingleProjectileShooterTest {
 
   @org.junit.jupiter.api.Test
   void testCheckBalloonInRangeReturnsTrue() {
-    DartTower testTower = new DartTower(10,20,5);
+    TowerFactory towerFactory = new SingleTowerFactory();
+    Tower testTower = towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(new Bloon(BloonsType.RED, 10,10,5,5));
     bloonsList.add(new Bloon(BloonsType.RED, 15,30,5,5));
@@ -24,7 +29,8 @@ class DartTowerTest {
 
   @org.junit.jupiter.api.Test
   void testCheckBalloonInRangeReturnsFalse() {
-    DartTower testTower = new DartTower(0,0,5);
+    TowerFactory towerFactory = new SingleTowerFactory();
+    Tower testTower = towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(new Bloon(BloonsType.RED, 10,10,5,5));
     bloonsList.add(new Bloon(BloonsType.RED, 15,30,5,5));
@@ -34,7 +40,8 @@ class DartTowerTest {
 
   @org.junit.jupiter.api.Test
   void testFindClosestBloon() {
-    DartTower testTower = new DartTower(10,20,5);
+    TowerFactory towerFactory = new SingleTowerFactory();
+    SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(new Bloon(BloonsType.RED, 10,10,5,5));
     bloonsList.add(new Bloon(BloonsType.RED, 15,30,5,5));
@@ -46,7 +53,8 @@ class DartTowerTest {
 
   @org.junit.jupiter.api.Test
   void testFindStrongestBloon() {
-    DartTower testTower = new DartTower(10,20,5);
+    TowerFactory towerFactory = new SingleTowerFactory();
+    SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(new Bloon(BloonsType.RED, 10,21,5,5));
     bloonsList.add(new Bloon(BloonsType.RED, 10,22,5,5));
@@ -58,7 +66,8 @@ class DartTowerTest {
 
   @org.junit.jupiter.api.Test
   void testFindFirstBloon() {
-    DartTower testTower = new DartTower(10,20,5);
+    TowerFactory towerFactory = new SingleTowerFactory();
+    SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
     List<Bloon> bloonsList = new ArrayList<>();
     Bloon expected = new Bloon(BloonsType.RED, 11,22,5,5);
     bloonsList.add(expected);
@@ -70,7 +79,8 @@ class DartTowerTest {
 
   @org.junit.jupiter.api.Test
   void testFindLastBloon() {
-    DartTower testTower = new DartTower(10,20,5);
+    TowerFactory towerFactory = new SingleTowerFactory();
+    SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(new Bloon(BloonsType.RED, 11,22,5,5));
     bloonsList.add(new Bloon(BloonsType.RED, 13,24,5,5));
@@ -83,36 +93,41 @@ class DartTowerTest {
 
   @org.junit.jupiter.api.Test
   void testGetDistance() {
-    DartTower testTower = new DartTower(0,0,5);
+    TowerFactory towerFactory = new SingleTowerFactory();
+    SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
     Bloon target = new Bloon(BloonsType.RED, 3,4,5,5);
     assertEquals(5, testTower.getDistance(target));
   }
 
   @org.junit.jupiter.api.Test
   void testFindShootXVelocity() {
-    DartTower testTower = new DartTower(0,0,5);
+    TowerFactory towerFactory = new SingleTowerFactory();
+    SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
     Bloon target = new Bloon(BloonsType.RED, 3,4,5,5);
-    assertEquals(-12, testTower.findShootXVelocity(target));
+    assertEquals(-9, testTower.findShootXVelocity(target));
   }
 
   @org.junit.jupiter.api.Test
   void testFindShootYVelocity() {
-    DartTower testTower = new DartTower(0,0,5);
+    TowerFactory towerFactory = new SingleTowerFactory();
+    SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
     Bloon target = new Bloon(BloonsType.RED, 3,4,5,5);
-    assertEquals(-16, testTower.findShootYVelocity(target));
+    assertEquals(-12, testTower.findShootYVelocity(target));
   }
 
   @org.junit.jupiter.api.Test
   void testShootAtBloon() {
-    DartTower testTower = new DartTower(0,0,5);
+    TowerFactory towerFactory = new SingleTowerFactory();
+    SingleShotTower testTower = (SingleShotTower)
+        towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
     Bloon target = new Bloon(BloonsType.RED, 3,4,5,5);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
-    List<Dart> dart = testTower.shoot(bloonsCollection);
+    List<Projectile> dart = testTower.shoot(bloonsCollection);
     assertEquals(0, dart.get(0).getXPosition());
     assertEquals(0, dart.get(0).getYPosition());
-    assertEquals(-12, dart.get(0).getXVelocity());
-    assertEquals(-16, dart.get(0).getYVelocity());
+    assertEquals(-9, dart.get(0).getXVelocity());
+    assertEquals(-12, dart.get(0).getYVelocity());
   }
 }

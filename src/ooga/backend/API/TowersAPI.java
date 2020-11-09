@@ -2,7 +2,7 @@ package ooga.backend.API;
 
 import java.util.List;
 import ooga.backend.bloons.BloonsCollection;
-import ooga.backend.darts.Dart;
+import ooga.backend.projectile.Projectile;
 
 public interface TowersAPI {
 
@@ -10,7 +10,7 @@ public interface TowersAPI {
 
   boolean checkBalloonInRange(BloonsCollection bloonsCollection);
 
-  List<Dart> shoot(BloonsCollection bloonsCollection);
+  List<Projectile> shoot(BloonsCollection bloonsCollection);
 
   double getDistance(GamePiece target);
 

@@ -14,8 +14,10 @@ public class SingleTowerFactory implements TowerFactory {
     try {
       Class<?> towerClass = Class.forName(TOWER_PATH + type.toString());
       Constructor<?> towerConstructor = towerClass
-          .getDeclaredConstructor(double.class, double.class, int.class);
-      return (Tower) towerConstructor.newInstance(xPosition, yPosition, type.getRadius());
+          .getDeclaredConstructor(double.class, double.class, double.class,
+              double.class, double.class);
+      return (Tower) towerConstructor.newInstance(xPosition, yPosition, type.getRadius(),
+          type.getShootingSpeed(), type.getShootingRestRate());
     } catch (Exception e) {
       throw new ConfigurationException("No tower class found for selected type of tower.");
     }
