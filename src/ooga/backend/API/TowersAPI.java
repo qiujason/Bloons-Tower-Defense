@@ -1,17 +1,17 @@
 package ooga.backend.API;
 
 import java.util.List;
-import ooga.backend.bloons.Bloon;
-import ooga.backend.darts.Dart;
+import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.projectile.Projectile;
 
 public interface TowersAPI {
 
   double getShootingSpeed();
 
-  boolean checkBalloonInRange(List<Bloon> bloonsList);
+  boolean checkBalloonInRange(BloonsCollection bloonsCollection);
 
-  List<Dart> shoot(List<Bloon> bloonsList);
+  List<Projectile> shoot(BloonsCollection bloonsCollection);
 
-  double getDistance(Bloon target);
+  double getDistance(GamePiece target);
 
 }
