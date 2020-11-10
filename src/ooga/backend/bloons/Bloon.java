@@ -77,4 +77,9 @@ public class Bloon implements BloonsAPI, GamePiece {
     updateDistanceTraveled();
   }
 
+  @Override
+  public String toString(){
+    return "" + bloonsType.ordinal();
+  }
+
 }

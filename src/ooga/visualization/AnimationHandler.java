@@ -52,7 +52,7 @@ public class AnimationHandler {
     String currentBlockString = myLayout
         .get((int) ((myTestCircle.getCenterY() + myCircleSideY) / myBlockSize))
         .get((int) ((myTestCircle.getCenterX() + myCircleSideX) / myBlockSize));
-    switch(currentBlockString) {
+    switch(currentBlockString){
       case "*", ">" -> {
         myTestCircle.setCenterX(myTestCircle.getCenterX() + SPEED);
         myCircleSideX = -myBlockSize/2;
