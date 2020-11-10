@@ -161,7 +161,7 @@ public class BloonsApplication extends Application {
     }
     assert towerImage != null;
     ImagePattern towerImagePattern = new ImagePattern(towerImage);
-    Circle towerInGame = new Circle(myBlockSize / 2);
+    Circle towerInGame = new Circle(50,50,myBlockSize / 2);
     towerInGame.setFill(towerImagePattern);
     myLevelLayout.getChildren().add(towerInGame);
     towerInGame.setOnMouseMoved(e -> {
