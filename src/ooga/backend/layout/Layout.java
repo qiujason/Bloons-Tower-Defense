@@ -54,4 +54,16 @@ public class Layout implements LayoutAPI {
     return new int[2];
   }
 
+  public int getWidth() {
+    return width;
+  }
+
+  public int getHeight() {
+    return height;
+  }
+
+  public boolean isEndOfPath(int row, int col){
+    return getBlock(row, col).isEndBlock();
+  }
+
 }

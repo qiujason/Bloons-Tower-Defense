@@ -9,6 +9,7 @@ public class Bloon implements BloonsAPI, GamePiece {
   private BloonsType bloonsType;
   private double xPosition;
   private double yPosition;
+
   private double xVelocity;
   private double yVelocity;
   private double distanceTraveled;
@@ -75,6 +76,19 @@ public class Bloon implements BloonsAPI, GamePiece {
     xPosition += xVelocity;
     yPosition += yVelocity;
     updateDistanceTraveled();
+  }
+
+  public double getXVelocity() {
+    return xVelocity;
+  }
+
+  public double getYVelocity() {
+    return yVelocity;
+  }
+
+  @Override
+  public String toString(){
+    return "" + bloonsType.ordinal();
   }
 
 }

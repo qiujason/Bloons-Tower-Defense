@@ -18,6 +18,8 @@ import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.BloonsIterator;
 import ooga.backend.bloons.BloonsType;
+import ooga.backend.layout.Layout;
+import ooga.backend.layout.LayoutBlock;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowersCollection;
 import ooga.backend.towers.TowersIterator;
@@ -29,7 +31,7 @@ public class AnimationHandler {
   public static final double SPEED = 3;
 
   private Timeline myAnimation;
-  private List<List<String>> myLayout;
+  private Layout myLayout;
   private Group myLevelLayout;
   private double myStartingX;
   private double myStartingY;
@@ -44,7 +46,7 @@ public class AnimationHandler {
   private double myCircleSideX;
   private double myCircleSideY;
 
-  public AnimationHandler(List<List<String>> layout, Group levelLayout, double startingX,
+  public AnimationHandler(Layout layout, Group levelLayout, double startingX,
       double startingY, double blockSize) {
     myAnimation = new Timeline();
     myAnimation.setCycleCount(Timeline.INDEFINITE);
@@ -78,44 +80,47 @@ public class AnimationHandler {
   // TODO: Refactor
   private void animateBloons() {
     BloonsIterator bloonsIterator = (BloonsIterator) myBloons.createIterator();
-    String currentBlockString = myLayout
-        .get((int) ((myTestCircle.getCenterY() + myCircleSideY) / myBlockSize))
-        .get((int) ((myTestCircle.getCenterX() + myCircleSideX) / myBlockSize));
+    LayoutBlock currentBlock = myLayout.getBlock(((int) ((myTestCircle.getCenterY() + myCircleSideY) / myBlockSize))
+        ,((int) ((myTestCircle.getCenterX() + myCircleSideX) / myBlockSize)));
+
     while(bloonsIterator.hasMore()) {
       Bloon currentBloon = (Bloon) bloonsIterator.getNext();
-
-      switch(currentBlockString) {
-        case "*", ">" -> {
-          currentBloon.setXVelocity(SPEED);
-          currentBloon.setYVelocity(0);
-          myTestCircle.setCenterX(myTestCircle.getCenterX() + SPEED);
-          myCircleSideX = -myBlockSize / 2;
-          myCircleSideY = 0;
-        }
-        case "<" -> {
-          currentBloon.setXVelocity(-SPEED);
-          currentBloon.setYVelocity(0);
-          myTestCircle.setCenterX(myTestCircle.getCenterX() - SPEED);
-          myCircleSideX = myBlockSize / 2;
-          myCircleSideY = 0;
-        }
-        case "v" -> {
-          currentBloon.setXVelocity(0);
-          currentBloon.setYVelocity(SPEED);
-          myTestCircle.setCenterY(myTestCircle.getCenterY() + SPEED);
-          myCircleSideX = 0;
-          myCircleSideY = -myBlockSize / 2;
-        }
-        case "^" -> {
-          currentBloon.setXVelocity(0);
-          currentBloon.setYVelocity(-SPEED);
-          myTestCircle.setCenterY(myTestCircle.getCenterY() - SPEED);
-          myCircleSideX = 0;
-          myCircleSideY = myBlockSize / 2;
-        }
-        case "@" -> myLevelLayout.getChildren().remove(myTestCircle);
+      if(currentBlock.isEndBlock()){
+        myLevelLayout.getChildren().remove(myTestCircle);
       }
+      currentBloon.setXVelocity(SPEED*currentBlock.getDx());
+      currentBloon.setYVelocity(SPEED*currentBlock.getDy());
+
+      myTestCircle.setCenterX(myTestCircle.getCenterX() + currentBloon.getXVelocity());
+      myTestCircle.setCenterY(myTestCircle.getCenterY() + currentBloon.getYVelocity());
+
+//      myCircleSideX = -myBlockSize / 2;
+//          myCircleSideY = 0;
     }
+//        case "<" -> {
+//          currentBloon.setXVelocity(-SPEED);
+//          currentBloon.setYVelocity(0);
+//          myTestCircle.setCenterX(myTestCircle.getCenterX() - SPEED);
+//          myCircleSideX = myBlockSize / 2;
+//          myCircleSideY = 0;
+//        }
+//        case "v" -> {
+//          currentBloon.setXVelocity(0);
+//          currentBloon.setYVelocity(SPEED);
+//          myTestCircle.setCenterY(myTestCircle.getCenterY() + SPEED);
+//          myCircleSideX = 0;
+//          myCircleSideY = -myBlockSize / 2;
+//        }
+//        case "^" -> {
+//          currentBloon.setXVelocity(0);
+//          currentBloon.setYVelocity(-SPEED);
+//          myTestCircle.setCenterY(myTestCircle.getCenterY() - SPEED);
+//          myCircleSideX = 0;
+//          myCircleSideY = myBlockSize / 2;
+//        }
+//        case "@" -> myLevelLayout.getChildren().remove(myTestCircle);
+//      }
+//    }
     myBloons.updateAll();
   }
 
