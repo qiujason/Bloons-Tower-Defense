@@ -85,43 +85,24 @@ public class AnimationHandler {
 
     while(bloonsIterator.hasMore()) {
       Bloon currentBloon = (Bloon) bloonsIterator.getNext();
-      if(currentBlock.isEndBlock()){
+      if (currentBlock.isEndBlock()) {
         myLevelLayout.getChildren().remove(myTestCircle);
       }
-      currentBloon.setXVelocity(SPEED*currentBlock.getDx());
-      currentBloon.setYVelocity(SPEED*currentBlock.getDy());
+      currentBloon.setXVelocity(SPEED * currentBlock.getDx());
+      currentBloon.setYVelocity(SPEED * currentBlock.getDy());
 
       myTestCircle.setCenterX(myTestCircle.getCenterX() + currentBloon.getXVelocity());
       myTestCircle.setCenterY(myTestCircle.getCenterY() + currentBloon.getYVelocity());
 
-//      myCircleSideX = -myBlockSize / 2;
-//          myCircleSideY = 0;
+      setCircleSides(currentBlock);
+
+      myBloons.updateAll();
     }
-//        case "<" -> {
-//          currentBloon.setXVelocity(-SPEED);
-//          currentBloon.setYVelocity(0);
-//          myTestCircle.setCenterX(myTestCircle.getCenterX() - SPEED);
-//          myCircleSideX = myBlockSize / 2;
-//          myCircleSideY = 0;
-//        }
-//        case "v" -> {
-//          currentBloon.setXVelocity(0);
-//          currentBloon.setYVelocity(SPEED);
-//          myTestCircle.setCenterY(myTestCircle.getCenterY() + SPEED);
-//          myCircleSideX = 0;
-//          myCircleSideY = -myBlockSize / 2;
-//        }
-//        case "^" -> {
-//          currentBloon.setXVelocity(0);
-//          currentBloon.setYVelocity(-SPEED);
-//          myTestCircle.setCenterY(myTestCircle.getCenterY() - SPEED);
-//          myCircleSideX = 0;
-//          myCircleSideY = myBlockSize / 2;
-//        }
-//        case "@" -> myLevelLayout.getChildren().remove(myTestCircle);
-//      }
-//    }
-    myBloons.updateAll();
+  }
+
+  private void setCircleSides(LayoutBlock currentBlock) {
+    myCircleSideX = -myBlockSize * currentBlock.getDx() / 2;
+    myCircleSideY = -myBlockSize * currentBlock.getDy() / 2;
   }
 
   private void animateTowers() {
