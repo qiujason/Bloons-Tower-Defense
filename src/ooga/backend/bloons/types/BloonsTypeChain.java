@@ -1,6 +1,5 @@
 package ooga.backend.bloons.types;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -74,10 +73,11 @@ public class BloonsTypeChain {
   }
 
   public BloonsType getBloonsTypeRecord(int index) {
+    BloonsTypeNode retNode = head;
     for (int i = 0; i < index; i++) {
-
+      retNode = retNode.next;
     }
-    return null;
+    return retNode.getType();
   }
 
   public BloonsType getBloonsTypeRecord(String bloonsType) {

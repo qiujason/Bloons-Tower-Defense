@@ -40,8 +40,7 @@ public class BloonReader extends Reader{
 
   private Bloon createBloon(BloonsTypeChain chain, String bloon, Layout layout) {
     int bloonLives = Integer.parseInt(bloon);
-    BloonsType bloonType = chain
-        BloonsType.values()[bloonLives];
+    BloonsType bloonType = chain.getBloonsTypeRecord(bloonLives);
     double startRow = layout.getStartBlockCoordinates()[0];
     double startCol = layout.getStartBlockCoordinates()[1];
     double dx = layout.getBlock((int)startRow, (int)startCol).getDx();

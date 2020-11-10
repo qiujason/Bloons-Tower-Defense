@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 import ooga.backend.bloons.Bloon;
+<<<<<<< Updated upstream:test/ooga/backend/towers/spreadshottowers/MultiProjectileShooterTest.java
 import ooga.backend.bloons.collection.BloonsCollection;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.projectile.Projectile;
@@ -12,15 +13,32 @@ import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.factory.SingleTowerFactory;
 import ooga.backend.towers.factory.TowerFactory;
+=======
+import ooga.backend.bloons.types.BloonsTypeChain;
+import ooga.backend.darts.Dart;
+import org.junit.jupiter.api.BeforeEach;
+>>>>>>> Stashed changes:test/ooga/backend/towers/TackShooterTest.java
 import org.junit.jupiter.api.Test;
 
 class MultiProjectileShooterTest {
 
+  BloonsTypeChain chain;
+
+  @BeforeEach
+  void initializeBloonsTypes() {
+    chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
+  }
+
   @Test
   void testShootBalloonInRange() {
+<<<<<<< Updated upstream:test/ooga/backend/towers/spreadshottowers/MultiProjectileShooterTest.java
     TowerFactory towerFactory = new SingleTowerFactory();
     Tower testTower = towerFactory.createTower(TowerType.MultiProjectileShooter, 0,0);
     Bloon target = new Bloon(new BloonsType("RED", 1, 1), 3,4,5,5);
+=======
+    TackShooter testTower = new TackShooter(0,0,5);
+    Bloon target = new Bloon(chain.getBloonsTypeRecord("RED"), 3,4,5,5);
+>>>>>>> Stashed changes:test/ooga/backend/towers/TackShooterTest.java
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
@@ -68,9 +86,14 @@ class MultiProjectileShooterTest {
 
   @Test
   void testShootNoBalloonInRange() {
+<<<<<<< Updated upstream:test/ooga/backend/towers/spreadshottowers/MultiProjectileShooterTest.java
     TowerFactory towerFactory = new SingleTowerFactory();
     Tower testTower = towerFactory.createTower(TowerType.MultiProjectileShooter, 0,0);
     Bloon target = new Bloon(new BloonsType("RED", 1, 1), 20,20,5,5);
+=======
+    TackShooter testTower = new TackShooter(0,0,5);
+    Bloon target = new Bloon(chain.getBloonsTypeRecord("RED"), 20,20,5,5);
+>>>>>>> Stashed changes:test/ooga/backend/towers/TackShooterTest.java
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
