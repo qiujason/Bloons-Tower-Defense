@@ -31,7 +31,6 @@ public class AnimationHandler {
   public static final double FRAMES_PER_SECOND = 60;
   public static final double ANIMATION_DELAY = 1 / FRAMES_PER_SECOND;
   public static final double SPEED = 3;
-  public static final double PROJECTILE_SPEED = 10;
 
   private Timeline myAnimation = new Timeline();
   private List<List<String>> myLayout;
@@ -89,7 +88,6 @@ public class AnimationHandler {
         .get((int) ((myTestCircle.getCenterX() + myCircleSideX) / myBlockSize));
     while (bloonsIterator.hasMore()) {
       Bloon currentBloon = (Bloon) bloonsIterator.getNext();
-
       switch(currentBlockString) {
         case "*", ">" -> {
           currentBloon.setXVelocity(SPEED);
@@ -155,13 +153,19 @@ public class AnimationHandler {
 
   private void attemptToFire(Bloon bloon, Tower tower) {
     if (tower.getCanShoot()) {
-      double projectileXSpeed = PROJECTILE_SPEED * tower.getDistance(bloon) / (bloon.getXPosition() - tower.getXPosition());
-      double projectileYSpeed = PROJECTILE_SPEED * tower.getDistance(bloon) / (bloon.getYPosition() - tower.getYPosition());
+      double projectileXSpeed =
+          tower.getShootingSpeed() * (bloon.getXPosition() - tower.getXPosition()) / tower
+              .getDistance(bloon);
+      double projectileYSpeed =
+          tower.getShootingSpeed() * (bloon.getYPosition() - tower.getYPosition()) / tower
+              .getDistance(bloon);
       Projectile newProjectile = myProjectileFactory
           .createDart(ProjectileType.SingleTargetProjectile, tower.getXPosition(),
               tower.getYPosition(), projectileXSpeed, projectileYSpeed);
-      Circle projectileInGame = new Circle(newProjectile.getXPosition(), newProjectile.getYPosition(), myBlockSize / 3);
+      Circle projectileInGame = new Circle(newProjectile.getXPosition(),
+          newProjectile.getYPosition(), myBlockSize / 8);
       myLevelLayout.getChildren().add(projectileInGame);
+      myProjectiles.add(newProjectile);
       myProjectilesInGame.put(newProjectile, projectileInGame);
     }
   }
@@ -169,24 +173,39 @@ public class AnimationHandler {
   private void animateProjectiles() {
     ProjectilesIterator projectilesIterator = (ProjectilesIterator) myProjectiles.createIterator();
     BloonsIterator bloonsIterator = (BloonsIterator) myBloons.createIterator();
-    while(projectilesIterator.hasMore()){
+    while (projectilesIterator.hasMore()) {
       Projectile projectile = (Projectile) projectilesIterator.getNext();
       Circle projectileInGame = (Circle) myProjectilesInGame.get(projectile);
       projectileInGame.setCenterX(projectileInGame.getCenterX() + projectile.getXVelocity());
       projectileInGame.setCenterY(projectileInGame.getCenterY() + projectile.getYVelocity());
-      while(bloonsIterator.hasMore()){
+      while (bloonsIterator.hasMore()) {
         Bloon bloon = (Bloon) bloonsIterator.getNext();
-        if(checkBloonCollision(projectile, bloon)){
+        if (checkBloonCollision(projectile, bloon)) {
           myLevelLayout.getChildren().remove(myProjectilesInGame.remove(projectile));
+          myLevelLayout.getChildren().remove(myBloonsInGame.remove(bloon));
           myProjectiles.remove(projectile);
+          myBloons.remove(bloon);
         }
+      }
+      if (checkOutOfBoundsProjectile(projectileInGame)) {
+        myLevelLayout.getChildren().remove(projectileInGame);
       }
       bloonsIterator.reset();
     }
     myProjectiles.updateAll();
   }
 
+  private boolean checkOutOfBoundsProjectile(Circle projectile) {
+    return projectile.getCenterX() <= 0
+        || projectile.getCenterX() >= BloonsApplication.GAME_WIDTH
+        || projectile.getCenterY() <= 0
+        || projectile.getCenterY() >= BloonsApplication.GAME_HEIGHT;
+  }
+
   private boolean checkBloonCollision(Projectile projectile, Bloon bloon) {
+    Circle projectileInGame = (Circle) myProjectilesInGame.get(projectile);
+    Circle bloonInGame = (Circle) myBloonsInGame.get(bloon);
+    //return projectileInGame.getBoundsInParent().intersects(bloonInGame.getBoundsInParent());
     return false;
   }
 
