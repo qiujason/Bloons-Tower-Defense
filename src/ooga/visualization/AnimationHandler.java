@@ -1,6 +1,5 @@
 package ooga.visualization;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,14 +9,19 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import javafx.util.Pair;
 import ooga.backend.API.GamePiece;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.BloonsIterator;
 import ooga.backend.bloons.BloonsType;
+import ooga.backend.bloons.factory.BloonsFactory;
+import ooga.backend.projectile.Projectile;
+import ooga.backend.projectile.ProjectileType;
+import ooga.backend.projectile.ProjectilesCollection;
+import ooga.backend.projectile.ProjectilesIterator;
+import ooga.backend.projectile.factory.ProjectileFactory;
+import ooga.backend.projectile.factory.SingleProjectileFactory;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowersCollection;
 import ooga.backend.towers.TowersIterator;
@@ -27,8 +31,9 @@ public class AnimationHandler {
   public static final double FRAMES_PER_SECOND = 60;
   public static final double ANIMATION_DELAY = 1 / FRAMES_PER_SECOND;
   public static final double SPEED = 3;
+  public static final double PROJECTILE_SPEED = 10;
 
-  private Timeline myAnimation;
+  private Timeline myAnimation = new Timeline();
   private List<List<String>> myLayout;
   private Group myLevelLayout;
   private double myStartingX;
@@ -36,17 +41,20 @@ public class AnimationHandler {
   private double myBlockSize;
   private Circle myTestCircle;
 
-  private TowersCollection myTowers;
-  private Map<Tower, Node> myTowersInGame;
-  private BloonsCollection myBloons;
-  private Map<Bloon, Node> myBloonsInGame;
+  private TowersCollection myTowers = new TowersCollection();
+  private Map<Tower, Node> myTowersInGame = new HashMap<>();
+  private BloonsCollection myBloons = new BloonsCollection();
+  private Map<Bloon, Node> myBloonsInGame = new HashMap<>();
+  private BloonsFactory myBloonsFactory;
+  private ProjectilesCollection myProjectiles = new ProjectilesCollection();
+  private Map<Projectile, Node> myProjectilesInGame = new HashMap<>();
+  private ProjectileFactory myProjectileFactory = new SingleProjectileFactory();
 
   private double myCircleSideX;
   private double myCircleSideY;
 
   public AnimationHandler(List<List<String>> layout, Group levelLayout, double startingX,
       double startingY, double blockSize) {
-    myAnimation = new Timeline();
     myAnimation.setCycleCount(Timeline.INDEFINITE);
     KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> animate());
     myAnimation.getKeyFrames().add(movement);
@@ -61,10 +69,6 @@ public class AnimationHandler {
     myTestCircle.setId("TestCircle");
     myLevelLayout.getChildren().add(myTestCircle);
 
-    myTowers = new TowersCollection();
-    myTowersInGame = new HashMap<>();
-    myBloons = new BloonsCollection();
-    myBloonsInGame = new HashMap<>();
     Bloon testBloon = new Bloon(BloonsType.RED, myTestCircle.getCenterX(),
         myTestCircle.getCenterY(), 0, 0);
     myBloons.add(testBloon);
@@ -74,6 +78,7 @@ public class AnimationHandler {
   private void animate() {
     animateBloons();
     animateTowers();
+    animateProjectiles();
   }
 
   // TODO: Refactor
@@ -128,14 +133,16 @@ public class AnimationHandler {
       while (bloonsIterator.hasMore()) {
         Bloon currentBloon = (Bloon) bloonsIterator.getNext();
         if (currentTower.getDistance(currentBloon) <= currentTower.getRadius() * myBlockSize) {
-          rotateBloon(currentBloon, currentTower);
+          rotateTower(currentBloon, currentTower);
+          attemptToFire(currentBloon, currentTower);
         }
       }
       bloonsIterator.reset();
     }
+    myTowers.updateAll();
   }
 
-  private void rotateBloon(Bloon bloon, Tower tower) {
+  private void rotateTower(Bloon bloon, Tower tower) {
     Node towerInGame = myTowersInGame.get(tower);
     double angle = Math.toDegrees(
         Math.asin((bloon.getXPosition() - tower.getXPosition()) / tower.getDistance(bloon)));
@@ -144,6 +151,43 @@ public class AnimationHandler {
     } else {
       towerInGame.setRotate(180 - angle);
     }
+  }
+
+  private void attemptToFire(Bloon bloon, Tower tower) {
+    if (tower.getCanShoot()) {
+      double projectileXSpeed = PROJECTILE_SPEED * tower.getDistance(bloon) / (bloon.getXPosition() - tower.getXPosition());
+      double projectileYSpeed = PROJECTILE_SPEED * tower.getDistance(bloon) / (bloon.getYPosition() - tower.getYPosition());
+      Projectile newProjectile = myProjectileFactory
+          .createDart(ProjectileType.SingleTargetProjectile, tower.getXPosition(),
+              tower.getYPosition(), projectileXSpeed, projectileYSpeed);
+      Circle projectileInGame = new Circle(newProjectile.getXPosition(), newProjectile.getYPosition(), myBlockSize / 3);
+      myLevelLayout.getChildren().add(projectileInGame);
+      myProjectilesInGame.put(newProjectile, projectileInGame);
+    }
+  }
+
+  private void animateProjectiles() {
+    ProjectilesIterator projectilesIterator = (ProjectilesIterator) myProjectiles.createIterator();
+    BloonsIterator bloonsIterator = (BloonsIterator) myBloons.createIterator();
+    while(projectilesIterator.hasMore()){
+      Projectile projectile = (Projectile) projectilesIterator.getNext();
+      Circle projectileInGame = (Circle) myProjectilesInGame.get(projectile);
+      projectileInGame.setCenterX(projectileInGame.getCenterX() + projectile.getXVelocity());
+      projectileInGame.setCenterY(projectileInGame.getCenterY() + projectile.getYVelocity());
+      while(bloonsIterator.hasMore()){
+        Bloon bloon = (Bloon) bloonsIterator.getNext();
+        if(checkBloonCollision(projectile, bloon)){
+          myLevelLayout.getChildren().remove(myProjectilesInGame.remove(projectile));
+          myProjectiles.remove(projectile);
+        }
+      }
+      bloonsIterator.reset();
+    }
+    myProjectiles.updateAll();
+  }
+
+  private boolean checkBloonCollision(Projectile projectile, Bloon bloon) {
+    return false;
   }
 
   public void addTower(GamePiece tower, Node towerInGame) {
