@@ -11,6 +11,7 @@ import ooga.backend.projectile.factory.ProjectileFactory;
 import ooga.backend.projectile.factory.SingleProjectileFactory;
 import ooga.backend.towers.ShootingChoice;
 import ooga.backend.towers.Tower;
+import ooga.backend.towers.TowerType;
 
 public abstract class SingleShotTower extends Tower {
 
@@ -23,7 +24,6 @@ public abstract class SingleShotTower extends Tower {
     super(myXPosition, myYPosition, myRadius, myShootingSpeed, myShootingRestRate);
     shootingChoice = defaultShootingChoice;
   }
-
 
   public ShootingChoice getShootingChoice(){
     return shootingChoice;
