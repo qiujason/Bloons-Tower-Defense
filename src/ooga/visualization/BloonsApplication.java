@@ -143,7 +143,7 @@ public class BloonsApplication extends Application {
     String blockColorAsString = myBlockMappings.getString(block);
     Color blockColor = Color.web(blockColorAsString);
     blockRectangle.setFill(blockColor);
-    blockRectangle.setOnMouseClicked(e -> putTower(blockRectangle));
+//    blockRectangle.setOnMouseClicked(e -> putTower(blockRectangle));
     if(block.charAt(0) == '*') {
       myStartingX = currentBlockX + blockSize / 2;
       myStartingY = currentBlockY + blockSize / 2;
@@ -179,35 +179,35 @@ public class BloonsApplication extends Application {
   }
 
   // TODO: handle exception/refactor
-  private void putTower(Rectangle blockRectangle) {
-    Color playableBlock = Color.valueOf(myBlockMappings.getString("0"));
-    Color nonPlayableBlock = Color.valueOf(myBlockMappings.getString(">"));
-    if (blockRectangle.getFill().equals(playableBlock) && !blockToTower.containsKey(blockRectangle)) {
-      Image towerImage = null;
-      try {
-        towerImage = new Image(String.valueOf(getClass().getResource(TOWER_IMAGE).toURI()));
-      } catch (URISyntaxException e) {
-        e.printStackTrace();
-      }
-      assert towerImage != null;
-      ImagePattern towerImagePattern = new ImagePattern(towerImage);
-      Circle towerInGame = new Circle(blockRectangle.getX() + myBlockSize / 2, blockRectangle.getY() + myBlockSize / 2, myBlockSize / 2);
-      towerInGame.setFill(towerImagePattern);
-      towerInGame.setId(blockRectangle.getId() + "Tower");
-      towerInGame.setOnMouseClicked(e -> myAnimationHandler.removeTower(towerInGame));
-      blockToTower.put(blockRectangle, towerInGame);
-      TowerFactory towerFactory = new SingleTowerFactory();
-      myAnimationHandler.addTower(towerFactory
-          .createTower(TowerType.SingleProjectileShooter, blockRectangle.getX() + myBlockSize / 2,
-              blockRectangle.getY() + myBlockSize / 2), towerInGame);
-    } else if (!blockRectangle.getFill().equals(nonPlayableBlock)) {
-      blockToTower.remove(blockRectangle);
-    }
-    else {
-      myAnimationHandler.getAnimation().pause();
-      makeAlert("Invalid Tower Space", "You cannot place a tower there :(");
-    }
-  }
+//  private void putTower(Rectangle blockRectangle) {
+//    Color playableBlock = Color.valueOf(myBlockMappings.getString("0"));
+//    Color nonPlayableBlock = Color.valueOf(myBlockMappings.getString(">"));
+//    if (blockRectangle.getFill().equals(playableBlock) && !blockToTower.containsKey(blockRectangle)) {
+//      Image towerImage = null;
+//      try {
+//        towerImage = new Image(String.valueOf(getClass().getResource(TOWER_IMAGE).toURI()));
+//      } catch (URISyntaxException e) {
+//        e.printStackTrace();
+//      }
+//      assert towerImage != null;
+//      ImagePattern towerImagePattern = new ImagePattern(towerImage);
+//      Circle towerInGame = new Circle(blockRectangle.getX() + myBlockSize / 2, blockRectangle.getY() + myBlockSize / 2, myBlockSize / 2);
+//      towerInGame.setFill(towerImagePattern);
+//      towerInGame.setId(blockRectangle.getId() + "Tower");
+//      towerInGame.setOnMouseClicked(e -> myAnimationHandler.removeTower(towerInGame));
+//      blockToTower.put(blockRectangle, towerInGame);
+//      TowerFactory towerFactory = new SingleTowerFactory();
+//      myAnimationHandler.addTower(towerFactory
+//          .createTower(TowerType.SingleProjectileShooter, blockRectangle.getX() + myBlockSize / 2,
+//              blockRectangle.getY() + myBlockSize / 2), towerInGame);
+//    } else if (!blockRectangle.getFill().equals(nonPlayableBlock)) {
+//      blockToTower.remove(blockRectangle);
+//    }
+//    else {
+//      myAnimationHandler.getAnimation().pause();
+//      makeAlert("Invalid Tower Space", "You cannot place a tower there :(");
+//    }
+//  }
 
   private void visualizePlayerGUI(BorderPane level) {
     VBox menuPane = new VBox();
