@@ -15,6 +15,10 @@ public class BloonsCollection implements GamePieceCollection {
     bloons = new ArrayList<>();
   }
 
+  public BloonsCollection(List<Bloon> bloonsList){
+    bloons = bloonsList;
+  }
+
   @Override
   public boolean add(GamePiece bloon) {
     if (bloon instanceof Bloon) {

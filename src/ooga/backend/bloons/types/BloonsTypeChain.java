@@ -37,7 +37,7 @@ public class BloonsTypeChain {
     }
 
     if (bloonTypes[0].equals("DEAD")) {
-      head = new BloonsTypeNode(new BloonsType("DEAD", 0, 0);
+      head = new BloonsTypeNode(new BloonsType("DEAD", 0, 0));
       bloonsTypeBloonMap.put("DEAD", head); // dead bloon
     } else {
       //TODO: throw exception (dead is not the first bloon)

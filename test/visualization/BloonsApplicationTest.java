@@ -3,6 +3,7 @@ package visualization;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -51,11 +52,12 @@ public class BloonsApplicationTest extends DukeApplicationTest {
   @Test // Not general
   public void testPutTower() {
     clickOn(myStartButton);
-    Rectangle myRectangle = lookup("#LayoutBlock00").query();
-    clickOn(myRectangle);
-    assertNotEquals(Color.GREEN, myRectangle.getFill());
-    clickOn(myRectangle);
-    assertEquals(Color.GREEN, myRectangle.getFill());
+    Rectangle myBlock = lookup("#LayoutBlock00").query();
+    clickOn(myBlock);
+    Circle myTower = lookup("#LayoutBlock00Tower").query();
+    assertNotEquals(Color.GREEN, myTower.getFill());
+    clickOn(myTower);
+    assertEquals(Color.GREEN, myBlock.getFill());
   }
 
   @Test
@@ -129,7 +131,7 @@ public class BloonsApplicationTest extends DukeApplicationTest {
   }
 
   @Test
-  public void testTurn(){
+  public void testBloonTurn(){
     clickOn(myStartButton);
     Button myPlayButton = lookup("#Play").query();
     clickOn(myPlayButton);
@@ -139,4 +141,17 @@ public class BloonsApplicationTest extends DukeApplicationTest {
     }
     assertNotEquals(64, (int) myTestCircle.getCenterY());
   }
+
+  @Test
+  public void testTowerTurn(){
+    clickOn(myStartButton);
+    Rectangle myBlock = lookup("#LayoutBlock00").query();
+    clickOn(myBlock);
+    Circle myTower = lookup("#LayoutBlock00Tower").query();
+    assertEquals(0, myTower.getRotate());
+    Button myPlayButton = lookup("#Play").query();
+    clickOn(myPlayButton);
+    assertNotEquals(0, myTower.getRotate());
+  }
+
 }

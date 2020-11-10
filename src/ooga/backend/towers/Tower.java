@@ -3,26 +3,36 @@ package ooga.backend.towers;
 import java.util.List;
 import ooga.backend.API.GamePiece;
 import ooga.backend.API.TowersAPI;
-import ooga.backend.bloons.Bloon;
-import ooga.backend.darts.Dart;
+import ooga.backend.bloons.collection.BloonsCollection;
+import ooga.backend.collections.Iterator;
+import ooga.backend.projectile.Projectile;
 
 public abstract class Tower implements GamePiece, TowersAPI {
 
-  private static final double defaultShootingSpeed = 20.0;
-
   private double xPosition;
   private double yPosition;
-  private int radius;
+  private double radius;
   private double shootingSpeed;
+  private double shootingRestRate;
+  private double countRestPeriod;
+  private boolean canShoot;
 
-  public Tower(double myXPosition, double myYPosition, int myRadius){
+  // if canShoot = true, step function can call shoot method, if not, do not call shoot method
+
+  public Tower(double myXPosition, double myYPosition, double myRadius, double myShootingSpeed,
+      double myShootingRestRate){
     setXPosition(myXPosition);
     setYPosition(myYPosition);
     radius = myRadius;
-    shootingSpeed = defaultShootingSpeed;
+    shootingSpeed = myShootingSpeed;
+    shootingRestRate = myShootingRestRate;
+    countRestPeriod = 0;
+    canShoot = true;
   }
 
-  public int getRadius(){
+  public abstract TowerType getTowerType();
+
+  public double getRadius(){
     return radius;
   }
 
@@ -46,17 +56,30 @@ public abstract class Tower implements GamePiece, TowersAPI {
     return yPosition;
   }
 
+  // update canShoot to true after resting period has elapsed
   @Override
   public void update() {
+    if(!canShoot) {
+      countRestPeriod++;
+    }
+    if(countRestPeriod == shootingRestRate){
+      countRestPeriod = 0;
+      canShoot = true;
+    }
+  }
 
+  public boolean getCanShoot(){
+    return canShoot;
   }
 
   public double getShootingSpeed(){
     return shootingSpeed;
   }
 
-  public boolean checkBalloonInRange(List<Bloon> bloonsList){
-    for(Bloon bloon : bloonsList){
+  public boolean checkBalloonInRange(BloonsCollection bloonsCollection){
+    Iterator iterator = bloonsCollection.createIterator();
+    while(iterator.hasMore()){
+      GamePiece bloon = iterator.getNext();
       double distance = getDistance(bloon);
       if(distance <= radius){
         return true;
@@ -65,9 +88,9 @@ public abstract class Tower implements GamePiece, TowersAPI {
     return false;
   }
 
-  public abstract List<Dart> shoot(List<Bloon> bloonsList);
+  public abstract List<Projectile> shoot(BloonsCollection bloonsCollection);
 
-  public double getDistance(Bloon target){
+  public double getDistance(GamePiece target){
     return Math.sqrt(Math.pow(xPosition-target.getXPosition(), 2) + Math.pow(yPosition-target.getYPosition(), 2));
   }
 

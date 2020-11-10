@@ -6,9 +6,10 @@ import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.collection.BloonsCollection;
 import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.collections.Iterator;
-import ooga.backend.darts.SingleDart;
+import ooga.backend.projectile.ProjectileType;
+import ooga.backend.projectile.SingleTargetProjectile;
 import ooga.backend.bloons.factory.BasicBloonsFactory;
-import org.junit.jupiter.api.BeforeAll;=
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 
@@ -69,7 +70,7 @@ public class BloonsTest {
   @Test
   void testAddNonBloonCollection() {
     BloonsCollection list = new BloonsCollection();
-    assertFalse(list.add(new SingleDart(0, 0, 0, 0)));
+    assertFalse(list.add(new SingleTargetProjectile(ProjectileType.SingleTargetProjectile, 0, 0, 0, 0)));
   }
 
   @Test
@@ -96,7 +97,7 @@ public class BloonsTest {
   @Test
   void testRemoveNonBloonCollection() {
     BloonsCollection list = new BloonsCollection();
-    assertFalse(list.remove(new SingleDart(0, 0, 0, 0)));
+    assertFalse(list.remove(new SingleTargetProjectile(ProjectileType.SingleTargetProjectile, 0, 0, 0, 0)));
   }
 
   @Test
