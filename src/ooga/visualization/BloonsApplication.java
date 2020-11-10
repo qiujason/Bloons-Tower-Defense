@@ -171,6 +171,10 @@ public class BloonsApplication extends Application {
       towerInGame.setOnMouseMoved(null);
       towerInGame.setCenterX(e.getX());
       towerInGame.setCenterY(e.getY());
+      TowerFactory towerFactory = new SingleTowerFactory();
+      myAnimationHandler.addTower(towerFactory
+          .createTower(TowerType.SingleProjectileShooter, e.getX(),
+              e.getY()), towerInGame);
     });
   }
 
