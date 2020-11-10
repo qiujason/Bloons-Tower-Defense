@@ -21,27 +21,33 @@ public class BloonReader extends Reader{
     return bloonWave;
   }
 
-  public List<BloonsCollection> generateBloonsCollectionMap(BloonsTypeChain chain, String fileName, Layout layout){
+  public List<BloonsCollection> generateBloonsCollectionMap(BloonsTypeChain chain, String fileName, Layout layout){ //TODO: create test for seeing if bloon is in right position (negative x)
     List<BloonsCollection> listOfBloons = new ArrayList<>();
     List<List<String>> bloonWaves = getDataFromFile(fileName);
     BloonsCollection currentCollection = new BloonsCollection();
+    int offset = 0;
     for (List<String> row : bloonWaves){
       if (row.get(0).equals("=")){
         listOfBloons.add(currentCollection);
         currentCollection = new BloonsCollection();
+        continue;
       }
-      for (String bloon : row){
-        Bloon bloons = createBloon(chain, bloon, layout);
-        currentCollection.add(bloons);
+      else{
+        for (String bloonInfo : row){
+          Bloon bloon = createBloon(chain, bloonInfo, layout, offset);
+          offset++;
+          currentCollection.add(bloon);
+        }
       }
     }
+    listOfBloons.add(currentCollection);
     return listOfBloons;
   }
 
-  private Bloon createBloon(BloonsTypeChain chain, String bloon, Layout layout) {
+  private Bloon createBloon(BloonsTypeChain chain, String bloon, Layout layout, int offset) {
     int bloonLives = Integer.parseInt(bloon);
     BloonsType bloonType = chain.getBloonsTypeRecord(bloonLives);
-    double startRow = layout.getStartBlockCoordinates()[0];
+    double startRow = layout.getStartBlockCoordinates()[0] - offset;
     double startCol = layout.getStartBlockCoordinates()[1];
     double dx = layout.getBlock((int)startRow, (int)startCol).getDx();
     double dy = layout.getBlock((int)startRow, (int)startCol).getDy();
