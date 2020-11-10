@@ -3,7 +3,7 @@ package ooga.backend.towers.singleshottowers;
 import java.util.ArrayList;
 import java.util.List;
 import ooga.backend.bloons.Bloon;
-import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.bloons.collection.BloonsCollection;
 import ooga.backend.collections.Iterator;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
@@ -72,7 +72,7 @@ public abstract class SingleShotTower extends Tower {
       if(getDistance(bloon) > getRadius()){
         continue;
       }
-      double strength = bloon.getBloonsType().getRBE();
+      double strength = bloon.getBloonsType().RBE();
       if(maxStrength < strength){
         maxStrength = strength;
         strongestBloon = bloon;

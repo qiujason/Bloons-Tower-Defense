@@ -5,7 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.bloons.collection.BloonsCollection;
+import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.collections.Iterator;
 import ooga.backend.layout.Layout;
 import ooga.backend.readers.BloonReader;
@@ -38,7 +39,8 @@ public class BloonReaderTest {
     LayoutReader layoutReader = new LayoutReader();
     BloonReader reader = new BloonReader();
     Layout layout = layoutReader.generateLayout("layouts/level1.csv");
-    List<BloonsCollection> list = reader.generateBloonsCollectionMap("tests/test_bloon_waves/level1_test.csv", layout);
+    BloonsTypeChain chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
+    List<BloonsCollection> list = reader.generateBloonsCollectionMap(chain, "tests/test_bloon_waves/level1_test.csv", layout);
     String[][] expectedWaves =
         {{"1","1","1","1","1","1","1","1","1","1","1","1"},
             {"0","0","0","0","0","0","0","0","0","0","0","0"},

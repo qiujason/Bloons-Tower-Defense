@@ -1,7 +1,6 @@
 package ooga.visualization;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -12,9 +11,9 @@ import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import ooga.backend.API.GamePiece;
 import ooga.backend.bloons.Bloon;
-import ooga.backend.bloons.BloonsCollection;
-import ooga.backend.bloons.BloonsIterator;
-import ooga.backend.bloons.BloonsType;
+import ooga.backend.bloons.collection.BloonsCollection;
+import ooga.backend.bloons.collection.BloonsIterator;
+import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.factory.BloonsFactory;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
@@ -70,7 +69,7 @@ public class AnimationHandler {
     myTestCircle.setId("TestCircle");
     myLevelLayout.getChildren().add(myTestCircle);
 
-    Bloon testBloon = new Bloon(BloonsType.RED, myTestCircle.getCenterX(),
+    Bloon testBloon = new Bloon(new BloonsType("RED", 1, 1), myTestCircle.getCenterX(),
         myTestCircle.getCenterY(), 0, 0);
     myBloons.add(testBloon);
     myBloonsInGame.put(testBloon, myTestCircle);

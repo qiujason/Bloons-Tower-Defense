@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import ooga.backend.bloons.Bloon;
-import ooga.backend.bloons.BloonsCollection;
-import ooga.backend.bloons.BloonsType;
+import ooga.backend.bloons.collection.BloonsCollection;
+import ooga.backend.bloons.types.BloonsType;
+import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.layout.Layout;
 
 public class BloonReader extends Reader{
@@ -20,7 +21,7 @@ public class BloonReader extends Reader{
     return bloonWave;
   }
 
-  public List<BloonsCollection> generateBloonsCollectionMap(String fileName, Layout layout){ //TODO: create test for seeing if bloon is in right position (negative x)
+  public List<BloonsCollection> generateBloonsCollectionMap(BloonsTypeChain chain, String fileName, Layout layout){ //TODO: create test for seeing if bloon is in right position (negative x)
     List<BloonsCollection> listOfBloons = new ArrayList<>();
     List<List<String>> bloonWaves = getDataFromFile(fileName);
     BloonsCollection currentCollection = new BloonsCollection();
@@ -33,7 +34,7 @@ public class BloonReader extends Reader{
       }
       else{
         for (String bloonInfo : row){
-          Bloon bloon = createBloon(bloonInfo, layout, offset);
+          Bloon bloon = createBloon(chain, bloonInfo, layout, offset);
           offset++;
           currentCollection.add(bloon);
         }
@@ -43,9 +44,9 @@ public class BloonReader extends Reader{
     return listOfBloons;
   }
 
-  private Bloon createBloon(String bloon, Layout layout, int offset) {
+  private Bloon createBloon(BloonsTypeChain chain, String bloon, Layout layout, int offset) {
     int bloonLives = Integer.parseInt(bloon);
-    BloonsType bloonType = BloonsType.values()[bloonLives];
+    BloonsType bloonType = chain.getBloonsTypeRecord(bloonLives);
     double startRow = layout.getStartBlockCoordinates()[0] - offset;
     double startCol = layout.getStartBlockCoordinates()[1];
     double dx = layout.getBlock((int)startRow, (int)startCol).getDx();

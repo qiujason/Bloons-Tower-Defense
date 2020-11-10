@@ -3,6 +3,10 @@ package ooga.backend.bloons;
 
 import ooga.backend.API.BloonsAPI;
 import ooga.backend.API.GamePiece;
+import ooga.backend.bloons.factory.BasicBloonsFactory;
+import ooga.backend.bloons.types.BloonsType;
+import ooga.backend.bloons.types.BloonsTypeChain;
+import ooga.backend.towers.TowerType;
 
 public class Bloon implements BloonsAPI, GamePiece {
 
@@ -22,7 +26,7 @@ public class Bloon implements BloonsAPI, GamePiece {
     this.xVelocity = xVelocity;
     this.yVelocity = yVelocity;
     distanceTraveled = 0;
-    relativeSpeed = bloonsType.getRelativeSpeed();
+    relativeSpeed = bloonsType.relativeSpeed();
   }
 
   public BloonsType getBloonsType(){
@@ -37,6 +41,19 @@ public class Bloon implements BloonsAPI, GamePiece {
   @Override
   public void setYVelocity(double newYVelocity) {
     yVelocity = newYVelocity;
+  }
+
+  @Override
+  public Bloon[] shootBloon(BloonsTypeChain chain, TowerType towerCaller, int hits) {
+    BloonsType nextBloonsType = chain.getNextBloonsType(bloonsType);
+    int numBloonsProduced = chain.getNumNextBloons(bloonsType);
+
+    Bloon[] bloons = new Bloon[numBloonsProduced];
+    BasicBloonsFactory factory = new BasicBloonsFactory();
+    for (int i = 0; i < numBloonsProduced; i++) {
+      bloons[i] = (Bloon) factory.createBloon(nextBloonsType, xPosition, yPosition, xVelocity, yVelocity);
+    }
+    return bloons;
   }
 
   @Override
@@ -69,12 +86,12 @@ public class Bloon implements BloonsAPI, GamePiece {
   }
 
   private void updateDistanceTraveled() {
-    distanceTraveled += Math.abs(xVelocity) + Math.abs(yVelocity);
+    distanceTraveled += (Math.abs(xVelocity) + Math.abs(yVelocity)) * relativeSpeed;
   }
 
   private void updatePosition() {
-    xPosition += xVelocity;
-    yPosition += yVelocity;
+    xPosition += xVelocity * relativeSpeed;
+    yPosition += yVelocity * relativeSpeed;
     updateDistanceTraveled();
   }
 
@@ -88,7 +105,7 @@ public class Bloon implements BloonsAPI, GamePiece {
 
   @Override
   public String toString(){
-    return "" + bloonsType.ordinal();
+    return "" + bloonsType.name();
   }
 
 }
