@@ -7,6 +7,7 @@ import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
 import ooga.backend.projectile.factory.ProjectileFactory;
 import ooga.backend.projectile.factory.SingleProjectileFactory;
+import ooga.backend.towers.TowerType;
 
 public class MultiProjectileShooter extends SpreadShotTower {
 
@@ -27,11 +28,16 @@ public class MultiProjectileShooter extends SpreadShotTower {
       for(int i = 0; i < numberOfShots; i++){
         ProjectileFactory projectileFactory = new SingleProjectileFactory();
         double projectileXVelocity = Math.cos(i*degreeIncrementPerShot);
-        double projectileYVelocity = Math.sin(i*degreeIncrementPerShot);;
+        double projectileYVelocity = Math.sin(i*degreeIncrementPerShot);
         shot.add(projectileFactory
             .createDart(ProjectileType.SingleTargetProjectile, getXPosition(), getYPosition(), projectileXVelocity, projectileYVelocity));
       }
     }
     return shot;
+  }
+
+  @Override
+  public TowerType getTowerType() {
+    return TowerType.MultiProjectileShooter;
   }
 }

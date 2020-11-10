@@ -4,7 +4,6 @@ public enum TowerType {
   SingleProjectileShooter(5, 5, 15, true),
   MultiProjectileShooter(5, 10, 10, false),
   SpreadProjectileShooter(15, 20, 20, true),
-  IceTower(5, 15, 10, false),
   UnlimitedRangeProjectileShooter(800, 5, 10, true);
 
   private double radius;
