@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -31,6 +32,8 @@ import ooga.backend.readers.LayoutReader;
 import ooga.backend.towers.singleshottowers.SingleProjectileShooter;
 import ooga.controller.GameMenuController;
 import ooga.controller.GameMenuInterface;
+import ooga.controller.TowerMenuController;
+import ooga.controller.TowerMenuInterface;
 
 public class BloonsApplication extends Application {
 
@@ -50,6 +53,7 @@ public class BloonsApplication extends Application {
   private Group myLevelLayout;
   private GameMenu myMenu;
   private GameMenuInterface gameMenuController;
+  private TowerMenuInterface towerMenuController;
   private AnimationHandler myAnimationHandler;
   private double myStartingX;
   private double myStartingY;
@@ -88,6 +92,7 @@ public class BloonsApplication extends Application {
     visualizeLayout(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myStartingX, myStartingY, myBlockSize);
     gameMenuController = new GameMenuController(myAnimationHandler.getAnimation());
+    towerMenuController = new TowerMenuController();
     blockToTower = new HashMap<>();
     visualizePlayerGUI(level);
     level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
@@ -147,6 +152,29 @@ public class BloonsApplication extends Application {
     return blockRectangle;
   }
 
+  public void createTower(){
+    Image towerImage = null;
+    try {
+      towerImage = new Image(String.valueOf(getClass().getResource(TOWER_IMAGE).toURI()));
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
+    assert towerImage != null;
+    ImagePattern towerImagePattern = new ImagePattern(towerImage);
+    Circle towerInGame = new Circle(myBlockSize / 2);
+    towerInGame.setFill(towerImagePattern);
+    myLevelLayout.getChildren().add(towerInGame);
+    myScene.setOnMouseMoved(e -> {
+      towerInGame.setCenterX(e.getX());
+      towerInGame.setCenterY(e.getY());
+    });
+    towerInGame.setOnMouseClicked(e ->{
+      towerInGame.setOnMouseMoved(null);
+      towerInGame.setCenterX(e.getX());
+      towerInGame.setCenterY(e.getY());
+    });
+  }
+
   // TODO: handle exception/refactor
   private void putTower(Rectangle blockRectangle) {
     Color playableBlock = Color.valueOf(myBlockMappings.getString("0"));
@@ -178,7 +206,7 @@ public class BloonsApplication extends Application {
   private void visualizePlayerGUI(BorderPane level) {
     VBox menuPane = new VBox();
     menuPane.setSpacing(10); //magic num
-    myMenu = new GameMenu(menuPane, gameMenuController);
+    myMenu = new GameMenu(this, menuPane, gameMenuController, towerMenuController, myAnimationHandler);
     level.setRight(menuPane);
   }
 
