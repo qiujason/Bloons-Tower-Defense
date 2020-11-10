@@ -22,7 +22,7 @@ public class TowerValueReader {
     }
     towerValueMap = new HashMap<>();
     for(Object key : properties.keySet()){
-      towerValueMap.put(getTowerType((String) key), (Integer) properties.get(key));
+      towerValueMap.put(getTowerType((String) key), Integer.valueOf((String)properties.get(key)));
     }
   }
 
@@ -30,14 +30,16 @@ public class TowerValueReader {
     return towerValueMap;
   }
 
+
+  // Map property file key to TowerType enum
   public TowerType getTowerType(String key){
-    if(key.equals(TowerType.SingleProjectileShooter.toString())){
+    if(key.equals(TowerType.SingleProjectileShooter.name())){
       return TowerType.SingleProjectileShooter;
-    } else if(key.equals(TowerType.MultiProjectileShooter.toString())){
+    } else if(key.equals(TowerType.MultiProjectileShooter.name())){
       return TowerType.MultiProjectileShooter;
-    } else if(key.equals(TowerType.SpreadProjectileShooter.toString())){
+    } else if(key.equals(TowerType.SpreadProjectileShooter.name())){
       return TowerType.SpreadProjectileShooter;
-    } else if(key.equals(TowerType.UnlimitedRangeProjectileShooter.toString())){
+    } else if(key.equals(TowerType.UnlimitedRangeProjectileShooter.name())){
       return TowerType.UnlimitedRangeProjectileShooter;
     }
    throw new ConfigurationException("Properties file includes invalid tower type name");
