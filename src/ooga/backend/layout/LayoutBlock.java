@@ -51,4 +51,8 @@ public class LayoutBlock {
   public String getBlockType() {
     return blockType;
   }
+
+  public boolean isEndBlock(){
+    return blockType.equals("@");
+  }
 }

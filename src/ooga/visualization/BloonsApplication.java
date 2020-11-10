@@ -25,6 +25,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import ooga.backend.layout.Layout;
+import ooga.backend.layout.LayoutBlock;
 import ooga.backend.readers.LayoutReader;
 import ooga.backend.towers.singleshottowers.SingleProjectileShooter;
 import ooga.controller.GameMenuController;
@@ -42,7 +44,7 @@ public class BloonsApplication extends Application {
 
   private Stage myStage;
   private Scene myScene;
-  private List<List<String>> myLayout;
+  private Layout myLayout;
   private Map<Node, Node> blockToTower;
   private LayoutReader myLayoutReader;
   private Group myLevelLayout;
@@ -103,10 +105,10 @@ public class BloonsApplication extends Application {
     myLevelLayout = new Group();
     level.setLeft(myLevelLayout);
 
-    myLayout = myLayoutReader.getDataFromFile(LEVEL_FILE);
+    myLayout = myLayoutReader.generateLayout(LEVEL_FILE);
 
-    int numberOfRows = myLayout.size();
-    int numberOfColumns = myLayout.get(0).size();
+    int numberOfRows = myLayout.getHeight();
+    int numberOfColumns = myLayout.getWidth();
     double blockWidth = GAME_WIDTH / numberOfColumns;
     double blockHeight = GAME_HEIGHT / numberOfRows;
     myBlockSize = Math.min(blockWidth, blockHeight);
@@ -116,9 +118,9 @@ public class BloonsApplication extends Application {
     int blockNumberX = 0;
     int blockNumberY = 0;
 
-    for (List<String> row : myLayout) {
-      for (String block : row) {
-        Rectangle newBlock = createBlock(block, currentBlockX, currentBlockY, myBlockSize);
+    for (int i = 0; i < numberOfRows; i++) {
+      for (int j = 0; j < numberOfColumns; j++) {
+        Rectangle newBlock = createBlock(myLayout.getBlock(i,j).getBlockType(), currentBlockX, currentBlockY, myBlockSize);
         newBlock.setId("LayoutBlock" + blockNumberX + blockNumberY);
         myLevelLayout.getChildren().add(newBlock);
         currentBlockX += myBlockSize;
