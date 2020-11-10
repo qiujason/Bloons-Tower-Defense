@@ -1,11 +1,14 @@
 package ooga.visualization;
 
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -18,10 +21,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ooga.backend.readers.LayoutReader;
+import ooga.backend.towers.singleshottowers.SingleProjectileShooter;
 import ooga.controller.GameMenuController;
 import ooga.controller.GameMenuInterface;
 
@@ -38,6 +43,7 @@ public class BloonsApplication extends Application {
   private Stage myStage;
   private Scene myScene;
   private List<List<String>> myLayout;
+  private Map<Node, Node> blockToTower;
   private LayoutReader myLayoutReader;
   private Group myLevelLayout;
   private GameMenu myMenu;
@@ -70,7 +76,7 @@ public class BloonsApplication extends Application {
     startButton.setId("Start");
     BorderPane.setAlignment(startButton, Pos.CENTER);
     menu.setBottom(startButton);
-    menu.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
+    menu.setBackground(new Background(new BackgroundFill(Color.web("#83b576"), null, null)));
   }
 
   private void loadLevel() {
@@ -80,6 +86,7 @@ public class BloonsApplication extends Application {
     visualizeLayout(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myStartingX, myStartingY, myBlockSize);
     gameMenuController = new GameMenuController(myAnimationHandler.getAnimation());
+    blockToTower = new HashMap<>();
     visualizePlayerGUI(level);
     level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
     myScene = new Scene(level, WIDTH, HEIGHT);
@@ -128,7 +135,7 @@ public class BloonsApplication extends Application {
       double blockSize) {
     Rectangle blockRectangle = new Rectangle(currentBlockX, currentBlockY, blockSize, blockSize);
     String blockColorAsString = myBlockMappings.getString(block);
-    Color blockColor = Color.valueOf(blockColorAsString);
+    Color blockColor = Color.web(blockColorAsString);
     blockRectangle.setFill(blockColor);
     blockRectangle.setOnMouseClicked(e -> putTower(blockRectangle));
     if(block.charAt(0) == '*') {
@@ -142,7 +149,7 @@ public class BloonsApplication extends Application {
   private void putTower(Rectangle blockRectangle) {
     Color playableBlock = Color.valueOf(myBlockMappings.getString("0"));
     Color nonPlayableBlock = Color.valueOf(myBlockMappings.getString(">"));
-    if (blockRectangle.getFill().equals(playableBlock)) {
+    if (blockRectangle.getFill().equals(playableBlock) && !blockToTower.containsKey(blockRectangle)) {
       Image towerImage = null;
       try {
         towerImage = new Image(String.valueOf(getClass().getResource(TOWER_IMAGE).toURI()));
@@ -151,9 +158,14 @@ public class BloonsApplication extends Application {
       }
       assert towerImage != null;
       ImagePattern towerImagePattern = new ImagePattern(towerImage);
-      blockRectangle.setFill(towerImagePattern);
+      Circle towerInGame = new Circle(blockRectangle.getX() + myBlockSize / 2, blockRectangle.getY() + myBlockSize / 2, myBlockSize / 2);
+      towerInGame.setFill(towerImagePattern);
+      towerInGame.setId(blockRectangle.getId() + "Tower");
+      towerInGame.setOnMouseClicked(e -> myAnimationHandler.removeTower(towerInGame));
+      blockToTower.put(blockRectangle, towerInGame);
+      myAnimationHandler.addTower(new SingleProjectileShooter(blockRectangle.getX() + myBlockSize / 2, blockRectangle.getY() + myBlockSize / 2, (int) myBlockSize*2, 5, 5), towerInGame);
     } else if (!blockRectangle.getFill().equals(nonPlayableBlock)) {
-      blockRectangle.setFill(playableBlock);
+      blockToTower.remove(blockRectangle);
     }
     else {
       myAnimationHandler.getAnimation().pause();
