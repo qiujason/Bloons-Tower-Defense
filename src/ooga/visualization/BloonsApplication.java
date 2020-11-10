@@ -162,7 +162,7 @@ public class BloonsApplication extends Application {
     Circle towerInGame = new Circle(myBlockSize / 2);
     towerInGame.setFill(towerImagePattern);
     myLevelLayout.getChildren().add(towerInGame);
-    myScene.setOnMouseMoved(e -> {
+    towerInGame.setOnMouseMoved(e -> {
       towerInGame.setCenterX(e.getX());
       towerInGame.setCenterY(e.getY());
     });
