@@ -3,7 +3,7 @@ package ooga.backend.towers;
 import java.util.List;
 import ooga.backend.API.GamePiece;
 import ooga.backend.API.TowersAPI;
-import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.bloons.collection.BloonsCollection;
 import ooga.backend.collections.Iterator;
 import ooga.backend.projectile.Projectile;
 
