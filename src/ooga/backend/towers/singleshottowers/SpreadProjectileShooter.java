@@ -8,6 +8,7 @@ import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
 import ooga.backend.projectile.factory.ProjectileFactory;
 import ooga.backend.projectile.factory.SingleProjectileFactory;
+import ooga.backend.towers.TowerType;
 
 // CANON Tower
 public class SpreadProjectileShooter extends SingleShotTower {
@@ -32,4 +33,8 @@ public class SpreadProjectileShooter extends SingleShotTower {
     return shot;
   }
 
+  @Override
+  public TowerType getTowerType() {
+    return TowerType.SpreadProjectileShooter;
+  }
 }

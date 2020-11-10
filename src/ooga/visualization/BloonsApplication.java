@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -25,6 +26,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import ooga.backend.layout.Layout;
+import ooga.backend.layout.LayoutBlock;
 import ooga.backend.readers.LayoutReader;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
@@ -33,6 +36,8 @@ import ooga.backend.towers.factory.TowerFactory;
 import ooga.backend.towers.singleshottowers.SingleProjectileShooter;
 import ooga.controller.GameMenuController;
 import ooga.controller.GameMenuInterface;
+import ooga.controller.TowerMenuController;
+import ooga.controller.TowerMenuInterface;
 
 public class BloonsApplication extends Application {
 
@@ -46,12 +51,13 @@ public class BloonsApplication extends Application {
 
   private Stage myStage;
   private Scene myScene;
-  private List<List<String>> myLayout;
+  private Layout myLayout;
   private Map<Node, Node> blockToTower;
   private LayoutReader myLayoutReader;
   private Group myLevelLayout;
   private GameMenu myMenu;
   private GameMenuInterface gameMenuController;
+  private TowerMenuInterface towerMenuController;
   private AnimationHandler myAnimationHandler;
   private double myStartingX;
   private double myStartingY;
@@ -80,7 +86,7 @@ public class BloonsApplication extends Application {
     startButton.setId("Start");
     BorderPane.setAlignment(startButton, Pos.CENTER);
     menu.setBottom(startButton);
-    menu.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
+    menu.setBackground(new Background(new BackgroundFill(Color.web("#83b576"), null, null)));
   }
 
   private void loadLevel() {
@@ -89,6 +95,7 @@ public class BloonsApplication extends Application {
     visualizeLayout(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myStartingX, myStartingY, myBlockSize);
     gameMenuController = new GameMenuController(myAnimationHandler.getAnimation());
+    towerMenuController = new TowerMenuController();
     blockToTower = new HashMap<>();
     visualizePlayerGUI(level);
     level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
@@ -102,10 +109,10 @@ public class BloonsApplication extends Application {
     myLevelLayout = new Group();
     level.setLeft(myLevelLayout);
 
-    myLayout = myLayoutReader.getDataFromFile(LEVEL_FILE);
+    myLayout = myLayoutReader.generateLayout(LEVEL_FILE);
 
-    int numberOfRows = myLayout.size();
-    int numberOfColumns = myLayout.get(0).size();
+    int numberOfRows = myLayout.getHeight();
+    int numberOfColumns = myLayout.getWidth();
     double blockWidth = GAME_WIDTH / numberOfColumns;
     double blockHeight = GAME_HEIGHT / numberOfRows;
     myBlockSize = Math.min(blockWidth, blockHeight);
@@ -115,9 +122,9 @@ public class BloonsApplication extends Application {
     int blockNumberX = 0;
     int blockNumberY = 0;
 
-    for (List<String> row : myLayout) {
-      for (String block : row) {
-        Rectangle newBlock = createBlock(block, currentBlockX, currentBlockY, myBlockSize);
+    for (int i = 0; i < numberOfRows; i++) {
+      for (int j = 0; j < numberOfColumns; j++) {
+        Rectangle newBlock = createBlock(myLayout.getBlock(i,j).getBlockType(), currentBlockX, currentBlockY, myBlockSize);
         newBlock.setId("LayoutBlock" + blockNumberX + blockNumberY);
         myLevelLayout.getChildren().add(newBlock);
         currentBlockX += myBlockSize;
@@ -134,7 +141,7 @@ public class BloonsApplication extends Application {
       double blockSize) {
     Rectangle blockRectangle = new Rectangle(currentBlockX, currentBlockY, blockSize, blockSize);
     String blockColorAsString = myBlockMappings.getString(block);
-    Color blockColor = Color.valueOf(blockColorAsString);
+    Color blockColor = Color.web(blockColorAsString);
     blockRectangle.setFill(blockColor);
     blockRectangle.setOnMouseClicked(e -> putTower(blockRectangle));
     if(block.charAt(0) == '*') {
@@ -144,7 +151,30 @@ public class BloonsApplication extends Application {
     return blockRectangle;
   }
 
-  // TODO: handle exception/refactor for general case
+  public void createTower(){
+    Image towerImage = null;
+    try {
+      towerImage = new Image(String.valueOf(getClass().getResource(TOWER_IMAGE).toURI()));
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
+    assert towerImage != null;
+    ImagePattern towerImagePattern = new ImagePattern(towerImage);
+    Circle towerInGame = new Circle(50,50,myBlockSize / 2);
+    towerInGame.setFill(towerImagePattern);
+    myLevelLayout.getChildren().add(towerInGame);
+    towerInGame.setOnMouseMoved(e -> {
+      towerInGame.setCenterX(e.getX());
+      towerInGame.setCenterY(e.getY());
+    });
+    towerInGame.setOnMouseClicked(e ->{
+      towerInGame.setOnMouseMoved(null);
+      towerInGame.setCenterX(e.getX());
+      towerInGame.setCenterY(e.getY());
+    });
+  }
+
+  // TODO: handle exception/refactor
   private void putTower(Rectangle blockRectangle) {
     Color playableBlock = Color.valueOf(myBlockMappings.getString("0"));
     Color nonPlayableBlock = Color.valueOf(myBlockMappings.getString(">"));
@@ -178,7 +208,7 @@ public class BloonsApplication extends Application {
   private void visualizePlayerGUI(BorderPane level) {
     VBox menuPane = new VBox();
     menuPane.setSpacing(10); //magic num
-    myMenu = new GameMenu(menuPane, gameMenuController);
+    myMenu = new GameMenu(this, menuPane, gameMenuController, towerMenuController, myAnimationHandler);
     level.setRight(menuPane);
   }
 

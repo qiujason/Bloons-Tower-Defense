@@ -4,13 +4,18 @@ import java.net.URISyntaxException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import ooga.controller.GameMenuInterface;
 import javafx.scene.control.Button;
+import ooga.controller.TowerMenuInterface;
 
 public class GameMenu {
 
@@ -19,6 +24,7 @@ public class GameMenu {
       .getBundle(getClass().getPackageName() + ".resources.menu" + LANGUAGE);
 
   private VBox myMenuPane;
+  private AnimationHandler myAnimationHandler;
 
   private Button playButton;
   private Button pauseButton;
@@ -26,6 +32,7 @@ public class GameMenu {
   private Button slowDownButton;
   private Button dartTowerButton;
   private Button tackTowerButton;
+
 
   private static final String PLAY_TEXT = "PlayButton";
   private static final String PAUSE_TEXT = "PauseButton";
@@ -35,21 +42,26 @@ public class GameMenu {
   private static final String DART_TOWER_NAME = "DartTower";
   private static final String DART_TOWER_COST = "$100";
   private static final String DART_TOWER_IMAGE = "/gamePhotos/dart_monkey_icon.png";
+  private static final String TOWER_IMAGE = "/gamePhotos/dartmonkey.png";
+
   private static final String TACK_TOWER_IMAGE = "/gamePhotos/";
 
   private static Double BUTTON_WIDTH = 100.0;
 
-  public GameMenu(VBox MenuPane, GameMenuInterface controller) {
+  public GameMenu(BloonsApplication App, VBox MenuPane, GameMenuInterface gameController, TowerMenuInterface towerController,
+      AnimationHandler animationHandler) {
     myMenuPane = MenuPane;
-    playButton = makeButton(menuProperties.getString(PLAY_TEXT), event -> controller.play());
-    pauseButton = makeButton(menuProperties.getString(PAUSE_TEXT), event -> controller.pause());
+    myAnimationHandler = animationHandler;
+
+    playButton = makeButton(menuProperties.getString(PLAY_TEXT), event -> gameController.play());
+    pauseButton = makeButton(menuProperties.getString(PAUSE_TEXT), event -> gameController.pause());
     makeButtonRow(playButton, pauseButton);
 
-    speedUpButton = makeButton(menuProperties.getString(SPEEDUP_TEXT), event -> controller.speedUp());
-    slowDownButton = makeButton(menuProperties.getString(SLOWDOWN_TEXT), event -> controller.slowDown());
+    speedUpButton = makeButton(menuProperties.getString(SPEEDUP_TEXT), event -> gameController.speedUp());
+    slowDownButton = makeButton(menuProperties.getString(SLOWDOWN_TEXT), event -> gameController.slowDown());
     makeButtonRow(speedUpButton, slowDownButton);
 
-    dartTowerButton = makeTowerButton(DART_TOWER_NAME, DART_TOWER_IMAGE, event -> controller.play());
+    dartTowerButton = makeTowerButton(DART_TOWER_NAME, DART_TOWER_IMAGE, event -> App.createTower());
     makeTowerRow(DART_TOWER_NAME, DART_TOWER_COST, dartTowerButton);
   }
 
@@ -80,12 +92,7 @@ public class GameMenu {
   }
 
   private Button makeTowerButton(String towerName, String imageDirectory, EventHandler<ActionEvent> handler){
-    Image towerImage = null;
-    try {
-      towerImage = new Image(String.valueOf(getClass().getResource(imageDirectory).toURI()));
-    } catch (URISyntaxException e) {
-      e.printStackTrace();
-    }
+    Image towerImage = makeImage(imageDirectory);
     ImageView imageView = new ImageView(towerImage);
     imageView.setFitHeight(90);
     imageView.setFitWidth(90);
@@ -94,5 +101,18 @@ public class GameMenu {
     button.setId(towerName);
     return button;
   }
+
+  private Image makeImage(String directory){
+    Image towerImage = null;
+    try {
+      towerImage = new Image(String.valueOf(getClass().getResource(directory).toURI()));
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
+    assert towerImage != null;
+    return towerImage;
+  }
+
+
 
 }
