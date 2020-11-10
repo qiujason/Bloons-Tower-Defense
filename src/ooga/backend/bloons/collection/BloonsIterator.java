@@ -1,7 +1,8 @@
-package ooga.backend.bloons;
+package ooga.backend.bloons.collection;
 
 import java.util.List;
 import ooga.backend.API.GamePiece;
+import ooga.backend.bloons.Bloon;
 import ooga.backend.collections.Iterator;
 
 public class BloonsIterator implements Iterator {

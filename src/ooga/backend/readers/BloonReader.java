@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import ooga.backend.bloons.Bloon;
-import ooga.backend.bloons.BloonsCollection;
-import ooga.backend.bloons.BloonsType;
+import ooga.backend.bloons.collection.BloonsCollection;
+import ooga.backend.bloons.types.BloonsType;
+import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.layout.Layout;
 
 public class BloonReader extends Reader{
@@ -20,7 +21,7 @@ public class BloonReader extends Reader{
     return bloonWave;
   }
 
-  public List<BloonsCollection> generateBloonsCollectionMap(String fileName, Layout layout){
+  public List<BloonsCollection> generateBloonsCollectionMap(BloonsTypeChain chain, String fileName, Layout layout){
     List<BloonsCollection> listOfBloons = new ArrayList<>();
     List<List<String>> bloonWaves = getDataFromFile(fileName);
     BloonsCollection currentCollection = new BloonsCollection();
@@ -30,16 +31,17 @@ public class BloonReader extends Reader{
         currentCollection = new BloonsCollection();
       }
       for (String bloon : row){
-        Bloon bloons = createBloon(bloon, layout);
+        Bloon bloons = createBloon(chain, bloon, layout);
         currentCollection.add(bloons);
       }
     }
     return listOfBloons;
   }
 
-  private Bloon createBloon(String bloon, Layout layout) {
+  private Bloon createBloon(BloonsTypeChain chain, String bloon, Layout layout) {
     int bloonLives = Integer.parseInt(bloon);
-    BloonsType bloonType = BloonsType.values()[bloonLives];
+    BloonsType bloonType = chain.
+        BloonsType.values()[bloonLives];
     double startRow = layout.getStartBlockCoordinates()[0];
     double startCol = layout.getStartBlockCoordinates()[1];
     double dx = layout.getBlock((int)startRow, (int)startCol).getDx();

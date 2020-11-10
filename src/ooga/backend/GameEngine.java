@@ -1,7 +1,7 @@
 package ooga.backend;
 
 import ooga.backend.API.GameEngineAPI;
-import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.bloons.collection.BloonsCollection;
 import ooga.backend.collections.Iterator;
 import ooga.backend.towers.TowersCollection;
 
