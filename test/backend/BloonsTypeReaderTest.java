@@ -11,7 +11,7 @@ public class BloonsTypeReaderTest {
   @Test
   void testGetBloonsTypeRecord() {
     BloonsTypeChain chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
-    assertEquals(new BloonsType("RED",1, 1), chain.getBloonsTypeRecord("RED").name());
+    assertEquals(new BloonsType("RED",1, 1), chain.getBloonsTypeRecord("RED"));
   }
 
   @Test

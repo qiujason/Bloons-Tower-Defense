@@ -9,7 +9,7 @@ import ooga.backend.collections.Iterator;
 import ooga.backend.projectile.ProjectileType;
 import ooga.backend.projectile.SingleTargetProjectile;
 import ooga.backend.bloons.factory.BasicBloonsFactory;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
@@ -17,7 +17,7 @@ public class BloonsTest {
 
   BloonsTypeChain chain;
 
-  @BeforeAll
+  @BeforeEach
   void initializeBloonsTypes() {
     chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
   }

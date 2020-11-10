@@ -29,6 +29,10 @@ import javafx.stage.Stage;
 import ooga.backend.layout.Layout;
 import ooga.backend.layout.LayoutBlock;
 import ooga.backend.readers.LayoutReader;
+import ooga.backend.towers.Tower;
+import ooga.backend.towers.TowerType;
+import ooga.backend.towers.factory.SingleTowerFactory;
+import ooga.backend.towers.factory.TowerFactory;
 import ooga.backend.towers.singleshottowers.SingleProjectileShooter;
 import ooga.controller.GameMenuController;
 import ooga.controller.GameMenuInterface;
@@ -88,7 +92,6 @@ public class BloonsApplication extends Application {
   private void loadLevel() {
     BorderPane level = new BorderPane();
     myLayoutReader = new LayoutReader();
-//    visualizeGameScreen(level);
     visualizeLayout(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myStartingX, myStartingY, myBlockSize);
     gameMenuController = new GameMenuController(myAnimationHandler.getAnimation());
@@ -100,10 +103,6 @@ public class BloonsApplication extends Application {
     myStage.setScene(myScene);
   }
 
-//  private void visualizeGameScreen(BorderPane level) {
-//    visualizeLayout(level);
-//    visualizePlayerGUI(level);
-//  }
 
   // TODO: Refactor
   private void visualizeLayout(BorderPane level) {
@@ -161,7 +160,7 @@ public class BloonsApplication extends Application {
     }
     assert towerImage != null;
     ImagePattern towerImagePattern = new ImagePattern(towerImage);
-    Circle towerInGame = new Circle(myBlockSize / 2);
+    Circle towerInGame = new Circle(50,50,myBlockSize / 2);
     towerInGame.setFill(towerImagePattern);
     myLevelLayout.getChildren().add(towerInGame);
     towerInGame.setOnMouseMoved(e -> {
@@ -193,7 +192,10 @@ public class BloonsApplication extends Application {
       towerInGame.setId(blockRectangle.getId() + "Tower");
       towerInGame.setOnMouseClicked(e -> myAnimationHandler.removeTower(towerInGame));
       blockToTower.put(blockRectangle, towerInGame);
-      myAnimationHandler.addTower(new SingleProjectileShooter(blockRectangle.getX() + myBlockSize / 2, blockRectangle.getY() + myBlockSize / 2, (int) myBlockSize*2, 5, 5), towerInGame);
+      TowerFactory towerFactory = new SingleTowerFactory();
+      myAnimationHandler.addTower(towerFactory
+          .createTower(TowerType.SingleProjectileShooter, blockRectangle.getX() + myBlockSize / 2,
+              blockRectangle.getY() + myBlockSize / 2), towerInGame);
     } else if (!blockRectangle.getFill().equals(nonPlayableBlock)) {
       blockToTower.remove(blockRectangle);
     }
