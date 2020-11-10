@@ -65,7 +65,8 @@ public class AnimationHandler {
     myTowersInGame = new HashMap<>();
     myBloons = new BloonsCollection();
     myBloonsInGame = new HashMap<>();
-    Bloon testBloon = new Bloon(BloonsType.RED, myTestCircle.getCenterX(), myTestCircle.getCenterY(), 0, 0);
+    Bloon testBloon = new Bloon(BloonsType.RED, myTestCircle.getCenterX(),
+        myTestCircle.getCenterY(), 0, 0);
     myBloons.add(testBloon);
     myBloonsInGame.put(testBloon, myTestCircle);
   }
@@ -81,7 +82,7 @@ public class AnimationHandler {
     String currentBlockString = myLayout
         .get((int) ((myTestCircle.getCenterY() + myCircleSideY) / myBlockSize))
         .get((int) ((myTestCircle.getCenterX() + myCircleSideX) / myBlockSize));
-    while(bloonsIterator.hasMore()) {
+    while (bloonsIterator.hasMore()) {
       Bloon currentBloon = (Bloon) bloonsIterator.getNext();
 
       switch(currentBlockString) {
@@ -122,11 +123,11 @@ public class AnimationHandler {
   private void animateTowers() {
     TowersIterator towersIterator = (TowersIterator) myTowers.createIterator();
     BloonsIterator bloonsIterator = (BloonsIterator) myBloons.createIterator();
-    while(towersIterator.hasMore()){
+    while (towersIterator.hasMore()) {
       Tower currentTower = (Tower) towersIterator.getNext();
-      while(bloonsIterator.hasMore()) {
+      while (bloonsIterator.hasMore()) {
         Bloon currentBloon = (Bloon) bloonsIterator.getNext();
-        if (currentTower.getDistance(currentBloon) <= currentTower.getRadius()){
+        if (currentTower.getDistance(currentBloon) <= currentTower.getRadius() * myBlockSize) {
           rotateBloon(currentBloon, currentTower);
         }
       }
@@ -134,24 +135,24 @@ public class AnimationHandler {
     }
   }
 
-  private void rotateBloon(Bloon bloon, Tower tower){
+  private void rotateBloon(Bloon bloon, Tower tower) {
     Node towerInGame = myTowersInGame.get(tower);
-    double angle = Math.toDegrees(Math.asin((bloon.getXPosition() - tower.getXPosition()) / tower.getDistance(bloon)));
-    if(bloon.getYPosition() < tower.getYPosition()){
+    double angle = Math.toDegrees(
+        Math.asin((bloon.getXPosition() - tower.getXPosition()) / tower.getDistance(bloon)));
+    if (bloon.getYPosition() < tower.getYPosition()) {
       towerInGame.setRotate(angle);
-    }
-    else{
+    } else {
       towerInGame.setRotate(180 - angle);
     }
   }
 
-  public void addTower(GamePiece tower, Node towerInGame){
+  public void addTower(GamePiece tower, Node towerInGame) {
     myTowers.add(tower);
     myTowersInGame.put((Tower) tower, towerInGame);
     myLevelLayout.getChildren().add(towerInGame);
   }
 
-  public void removeTower(Node towerInGame){
+  public void removeTower(Node towerInGame) {
     myLevelLayout.getChildren().remove(towerInGame);
   }
 
