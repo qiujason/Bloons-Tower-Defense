@@ -64,6 +64,7 @@ public class BloonsApplication extends Application {
   private Map<Node, Node> blockToTower;
   private LayoutReader myLayoutReader;
   private Group myLevelLayout;
+  private BloonsCollection myBloons;
   private GameMenu myMenu;
   private VBox myMenuPane;
   private GameMenuInterface gameMenuController;
@@ -74,6 +75,11 @@ public class BloonsApplication extends Application {
   private double myBlockSize;
   private final ResourceBundle myBlockMappings = ResourceBundle
       .getBundle(getClass().getPackageName() + ".resources.blockMappings");
+
+  public BloonsApplication(Layout layout, BloonsCollection bloons) {
+    myLayout = layout;
+    myBloons = bloons;
+  }
 
   @Override
   public void start(Stage mainStage) {
@@ -155,7 +161,6 @@ public class BloonsApplication extends Application {
     String blockColorAsString = myBlockMappings.getString(block);
     Color blockColor = Color.web(blockColorAsString);
     blockRectangle.setFill(blockColor);
-    blockRectangle.setOnMouseClicked(e -> putTower(blockRectangle));
     if(block.charAt(0) == '*') {
       myStartingX = currentBlockX + blockSize / 2;
       myStartingY = currentBlockY + blockSize / 2;
@@ -164,6 +169,8 @@ public class BloonsApplication extends Application {
   }
 
   public void createTower(){
+    Color playableBlock = Color.valueOf(myBlockMappings.getString("0"));
+    Color nonPlayableBlock = Color.valueOf(myBlockMappings.getString(">"));
     Image towerImage = null;
     try {
       towerImage = new Image(String.valueOf(getClass().getResource(TOWER_IMAGE).toURI()));
@@ -172,9 +179,7 @@ public class BloonsApplication extends Application {
     }
     assert towerImage != null;
     ImagePattern towerImagePattern = new ImagePattern(towerImage);
-    PointerInfo a = MouseInfo.getPointerInfo();
-    Point b = a.getLocation();
-    Circle towerInGame = new Circle(50,50,myBlockSize / 3);
+    Circle towerInGame = new Circle(HEIGHT/2,WIDTH/2,myBlockSize / 2);
     towerInGame.setFill(towerImagePattern);
     myLevelLayout.getChildren().add(towerInGame);
     myLevelLayout.setOnMouseMoved(e -> {
@@ -183,43 +188,12 @@ public class BloonsApplication extends Application {
     });
     myLevelLayout.setOnMouseClicked(e ->{
       myLevelLayout.setOnMouseMoved(null);
-      towerInGame.setCenterX(e.getX());
-      towerInGame.setCenterY(e.getY());
-      TowerFactory towerFactory = new SingleTowerFactory();
-      myAnimationHandler.addTower(towerFactory
-          .createTower(TowerType.SingleProjectileShooter, e.getX(),
-              e.getY()), towerInGame);
     });
-    towerInGame.setOnMouseClicked(e ->  {
-      myLevelLayout.setOnMouseClicked(null);
-      displaySettings();
-    });
+    TowerFactory towerFactory = new SingleTowerFactory();
+    myAnimationHandler.addTower(towerFactory
+        .createTower(TowerType.SingleProjectileShooter, towerInGame.getCenterX(),
+            towerInGame.getCenterY()), towerInGame);
   }
-
-  // TODO: handle exception/refactor
-//  private void putTower(Rectangle blockRectangle) {
-//    Color playableBlock = Color.valueOf(myBlockMappings.getString("0"));
-//    Color nonPlayableBlock = Color.valueOf(myBlockMappings.getString(">"));
-//    if (blockRectangle.getFill().equals(playableBlock) && !blockToTower.containsKey(blockRectangle)) {
-//      Image towerImage = null;
-//      try {
-//        towerImage = new Image(String.valueOf(getClass().getResource(TOWER_IMAGE).toURI()));
-//      } catch (URISyntaxException e) {
-//        e.printStackTrace();
-//      }
-//      assert towerImage != null;
-//      ImagePattern towerImagePattern = new ImagePattern(towerImage);
-//      Circle towerInGame = new Circle(blockRectangle.getX() + myBlockSize / 2, blockRectangle.getY() + myBlockSize / 2, myBlockSize / 2);
-//      towerInGame.setFill(towerImagePattern);
-//      towerInGame.setId(blockRectangle.getId() + "Tower");
-//      towerInGame.setOnMouseClicked(e -> myAnimationHandler.removeTower(towerInGame));
-//      blockToTower.put(blockRectangle, towerInGame);
-//      TowerFactory towerFactory = new SingleTowerFactory();
-//      myAnimationHandler.addTower(towerFactory
-//          .createTower(TowerType.SingleProjectileShooter, e.getX(),
-//              e.getY()), towerInGame);
-//    });
-//  }
 
   private void displaySettings(){
     FlowPane flow = new FlowPane();

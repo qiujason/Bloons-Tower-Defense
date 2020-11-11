@@ -4,7 +4,8 @@ import javafx.scene.shape.Circle;
 
 public class TowerNode extends Circle {
 
-  public TowerNode(double radius){
+  public TowerNode(double xPosition, double yPosition, double radius){
+
   }
 
 }
