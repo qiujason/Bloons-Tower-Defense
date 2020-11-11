@@ -92,6 +92,8 @@ public class AnimationHandler {
       Bloon currentBloon = (Bloon) bloonsIterator.getNext();
       if (currentBlock.isEndBlock()) {
         myLevelLayout.getChildren().remove(myTestCircle);
+        myBloons.remove(currentBloon);
+        myBloonsInGame.remove(currentBloon);
       }
       currentBloon.setXVelocity(SPEED * currentBlock.getDx());
       currentBloon.setYVelocity(SPEED * currentBlock.getDy());
