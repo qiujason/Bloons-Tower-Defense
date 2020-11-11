@@ -1,7 +1,6 @@
 package ooga.visualization;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -12,9 +11,9 @@ import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import ooga.backend.API.GamePiece;
 import ooga.backend.bloons.Bloon;
-import ooga.backend.bloons.BloonsCollection;
-import ooga.backend.bloons.BloonsIterator;
-import ooga.backend.bloons.BloonsType;
+import ooga.backend.bloons.collection.BloonsCollection;
+import ooga.backend.bloons.collection.BloonsIterator;
+import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.factory.BloonsFactory;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
@@ -44,7 +43,7 @@ public class AnimationHandler {
 
   private TowersCollection myTowers = new TowersCollection();
   private Map<Tower, Node> myTowersInGame = new HashMap<>();
-  private BloonsCollection myBloons = new BloonsCollection();
+  private BloonsCollection myBloons;
   private Map<Bloon, Node> myBloonsInGame = new HashMap<>();
   private BloonsFactory myBloonsFactory;
   private ProjectilesCollection myProjectiles = new ProjectilesCollection();
@@ -54,7 +53,7 @@ public class AnimationHandler {
   private double myCircleSideX;
   private double myCircleSideY;
 
-  public AnimationHandler(Layout layout, Group levelLayout, double startingX,
+  public AnimationHandler(Layout layout, Group levelLayout, BloonsCollection bloons, double startingX,
       double startingY, double blockSize) {
     myAnimation.setCycleCount(Timeline.INDEFINITE);
     KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> animate());
@@ -62,6 +61,7 @@ public class AnimationHandler {
 
     myLayout = layout;
     myLevelLayout = levelLayout;
+    myBloons = bloons;
     myStartingX = startingX;
     myStartingY = startingY;
     myBlockSize = blockSize;
@@ -70,13 +70,13 @@ public class AnimationHandler {
     myTestCircle.setId("TestCircle");
     myLevelLayout.getChildren().add(myTestCircle);
 
-    Bloon testBloon = new Bloon(BloonsType.RED, myTestCircle.getCenterX(),
+    Bloon testBloon = new Bloon(new BloonsType("RED", 1, 1), myTestCircle.getCenterX(),
         myTestCircle.getCenterY(), 0, 0);
     myBloons.add(testBloon);
     myBloonsInGame.put(testBloon, myTestCircle);
   }
 
-  private void animate() {
+  public void animate() {
     animateBloons();
     animateTowers();
     animateProjectiles();
@@ -204,6 +204,10 @@ public class AnimationHandler {
 
   public void removeTower(Node towerInGame) {
     myLevelLayout.getChildren().remove(towerInGame);
+  }
+
+  public void setBloonWave(BloonsCollection bloonWave) {
+    myBloons = bloonWave;
   }
 
   public Timeline getAnimation() {
