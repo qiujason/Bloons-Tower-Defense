@@ -184,36 +184,41 @@ public class BloonsApplication extends Application {
       myLevelLayout.setOnMouseMoved(null);
       towerInGame.setCenterX(e.getX());
       towerInGame.setCenterY(e.getY());
-    });
-  }
-
-  // TODO: handle exception/refactor
-  private void putTower(Rectangle blockRectangle) {
-    Color playableBlock = Color.valueOf(myBlockMappings.getString("0"));
-    Color nonPlayableBlock = Color.valueOf(myBlockMappings.getString(">"));
-    if (blockRectangle.getFill().equals(playableBlock) && !blockToTower.containsKey(blockRectangle)) {
-      Image towerImage = null;
-      try {
-        towerImage = new Image(String.valueOf(getClass().getResource(TOWER_IMAGE).toURI()));
-      } catch (URISyntaxException e) {
-        e.printStackTrace();
-      }
-      assert towerImage != null;
-      ImagePattern towerImagePattern = new ImagePattern(towerImage);
-      Circle towerInGame = new Circle(blockRectangle.getX() + myBlockSize / 2, blockRectangle.getY() + myBlockSize / 2, myBlockSize / 2);
-      towerInGame.setFill(towerImagePattern);
-      towerInGame.setId(blockRectangle.getId() + "Tower");
-      towerInGame.setOnMouseClicked(e -> myAnimationHandler.removeTower(towerInGame));
-      blockToTower.put(blockRectangle, towerInGame);
       TowerFactory towerFactory = new SingleTowerFactory();
       myAnimationHandler.addTower(towerFactory
           .createTower(TowerType.SingleProjectileShooter, e.getX(),
               e.getY()), towerInGame);
     });
     towerInGame.setOnMouseClicked(e ->  {
+      myLevelLayout.setOnMouseClicked(null);
       displaySettings();
     });
   }
+
+  // TODO: handle exception/refactor
+//  private void putTower(Rectangle blockRectangle) {
+//    Color playableBlock = Color.valueOf(myBlockMappings.getString("0"));
+//    Color nonPlayableBlock = Color.valueOf(myBlockMappings.getString(">"));
+//    if (blockRectangle.getFill().equals(playableBlock) && !blockToTower.containsKey(blockRectangle)) {
+//      Image towerImage = null;
+//      try {
+//        towerImage = new Image(String.valueOf(getClass().getResource(TOWER_IMAGE).toURI()));
+//      } catch (URISyntaxException e) {
+//        e.printStackTrace();
+//      }
+//      assert towerImage != null;
+//      ImagePattern towerImagePattern = new ImagePattern(towerImage);
+//      Circle towerInGame = new Circle(blockRectangle.getX() + myBlockSize / 2, blockRectangle.getY() + myBlockSize / 2, myBlockSize / 2);
+//      towerInGame.setFill(towerImagePattern);
+//      towerInGame.setId(blockRectangle.getId() + "Tower");
+//      towerInGame.setOnMouseClicked(e -> myAnimationHandler.removeTower(towerInGame));
+//      blockToTower.put(blockRectangle, towerInGame);
+//      TowerFactory towerFactory = new SingleTowerFactory();
+//      myAnimationHandler.addTower(towerFactory
+//          .createTower(TowerType.SingleProjectileShooter, e.getX(),
+//              e.getY()), towerInGame);
+//    });
+//  }
 
   private void displaySettings(){
     FlowPane flow = new FlowPane();

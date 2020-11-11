@@ -2,6 +2,7 @@ package ooga;
 
 
 import javafx.application.Application;
+import ooga.controller.Controller;
 
 /**
  * Feel free to completely change this code or delete it entirely. 
