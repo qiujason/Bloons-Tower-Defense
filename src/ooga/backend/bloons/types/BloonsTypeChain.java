@@ -45,7 +45,8 @@ public class BloonsTypeChain {
     for (int i = 1; i < bloonTypes.length; i++) {
       String[] attributes = bundle.getString(bloonTypes[i]).split(",", 3);
       BloonsTypeNode currentBloon = new BloonsTypeNode(
-          new BloonsType(bloonTypes[i], Integer.parseInt(attributes[0]), Double.parseDouble(attributes[1])));
+          new BloonsType(bloonTypes[i], Integer.parseInt(attributes[0]),
+              Double.parseDouble(attributes[1])));
       initializeNextBloons(currentBloon, attributes[2]);
       if (!bloonsTypeBloonMap.containsKey(bloonTypes[i])) {
         bloonsTypeBloonMap.put(bloonTypes[i], currentBloon);
@@ -76,6 +77,9 @@ public class BloonsTypeChain {
     BloonsTypeNode retNode = head;
     for (int i = 0; i < index; i++) {
       retNode = retNode.prev;
+      if (retNode == null) {
+        return null;
+      }
     }
     return retNode.getType();
   }
@@ -91,12 +95,18 @@ public class BloonsTypeChain {
     if (!bloonsTypeBloonMap.containsKey(bloonsType.name())) {
       //TODO: throw exception invalid bloons name
     }
+    if (bloonsTypeBloonMap.get(bloonsType.name()).next == null) {
+      return bloonsTypeBloonMap.get(bloonsType.name()).getType();
+    }
     return bloonsTypeBloonMap.get(bloonsType.name()).next.getType();
   }
 
   public BloonsType getPrevBloonsType(BloonsType bloonsType) {
     if (!bloonsTypeBloonMap.containsKey(bloonsType.name())) {
       //TODO: throw exception invalid bloons name
+    }
+    if (bloonsTypeBloonMap.get(bloonsType.name()).prev == null) {
+      return null;
     }
     return bloonsTypeBloonMap.get(bloonsType.name()).prev.getType();
   }
