@@ -9,7 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
-import ooga.backend.API.GamePiece;
+import ooga.backend.GamePiece;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.collection.BloonsCollection;
 import ooga.backend.bloons.collection.BloonsIterator;

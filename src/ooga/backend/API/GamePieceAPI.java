@@ -1,7 +1,7 @@
 package ooga.backend.API;
 
 
-public interface GamePiece {
+public interface GamePieceAPI {
 
   void setXPosition(double updateXPos);
 

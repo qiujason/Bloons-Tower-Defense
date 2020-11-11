@@ -1,7 +1,7 @@
 package ooga.backend.towers;
 
 import java.util.List;
-import ooga.backend.API.GamePiece;
+import ooga.backend.GamePiece;
 import ooga.backend.collections.Iterator;
 
 public class TowersIterator implements Iterator {
