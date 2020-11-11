@@ -1,6 +1,7 @@
 package ooga;
 
 
+import javafx.application.Application;
 import ooga.controller.Controller;
 
 /**
@@ -11,6 +12,6 @@ public class Main {
      * Start of the program.
      */
     public static void main (String[] args) {
-        Controller.startGame();
+        Application.launch(Controller.class);
     }
 }
