@@ -85,17 +85,18 @@ public class AnimationHandler {
   // TODO: Refactor
   private void animateBloons() {
     BloonsIterator bloonsIterator = (BloonsIterator) myBloons.createIterator();
-    LayoutBlock currentBlock = myLayout.getBlock(((int) ((myTestCircle.getCenterY() + myCircleSideY) / myBlockSize))
-        ,((int) ((myTestCircle.getCenterX() + myCircleSideX) / myBlockSize)));
+
 
     while(bloonsIterator.hasMore()) {
       Bloon currentBloon = (Bloon) bloonsIterator.getNext();
+      LayoutBlock currentBlock = myLayout.getBlock(((int) ((myTestCircle.getCenterY() + myCircleSideY) / myBlockSize))
+          ,((int) ((myTestCircle.getCenterX() + myCircleSideX) / myBlockSize)));
       if (currentBlock.isEndBlock()) {
         myLevelLayout.getChildren().remove(myTestCircle);
         myBloons.remove(currentBloon);
       }
-      currentBloon.setXVelocity(SPEED * currentBlock.getDx());
-      currentBloon.setYVelocity(SPEED * currentBlock.getDy());
+      currentBloon.setXVelocity(currentBloon.getBloonsType().relativeSpeed() * currentBlock.getDx()/10);
+      currentBloon.setYVelocity(currentBloon.getBloonsType().relativeSpeed() * currentBlock.getDy()/10);
 
       myTestCircle.setCenterX(myTestCircle.getCenterX() + currentBloon.getXVelocity());
       myTestCircle.setCenterY(myTestCircle.getCenterY() + currentBloon.getYVelocity());

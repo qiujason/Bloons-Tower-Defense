@@ -47,10 +47,11 @@ public class BloonReader extends Reader{
   private Bloon createBloon(BloonsTypeChain chain, String bloon, Layout layout, int offset) {
     int bloonLives = Integer.parseInt(bloon);
     BloonsType bloonType = chain.getBloonsTypeRecord(bloonLives);
-    double startRow = layout.getStartBlockCoordinates()[0] - offset;
+    double startRow = layout.getStartBlockCoordinates()[0];
     double startCol = layout.getStartBlockCoordinates()[1];
-    double dx = layout.getBlock((int)startRow, (int)startCol).getDx();
-    double dy = layout.getBlock((int)startRow, (int)startCol).getDy();
+    double dx = layout.getBlock((int)startRow, (int)startCol).getDx() * bloonType.relativeSpeed()/1000;
+    double dy = layout.getBlock((int)startRow, (int)startCol).getDy() * bloonType.relativeSpeed()/1000;
+    startRow = startRow - offset;
     return new Bloon(bloonType, startRow, startCol, dx, dy);
   }
 
