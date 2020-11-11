@@ -100,7 +100,8 @@ public class BloonsApplication extends Application {
     BorderPane level = new BorderPane();
     myLayoutReader = new LayoutReader();
     visualizeLayout(level);
-    myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myStartingX, myStartingY, myBlockSize);
+    myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
+        myStartingX, myStartingY, myBlockSize);
     gameMenuController = new GameMenuController(myAnimationHandler.getAnimation());
     towerMenuController = new TowerMenuController();
     blockToTower = new HashMap<>();
