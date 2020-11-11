@@ -75,7 +75,7 @@ public class BloonsTypeChain {
   public BloonsType getBloonsTypeRecord(int index) {
     BloonsTypeNode retNode = head;
     for (int i = 0; i < index; i++) {
-      retNode = retNode.next;
+      retNode = retNode.prev;
     }
     return retNode.getType();
   }

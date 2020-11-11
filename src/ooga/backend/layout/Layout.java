@@ -3,17 +3,20 @@ package ooga.backend.layout;
 import java.util.ArrayList;
 import java.util.List;
 import ooga.backend.API.LayoutAPI;
+import ooga.visualization.BloonsApplication;
 
 public class Layout implements LayoutAPI {
 
   private int width;
   private int height;
   private List<List<LayoutBlock>> layoutConfig;
+  private double blockSize;
 
   public Layout(List<List<String>> layoutConfig){
     this.width = layoutConfig.get(0).size();
     this.height = layoutConfig.size();
     this.layoutConfig = createLayoutConfig(layoutConfig);
+    this.blockSize = initializeBlockSize();
   }
 
   private List<List<LayoutBlock>> createLayoutConfig(List<List<String>> layoutConfig) {
@@ -26,6 +29,12 @@ public class Layout implements LayoutAPI {
       layoutBlocks.add(blockRow);
     }
     return layoutBlocks;
+  }
+
+  private double initializeBlockSize() {
+    double blockWidth = BloonsApplication.GAME_WIDTH / width;
+    double blockHeight = BloonsApplication.GAME_HEIGHT / height;
+    return Math.min(blockWidth, blockHeight);
   }
 
   @Override
@@ -64,6 +73,10 @@ public class Layout implements LayoutAPI {
 
   public boolean isEndOfPath(int row, int col){
     return getBlock(row, col).isEndBlock();
+  }
+
+  public double getBlockSize() {
+    return blockSize;
   }
 
 }

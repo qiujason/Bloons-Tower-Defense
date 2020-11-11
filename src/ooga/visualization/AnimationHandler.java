@@ -43,7 +43,7 @@ public class AnimationHandler {
 
   private TowersCollection myTowers = new TowersCollection();
   private Map<Tower, Node> myTowersInGame = new HashMap<>();
-  private BloonsCollection myBloons = new BloonsCollection();
+  private BloonsCollection myBloons;
   private Map<Bloon, Node> myBloonsInGame = new HashMap<>();
   private BloonsFactory myBloonsFactory;
   private ProjectilesCollection myProjectiles = new ProjectilesCollection();
@@ -53,7 +53,7 @@ public class AnimationHandler {
   private double myCircleSideX;
   private double myCircleSideY;
 
-  public AnimationHandler(Layout layout, Group levelLayout, double startingX,
+  public AnimationHandler(Layout layout, Group levelLayout, BloonsCollection bloons, double startingX,
       double startingY, double blockSize) {
     myAnimation.setCycleCount(Timeline.INDEFINITE);
     KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> animate());
@@ -61,6 +61,7 @@ public class AnimationHandler {
 
     myLayout = layout;
     myLevelLayout = levelLayout;
+    myBloons = bloons;
     myStartingX = startingX;
     myStartingY = startingY;
     myBlockSize = blockSize;
@@ -75,7 +76,7 @@ public class AnimationHandler {
     myBloonsInGame.put(testBloon, myTestCircle);
   }
 
-  private void animate() {
+  public void animate() {
     animateBloons();
     animateTowers();
     animateProjectiles();
@@ -84,16 +85,18 @@ public class AnimationHandler {
   // TODO: Refactor
   private void animateBloons() {
     BloonsIterator bloonsIterator = (BloonsIterator) myBloons.createIterator();
-    LayoutBlock currentBlock = myLayout.getBlock(((int) ((myTestCircle.getCenterY() + myCircleSideY) / myBlockSize))
-        ,((int) ((myTestCircle.getCenterX() + myCircleSideX) / myBlockSize)));
+
 
     while(bloonsIterator.hasMore()) {
       Bloon currentBloon = (Bloon) bloonsIterator.getNext();
+      LayoutBlock currentBlock = myLayout.getBlock(((int) ((myTestCircle.getCenterY() + myCircleSideY) / myBlockSize))
+          ,((int) ((myTestCircle.getCenterX() + myCircleSideX) / myBlockSize)));
       if (currentBlock.isEndBlock()) {
         myLevelLayout.getChildren().remove(myTestCircle);
+        myBloons.remove(currentBloon);
       }
-      currentBloon.setXVelocity(SPEED * currentBlock.getDx());
-      currentBloon.setYVelocity(SPEED * currentBlock.getDy());
+      currentBloon.setXVelocity(currentBloon.getBloonsType().relativeSpeed() * currentBlock.getDx()/10);
+      currentBloon.setYVelocity(currentBloon.getBloonsType().relativeSpeed() * currentBlock.getDy()/10);
 
       myTestCircle.setCenterX(myTestCircle.getCenterX() + currentBloon.getXVelocity());
       myTestCircle.setCenterY(myTestCircle.getCenterY() + currentBloon.getYVelocity());
@@ -203,6 +206,10 @@ public class AnimationHandler {
 
   public void removeTower(Node towerInGame) {
     myLevelLayout.getChildren().remove(towerInGame);
+  }
+
+  public void setBloonWave(BloonsCollection bloonWave) {
+    myBloons = bloonWave;
   }
 
   public Timeline getAnimation() {

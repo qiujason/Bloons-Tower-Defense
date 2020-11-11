@@ -26,6 +26,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import ooga.backend.bloons.collection.BloonsCollection;
 import ooga.backend.layout.Layout;
 import ooga.backend.layout.LayoutBlock;
 import ooga.backend.readers.LayoutReader;
@@ -52,6 +53,7 @@ public class BloonsApplication extends Application {
   private Stage myStage;
   private Scene myScene;
   private Layout myLayout;
+  private BloonsCollection myBloons;
   private Map<Node, Node> blockToTower;
   private LayoutReader myLayoutReader;
   private Group myLevelLayout;
@@ -64,6 +66,11 @@ public class BloonsApplication extends Application {
   private double myBlockSize;
   private final ResourceBundle myBlockMappings = ResourceBundle
       .getBundle(getClass().getPackageName() + ".resources.blockMappings");
+
+  public BloonsApplication(Layout layout, BloonsCollection bloons) {
+    myLayout = layout;
+    myBloons = bloons;
+  }
 
   @Override
   public void start(Stage mainStage) {
@@ -93,7 +100,8 @@ public class BloonsApplication extends Application {
     BorderPane level = new BorderPane();
     myLayoutReader = new LayoutReader();
     visualizeLayout(level);
-    myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myStartingX, myStartingY, myBlockSize);
+    myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
+        myStartingX, myStartingY, myBlockSize);
     gameMenuController = new GameMenuController(myAnimationHandler.getAnimation());
     towerMenuController = new TowerMenuController();
     blockToTower = new HashMap<>();
@@ -116,6 +124,7 @@ public class BloonsApplication extends Application {
     double blockWidth = GAME_WIDTH / numberOfColumns;
     double blockHeight = GAME_HEIGHT / numberOfRows;
     myBlockSize = Math.min(blockWidth, blockHeight);
+    System.out.println(myBlockSize);
 
     double currentBlockX = 0;
     double currentBlockY = 0;
@@ -228,6 +237,10 @@ public class BloonsApplication extends Application {
     a.setHeaderText(header);
     a.setContentText(message);
     a.show();
+  }
+
+  public AnimationHandler getMyAnimationHandler() {
+    return myAnimationHandler;
   }
 
 }

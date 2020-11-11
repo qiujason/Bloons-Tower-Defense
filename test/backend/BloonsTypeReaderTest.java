@@ -9,14 +9,20 @@ import org.junit.jupiter.api.Test;
 public class BloonsTypeReaderTest {
 
   @Test
-  void testGetBloonsTypeRecord() {
+  void testGetBloonsTypeRecordByName() {
     BloonsTypeChain chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
     assertEquals(new BloonsType("RED",1, 1), chain.getBloonsTypeRecord("RED"));
   }
 
   @Test
   void testGetNextBloonsTypeRecord() {
-    BloonsTypeChain chain = new BloonsTypeChain("bloon_resources.Bloons");
+    BloonsTypeChain chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
+    assertEquals(new BloonsType("DEAD",0, 0), chain.getNextBloonsType(chain.getBloonsTypeRecord("RED")));
+  }
+
+  @Test
+  void testGetBloonsTypeRecordByIndex() {
+    BloonsTypeChain chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
     assertEquals(new BloonsType("DEAD",0, 0), chain.getNextBloonsType(chain.getBloonsTypeRecord("RED")));
   }
 
