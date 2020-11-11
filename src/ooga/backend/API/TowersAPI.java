@@ -1,6 +1,7 @@
 package ooga.backend.API;
 
 import java.util.List;
+import ooga.backend.GamePiece;
 import ooga.backend.bloons.collection.BloonsCollection;
 import ooga.backend.projectile.Projectile;
 

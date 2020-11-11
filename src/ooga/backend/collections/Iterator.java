@@ -1,7 +1,7 @@
 package ooga.backend.collections;
 
 
-import ooga.backend.API.GamePiece;
+import ooga.backend.GamePiece;
 
 public interface Iterator {
 
