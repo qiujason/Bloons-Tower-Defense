@@ -4,7 +4,7 @@ package ooga.controller;
 import javafx.application.Application;
 import ooga.visualization.BloonsApplication;
 
-public class Controller {
+public class ApplicationController {
 
   public static void startGame() {
     // run javafx

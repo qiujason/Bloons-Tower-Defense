@@ -1,5 +1,8 @@
 package ooga.visualization;
 
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.PointerInfo;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
@@ -15,10 +18,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -26,6 +33,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import ooga.backend.layout.Layout;
 import ooga.backend.layout.LayoutBlock;
 import ooga.backend.readers.LayoutReader;
@@ -52,10 +60,12 @@ public class BloonsApplication extends Application {
   private Stage myStage;
   private Scene myScene;
   private Layout myLayout;
-  private Map<Node, Node> blockToTower;
+//  private Map<Node, Node> blockToTower;
   private LayoutReader myLayoutReader;
+  private Group mySceneRoot;
   private Group myLevelLayout;
   private GameMenu myMenu;
+  private VBox myMenuPane;
   private GameMenuInterface gameMenuController;
   private TowerMenuInterface towerMenuController;
   private AnimationHandler myAnimationHandler;
@@ -96,7 +106,7 @@ public class BloonsApplication extends Application {
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myStartingX, myStartingY, myBlockSize);
     gameMenuController = new GameMenuController(myAnimationHandler.getAnimation());
     towerMenuController = new TowerMenuController();
-    blockToTower = new HashMap<>();
+//    blockToTower = new HashMap<>();
     visualizePlayerGUI(level);
     level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
     myScene = new Scene(level, WIDTH, HEIGHT);
@@ -160,15 +170,17 @@ public class BloonsApplication extends Application {
     }
     assert towerImage != null;
     ImagePattern towerImagePattern = new ImagePattern(towerImage);
-    Circle towerInGame = new Circle(50,50,myBlockSize / 2);
+    PointerInfo a = MouseInfo.getPointerInfo();
+    Point b = a.getLocation();
+    Circle towerInGame = new Circle(50,50,myBlockSize / 3);
     towerInGame.setFill(towerImagePattern);
     myLevelLayout.getChildren().add(towerInGame);
-    towerInGame.setOnMouseMoved(e -> {
+    myLevelLayout.setOnMouseMoved(e -> {
       towerInGame.setCenterX(e.getX());
       towerInGame.setCenterY(e.getY());
     });
-    towerInGame.setOnMouseClicked(e ->{
-      towerInGame.setOnMouseMoved(null);
+    myLevelLayout.setOnMouseClicked(e ->{
+      myLevelLayout.setOnMouseMoved(null);
       towerInGame.setCenterX(e.getX());
       towerInGame.setCenterY(e.getY());
       TowerFactory towerFactory = new SingleTowerFactory();
@@ -176,6 +188,17 @@ public class BloonsApplication extends Application {
           .createTower(TowerType.SingleProjectileShooter, e.getX(),
               e.getY()), towerInGame);
     });
+    towerInGame.setOnMouseClicked(e ->  {
+      displaySettings();
+    });
+  }
+
+  private void displaySettings(){
+    FlowPane flow = new FlowPane();
+    VBox settings = new VBox(new Label("EDDIE"));
+    settings.setAlignment(Pos.CENTER);
+    flow.getChildren().add(settings);
+    myMenuPane.getChildren().add(flow);
   }
 
   // TODO: handle exception/refactor
@@ -210,10 +233,10 @@ public class BloonsApplication extends Application {
 //  }
 
   private void visualizePlayerGUI(BorderPane level) {
-    VBox menuPane = new VBox();
-    menuPane.setSpacing(10); //magic num
-    myMenu = new GameMenu(this, menuPane, gameMenuController, towerMenuController, myAnimationHandler);
-    level.setRight(menuPane);
+    myMenuPane = new VBox();
+    myMenuPane.setSpacing(10); //magic num
+    myMenu = new GameMenu(this, myMenuPane, gameMenuController, towerMenuController, myAnimationHandler);
+    level.setRight(myMenuPane);
   }
 
   /**
