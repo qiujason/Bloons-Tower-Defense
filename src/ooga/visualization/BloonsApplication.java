@@ -172,12 +172,12 @@ public class BloonsApplication extends Application {
     Circle towerInGame = new Circle(50,50,myBlockSize / 2);
     towerInGame.setFill(towerImagePattern);
     myLevelLayout.getChildren().add(towerInGame);
-    towerInGame.setOnMouseMoved(e -> {
+    myLevelLayout.setOnMouseMoved(e -> {
       towerInGame.setCenterX(e.getX());
       towerInGame.setCenterY(e.getY());
     });
     towerInGame.setOnMouseClicked(e ->{
-      towerInGame.setOnMouseMoved(null);
+      myLevelLayout.setOnMouseMoved(null);
       towerInGame.setCenterX(e.getX());
       towerInGame.setCenterY(e.getY());
       TowerFactory towerFactory = new SingleTowerFactory();
