@@ -1,6 +1,6 @@
 package ooga.backend.bloons.factory;
 
-import ooga.backend.API.GamePiece;
+import ooga.backend.GamePiece;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.types.BloonsType;
 

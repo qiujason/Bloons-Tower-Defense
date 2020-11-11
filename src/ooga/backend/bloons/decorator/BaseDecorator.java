@@ -1,16 +1,17 @@
 package ooga.backend.bloons.decorator;
 
 import ooga.backend.API.BloonsAPI;
-import ooga.backend.API.GamePiece;
+import ooga.backend.GamePiece;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.towers.TowerType;
 
-public class BaseDecorator implements BloonsAPI, GamePiece {
+public class BaseDecorator extends GamePiece implements BloonsAPI {
 
   protected final Bloon bloonWrappee;
 
   public BaseDecorator(Bloon bloon) {
+    super(bloon.getXPosition(), bloon.getYPosition());
     bloonWrappee = bloon;
   }
 
