@@ -127,6 +127,7 @@ public class BloonsApplication extends Application {
     double blockWidth = GAME_WIDTH / numberOfColumns;
     double blockHeight = GAME_HEIGHT / numberOfRows;
     myBlockSize = Math.min(blockWidth, blockHeight);
+    System.out.println(myBlockSize);
 
     double currentBlockX = 0;
     double currentBlockY = 0;
