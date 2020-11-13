@@ -13,10 +13,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -34,6 +36,11 @@ import ooga.controller.GameMenuController;
 import ooga.controller.GameMenuInterface;
 import ooga.controller.TowerMenuController;
 import ooga.controller.TowerMenuInterface;
+import ooga.visualization.menu.GameMenu;
+import ooga.visualization.weapons.TowerNode;
+import ooga.visualization.weapons.TowerNodeFactory;
+import ooga.visualization.weapons.WeaponNodeFactory;
+import ooga.visualization.weapons.WeaponRange;
 
 public class BloonsApplication extends Application {
 
@@ -53,6 +60,7 @@ public class BloonsApplication extends Application {
   private LayoutReader myLayoutReader;
   private Group myLevelLayout;
   private GameMenu myMenu;
+  private VBox myMenuPane;
   private GameMenuInterface gameMenuController;
   private TowerMenuInterface towerMenuController;
   private AnimationHandler myAnimationHandler;
@@ -119,7 +127,6 @@ public class BloonsApplication extends Application {
     double blockWidth = GAME_WIDTH / numberOfColumns;
     double blockHeight = GAME_HEIGHT / numberOfRows;
     myBlockSize = Math.min(blockWidth, blockHeight);
-    System.out.println(myBlockSize);
 
     double currentBlockX = 0;
     double currentBlockY = 0;
@@ -155,69 +162,48 @@ public class BloonsApplication extends Application {
     return blockRectangle;
   }
 
-  public void createTower(){
-    Image towerImage = null;
-    try {
-      towerImage = new Image(String.valueOf(getClass().getResource(TOWER_IMAGE).toURI()));
-    } catch (URISyntaxException e) {
-      e.printStackTrace();
-    }
-    assert towerImage != null;
-    ImagePattern towerImagePattern = new ImagePattern(towerImage);
-    Circle towerInGame = new Circle(50,50,myBlockSize / 2);
-    towerInGame.setFill(towerImagePattern);
+  public void createTower() {
+    Color playableBlock = Color.valueOf(myBlockMappings.getString("0"));
+    Color nonPlayableBlock = Color.valueOf(myBlockMappings.getString(">"));
+    WeaponNodeFactory nodeFactory = new TowerNodeFactory();
+    TowerNode towerInGame = nodeFactory.createTowerNode(TowerType.SingleProjectileShooter, GAME_WIDTH/2,
+        GAME_HEIGHT/2, myBlockSize/2);
+    WeaponRange towerRange = towerInGame.getRangeDisplay();
     myLevelLayout.getChildren().add(towerInGame);
-    towerInGame.setOnMouseMoved(e -> {
+    myLevelLayout.getChildren().add(towerRange);
+    towerInGame.toFront();
+
+    TowerFactory towerFactory = new SingleTowerFactory();
+
+    myLevelLayout.setOnMouseMoved(e -> {
       towerInGame.setCenterX(e.getX());
       towerInGame.setCenterY(e.getY());
+      towerRange.setCenterX(e.getX());
+      towerRange.setCenterY(e.getY());
     });
-    towerInGame.setOnMouseClicked(e ->{
-      towerInGame.setOnMouseMoved(null);
-      towerInGame.setCenterX(e.getX());
-      towerInGame.setCenterY(e.getY());
-      TowerFactory towerFactory = new SingleTowerFactory();
+    towerInGame.setOnMouseClicked(e -> {
+      myLevelLayout.setOnMouseMoved(null);
+      towerRange.makeInvisible();
       myAnimationHandler.addTower(towerFactory
-          .createTower(TowerType.SingleProjectileShooter, e.getX(),
-              e.getY()), towerInGame);
+          .createTower(TowerType.SingleProjectileShooter, towerInGame.getCenterX(),
+              towerInGame.getCenterY()), towerInGame);
+      towerInGame.setOnMouseClicked(null);
     });
   }
 
-  // TODO: handle exception/refactor
-//  private void putTower(Rectangle blockRectangle) {
-//    Color playableBlock = Color.valueOf(myBlockMappings.getString("0"));
-//    Color nonPlayableBlock = Color.valueOf(myBlockMappings.getString(">"));
-//    if (blockRectangle.getFill().equals(playableBlock) && !blockToTower.containsKey(blockRectangle)) {
-//      Image towerImage = null;
-//      try {
-//        towerImage = new Image(String.valueOf(getClass().getResource(TOWER_IMAGE).toURI()));
-//      } catch (URISyntaxException e) {
-//        e.printStackTrace();
-//      }
-//      assert towerImage != null;
-//      ImagePattern towerImagePattern = new ImagePattern(towerImage);
-//      Circle towerInGame = new Circle(blockRectangle.getX() + myBlockSize / 2, blockRectangle.getY() + myBlockSize / 2, myBlockSize / 2);
-//      towerInGame.setFill(towerImagePattern);
-//      towerInGame.setId(blockRectangle.getId() + "Tower");
-//      towerInGame.setOnMouseClicked(e -> myAnimationHandler.removeTower(towerInGame));
-//      blockToTower.put(blockRectangle, towerInGame);
-//      TowerFactory towerFactory = new SingleTowerFactory();
-//      myAnimationHandler.addTower(towerFactory
-//          .createTower(TowerType.SingleProjectileShooter, blockRectangle.getX() + myBlockSize / 2,
-//              blockRectangle.getY() + myBlockSize / 2), towerInGame);
-//    } else if (!blockRectangle.getFill().equals(nonPlayableBlock)) {
-//      blockToTower.remove(blockRectangle);
-//    }
-//    else {
-//      myAnimationHandler.getAnimation().pause();
-//      makeAlert("Invalid Tower Space", "You cannot place a tower there :(");
-//    }
-//  }
+  private void displaySettings(){
+    FlowPane flow = new FlowPane();
+    VBox settings = new VBox(new Label("EDDIE"));
+    settings.setAlignment(Pos.CENTER);
+    flow.getChildren().add(settings);
+    myMenuPane.getChildren().add(flow);
+  }
 
   private void visualizePlayerGUI(BorderPane level) {
-    VBox menuPane = new VBox();
-    menuPane.setSpacing(10); //magic num
-    myMenu = new GameMenu(this, menuPane, gameMenuController, towerMenuController, myAnimationHandler);
-    level.setRight(menuPane);
+    myMenuPane = new VBox();
+    myMenuPane.setSpacing(10); //magic num
+    myMenu = new GameMenu(this, myMenuPane, gameMenuController, towerMenuController, myAnimationHandler);
+    level.setRight(myMenuPane);
   }
 
   /**
@@ -227,11 +213,16 @@ public class BloonsApplication extends Application {
    */
   public void makeAlert(String header, String message) {
     Alert a = new Alert(Alert.AlertType.NONE);
-    ButtonType close = new ButtonType(":(", ButtonBar.ButtonData.CANCEL_CLOSE);
+    ButtonType close = new ButtonType("OK", ButtonBar.ButtonData.CANCEL_CLOSE);
     a.getButtonTypes().addAll(close);
     a.setHeaderText(header);
     a.setContentText(message);
     a.show();
+  }
+
+  public void fullScreen(){
+    myStage.setFullScreen(true);
+    myStage.show();
   }
 
   public AnimationHandler getMyAnimationHandler() {

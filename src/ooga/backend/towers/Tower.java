@@ -7,6 +7,7 @@ import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
+import ooga.visualization.AnimationHandler;
 
 public abstract class Tower extends GamePiece implements TowersAPI {
 
@@ -23,7 +24,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     super(myXPosition, myYPosition);
     radius = myRadius;
     shootingSpeed = myShootingSpeed;
-    shootingRestRate = myShootingRestRate;
+    shootingRestRate = myShootingRestRate * AnimationHandler.FRAMES_PER_SECOND;
     countRestPeriod = 0;
     canShoot = true;
   }
@@ -44,6 +45,10 @@ public abstract class Tower extends GamePiece implements TowersAPI {
       countRestPeriod = 0;
       canShoot = true;
     }
+  }
+
+  public void updateCanShoot(boolean update){
+    canShoot = update;
   }
 
   public boolean getCanShoot(){

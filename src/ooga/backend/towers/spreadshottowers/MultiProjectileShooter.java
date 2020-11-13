@@ -23,6 +23,7 @@ public class MultiProjectileShooter extends SpreadShotTower {
 
   @Override
   public List<Projectile> shoot(BloonsCollection bloonsCollection) {
+    updateCanShoot(false);
     List<Projectile> shot = new ArrayList<>();
     if(checkBalloonInRange(bloonsCollection)){
       for(int i = 0; i < numberOfShots; i++){

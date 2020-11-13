@@ -21,9 +21,4 @@ public class LayoutReader extends Reader{
     List<List<String>> layoutConfig = getDataFromFile(fileName);
     return new Layout(layoutConfig);
   }
-
-
-
-
-
 }

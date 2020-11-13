@@ -1,27 +1,25 @@
-package ooga.visualization;
+package ooga.visualization.menu;
 
 import java.net.URISyntaxException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Cursor;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import ooga.controller.GameMenuInterface;
 import javafx.scene.control.Button;
 import ooga.controller.TowerMenuInterface;
+import ooga.visualization.AnimationHandler;
+import ooga.visualization.BloonsApplication;
 
 public class GameMenu {
 
   private static final String LANGUAGE = "English";
-  private final ResourceBundle menuProperties = ResourceBundle
-      .getBundle(getClass().getPackageName() + ".resources.menu" + LANGUAGE);
+  private final ResourceBundle menuProperties =
+      ResourceBundle.getBundle("ooga.visualization.resources.menu" + LANGUAGE);
 
   private VBox myMenuPane;
   private AnimationHandler myAnimationHandler;
@@ -41,7 +39,7 @@ public class GameMenu {
 
   private static final String DART_TOWER_NAME = "DartTower";
   private static final String DART_TOWER_COST = "$100";
-  private static final String DART_TOWER_IMAGE = "/gamePhotos/dart_monkey_icon.png";
+  private static final String DART_TOWER_IMAGE = "/gamePhotos/dartmonkeybutton.png";
   private static final String TOWER_IMAGE = "/gamePhotos/dartmonkey.png";
 
   private static final String TACK_TOWER_IMAGE = "/gamePhotos/";
@@ -94,8 +92,8 @@ public class GameMenu {
   private Button makeTowerButton(String towerName, String imageDirectory, EventHandler<ActionEvent> handler){
     Image towerImage = makeImage(imageDirectory);
     ImageView imageView = new ImageView(towerImage);
-    imageView.setFitHeight(90);
-    imageView.setFitWidth(90);
+    imageView.setFitHeight(60);
+    imageView.setFitWidth(60);
     Button button = new Button("",imageView);
     button.setOnAction(handler);
     button.setId(towerName);

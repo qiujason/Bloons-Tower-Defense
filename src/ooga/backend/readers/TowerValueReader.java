@@ -32,7 +32,7 @@ public class TowerValueReader {
 
 
   // Map property file key to TowerType enum
-  public TowerType getTowerType(String key){
+  public TowerType getTowerType(String key){ //TODO: use reflection soon
     if(key.equals(TowerType.SingleProjectileShooter.name())){
       return TowerType.SingleProjectileShooter;
     } else if(key.equals(TowerType.MultiProjectileShooter.name())){
