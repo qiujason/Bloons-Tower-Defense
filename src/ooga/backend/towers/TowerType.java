@@ -1,10 +1,10 @@
 package ooga.backend.towers;
 
 public enum TowerType {
-  SingleProjectileShooter(100, 5, 15, true),
-  MultiProjectileShooter(5, 10, 10, false),
-  SpreadProjectileShooter(15, 20, 20, true),
-  UnlimitedRangeProjectileShooter(800, 5, 10, true);
+  SingleProjectileShooter(75, 5, 15, true),
+  MultiProjectileShooter(50, 10, 10, false),
+  SpreadProjectileShooter(75, 20, 20, true),
+  UnlimitedRangeProjectileShooter(150, 5, 10, true);
 
   private double radius;
   private double shootingRestRate;

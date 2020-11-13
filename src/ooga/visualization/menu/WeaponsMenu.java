@@ -16,12 +16,13 @@ import ooga.controller.TowerMenuInterface;
 public class WeaponsMenu extends FlowPane {
 
   private TowerMenuInterface controller;
-  private List<Enum> weaponTypeList = Arrays.asList(TowerType.values());
+  private List<TowerType> weaponTypeList = Arrays.asList(TowerType.values());
 
   //later make this read in what package from a overall game properties file
   private static final String PACKAGE = "btd_towers/";
   private static final String NAMES = "TowerMonkey";
   private static final String PICTURES = "MonkeyPics";
+  private static final String BUTTON_TAG = "Button";
 
   private ResourceBundle typeToName = ResourceBundle.getBundle(PACKAGE + NAMES);
   private ResourceBundle nameToPicture = ResourceBundle.getBundle(PACKAGE + PICTURES);
@@ -32,9 +33,9 @@ public class WeaponsMenu extends FlowPane {
   }
 
   private void makeAllWeaponButtons(){
-    for(Enum type : weaponTypeList){
-      this.getChildren().add(makeWeaponButton(typeToName.getString(type.name()),
-          event -> controller.buyTower()));
+    for(TowerType type : weaponTypeList){
+      this.getChildren().add(makeWeaponButton(typeToName.getString(type.name()) + BUTTON_TAG,
+          event -> controller.buyTower(type)));
     }
   }
 

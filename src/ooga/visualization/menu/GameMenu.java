@@ -1,19 +1,13 @@
 package ooga.visualization.menu;
 
-import java.net.URISyntaxException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import ooga.controller.GameMenuInterface;
 import javafx.scene.control.Button;
 import ooga.controller.TowerMenuInterface;
-import ooga.visualization.AnimationHandler;
-import ooga.visualization.BloonsApplication;
 
 public class GameMenu {
 

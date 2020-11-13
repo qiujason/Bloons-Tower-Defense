@@ -49,11 +49,9 @@ public class Controller extends Application {
     initializeBloonTypes();
     initializeBloonWaves();
     startGameEngine();
-
     initializeGameMenuController();
-    initializeTowerMenuController();
 
-    bloonsApplication = new BloonsApplication(gameController, towerController, layout, gameEngine.getCurrentBloonWave());
+    bloonsApplication = new BloonsApplication(gameController, layout, gameEngine.getCurrentBloonWave());
     bloonsApplication.fireInTheHole(primaryStage);
     animationHandler = bloonsApplication.getMyAnimationHandler();
 
@@ -76,10 +74,6 @@ public class Controller extends Application {
 
   private void initializeGameMenuController(){
     gameController = new GameMenuController(myAnimation);
-  }
-
-  private void initializeTowerMenuController(){
-    towerController = new TowerMenuController();
   }
 
   private void startGameEngine() {
