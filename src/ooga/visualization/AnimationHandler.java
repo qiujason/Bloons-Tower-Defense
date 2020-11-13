@@ -1,6 +1,7 @@
 package ooga.visualization;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -13,6 +14,7 @@ import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.factory.BloonsFactory;
+import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
@@ -67,10 +69,10 @@ public class AnimationHandler {
     myTestCircle.setId("TestCircle");
     myLevelLayout.getChildren().add(myTestCircle);
 
-    Bloon testBloon = new Bloon(new BloonsType("RED", 1, 1), myTestCircle.getCenterX(),
-        myTestCircle.getCenterY(), 0, 0);
-    myBloons.add(testBloon);
-    myBloonsInGame.put(testBloon, myTestCircle);
+//    Bloon testBloon = new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), myTestCircle.getCenterX(),
+//        myTestCircle.getCenterY(), 0, 0);
+//    myBloons.add(testBloon);
+//    myBloonsInGame.put(testBloon, myTestCircle);
   }
 
   public void animate() {

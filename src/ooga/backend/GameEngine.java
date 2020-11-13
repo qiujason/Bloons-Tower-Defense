@@ -34,7 +34,7 @@ public class GameEngine implements GameEngineAPI {
   @Override
   public void moveBloons() {
     while (currentBloonsIterator.hasNext()) {
-      Bloon bloon = (Bloon)currentBloonsIterator.next();
+      Bloon bloon = currentBloonsIterator.next();
       LayoutBlock currentBlock = layout.getBlock(((int) (bloon.getXPosition()))
           ,((int) (bloon.getYPosition()) ));
 

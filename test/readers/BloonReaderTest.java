@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.types.BloonsTypeChain;
+import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.layout.Layout;
 import ooga.backend.readers.BloonReader;
 import ooga.backend.readers.LayoutReader;
@@ -50,9 +51,9 @@ public class BloonReaderTest {
 
   private boolean generateBloonsCollectionMapTestHelper(String[][] expectedWaves, List<BloonsCollection> list){
     for (int i = 0; i < expectedWaves.length; i++){
-      Iterator iterate = list.get(i).createIterator();
+      GamePieceIterator<Bloon> iterate = list.get(i).createIterator();
       for (int j = 0; j < expectedWaves[i].length; j++){
-        Bloon bloon = (Bloon) iterate.getNext();
+        Bloon bloon = iterate.next();
         if (!expectedWaves[i][j].equals(bloon.toString())){
           return false;
         }

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.bloons.factory.BasicBloonsFactory;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.layout.Layout;
@@ -52,7 +53,7 @@ public class BloonReader extends Reader{
     double dx = layout.getBlock((int)startRow, (int)startCol).getDx() * bloonType.relativeSpeed()/1000;
     double dy = layout.getBlock((int)startRow, (int)startCol).getDy() * bloonType.relativeSpeed()/1000;
     startRow = startRow - offset;
-    return new Bloon(bloonType, startRow, startCol, dx, dy);
+    return new BasicBloonsFactory().createBloon(chain, bloonType, startRow, startCol, dx, dy);
   }
 
 }
