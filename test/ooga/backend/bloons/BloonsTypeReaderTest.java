@@ -25,7 +25,7 @@ public class BloonsTypeReaderTest {
   @Test
   void testGetPrevBloonsTypeRecordBeginning() {
     BloonsTypeChain chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
-    assertNull(chain.getNextBloonsType(chain.getBloonsTypeRecord("DEAD")));
+    assertEquals(chain.getBloonsTypeRecord("DEAD"), chain.getNextBloonsType(chain.getBloonsTypeRecord("DEAD")));
   }
 
   @Test

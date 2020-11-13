@@ -1,6 +1,7 @@
 package ooga.backend.collections;
 
 
+import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
@@ -10,12 +11,10 @@ public class GamePieceIterator<T extends GamePiece> implements Iterator<T> {
 
   private int index;
   private final List<T> collection;
-  private int totalElements;
 
   public GamePieceIterator(List<T> existingCollection) {
     this.index = 0;
-    this.collection = existingCollection;
-    this.totalElements = collection.size();
+    this.collection = new ArrayList<>(existingCollection);
   }
 
   @Override
@@ -25,9 +24,6 @@ public class GamePieceIterator<T extends GamePiece> implements Iterator<T> {
 
   @Override
   public T next() {
-    if (collection.size() != totalElements) {
-      throw new ConcurrentModificationException();
-    }
     if (hasNext()) {
       T gamePiece = collection.get(index);
       index++;
@@ -43,7 +39,6 @@ public class GamePieceIterator<T extends GamePiece> implements Iterator<T> {
         if (i < index) {
           index = Math.max(1, index)-1; // ignore warning: floors index at 0
         }
-        totalElements--;
         break;
       }
     }

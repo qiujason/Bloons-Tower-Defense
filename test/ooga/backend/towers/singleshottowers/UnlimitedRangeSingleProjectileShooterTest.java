@@ -27,7 +27,7 @@ class UnlimitedRangeSingleProjectileShooterTest {
   }
 
   @Test
-  void shoot() {
+  void testShoot() {
     TowerFactory towerFactory = new SingleTowerFactory();
     Tower testTower = towerFactory.createTower(TowerType.UnlimitedRangeProjectileShooter, 0, 0);
     Bloon target = new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 300,400,5,5);

@@ -2,17 +2,23 @@ package ooga.controller;
 
 
 import java.util.List;
+import java.util.Map;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import ooga.backend.ConfigurationException;
 import ooga.backend.GameEngine;
 import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.bank.Bank;
 import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.layout.Layout;
 import ooga.backend.readers.BloonReader;
 import ooga.backend.readers.LayoutReader;
+import ooga.backend.readers.RoundBonusReader;
+import ooga.backend.readers.TowerValueReader;
+import ooga.backend.towers.TowerType;
 import ooga.visualization.AnimationHandler;
 import ooga.visualization.BloonsApplication;
 
@@ -25,6 +31,9 @@ public class Controller extends Application {
   public static final String BLOON_WAVES_PATH = "bloon_waves/";
   public static final String LEVEL_FILE = "level1.csv";
   public static final String BLOONS_TYPE_PATH = "bloon_resources/Bloons";
+  public static final String TOWER_BUY_VALUES_PATH = "towervalues/TowerBuyValues.properties";
+  public static final String TOWER_SELL_VALUES_PATH = "towervalues/TowerSellValues.properties";
+  public static String ROUND_BONUSES_PATH = "roundBonuses/BTD5_default_level1_to_10.csv";
 
   private Timeline myAnimation = new Timeline();
   private BloonsApplication bloonsApplication;
@@ -35,13 +44,14 @@ public class Controller extends Application {
   private GameEngine gameEngine;
   private Layout layout;
   private List<BloonsCollection> allBloonWaves;
+  private Bank bank;
 
   @Override
   public void start(Stage primaryStage) {
     myAnimation = new Timeline();
     layoutReader = new LayoutReader();
     bloonReader = new BloonReader();
-
+    setUpBank();
     initializeLayout();
     initializeBloonTypes();
     initializeBloonWaves();
@@ -54,6 +64,27 @@ public class Controller extends Application {
     myAnimation.setCycleCount(Timeline.INDEFINITE);
     KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> step());
     myAnimation.getKeyFrames().add(movement);
+  }
+
+  public void setUpBank(){
+    Map<TowerType, Integer> towerBuyMap = new TowerValueReader(TOWER_BUY_VALUES_PATH).getMap();
+    Map<TowerType, Integer> towerSellMap = new TowerValueReader(TOWER_SELL_VALUES_PATH).getMap();
+    RoundBonusReader roundBonusReader = new RoundBonusReader();
+    List<List<String>> roundBonuses = roundBonusReader.getDataFromFile(ROUND_BONUSES_PATH);
+    if(roundBonuses.size() == 0){
+      throw new ConfigurationException("Round bonuses csv is empty.");
+    }
+    int rounds = Integer.parseInt(roundBonuses.get(0).get(0));
+    if(roundBonuses.size() == 1) {
+      if (roundBonuses.get(0).size() == 1) {
+        bank = new Bank(towerBuyMap, towerSellMap, rounds);
+      } else {
+        int starting_bonus = Integer.parseInt(roundBonuses.get(0).get(1));
+        bank = new Bank(towerBuyMap, towerSellMap, starting_bonus);
+      }
+    } else{
+      bank = new Bank(towerBuyMap, towerSellMap, roundBonuses.get(1));
+    }
   }
 
   private void initializeLayout() {
