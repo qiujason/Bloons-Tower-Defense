@@ -1,10 +1,8 @@
 package ooga.visualization;
 
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -14,15 +12,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -30,22 +25,12 @@ import ooga.backend.bloons.collection.BloonsCollection;
 import ooga.backend.layout.Layout;
 import ooga.backend.layout.LayoutBlock;
 import ooga.backend.readers.LayoutReader;
-import ooga.backend.towers.Tower;
-import ooga.backend.towers.TowerType;
-import ooga.backend.towers.factory.SingleTowerFactory;
-import ooga.backend.towers.factory.TowerFactory;
-import ooga.backend.towers.singleshottowers.SingleProjectileShooter;
-import ooga.controller.GameMenuController;
 import ooga.controller.GameMenuInterface;
 import ooga.controller.TowerMenuController;
 import ooga.controller.TowerMenuInterface;
 import ooga.visualization.menu.GameMenu;
-import ooga.visualization.weapons.TowerNode;
-import ooga.visualization.weapons.TowerNodeFactory;
-import ooga.visualization.weapons.WeaponNodeFactory;
-import ooga.visualization.weapons.WeaponRange;
 
-public class BloonsApplication extends Application {
+public class BloonsApplication {
 
   public static final double HEIGHT = 500;
   public static final double WIDTH = 800;
@@ -53,7 +38,6 @@ public class BloonsApplication extends Application {
   public static final double GAME_WIDTH = 0.75 * WIDTH;
   public static final String LAYOUTS_PATH = "layouts/";
   public static final String LEVEL_FILE = LAYOUTS_PATH + "level1.csv";
-  public static final String TOWER_IMAGE = "/gamePhotos/dartmonkey.png";
 
   private Stage myStage;
   private Scene myScene;
@@ -73,13 +57,13 @@ public class BloonsApplication extends Application {
   private final ResourceBundle myBlockMappings = ResourceBundle
       .getBundle(getClass().getPackageName() + ".resources.blockMappings");
 
-  public BloonsApplication(Layout layout, BloonsCollection bloons) {
+  public BloonsApplication(GameMenuInterface gameController, Layout layout, BloonsCollection bloons) {
+    gameMenuController = gameController;
     myLayout = layout;
     myBloons = bloons;
   }
 
-  @Override
-  public void start(Stage mainStage) {
+  public void fireInTheHole(Stage mainStage) {
     myStage = mainStage;
     BorderPane menuLayout = new BorderPane();
     setupMenuLayout(menuLayout);
@@ -108,15 +92,12 @@ public class BloonsApplication extends Application {
     visualizeLayout(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
         myStartingX, myStartingY, myBlockSize);
-    gameMenuController = new GameMenuController(myAnimationHandler.getAnimation());
-    towerMenuController = new TowerMenuController();
-    blockToTower = new HashMap<>();
+    towerMenuController = new TowerMenuController(GAME_WIDTH, GAME_HEIGHT, myBlockSize, myLevelLayout, myAnimationHandler);
     visualizePlayerGUI(level);
     level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
     myScene = new Scene(level, WIDTH, HEIGHT);
     myStage.setScene(myScene);
   }
-
 
   // TODO: Refactor
   private void visualizeLayout(BorderPane level) {
@@ -157,41 +138,11 @@ public class BloonsApplication extends Application {
     String blockColorAsString = myBlockMappings.getString(block);
     Color blockColor = Color.web(blockColorAsString);
     blockRectangle.setFill(blockColor);
-//    blockRectangle.setOnMouseClicked(e -> putTower(blockRectangle));
     if(block.charAt(0) == '*') {
       myStartingX = currentBlockX + blockSize / 2;
       myStartingY = currentBlockY + blockSize / 2;
     }
     return blockRectangle;
-  }
-
-  public void createTower() {
-    Color playableBlock = Color.valueOf(myBlockMappings.getString("0"));
-    Color nonPlayableBlock = Color.valueOf(myBlockMappings.getString(">"));
-    WeaponNodeFactory nodeFactory = new TowerNodeFactory();
-    TowerNode towerInGame = nodeFactory.createTowerNode(TowerType.SingleProjectileShooter, GAME_WIDTH/2,
-        GAME_HEIGHT/2, myBlockSize/2);
-    WeaponRange towerRange = towerInGame.getRangeDisplay();
-    myLevelLayout.getChildren().add(towerInGame);
-    myLevelLayout.getChildren().add(towerRange);
-    towerInGame.toFront();
-
-    TowerFactory towerFactory = new SingleTowerFactory();
-
-    myLevelLayout.setOnMouseMoved(e -> {
-      towerInGame.setCenterX(e.getX());
-      towerInGame.setCenterY(e.getY());
-      towerRange.setCenterX(e.getX());
-      towerRange.setCenterY(e.getY());
-    });
-    towerInGame.setOnMouseClicked(e -> {
-      myLevelLayout.setOnMouseMoved(null);
-      towerRange.makeInvisible();
-      myAnimationHandler.addTower(towerFactory
-          .createTower(TowerType.SingleProjectileShooter, towerInGame.getCenterX(),
-              towerInGame.getCenterY()), towerInGame);
-      towerInGame.setOnMouseClicked(null);
-    });
   }
 
   private void displaySettings(){
@@ -205,7 +156,7 @@ public class BloonsApplication extends Application {
   private void visualizePlayerGUI(BorderPane level) {
     myMenuPane = new VBox();
     myMenuPane.setSpacing(10); //magic num
-    myMenu = new GameMenu(this, myMenuPane, gameMenuController, towerMenuController, myAnimationHandler);
+    myMenu = new GameMenu(myMenuPane, gameMenuController, towerMenuController);
     level.setRight(myMenuPane);
   }
 

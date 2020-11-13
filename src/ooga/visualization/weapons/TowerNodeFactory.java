@@ -1,6 +1,5 @@
 package ooga.visualization.weapons;
 
-import javafx.scene.shape.Shape;
 import ooga.backend.towers.TowerType;
 
 public class TowerNodeFactory implements WeaponNodeFactory {

@@ -36,6 +36,8 @@ public class Controller extends Application {
   private GameEngine gameEngine;
   private Layout layout;
   private List<BloonsCollection> allBloonWaves;
+  private GameMenuInterface gameController;
+  private TowerMenuInterface towerController;
 
   @Override
   public void start(Stage primaryStage) {
@@ -47,9 +49,10 @@ public class Controller extends Application {
     initializeBloonTypes();
     initializeBloonWaves();
     startGameEngine();
+    initializeGameMenuController();
 
-    bloonsApplication = new BloonsApplication(layout, gameEngine.getCurrentBloonWave());
-    bloonsApplication.start(primaryStage);
+    bloonsApplication = new BloonsApplication(gameController, layout, gameEngine.getCurrentBloonWave());
+    bloonsApplication.fireInTheHole(primaryStage);
     animationHandler = bloonsApplication.getMyAnimationHandler();
 
     myAnimation.setCycleCount(Timeline.INDEFINITE);
@@ -67,6 +70,10 @@ public class Controller extends Application {
 
   private void initializeBloonWaves() {
     allBloonWaves = bloonReader.generateBloonsCollectionMap(bloonsTypeChain, BLOON_WAVES_PATH + LEVEL_FILE, layout);
+  }
+
+  private void initializeGameMenuController(){
+    gameController = new GameMenuController(myAnimation);
   }
 
   private void startGameEngine() {
