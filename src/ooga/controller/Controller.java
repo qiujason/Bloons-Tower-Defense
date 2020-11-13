@@ -1,7 +1,6 @@
 package ooga.controller;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javafx.animation.KeyFrame;
@@ -11,17 +10,15 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import ooga.backend.ConfigurationException;
 import ooga.backend.GameEngine;
+import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bank.Bank;
-import ooga.backend.bloons.collection.BloonsCollection;
 import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.layout.Layout;
 import ooga.backend.readers.BloonReader;
 import ooga.backend.readers.LayoutReader;
 import ooga.backend.readers.RoundBonusReader;
 import ooga.backend.readers.TowerValueReader;
-import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
-import ooga.backend.towers.TowersCollection;
 import ooga.visualization.AnimationHandler;
 import ooga.visualization.BloonsApplication;
 
@@ -77,12 +74,12 @@ public class Controller extends Application {
     if(roundBonuses.size() == 0){
       throw new ConfigurationException("Round bonuses csv is empty.");
     }
-    int rounds = Integer.valueOf(roundBonuses.get(0).get(0));
+    int rounds = Integer.parseInt(roundBonuses.get(0).get(0));
     if(roundBonuses.size() == 1) {
       if (roundBonuses.get(0).size() == 1) {
         bank = new Bank(towerBuyMap, towerSellMap, rounds);
       } else {
-        int starting_bonus = Integer.valueOf(roundBonuses.get(0).get(1));
+        int starting_bonus = Integer.parseInt(roundBonuses.get(0).get(1));
         bank = new Bank(towerBuyMap, towerSellMap, starting_bonus);
       }
     } else{

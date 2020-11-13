@@ -1,4 +1,4 @@
-package readers;
+package ooga.backend.readers;
 
 import java.util.Arrays;
 import java.util.List;

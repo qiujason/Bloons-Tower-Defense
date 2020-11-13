@@ -6,23 +6,24 @@ import ooga.backend.GamePiece;
 import ooga.backend.bloons.factory.BasicBloonsFactory;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.BloonsTypeChain;
-import ooga.backend.towers.TowerType;
 
 public class Bloon extends GamePiece implements BloonsAPI {
 
+  private final BloonsTypeChain chain;
   private BloonsType bloonsType;
   private double xVelocity;
   private double yVelocity;
   private double distanceTraveled;
   private double relativeSpeed;
 
-  public Bloon(BloonsType bloonsType, double xPosition, double yPosition, double xVelocity, double yVelocity) {
+  public Bloon(BloonsTypeChain chain, BloonsType bloonsType, double xPosition, double yPosition, double xVelocity, double yVelocity) {
     super(xPosition, yPosition);
+    this.chain = chain;
     this.bloonsType = bloonsType;
     this.xVelocity = xVelocity;
     this.yVelocity = yVelocity;
-    distanceTraveled = 0;
-    relativeSpeed = bloonsType.relativeSpeed();
+    this.distanceTraveled = 0;
+    this.relativeSpeed = bloonsType.relativeSpeed();
   }
 
   public BloonsType getBloonsType(){
@@ -40,14 +41,14 @@ public class Bloon extends GamePiece implements BloonsAPI {
   }
 
   @Override
-  public Bloon[] shootBloon(BloonsTypeChain chain, TowerType towerCaller, int hits) {
+  public Bloon[] shootBloon() {
     BloonsType nextBloonsType = chain.getNextBloonsType(bloonsType);
     int numBloonsProduced = chain.getNumNextBloons(bloonsType);
 
     Bloon[] bloons = new Bloon[numBloonsProduced];
     BasicBloonsFactory factory = new BasicBloonsFactory();
     for (int i = 0; i < numBloonsProduced; i++) {
-      bloons[i] = (Bloon) factory.createBloon(nextBloonsType, getXPosition(), getYPosition(), xVelocity, yVelocity);
+      bloons[i] = factory.createBloon(chain, nextBloonsType, getXPosition(), getYPosition(), xVelocity, yVelocity);
     }
     return bloons;
   }
@@ -72,6 +73,14 @@ public class Bloon extends GamePiece implements BloonsAPI {
   @Override
   public String toString(){
     return "" + bloonsType.name();
+  }
+
+  protected void setBloonsType(BloonsType type) {
+    bloonsType = type;
+  }
+
+  protected BloonsTypeChain getChain() {
+    return chain;
   }
 
   private void updateDistanceTraveled() {

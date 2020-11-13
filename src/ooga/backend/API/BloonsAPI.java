@@ -16,6 +16,6 @@ public interface BloonsAPI {
    */
   void setYVelocity(double newYVelocity);
 
-  Bloon[] shootBloon(BloonsTypeChain chain, TowerType towerCaller, int hits);
+  Bloon[] shootBloon();
 
 }
