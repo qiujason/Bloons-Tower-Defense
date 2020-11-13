@@ -1,12 +1,15 @@
 package ooga.visualization;
 
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import ooga.backend.GamePiece;
@@ -100,10 +103,23 @@ public class AnimationHandler {
       Bloon bloonToSpawn = (Bloon) bloonsIterator.getNext();
       myBloons.add(bloonToSpawn);
       Circle myBloonInGame = new Circle(myStartingX, myStartingY, myBlockSize / 2.5, Color.RED);
+      myBloonInGame.setFill(findBloonImage());
       myBloonsInGame.put(bloonToSpawn, myBloonInGame);
       myLevelLayout.getChildren().add(myBloonInGame);
       myWaitingBloons.remove(bloonToSpawn);
     }
+  }
+
+  private ImagePattern findBloonImage(){
+    Image bloonImage = null;
+    try {
+      bloonImage = new Image(String.valueOf(getClass().getResource("/gamePhotos/red_bloon.jpg").toURI()));
+    } catch (
+        URISyntaxException e) {
+      e.printStackTrace();
+    }
+    assert bloonImage != null;
+    return new ImagePattern(bloonImage);
   }
 
   // TODO: Refactor
