@@ -11,7 +11,6 @@ import ooga.backend.projectile.factory.ProjectileFactory;
 import ooga.backend.projectile.factory.SingleProjectileFactory;
 import ooga.backend.towers.ShootingChoice;
 import ooga.backend.towers.Tower;
-import ooga.backend.towers.TowerType;
 
 public abstract class SingleShotTower extends Tower {
 
@@ -120,6 +119,7 @@ public abstract class SingleShotTower extends Tower {
 
   @Override
   public List<Projectile> shoot(BloonsCollection bloonsCollection) {
+    updateCanShoot(false);
     List<Projectile> shot = new ArrayList<>();
     if(checkBalloonInRange(bloonsCollection)){
       Bloon target = getTarget(bloonsCollection);
