@@ -42,7 +42,7 @@ public class AnimationHandler {
   private Circle myTestCircle;
 
   private TowersCollection myTowers = new TowersCollection();
-  private Map<Tower, Node> myTowersInGame = new HashMap<>();
+  private Map<GamePiece, Node> myTowersInGame = new HashMap<>();
   private BloonsCollection myBloons;
   private Map<Bloon, Node> myBloonsInGame = new HashMap<>();
   private BloonsFactory myBloonsFactory;
@@ -201,7 +201,8 @@ public class AnimationHandler {
   public void addTower(GamePiece tower, Node towerInGame) {
     System.out.println("shit");
     myTowers.add(tower);
-    myTowersInGame.put((Tower) tower, towerInGame);
+    myTowersInGame.put(tower, towerInGame);
+    System.out.println(myTowersInGame.keySet().size());
 //    myLevelLayout.getChildren().add(towerInGame);
   }
 
