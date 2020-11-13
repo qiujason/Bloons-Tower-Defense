@@ -94,8 +94,8 @@ public class GameMenu {
   private Button makeTowerButton(String towerName, String imageDirectory, EventHandler<ActionEvent> handler){
     Image towerImage = makeImage(imageDirectory);
     ImageView imageView = new ImageView(towerImage);
-    imageView.setFitHeight(90);
-    imageView.setFitWidth(90);
+    imageView.setFitHeight(60);
+    imageView.setFitWidth(60);
     Button button = new Button("",imageView);
     button.setOnAction(handler);
     button.setId(towerName);

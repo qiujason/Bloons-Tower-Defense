@@ -199,6 +199,7 @@ public class AnimationHandler {
   }
 
   public void addTower(GamePiece tower, Node towerInGame) {
+    System.out.println("shit");
     myTowers.add(tower);
     myTowersInGame.put((Tower) tower, towerInGame);
 //    myLevelLayout.getChildren().add(towerInGame);
