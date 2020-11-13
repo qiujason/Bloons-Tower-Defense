@@ -5,6 +5,6 @@ import ooga.backend.towers.TowerType;
 
 public interface WeaponNodeFactory {
 
-  Shape createTowerNode(TowerType towerType, double xPosition, double yPosition, double radius);
+  TowerNode createTowerNode(TowerType towerType, double xPosition, double yPosition, double radius);
 
 }

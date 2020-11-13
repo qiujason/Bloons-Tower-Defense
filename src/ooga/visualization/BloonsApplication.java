@@ -37,6 +37,10 @@ import ooga.controller.GameMenuInterface;
 import ooga.controller.TowerMenuController;
 import ooga.controller.TowerMenuInterface;
 import ooga.visualization.menu.GameMenu;
+import ooga.visualization.weapons.TowerNode;
+import ooga.visualization.weapons.TowerNodeFactory;
+import ooga.visualization.weapons.WeaponNodeFactory;
+import ooga.visualization.weapons.WeaponRange;
 
 public class BloonsApplication extends Application {
 
@@ -161,28 +165,30 @@ public class BloonsApplication extends Application {
   public void createTower() {
     Color playableBlock = Color.valueOf(myBlockMappings.getString("0"));
     Color nonPlayableBlock = Color.valueOf(myBlockMappings.getString(">"));
-    Image towerImage = null;
-    try {
-      towerImage = new Image(String.valueOf(getClass().getResource(TOWER_IMAGE).toURI()));
-    } catch (URISyntaxException e) {
-      e.printStackTrace();
-    }
-    assert towerImage != null;
-    ImagePattern towerImagePattern = new ImagePattern(towerImage);
-    Circle towerInGame = new Circle(300, 180, myBlockSize / 3);
-    towerInGame.setFill(towerImagePattern);
+    WeaponNodeFactory nodeFactory = new TowerNodeFactory();
+    TowerNode towerInGame = nodeFactory.createTowerNode(TowerType.SingleProjectileShooter, GAME_WIDTH/2,
+        GAME_HEIGHT/2, myBlockSize/2);
+    WeaponRange towerRange = towerInGame.getRangeDisplay();
+    myLevelLayout.getChildren().add(towerRange);
     myLevelLayout.getChildren().add(towerInGame);
+
+
+    TowerFactory towerFactory = new SingleTowerFactory();
+
     myLevelLayout.setOnMouseMoved(e -> {
       towerInGame.setCenterX(e.getX());
       towerInGame.setCenterY(e.getY());
+      towerRange.setCenterX(e.getX());
+      towerRange.setCenterY(e.getY());
     });
-    myLevelLayout.setOnMouseClicked(e -> {
+    towerInGame.setOnMouseClicked(e -> {
       myLevelLayout.setOnMouseMoved(null);
-    });
-      TowerFactory towerFactory = new SingleTowerFactory();
+      towerRange.makeInvisible();
       myAnimationHandler.addTower(towerFactory
           .createTower(TowerType.SingleProjectileShooter, towerInGame.getCenterX(),
               towerInGame.getCenterY()), towerInGame);
+      towerInGame.setOnMouseClicked(null);
+    });
   }
 
   private void displaySettings(){

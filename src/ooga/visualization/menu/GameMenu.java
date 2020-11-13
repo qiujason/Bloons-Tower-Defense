@@ -18,8 +18,8 @@ import ooga.visualization.BloonsApplication;
 public class GameMenu {
 
   private static final String LANGUAGE = "English";
-  private final ResourceBundle menuProperties = ResourceBundle
-      .getBundle(getClass().getPackageName() + ".resources.menu" + LANGUAGE);
+  private final ResourceBundle menuProperties =
+      ResourceBundle.getBundle("ooga.visualization.resources.menu" + LANGUAGE);
 
   private VBox myMenuPane;
   private AnimationHandler myAnimationHandler;
