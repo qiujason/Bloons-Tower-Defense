@@ -1,12 +1,15 @@
 package ooga.visualization;
 
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import ooga.backend.GamePiece;
@@ -53,7 +56,8 @@ public class AnimationHandler {
 
   private int bloonSpawnDelay = 0;
 
-  public AnimationHandler(Layout layout, Group levelLayout, BloonsCollection bloons, double startingX,
+  public AnimationHandler(Layout layout, Group levelLayout, BloonsCollection bloons,
+      double startingX,
       double startingY, double blockSize) {
     myAnimation.setCycleCount(Timeline.INDEFINITE);
     KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> animate());
@@ -74,8 +78,9 @@ public class AnimationHandler {
     // The following code is merely to test a starting chain of 5 balloons
     BloonsTypeChain chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
     myWaitingBloons = new BloonsCollection();
-    for(int i = 0; i < 10; i++){
-      myWaitingBloons.add(new Bloon(chain.getBloonsTypeRecord("RED"), myStartingX, myStartingY, 0, 0));
+    for (int i = 0; i < 10; i++) {
+      myWaitingBloons
+          .add(new Bloon(chain.getBloonsTypeRecord("RED"), myStartingX, myStartingY, 0, 0));
     }
 
   }
@@ -84,32 +89,44 @@ public class AnimationHandler {
     animateBloons();
     animateTowers();
     animateProjectiles();
-    if(bloonSpawnDelay == BLOON_SPAWN_DELAY){
+    if (bloonSpawnDelay == BLOON_SPAWN_DELAY) {
       spawnBloon();
       bloonSpawnDelay = 0;
-    }
-    else{
+    } else {
       bloonSpawnDelay++;
     }
   }
 
   private void spawnBloon() {
     BloonsIterator bloonsIterator = (BloonsIterator) myWaitingBloons.createIterator();
-    if(bloonsIterator.hasMore()) {
+    if (bloonsIterator.hasMore()) {
       Bloon bloonToSpawn = (Bloon) bloonsIterator.getNext();
       myBloons.add(bloonToSpawn);
       Circle myBloonInGame = new Circle(myStartingX, myStartingY, myBlockSize / 2.5, Color.RED);
+      myBloonInGame.setFill(findBloonImage());
       myBloonsInGame.put(bloonToSpawn, myBloonInGame);
       myLevelLayout.getChildren().add(myBloonInGame);
       myWaitingBloons.remove(bloonToSpawn);
     }
   }
 
+  private ImagePattern findBloonImage(){
+    Image bloonImage = null;
+    try {
+      bloonImage = new Image(String.valueOf(getClass().getResource("/gamePhotos/red_bloon.jpg").toURI()));
+    } catch (
+        URISyntaxException e) {
+      e.printStackTrace();
+    }
+    assert bloonImage != null;
+    return new ImagePattern(bloonImage);
+  }
+
   // TODO: Refactor
   private void animateBloons() {
     BloonsIterator bloonsIterator = (BloonsIterator) myBloons.createIterator();
 
-    while(bloonsIterator.hasMore()) {
+    while (bloonsIterator.hasMore()) {
 
       Bloon currentBloon = (Bloon) bloonsIterator.getNext();
       Circle currentBloonInGame = (Circle) myBloonsInGame.get(currentBloon);
@@ -118,21 +135,25 @@ public class AnimationHandler {
       myCircleSidesY.putIfAbsent(currentBloon, 0.0);
 
       LayoutBlock currentBlock =
-          myLayout.getBlock(((int) ((currentBloonInGame.getCenterY() + myCircleSidesY.get(currentBloon)) / myBlockSize)), ((int) ((currentBloonInGame.getCenterX() + myCircleSidesX.get(currentBloon)) / myBlockSize)));
+          myLayout.getBlock(
+              ((int) ((currentBloonInGame.getCenterY() + myCircleSidesY.get(currentBloon))
+                  / myBlockSize)),
+              ((int) ((currentBloonInGame.getCenterX() + myCircleSidesX.get(currentBloon))
+                  / myBlockSize)));
       if (currentBlock.isEndBlock()) {
         myLevelLayout.getChildren().remove(currentBloonInGame);
         myBloons.remove(currentBloon);
         myBloonsInGame.remove(currentBloon);
       }
-      currentBloon.setXVelocity(currentBloon.getBloonsType().relativeSpeed() * currentBlock.getDx());
-      currentBloon.setYVelocity(currentBloon.getBloonsType().relativeSpeed() * currentBlock.getDy());
+      currentBloon
+          .setXVelocity(currentBloon.getBloonsType().relativeSpeed() * currentBlock.getDx());
+      currentBloon
+          .setYVelocity(currentBloon.getBloonsType().relativeSpeed() * currentBlock.getDy());
 
       currentBloonInGame.setCenterX(currentBloonInGame.getCenterX() + currentBloon.getXVelocity());
       currentBloonInGame.setCenterY(currentBloonInGame.getCenterY() + currentBloon.getYVelocity());
 
       setCircleSides(currentBlock, currentBloon);
-
-      System.out.println(currentBloon.getXPosition() + " = " + currentBloonInGame.getCenterX());
     }
     myBloons.updateAll();
   }
@@ -149,7 +170,7 @@ public class AnimationHandler {
       Tower currentTower = (Tower) towersIterator.getNext();
       while (bloonsIterator.hasMore()) {
         Bloon currentBloon = (Bloon) bloonsIterator.getNext();
-        if (currentTower.getDistance(currentBloon) <= currentTower.getRadius() * myBlockSize) {
+        if (currentTower.getDistance(currentBloon) <= currentTower.getTowerType().getRadius()) {
           rotateTower(currentBloon, currentTower);
           attemptToFire(currentBloon, currentTower);
           break;
