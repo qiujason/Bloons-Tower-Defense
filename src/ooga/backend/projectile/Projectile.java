@@ -1,16 +1,14 @@
 package ooga.backend.projectile;
-import ooga.backend.API.GamePiece;
+import ooga.backend.GamePiece;
 
-public abstract class Projectile implements GamePiece {
-  private double xPosition;
-  private double yPosition;
+public abstract class Projectile extends GamePiece {
+
   private double xVelocity;
   private double yVelocity;
   private ProjectileType type;
 
   public Projectile(ProjectileType type, double xPosition, double yPosition, double xVelocity, double yVelocity){
-    this.xPosition = xPosition;
-    this.yPosition = yPosition;
+    super(xPosition, yPosition);
     this.xVelocity = xVelocity;
     this.yVelocity = yVelocity;
     this.type = type;
@@ -25,8 +23,8 @@ public abstract class Projectile implements GamePiece {
   }
 
   public void updatePosition() {
-    xPosition += xVelocity;
-    yPosition += yVelocity;
+    setXPosition(getXPosition() + xVelocity);
+    setYPosition(getYPosition() + yVelocity);
   }
 
   public void setXVelocity(double newXVelocity) {
@@ -35,26 +33,6 @@ public abstract class Projectile implements GamePiece {
 
   public void setYVelocity(double newYVelocity) {
     yVelocity = newYVelocity;
-  }
-
-  @Override
-  public void setXPosition(double updateXPos) {
-    xPosition = updateXPos;
-  }
-
-  @Override
-  public void setYPosition(double updateYPos) {
-    yPosition = updateYPos;
-  }
-
-  @Override
-  public double getXPosition() {
-    return xPosition;
-  }
-
-  @Override
-  public double getYPosition() {
-    return yPosition;
   }
 
   @Override

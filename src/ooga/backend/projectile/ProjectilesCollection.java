@@ -2,7 +2,7 @@ package ooga.backend.projectile;
 
 import java.util.ArrayList;
 import java.util.List;
-import ooga.backend.API.GamePiece;
+import ooga.backend.GamePiece;
 import ooga.backend.collections.GamePieceCollection;
 import ooga.backend.collections.Iterator;
 

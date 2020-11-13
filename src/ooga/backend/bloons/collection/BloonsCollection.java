@@ -1,14 +1,15 @@
-package ooga.backend.bloons;
+package ooga.backend.bloons.collection;
 
 import java.util.ArrayList;
 import java.util.List;
-import ooga.backend.API.GamePiece;
+import ooga.backend.GamePiece;
+import ooga.backend.bloons.Bloon;
 import ooga.backend.collections.GamePieceCollection;
 import ooga.backend.collections.Iterator;
 
 public class BloonsCollection implements GamePieceCollection {
 
-  List<Bloon> bloons;
+  private List<Bloon> bloons;
 
   public BloonsCollection() {
     bloons = new ArrayList<>();
@@ -54,8 +55,8 @@ public class BloonsCollection implements GamePieceCollection {
     return new BloonsIterator(bloons);
   }
 
-  public void sort() {
-    bloons.sort((a,b) -> (int)(b.getDistanceTraveled()*10) - (int)(a.getDistanceTraveled() * 10));
+  private void sort() {
+    bloons.sort((a,b) -> (int)(b.getDistanceTraveled()*100) - (int)(a.getDistanceTraveled() * 100));
   }
 
 //  @Override

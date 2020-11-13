@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.bloons.Bloon;
+import ooga.backend.bloons.collection.BloonsCollection;
+import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.collections.Iterator;
 import ooga.backend.layout.Layout;
 import ooga.backend.readers.BloonReader;
@@ -38,19 +40,21 @@ public class BloonReaderTest {
     LayoutReader layoutReader = new LayoutReader();
     BloonReader reader = new BloonReader();
     Layout layout = layoutReader.generateLayout("layouts/level1.csv");
-    List<BloonsCollection> list = reader.generateBloonsCollectionMap("tests/test_bloon_waves/level1_test.csv", layout);
+    BloonsTypeChain chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
+    List<BloonsCollection> list = reader.generateBloonsCollectionMap(chain, "tests/test_bloon_waves/level1_test.csv", layout);
     String[][] expectedWaves =
-        {{"1","1","1","1","1","1","1","1","1","1","1","1"},
-            {"0","0","0","0","0","0","0","0","0","0","0","0"},
-            {"2","2","2","2","2","2","2","2","2","2","2","2"}};
+        {{"RED","RED","RED","RED","RED","RED","RED","RED","RED","RED","RED","RED"},
+            {"DEAD","DEAD","DEAD","DEAD","DEAD","DEAD","DEAD","DEAD","DEAD","DEAD","DEAD","DEAD"},
+            {"BLUE","BLUE","BLUE","BLUE","BLUE","BLUE","BLUE","BLUE","BLUE","BLUE","BLUE","BLUE"}};
     assertTrue(generateBloonsCollectionMapTestHelper(expectedWaves,list));
   }
 
   private boolean generateBloonsCollectionMapTestHelper(String[][] expectedWaves, List<BloonsCollection> list){
     for (int i = 0; i < expectedWaves.length; i++){
       Iterator iterate = list.get(i).createIterator();
-      for (int j = 0; j < expectedWaves[0].length; j++){
-        if (!expectedWaves[i][j].equals(iterate.getNext().toString())){
+      for (int j = 0; j < expectedWaves[i].length; j++){
+        Bloon bloon = (Bloon) iterate.getNext();
+        if (!expectedWaves[i][j].equals(bloon.toString())){
           return false;
         }
       }

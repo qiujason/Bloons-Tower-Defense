@@ -5,22 +5,31 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 import ooga.backend.bloons.Bloon;
-import ooga.backend.bloons.BloonsCollection;
-import ooga.backend.bloons.BloonsType;
+import ooga.backend.bloons.collection.BloonsCollection;
+import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.factory.SingleTowerFactory;
 import ooga.backend.towers.factory.TowerFactory;
+import ooga.backend.bloons.types.BloonsTypeChain;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class MultiProjectileShooterTest {
+
+  BloonsTypeChain chain;
+
+  @BeforeEach
+  void initializeBloonsTypes() {
+    chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
+  }
 
   @Test
   void testShootBalloonInRange() {
     TowerFactory towerFactory = new SingleTowerFactory();
     Tower testTower = towerFactory.createTower(TowerType.MultiProjectileShooter, 0,0);
-    Bloon target = new Bloon(BloonsType.RED, 3,4,5,5);
+    Bloon target = new Bloon(new BloonsType("RED", 1, 1), 3,4,5,5);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
@@ -70,7 +79,7 @@ class MultiProjectileShooterTest {
   void testShootNoBalloonInRange() {
     TowerFactory towerFactory = new SingleTowerFactory();
     Tower testTower = towerFactory.createTower(TowerType.MultiProjectileShooter, 0,0);
-    Bloon target = new Bloon(BloonsType.RED, 20,20,5,5);
+    Bloon target = new Bloon(new BloonsType("RED", 1, 1), 20,20,5,5);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);

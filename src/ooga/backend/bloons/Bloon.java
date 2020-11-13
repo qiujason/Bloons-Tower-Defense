@@ -2,27 +2,27 @@ package ooga.backend.bloons;
 
 
 import ooga.backend.API.BloonsAPI;
-import ooga.backend.API.GamePiece;
+import ooga.backend.GamePiece;
+import ooga.backend.bloons.factory.BasicBloonsFactory;
+import ooga.backend.bloons.types.BloonsType;
+import ooga.backend.bloons.types.BloonsTypeChain;
+import ooga.backend.towers.TowerType;
 
-public class Bloon implements BloonsAPI, GamePiece {
+public class Bloon extends GamePiece implements BloonsAPI {
 
   private BloonsType bloonsType;
-  private double xPosition;
-  private double yPosition;
-
   private double xVelocity;
   private double yVelocity;
   private double distanceTraveled;
   private double relativeSpeed;
 
   public Bloon(BloonsType bloonsType, double xPosition, double yPosition, double xVelocity, double yVelocity) {
+    super(xPosition, yPosition);
     this.bloonsType = bloonsType;
-    this.xPosition = xPosition;
-    this.yPosition = yPosition;
     this.xVelocity = xVelocity;
     this.yVelocity = yVelocity;
     distanceTraveled = 0;
-    relativeSpeed = bloonsType.getRelativeSpeed();
+    relativeSpeed = bloonsType.relativeSpeed();
   }
 
   public BloonsType getBloonsType(){
@@ -40,13 +40,16 @@ public class Bloon implements BloonsAPI, GamePiece {
   }
 
   @Override
-  public double getXPosition() {
-    return xPosition;
-  }
+  public Bloon[] shootBloon(BloonsTypeChain chain, TowerType towerCaller, int hits) {
+    BloonsType nextBloonsType = chain.getNextBloonsType(bloonsType);
+    int numBloonsProduced = chain.getNumNextBloons(bloonsType);
 
-  @Override
-  public double getYPosition() {
-    return yPosition;
+    Bloon[] bloons = new Bloon[numBloonsProduced];
+    BasicBloonsFactory factory = new BasicBloonsFactory();
+    for (int i = 0; i < numBloonsProduced; i++) {
+      bloons[i] = (Bloon) factory.createBloon(nextBloonsType, getXPosition(), getYPosition(), xVelocity, yVelocity);
+    }
+    return bloons;
   }
 
   @Override
@@ -54,28 +57,8 @@ public class Bloon implements BloonsAPI, GamePiece {
     updatePosition();
   }
 
-  @Override
-  public void setXPosition(double updateXPos) {
-    xPosition = updateXPos;
-  }
-
-  @Override
-  public void setYPosition(double updateYPos) {
-    yPosition = updateYPos;
-  }
-
   public double getDistanceTraveled() {
     return distanceTraveled;
-  }
-
-  private void updateDistanceTraveled() {
-    distanceTraveled += Math.abs(xVelocity) + Math.abs(yVelocity);
-  }
-
-  private void updatePosition() {
-    xPosition += xVelocity;
-    yPosition += yVelocity;
-    updateDistanceTraveled();
   }
 
   public double getXVelocity() {
@@ -88,7 +71,17 @@ public class Bloon implements BloonsAPI, GamePiece {
 
   @Override
   public String toString(){
-    return "" + bloonsType.ordinal();
+    return "" + bloonsType.name();
+  }
+
+  private void updateDistanceTraveled() {
+    distanceTraveled += (Math.abs(xVelocity) + Math.abs(yVelocity)) * relativeSpeed;
+  }
+
+  private void updatePosition() {
+    setXPosition(getXPosition() + xVelocity * relativeSpeed);
+    setYPosition(getYPosition() + yVelocity * relativeSpeed);
+    updateDistanceTraveled();
   }
 
 }

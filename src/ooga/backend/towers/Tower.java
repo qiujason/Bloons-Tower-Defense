@@ -1,16 +1,14 @@
 package ooga.backend.towers;
 
 import java.util.List;
-import ooga.backend.API.GamePiece;
 import ooga.backend.API.TowersAPI;
-import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.GamePiece;
+import ooga.backend.bloons.collection.BloonsCollection;
 import ooga.backend.collections.Iterator;
 import ooga.backend.projectile.Projectile;
 
-public abstract class Tower implements GamePiece, TowersAPI {
+public abstract class Tower extends GamePiece implements TowersAPI {
 
-  private double xPosition;
-  private double yPosition;
   private double radius;
   private double shootingSpeed;
   private double shootingRestRate;
@@ -21,8 +19,7 @@ public abstract class Tower implements GamePiece, TowersAPI {
 
   public Tower(double myXPosition, double myYPosition, double myRadius, double myShootingSpeed,
       double myShootingRestRate){
-    setXPosition(myXPosition);
-    setYPosition(myYPosition);
+    super(myXPosition, myYPosition);
     radius = myRadius;
     shootingSpeed = myShootingSpeed;
     shootingRestRate = myShootingRestRate;
@@ -34,26 +31,6 @@ public abstract class Tower implements GamePiece, TowersAPI {
 
   public double getRadius(){
     return radius;
-  }
-
-  @Override
-  public void setXPosition(double updateXPos){
-    xPosition = updateXPos;
-  }
-
-  @Override
-  public void setYPosition(double updateYPos){
-    yPosition = updateYPos;
-  }
-
-  @Override
-  public double getXPosition(){
-    return xPosition;
-  }
-
-  @Override
-  public double getYPosition(){
-    return yPosition;
   }
 
   // update canShoot to true after resting period has elapsed
@@ -91,7 +68,7 @@ public abstract class Tower implements GamePiece, TowersAPI {
   public abstract List<Projectile> shoot(BloonsCollection bloonsCollection);
 
   public double getDistance(GamePiece target){
-    return Math.sqrt(Math.pow(xPosition-target.getXPosition(), 2) + Math.pow(yPosition-target.getYPosition(), 2));
+    return Math.sqrt(Math.pow(getXPosition()-target.getXPosition(), 2) + Math.pow(getYPosition()-target.getYPosition(), 2));
   }
 
 }
