@@ -29,7 +29,9 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   }
 
   public abstract TowerType getTowerType();
-
+  public double getShootingRestRate(){
+    return shootingRestRate;
+  }
   public double getRadius(){
     return radius;
   }
