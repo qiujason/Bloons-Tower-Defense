@@ -26,7 +26,7 @@ public class TowerValueReader {
     }
   }
 
-  public Map<TowerType, Integer> getTowerValueMap(){
+  public Map<TowerType, Integer> getMap(){
     return towerValueMap;
   }
 

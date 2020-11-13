@@ -11,7 +11,7 @@ class TowerValueReaderTest {
   @Test
   void getTowerValueMap() {
     TowerValueReader towerValueReader = new TowerValueReader("towervalues/TowerBuyValues.properties");
-    Map<TowerType, Integer> towerValueMap = towerValueReader.getTowerValueMap();
+    Map<TowerType, Integer> towerValueMap = towerValueReader.getMap();
     assertEquals(250, towerValueMap.get(TowerType.SingleProjectileShooter));
     assertEquals(305, towerValueMap.get(TowerType.MultiProjectileShooter));
     assertEquals(650, towerValueMap.get(TowerType.SpreadProjectileShooter));

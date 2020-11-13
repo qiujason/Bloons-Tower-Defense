@@ -28,23 +28,21 @@ public class Bank implements BankAPI {
 
   // Provided list of round bonuses read from csv
   public Bank(Map<TowerType, Integer> towerBuyMap, Map<TowerType, Integer> towerSellMap,
-      List<Integer> roundBonus) {
-    this.roundBonus = roundBonus;
+      List<String> roundBonus) {
     this.towerBuyMap = towerBuyMap;
     this.towerSellMap = towerSellMap;
     numberOfTotalRounds = roundBonus.size();
+    List<Integer> integerBonus = new ArrayList<>();
+    for(int i = 0; i < roundBonus.size(); i++){
+      integerBonus.add(Integer.valueOf(roundBonus.get(i)));
+    }
+    this.roundBonus = integerBonus;
   }
 
   // provide number of rounds and uses default starting round bonus of 100
   public Bank(Map<TowerType, Integer> towerBuyMap, Map<TowerType, Integer> towerSellMap,
       int numberOfRounds) {
-    this.towerBuyMap = towerBuyMap;
-    this.towerSellMap = towerSellMap;
-    numberOfTotalRounds = numberOfRounds;
-    roundBonus = new ArrayList<>();
-    for (int i = 0; i < numberOfRounds; i++) {
-      roundBonus.add(i + STARTING_ROUND_BONUS);
-    }
+    this(towerBuyMap, towerSellMap, numberOfRounds, STARTING_ROUND_BONUS);
   }
 
   // provide number of rounds and allows user to put in starting bonus
