@@ -181,6 +181,9 @@ public class BloonsApplication extends Application {
     myLevelLayout.setOnMouseMoved(e -> {
       towerInGame.setCenterX(e.getX());
       towerInGame.setCenterY(e.getY());
+      System.out.println(e.getX());
+      //System.out.println(e.getX());
+
       towerRange.setCenterX(e.getX());
       towerRange.setCenterY(e.getY());
     });
