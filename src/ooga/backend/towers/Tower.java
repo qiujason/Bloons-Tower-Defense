@@ -45,6 +45,10 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     }
   }
 
+  public void updateCanShoot(boolean update){
+    canShoot = update;
+  }
+
   public boolean getCanShoot(){
     return canShoot;
   }

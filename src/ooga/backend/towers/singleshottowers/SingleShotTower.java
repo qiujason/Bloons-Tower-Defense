@@ -120,6 +120,7 @@ public abstract class SingleShotTower extends Tower {
 
   @Override
   public List<Projectile> shoot(BloonsCollection bloonsCollection) {
+    updateCanShoot(false);
     List<Projectile> shot = new ArrayList<>();
     if(checkBalloonInRange(bloonsCollection)){
       Bloon target = getTarget(bloonsCollection);
