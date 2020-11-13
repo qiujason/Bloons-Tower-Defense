@@ -44,6 +44,9 @@ public abstract class Tower extends GamePiece implements TowersAPI {
       countRestPeriod = 0;
       canShoot = true;
     }
+    else{
+      canShoot = false;
+    }
   }
 
   public void updateCanShoot(boolean update){
