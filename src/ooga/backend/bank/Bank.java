@@ -58,7 +58,7 @@ public class Bank implements BankAPI {
   }
 
   public void advanceToLevel(int level) {
-    while (currentLevel <= level) {
+    while (currentLevel < level) {
       currentMoney += roundBonus.get(currentLevel);
       currentLevel++;
     }
