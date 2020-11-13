@@ -31,6 +31,7 @@ public class AnimationHandler {
 
   public static final double FRAMES_PER_SECOND = 60;
   public static final double ANIMATION_DELAY = 1 / FRAMES_PER_SECOND;
+  public static final double BLOON_SPAWN_DELAY = 0.5 * FRAMES_PER_SECOND;
   public static final double SPEED = 3;
 
   private Timeline myAnimation = new Timeline();
@@ -57,6 +58,7 @@ public class AnimationHandler {
       double startingY, double blockSize) {
     myAnimation.setCycleCount(Timeline.INDEFINITE);
     KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> animate());
+
     myAnimation.getKeyFrames().add(movement);
 
     myLayout = layout;
@@ -94,6 +96,7 @@ public class AnimationHandler {
       if (currentBlock.isEndBlock()) {
         myLevelLayout.getChildren().remove(myTestCircle);
         myBloons.remove(currentBloon);
+        myBloonsInGame.remove(currentBloon);
       }
       currentBloon.setXVelocity(currentBloon.getBloonsType().relativeSpeed() * currentBlock.getDx()/10);
       currentBloon.setYVelocity(currentBloon.getBloonsType().relativeSpeed() * currentBlock.getDy()/10);
@@ -122,6 +125,7 @@ public class AnimationHandler {
         if (currentTower.getDistance(currentBloon) <= currentTower.getRadius() * myBlockSize) {
           rotateTower(currentBloon, currentTower);
           attemptToFire(currentBloon, currentTower);
+          break;
         }
       }
       bloonsIterator.reset();
@@ -140,6 +144,7 @@ public class AnimationHandler {
     }
   }
 
+  // TODO: use shoot method
   private void attemptToFire(Bloon bloon, Tower tower) {
     if (tower.getCanShoot()) {
       double projectileXSpeed =
@@ -199,7 +204,6 @@ public class AnimationHandler {
   }
 
   public void addTower(GamePiece tower, Node towerInGame) {
-    System.out.println("shit");
     myTowers.add(tower);
     myTowersInGame.put((Tower) tower, towerInGame);
 //    myLevelLayout.getChildren().add(towerInGame);

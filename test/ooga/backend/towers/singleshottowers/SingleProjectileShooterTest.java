@@ -32,8 +32,8 @@ class SingleProjectileShooterTest {
     TowerFactory towerFactory = new SingleTowerFactory();
     Tower testTower = towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
     List<Bloon> bloonsList = new ArrayList<>();
-    bloonsList.add(new Bloon(new BloonsType("RED", 1, 1), 10,10,5,5));
-    bloonsList.add(new Bloon(new BloonsType("RED", 1, 1), 15,30,5,5));
+    bloonsList.add(new Bloon(new BloonsType("RED", 1, 1), 100,10,5,5));
+    bloonsList.add(new Bloon(new BloonsType("RED", 1, 1), 300,30,5,5));
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
     assertFalse(testTower.checkBalloonInRange(bloonsCollection));
   }
@@ -58,7 +58,7 @@ class SingleProjectileShooterTest {
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(new Bloon(new BloonsType("RED", 1, 1), 10,21,5,5));
     bloonsList.add(new Bloon(new BloonsType("RED", 1, 1), 10,22,5,5));
-    Bloon expected = new Bloon(new BloonsType("BLACK", 1, 1), 13,23,5,5);
+    Bloon expected = new Bloon(new BloonsType("BLACK", 3, 1), 13,23,5,5);
     bloonsList.add(expected);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
     assertEquals(expected, testTower.findStrongestBloon(bloonsCollection));

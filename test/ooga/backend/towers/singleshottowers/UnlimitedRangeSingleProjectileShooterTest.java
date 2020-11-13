@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 class UnlimitedRangeSingleProjectileShooterTest {
 
   @Test
-  void shoot() {
+  void testShoot() {
     TowerFactory towerFactory = new SingleTowerFactory();
     Tower testTower = towerFactory.createTower(TowerType.UnlimitedRangeProjectileShooter, 0, 0);
     Bloon target = new Bloon(new BloonsType("RED", 1, 1), 300,400,5,5);
