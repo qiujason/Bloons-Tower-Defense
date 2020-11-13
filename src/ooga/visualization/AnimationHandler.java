@@ -62,7 +62,8 @@ public class AnimationHandler {
     myLayout = layout;
     myLevelLayout = levelLayout;
 
-    myBloons = new BloonsCollection();
+    myBloons = bloons;
+    System.out.println(bloons);
 
     myStartingX = startingX;
     myStartingY = startingY;
@@ -71,17 +72,20 @@ public class AnimationHandler {
     myCircleSidesX = new HashMap<>();
     myCircleSidesY = new HashMap<>();
 
-    // The following code is merely to test a starting chain of 5 balloons
-    BloonsTypeChain chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
-    myWaitingBloons = new BloonsCollection();
-    for(int i = 0; i < 10; i++){
-      myWaitingBloons.add(new Bloon(chain.getBloonsTypeRecord("RED"), myStartingX, myStartingY, 0, 0));
-    }
+//    // The following code is merely to test a starting chain of 5 balloons
+//    BloonsTypeChain chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
+//    myWaitingBloons = new BloonsCollection();
+//    for(int i = 0; i < 10; i++){
+//      myWaitingBloons.add(new Bloon(chain.getBloonsTypeRecord("RED"), myStartingX, myStartingY, 0, 0));
+    //}
+
+  }
+
+  public void readyUpBloons(){
 
   }
 
   public void animate() {
-    animateBloons();
     animateTowers();
     animateProjectiles();
     if(bloonSpawnDelay == BLOON_SPAWN_DELAY){
@@ -91,28 +95,36 @@ public class AnimationHandler {
     else{
       bloonSpawnDelay++;
     }
+    animateBloons();
+
   }
 
   private void spawnBloon() {
-    BloonsIterator bloonsIterator = (BloonsIterator) myWaitingBloons.createIterator();
+    BloonsIterator bloonsIterator = (BloonsIterator) myBloons.createIterator();
     if(bloonsIterator.hasMore()) {
       Bloon bloonToSpawn = (Bloon) bloonsIterator.getNext();
-      myBloons.add(bloonToSpawn);
+
       Circle myBloonInGame = new Circle(myStartingX, myStartingY, myBlockSize / 2.5, Color.RED);
+      System.out.println(myBloonInGame);
+      System.out.println("ADSF");
+
       myBloonsInGame.put(bloonToSpawn, myBloonInGame);
       myLevelLayout.getChildren().add(myBloonInGame);
-      myWaitingBloons.remove(bloonToSpawn);
+      myBloons.remove(bloonToSpawn);
     }
   }
 
   // TODO: Refactor
   private void animateBloons() {
+
+
     BloonsIterator bloonsIterator = (BloonsIterator) myBloons.createIterator();
 
     while(bloonsIterator.hasMore()) {
 
       Bloon currentBloon = (Bloon) bloonsIterator.getNext();
       Circle currentBloonInGame = (Circle) myBloonsInGame.get(currentBloon);
+      System.out.println(myBloonsInGame.get(currentBloon) );
 
       myCircleSidesX.putIfAbsent(currentBloon, 0.0);
       myCircleSidesY.putIfAbsent(currentBloon, 0.0);
@@ -246,6 +258,10 @@ public class AnimationHandler {
 
   public Timeline getAnimation() {
     return myAnimation;
+  }
+
+  public String toString(){
+    return "YUH";
   }
 
 }

@@ -1,4 +1,4 @@
-package ooga.visualization.weapons;
+package ooga.visualization.nodes;
 
 import java.net.URISyntaxException;
 import javafx.scene.image.Image;
@@ -6,12 +6,10 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import ooga.backend.towers.TowerType;
 
-public class TowerNode extends Circle {
+public class TowerNode extends GamePieceNode{
 
   private TowerType towerType;
-  private double xPosition;
-  private double yPosition;
-  private double radius;
+
   private WeaponRange rangeDisplay;
 
   private static final String TOWER_IMAGE = "/gamePhotos/dartmonkey.png";
@@ -35,7 +33,8 @@ public class TowerNode extends Circle {
     rangeDisplay.makeVisible();
   }
 
-  private ImagePattern findTowerImage(){
+  @Override
+  public ImagePattern findTowerImage(){
     Image towerImage = null;
     try {
       towerImage = new Image(String.valueOf(getClass().getResource(TOWER_IMAGE).toURI()));

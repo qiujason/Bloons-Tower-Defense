@@ -1,10 +1,8 @@
 package ooga.visualization;
 
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -14,38 +12,32 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ooga.backend.bloons.collection.BloonsCollection;
 import ooga.backend.layout.Layout;
-import ooga.backend.layout.LayoutBlock;
 import ooga.backend.readers.LayoutReader;
-import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.factory.SingleTowerFactory;
 import ooga.backend.towers.factory.TowerFactory;
-import ooga.backend.towers.singleshottowers.SingleProjectileShooter;
 import ooga.controller.GameMenuController;
 import ooga.controller.GameMenuInterface;
 import ooga.controller.TowerMenuController;
 import ooga.controller.TowerMenuInterface;
 import ooga.visualization.menu.GameMenu;
-import ooga.visualization.weapons.TowerNode;
-import ooga.visualization.weapons.TowerNodeFactory;
-import ooga.visualization.weapons.WeaponNodeFactory;
-import ooga.visualization.weapons.WeaponRange;
+import ooga.visualization.nodes.TowerNode;
+import ooga.visualization.nodes.TowerNodeFactory;
+import ooga.visualization.nodes.WeaponNodeFactory;
+import ooga.visualization.nodes.WeaponRange;
 
-public class BloonsApplication extends Application {
+public class BloonsApplication {
 
   public static final double HEIGHT = 500;
   public static final double WIDTH = 800;
@@ -76,10 +68,10 @@ public class BloonsApplication extends Application {
   public BloonsApplication(Layout layout, BloonsCollection bloons) {
     myLayout = layout;
     myBloons = bloons;
+    //myAnimationHandler = new AnimationHandler(layout, new Group(), bloons)
   }
 
-  @Override
-  public void start(Stage mainStage) {
+  public void fireInTheHole(Stage mainStage) {
     myStage = mainStage;
     BorderPane menuLayout = new BorderPane();
     setupMenuLayout(menuLayout);
@@ -157,7 +149,6 @@ public class BloonsApplication extends Application {
     String blockColorAsString = myBlockMappings.getString(block);
     Color blockColor = Color.web(blockColorAsString);
     blockRectangle.setFill(blockColor);
-//    blockRectangle.setOnMouseClicked(e -> putTower(blockRectangle));
     if(block.charAt(0) == '*') {
       myStartingX = currentBlockX + blockSize / 2;
       myStartingY = currentBlockY + blockSize / 2;
@@ -179,13 +170,15 @@ public class BloonsApplication extends Application {
     TowerFactory towerFactory = new SingleTowerFactory();
 
     myLevelLayout.setOnMouseMoved(e -> {
-      towerInGame.setCenterX(e.getX());
-      towerInGame.setCenterY(e.getY());
-      System.out.println(e.getX());
-      //System.out.println(e.getX());
 
-      towerRange.setCenterX(e.getX());
-      towerRange.setCenterY(e.getY());
+      if(e.getX() >= 0 && e.getX() <= GAME_WIDTH){
+        if(e.getY() >= 0 && e.getY() <= GAME_HEIGHT){
+          towerInGame.setCenterX(e.getX());
+          towerInGame.setCenterY(e.getY());
+          towerRange.setCenterX(e.getX());
+          towerRange.setCenterY(e.getY());
+        }
+      }
     });
     towerInGame.setOnMouseClicked(e -> {
       myLevelLayout.setOnMouseMoved(null);

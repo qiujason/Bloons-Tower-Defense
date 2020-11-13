@@ -49,10 +49,11 @@ public class Controller extends Application {
     startGameEngine();
 
     bloonsApplication = new BloonsApplication(layout, gameEngine.getCurrentBloonWave());
-    bloonsApplication.start(primaryStage);
-    animationHandler = bloonsApplication.getMyAnimationHandler();
+    bloonsApplication.fireInTheHole(primaryStage);
+
 
     myAnimation.setCycleCount(Timeline.INDEFINITE);
+
     KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> step());
     myAnimation.getKeyFrames().add(movement);
   }
@@ -74,6 +75,7 @@ public class Controller extends Application {
   }
 
   private void step() {
+    animationHandler = bloonsApplication.getMyAnimationHandler();
     animationHandler.setBloonWave(gameEngine.getCurrentBloonWave());
     animationHandler.animate();
   }
