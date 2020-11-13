@@ -1,10 +1,8 @@
 package ooga.visualization;
 
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -45,7 +43,7 @@ import ooga.visualization.weapons.TowerNodeFactory;
 import ooga.visualization.weapons.WeaponNodeFactory;
 import ooga.visualization.weapons.WeaponRange;
 
-public class BloonsApplication extends Application {
+public class BloonsApplication {
 
   public static final double HEIGHT = 500;
   public static final double WIDTH = 800;
@@ -78,8 +76,7 @@ public class BloonsApplication extends Application {
     myBloons = bloons;
   }
 
-  @Override
-  public void start(Stage mainStage) {
+  public void fireInTheHole(Stage mainStage) {
     myStage = mainStage;
     BorderPane menuLayout = new BorderPane();
     setupMenuLayout(menuLayout);
@@ -178,10 +175,14 @@ public class BloonsApplication extends Application {
     TowerFactory towerFactory = new SingleTowerFactory();
 
     myLevelLayout.setOnMouseMoved(e -> {
-      towerInGame.setCenterX(e.getX());
-      towerInGame.setCenterY(e.getY());
-      towerRange.setCenterX(e.getX());
-      towerRange.setCenterY(e.getY());
+      if(e.getX() >= 0 && e.getX() <= GAME_WIDTH){
+        if(e.getY() >= 0 && e.getY() <= GAME_HEIGHT){
+          towerInGame.setCenterX(e.getX());
+          towerInGame.setCenterY(e.getY());
+          towerRange.setCenterX(e.getX());
+          towerRange.setCenterY(e.getY());
+        }
+      }
     });
     towerInGame.setOnMouseClicked(e -> {
       myLevelLayout.setOnMouseMoved(null);

@@ -49,7 +49,7 @@ public class Controller extends Application {
     startGameEngine();
 
     bloonsApplication = new BloonsApplication(layout, gameEngine.getCurrentBloonWave());
-    bloonsApplication.start(primaryStage);
+    bloonsApplication.fireInTheHole(primaryStage);
     animationHandler = bloonsApplication.getMyAnimationHandler();
 
     myAnimation.setCycleCount(Timeline.INDEFINITE);

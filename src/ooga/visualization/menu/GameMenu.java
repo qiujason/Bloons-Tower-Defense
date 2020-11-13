@@ -59,7 +59,7 @@ public class GameMenu {
     slowDownButton = makeButton(menuProperties.getString(SLOWDOWN_TEXT), event -> gameController.slowDown());
     makeButtonRow(speedUpButton, slowDownButton);
 
-    dartTowerButton = makeTowerButton(DART_TOWER_NAME, DART_TOWER_IMAGE, event -> App.createTower());
+
     makeTowerRow(DART_TOWER_NAME, DART_TOWER_COST, dartTowerButton);
   }
 
