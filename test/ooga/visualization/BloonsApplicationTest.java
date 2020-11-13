@@ -1,15 +1,13 @@
-//package visualization;
+//package ooga.visualization;
 //
 //import static org.junit.jupiter.api.Assertions.assertEquals;
 //import static org.junit.jupiter.api.Assertions.assertNotEquals;
 //
-//import javafx.scene.Node;
 //import javafx.scene.control.Button;
 //import javafx.scene.paint.Color;
 //import javafx.scene.shape.Circle;
 //import javafx.scene.shape.Rectangle;
 //import javafx.stage.Stage;
-//import ooga.visualization.BloonsApplication;
 //import org.junit.jupiter.api.Test;
 //import util.DukeApplicationTest;
 //

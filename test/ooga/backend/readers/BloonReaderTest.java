@@ -1,4 +1,4 @@
-package readers;
+package ooga.backend.readers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

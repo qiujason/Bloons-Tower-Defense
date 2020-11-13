@@ -1,63 +1,22 @@
-package backend;
+package ooga.backend.collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
-import ooga.backend.bloons.factory.CamoBloonsFactory;
-import ooga.backend.bloons.factory.RegenBloonsFactory;
 import ooga.backend.bloons.types.BloonsTypeChain;
-import ooga.backend.bloons.types.Specials;
-import ooga.backend.collections.GamePieceCollection;
-import ooga.backend.collections.GamePieceIterator;
-import ooga.backend.bloons.factory.BasicBloonsFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
-public class BloonsTest {
+public class CollectionsTest {
 
   private BloonsTypeChain chain;
 
   @BeforeEach
   void initializeBloonsTypes() {
     chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
-  }
-
-  @Test
-  void testCreateBloonsFromFactory() {
-    assertNotNull((new BasicBloonsFactory().createBloon(chain, chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0)));
-  }
-
-  @Test
-  void testBloonsPositionUpdate() {
-    Bloon bloon = new Bloon(chain, chain.getBloonsTypeRecord("RED"), 10, 10, 10, 10);
-    bloon.update();
-    assertEquals(20, bloon.getXPosition());
-    assertEquals(20, bloon.getYPosition());
-  }
-
-  @Test
-  void testBloonsDistanceTraveled() {
-    Bloon bloon = new Bloon(chain, chain.getBloonsTypeRecord("RED"), 10, 10, 10, 10);
-    bloon.update();
-    assertEquals(20, bloon.getDistanceTraveled());
-  }
-
-  @Test
-  void testBloonsChangedVelocityPositionUpdate() {
-    Bloon bloon = new Bloon(chain, chain.getBloonsTypeRecord("RED"), 10, 10, 10, 10);
-    bloon.update();
-    assertEquals(20, bloon.getXPosition());
-    assertEquals(20, bloon.getYPosition());
-    bloon.setXVelocity(-5);
-    bloon.update();
-    assertEquals(15, bloon.getXPosition());
-    assertEquals(30, bloon.getYPosition());
-    bloon.setYVelocity(20);
-    bloon.update();
-    assertEquals(10, bloon.getXPosition());
-    assertEquals(50, bloon.getYPosition());
   }
 
   @Test
@@ -72,21 +31,19 @@ public class BloonsTest {
   @Test
   void testRemoveBloonsCollection() {
     BloonsCollection list = new BloonsCollection();
-    GamePieceIterator<Bloon> bloonsIterator = list.createIterator();
     Bloon newBloon = new Bloon(chain, chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
     assertTrue(list.add(newBloon));
+    GamePieceIterator<Bloon> bloonsIterator = list.createIterator();
     assertEquals(newBloon, bloonsIterator.next());
-    assertTrue(list.remove(newBloon));
+    bloonsIterator.remove(newBloon);
     assertFalse(bloonsIterator.hasNext());
   }
 
   @Test
   void testRemoveBloonsNotInCollection() {
     BloonsCollection list = new BloonsCollection();
-    GamePieceIterator<Bloon> bloonsIterator = list.createIterator();
     Bloon newBloon = new Bloon(chain, chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
     assertTrue(list.add(newBloon));
-    assertEquals(newBloon, bloonsIterator.next());
     assertFalse(list.remove(new Bloon(chain, chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0)));
   }
 
@@ -108,9 +65,9 @@ public class BloonsTest {
   @Test
   void testMaxOfIterator() {
     BloonsCollection list = new BloonsCollection();
-    GamePieceIterator<Bloon> bloonsIterator = list.createIterator();
     Bloon newBloon = new Bloon(chain, chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
     assertTrue(list.add(newBloon));
+    GamePieceIterator<Bloon> bloonsIterator = list.createIterator();
     assertTrue(bloonsIterator.hasNext());
     bloonsIterator.next();
     assertFalse(bloonsIterator.hasNext());
@@ -119,9 +76,9 @@ public class BloonsTest {
   @Test
   void testResetIterator() {
     BloonsCollection list = new BloonsCollection();
-    GamePieceIterator<Bloon> bloonsIterator = list.createIterator();
     Bloon newBloon = new Bloon(chain, chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
     assertTrue(list.add(newBloon));
+    GamePieceIterator<Bloon> bloonsIterator = list.createIterator();
     assertTrue(bloonsIterator.hasNext());
     bloonsIterator.next();
     assertFalse(bloonsIterator.hasNext());
@@ -185,18 +142,6 @@ public class BloonsTest {
     bloonsIterator.reset();
     list.updateAll();
     assertEquals(fastBloon, bloonsIterator.next());
-  }
-
-  @Test
-  void testMakeCamoBloonFromFactory() {
-    Bloon bloon = new CamoBloonsFactory().createBloon(chain, chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
-    assertTrue(bloon.getBloonsType().specials().contains(Specials.CAMO));
-  }
-
-  @Test
-  void testMakeRegenBloonFromFactory() {
-    Bloon bloon = new RegenBloonsFactory().createBloon(chain, chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
-    assertTrue(bloon.getBloonsType().specials().contains(Specials.REGEN));
   }
 
 }
