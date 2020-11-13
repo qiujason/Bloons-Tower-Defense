@@ -28,10 +28,13 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ooga.backend.bloons.collection.BloonsCollection;
 import ooga.backend.layout.Layout;
+import ooga.backend.layout.LayoutBlock;
 import ooga.backend.readers.LayoutReader;
+import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.factory.SingleTowerFactory;
 import ooga.backend.towers.factory.TowerFactory;
+import ooga.backend.towers.singleshottowers.SingleProjectileShooter;
 import ooga.controller.GameMenuController;
 import ooga.controller.GameMenuInterface;
 import ooga.controller.TowerMenuController;
@@ -55,10 +58,10 @@ public class BloonsApplication extends Application {
   private Stage myStage;
   private Scene myScene;
   private Layout myLayout;
+  private BloonsCollection myBloons;
   private Map<Node, Node> blockToTower;
   private LayoutReader myLayoutReader;
   private Group myLevelLayout;
-  private BloonsCollection myBloons;
   private GameMenu myMenu;
   private VBox myMenuPane;
   private GameMenuInterface gameMenuController;
@@ -127,7 +130,6 @@ public class BloonsApplication extends Application {
     double blockWidth = GAME_WIDTH / numberOfColumns;
     double blockHeight = GAME_HEIGHT / numberOfRows;
     myBlockSize = Math.min(blockWidth, blockHeight);
-    System.out.println(myBlockSize);
 
     double currentBlockX = 0;
     double currentBlockY = 0;
@@ -155,6 +157,7 @@ public class BloonsApplication extends Application {
     String blockColorAsString = myBlockMappings.getString(block);
     Color blockColor = Color.web(blockColorAsString);
     blockRectangle.setFill(blockColor);
+//    blockRectangle.setOnMouseClicked(e -> putTower(blockRectangle));
     if(block.charAt(0) == '*') {
       myStartingX = currentBlockX + blockSize / 2;
       myStartingY = currentBlockY + blockSize / 2;
@@ -169,9 +172,9 @@ public class BloonsApplication extends Application {
     TowerNode towerInGame = nodeFactory.createTowerNode(TowerType.SingleProjectileShooter, GAME_WIDTH/2,
         GAME_HEIGHT/2, myBlockSize/2);
     WeaponRange towerRange = towerInGame.getRangeDisplay();
-    myLevelLayout.getChildren().add(towerRange);
     myLevelLayout.getChildren().add(towerInGame);
-
+    myLevelLayout.getChildren().add(towerRange);
+    towerInGame.toFront();
 
     TowerFactory towerFactory = new SingleTowerFactory();
 
@@ -213,11 +216,16 @@ public class BloonsApplication extends Application {
    */
   public void makeAlert(String header, String message) {
     Alert a = new Alert(Alert.AlertType.NONE);
-    ButtonType close = new ButtonType(":(", ButtonBar.ButtonData.CANCEL_CLOSE);
+    ButtonType close = new ButtonType("OK", ButtonBar.ButtonData.CANCEL_CLOSE);
     a.getButtonTypes().addAll(close);
     a.setHeaderText(header);
     a.setContentText(message);
     a.show();
+  }
+
+  public void fullScreen(){
+    myStage.setFullScreen(true);
+    myStage.show();
   }
 
   public AnimationHandler getMyAnimationHandler() {
