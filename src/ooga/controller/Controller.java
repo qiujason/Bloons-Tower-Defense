@@ -36,7 +36,7 @@ public class Controller extends Application {
   public static final String BLOONS_TYPE_PATH = "bloon_resources/Bloons";
   public static final String TOWER_BUY_VALUES_PATH = "towervalues/TowerBuyValues.properties";
   public static final String TOWER_SELL_VALUES_PATH = "towervalues/TowerSellValues.properties";
-  public static final String ROUND_BONUSES_PATH = "roundBonuses/BTD5_default_level1_to_10.csv";
+  public static String ROUND_BONUSES_PATH = "roundBonuses/BTD5_default_level1_to_10.csv";
 
   private Timeline myAnimation = new Timeline();
   private BloonsApplication bloonsApplication;
