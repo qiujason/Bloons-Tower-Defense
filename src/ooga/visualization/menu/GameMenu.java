@@ -1,4 +1,4 @@
-package ooga.visualization;
+package ooga.visualization.menu;
 
 import java.net.URISyntaxException;
 import java.util.ResourceBundle;
@@ -12,6 +12,8 @@ import javafx.scene.layout.VBox;
 import ooga.controller.GameMenuInterface;
 import javafx.scene.control.Button;
 import ooga.controller.TowerMenuInterface;
+import ooga.visualization.AnimationHandler;
+import ooga.visualization.BloonsApplication;
 
 public class GameMenu {
 
@@ -37,7 +39,7 @@ public class GameMenu {
 
   private static final String DART_TOWER_NAME = "DartTower";
   private static final String DART_TOWER_COST = "$100";
-  private static final String DART_TOWER_IMAGE = "/gamePhotos/dart_monkey_icon.png";
+  private static final String DART_TOWER_IMAGE = "/gamePhotos/dartmonkeybutton.png";
   private static final String TOWER_IMAGE = "/gamePhotos/dartmonkey.png";
 
   private static final String TACK_TOWER_IMAGE = "/gamePhotos/";
