@@ -3,11 +3,10 @@ package backend;
 import static org.junit.jupiter.api.Assertions.*;
 
 import ooga.backend.bloons.Bloon;
-import ooga.backend.bloons.collection.BloonsCollection;
+import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.types.BloonsTypeChain;
-import ooga.backend.collections.Iterator;
-import ooga.backend.projectile.ProjectileType;
-import ooga.backend.projectile.SingleTargetProjectile;
+import ooga.backend.collections.GamePieceCollection;
+import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.bloons.factory.BasicBloonsFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,44 +59,32 @@ public class BloonsTest {
 
   @Test
   void testAddBloonsCollection() {
-    BloonsCollection list = new BloonsCollection();
-    Iterator bloonsIterator = list.createIterator();
+    GamePieceCollection<Bloon> list = new BloonsCollection();
+    GamePieceIterator<Bloon> bloonsIterator = list.createIterator();
     Bloon newBloon = new Bloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
     assertTrue(list.add(newBloon));
-    assertTrue(bloonsIterator.hasMore());
-  }
-
-  @Test
-  void testAddNonBloonCollection() {
-    BloonsCollection list = new BloonsCollection();
-    assertFalse(list.add(new SingleTargetProjectile(ProjectileType.SingleTargetProjectile, 0, 0, 0, 0)));
+    assertTrue(bloonsIterator.hasNext());
   }
 
   @Test
   void testRemoveBloonsCollection() {
     BloonsCollection list = new BloonsCollection();
-    Iterator bloonsIterator = list.createIterator();
+    GamePieceIterator<Bloon> bloonsIterator = list.createIterator();
     Bloon newBloon = new Bloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
     assertTrue(list.add(newBloon));
-    assertEquals(newBloon, bloonsIterator.getNext());
+    assertEquals(newBloon, bloonsIterator.next());
     assertTrue(list.remove(newBloon));
-    assertFalse(bloonsIterator.hasMore());
+    assertFalse(bloonsIterator.hasNext());
   }
 
   @Test
   void testRemoveBloonsNotInCollection() {
     BloonsCollection list = new BloonsCollection();
-    Iterator bloonsIterator = list.createIterator();
+    GamePieceIterator<Bloon> bloonsIterator = list.createIterator();
     Bloon newBloon = new Bloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
     assertTrue(list.add(newBloon));
-    assertEquals(newBloon, bloonsIterator.getNext());
+    assertEquals(newBloon, bloonsIterator.next());
     assertFalse(list.remove(new Bloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0)));
-  }
-
-  @Test
-  void testRemoveNonBloonCollection() {
-    BloonsCollection list = new BloonsCollection();
-    assertFalse(list.remove(new SingleTargetProjectile(ProjectileType.SingleTargetProjectile, 0, 0, 0, 0)));
   }
 
   @Test
@@ -109,81 +96,81 @@ public class BloonsTest {
   @Test
   void testHasMoreIterator() {
     BloonsCollection list = new BloonsCollection();
-    Iterator bloonsIterator = list.createIterator();
+    GamePieceIterator<Bloon> bloonsIterator = list.createIterator();
     Bloon newBloon = new Bloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
     assertTrue(list.add(newBloon));
-    assertTrue(bloonsIterator.hasMore());
+    assertTrue(bloonsIterator.hasNext());
   }
 
   @Test
   void testMaxOfIterator() {
     BloonsCollection list = new BloonsCollection();
-    Iterator bloonsIterator = list.createIterator();
+    GamePieceIterator<Bloon> bloonsIterator = list.createIterator();
     Bloon newBloon = new Bloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
     assertTrue(list.add(newBloon));
-    assertTrue(bloonsIterator.hasMore());
-    bloonsIterator.getNext();
-    assertFalse(bloonsIterator.hasMore());
+    assertTrue(bloonsIterator.hasNext());
+    bloonsIterator.next();
+    assertFalse(bloonsIterator.hasNext());
   }
 
   @Test
   void testResetIterator() {
     BloonsCollection list = new BloonsCollection();
-    Iterator bloonsIterator = list.createIterator();
+    GamePieceIterator<Bloon> bloonsIterator = list.createIterator();
     Bloon newBloon = new Bloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
     assertTrue(list.add(newBloon));
-    assertTrue(bloonsIterator.hasMore());
-    bloonsIterator.getNext();
-    assertFalse(bloonsIterator.hasMore());
+    assertTrue(bloonsIterator.hasNext());
+    bloonsIterator.next();
+    assertFalse(bloonsIterator.hasNext());
     bloonsIterator.reset();
-    assertTrue(bloonsIterator.hasMore());
+    assertTrue(bloonsIterator.hasNext());
   }
 
   @Test
   void testGetNextBloonsIterator() {
     BloonsCollection list = new BloonsCollection();
-    Iterator bloonsIterator = list.createIterator();
+    GamePieceIterator<Bloon> bloonsIterator = list.createIterator();
     Bloon bloon1 = new Bloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 0);
     assertTrue(list.add(bloon1));
-    assertEquals(bloon1, bloonsIterator.getNext());
+    assertEquals(bloon1, bloonsIterator.next());
     Bloon bloon2 = new Bloon(chain.getBloonsTypeRecord("RED"), 0, 0, 16, 0);
     assertTrue(list.add(bloon2));
-    assertEquals(bloon2, bloonsIterator.getNext());
+    assertEquals(bloon2, bloonsIterator.next());
   }
 
   @Test
   void testGetNextResetBloonsIterator() {
     BloonsCollection list = new BloonsCollection();
-    Iterator bloonsIterator = list.createIterator();
+    GamePieceIterator<Bloon> bloonsIterator = list.createIterator();
     Bloon bloon1 = new Bloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 0);
     assertTrue(list.add(bloon1));
-    assertEquals(bloon1, bloonsIterator.getNext());
+    assertEquals(bloon1, bloonsIterator.next());
     Bloon bloon2 = new Bloon(chain.getBloonsTypeRecord("RED"), 0, 0, 16, 0);
     assertTrue(list.add(bloon2));
-    assertEquals(bloon2, bloonsIterator.getNext());
+    assertEquals(bloon2, bloonsIterator.next());
     bloonsIterator.reset();
-    assertEquals(bloon1, bloonsIterator.getNext());
+    assertEquals(bloon1, bloonsIterator.next());
   }
 
   @Test
   void testAddSortBloonsIterator() {
     BloonsCollection list = new BloonsCollection();
-    Iterator bloonsIterator = list.createIterator();
+    GamePieceIterator<Bloon> bloonsIterator = list.createIterator();
     Bloon slowBloon = new Bloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 0);
     assertTrue(list.add(slowBloon));
     slowBloon.update();
-    assertEquals(slowBloon, bloonsIterator.getNext());
+    assertEquals(slowBloon, bloonsIterator.next());
     bloonsIterator.reset();
     Bloon fastBloon = new Bloon(chain.getBloonsTypeRecord("RED"), 0, 0, 16, 0);
     fastBloon.update();
     list.add(fastBloon);
-    assertEquals(fastBloon, bloonsIterator.getNext());
+    assertEquals(fastBloon, bloonsIterator.next());
   }
 
   @Test
   void testSortCollection() {
     BloonsCollection list = new BloonsCollection();
-    Iterator bloonsIterator = list.createIterator();
+    GamePieceIterator<Bloon> bloonsIterator = list.createIterator();
     Bloon slowBloon = new Bloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 0);
     assertTrue(list.add(slowBloon));
     slowBloon.update();
@@ -191,10 +178,10 @@ public class BloonsTest {
     Bloon fastBloon = new Bloon(chain.getBloonsTypeRecord("RED"), 0, 0, 16, 0);
     assertTrue(list.add(fastBloon));
     list.updateAll();
-    assertEquals(slowBloon, bloonsIterator.getNext());
+    assertEquals(slowBloon, bloonsIterator.next());
     bloonsIterator.reset();
     list.updateAll();
-    assertEquals(fastBloon, bloonsIterator.getNext());
+    assertEquals(fastBloon, bloonsIterator.next());
   }
 
 }

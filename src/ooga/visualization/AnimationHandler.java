@@ -9,23 +9,20 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
-import ooga.backend.GamePiece;
 import ooga.backend.bloons.Bloon;
-import ooga.backend.bloons.collection.BloonsCollection;
-import ooga.backend.bloons.collection.BloonsIterator;
+import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.factory.BloonsFactory;
+import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
 import ooga.backend.projectile.ProjectilesCollection;
-import ooga.backend.projectile.ProjectilesIterator;
 import ooga.backend.projectile.factory.ProjectileFactory;
 import ooga.backend.projectile.factory.SingleProjectileFactory;
 import ooga.backend.layout.Layout;
 import ooga.backend.layout.LayoutBlock;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowersCollection;
-import ooga.backend.towers.TowersIterator;
 
 public class AnimationHandler {
 
@@ -84,11 +81,11 @@ public class AnimationHandler {
 
   // TODO: Refactor
   private void animateBloons() {
-    BloonsIterator bloonsIterator = (BloonsIterator) myBloons.createIterator();
+    GamePieceIterator<Bloon> bloonsIterator = myBloons.createIterator();
 
 
-    while(bloonsIterator.hasMore()) {
-      Bloon currentBloon = (Bloon) bloonsIterator.getNext();
+    while(bloonsIterator.hasNext()) {
+      Bloon currentBloon = bloonsIterator.next();
       LayoutBlock currentBlock = myLayout.getBlock(((int) ((myTestCircle.getCenterY() + myCircleSideY) / myBlockSize))
           ,((int) ((myTestCircle.getCenterX() + myCircleSideX) / myBlockSize)));
       if (currentBlock.isEndBlock()) {
@@ -113,12 +110,12 @@ public class AnimationHandler {
   }
 
   private void animateTowers() {
-    TowersIterator towersIterator = (TowersIterator) myTowers.createIterator();
-    BloonsIterator bloonsIterator = (BloonsIterator) myBloons.createIterator();
-    while (towersIterator.hasMore()) {
-      Tower currentTower = (Tower) towersIterator.getNext();
-      while (bloonsIterator.hasMore()) {
-        Bloon currentBloon = (Bloon) bloonsIterator.getNext();
+    GamePieceIterator<Tower> towersIterator = myTowers.createIterator();
+    GamePieceIterator<Bloon> bloonsIterator = myBloons.createIterator();
+    while (towersIterator.hasNext()) {
+      Tower currentTower = towersIterator.next();
+      while (bloonsIterator.hasNext()) {
+        Bloon currentBloon = bloonsIterator.next();
         if (currentTower.getDistance(currentBloon) <= currentTower.getRadius() * myBlockSize) {
           rotateTower(currentBloon, currentTower);
           attemptToFire(currentBloon, currentTower);
@@ -160,15 +157,15 @@ public class AnimationHandler {
   }
 
   private void animateProjectiles() {
-    ProjectilesIterator projectilesIterator = (ProjectilesIterator) myProjectiles.createIterator();
-    BloonsIterator bloonsIterator = (BloonsIterator) myBloons.createIterator();
-    while (projectilesIterator.hasMore()) {
-      Projectile projectile = (Projectile) projectilesIterator.getNext();
+    GamePieceIterator<Projectile> projectilesIterator = myProjectiles.createIterator();
+    GamePieceIterator<Bloon> bloonsIterator = myBloons.createIterator();
+    while (projectilesIterator.hasNext()) {
+      Projectile projectile = projectilesIterator.next();
       Circle projectileInGame = (Circle) myProjectilesInGame.get(projectile);
       projectileInGame.setCenterX(projectileInGame.getCenterX() + projectile.getXVelocity());
       projectileInGame.setCenterY(projectileInGame.getCenterY() + projectile.getYVelocity());
-      while (bloonsIterator.hasMore()) {
-        Bloon bloon = (Bloon) bloonsIterator.getNext();
+      while (bloonsIterator.hasNext()) {
+        Bloon bloon = bloonsIterator.next();
         if (checkBloonCollision(projectile, bloon)) {
           myLevelLayout.getChildren().remove(myProjectilesInGame.remove(projectile));
           myLevelLayout.getChildren().remove(myBloonsInGame.remove(bloon));
@@ -198,9 +195,9 @@ public class AnimationHandler {
     return false;
   }
 
-  public void addTower(GamePiece tower, Node towerInGame) {
+  public void addTower(Tower tower, Node towerInGame) {
     myTowers.add(tower);
-    myTowersInGame.put((Tower) tower, towerInGame);
+    myTowersInGame.put(tower, towerInGame);
 //    myLevelLayout.getChildren().add(towerInGame);
   }
 

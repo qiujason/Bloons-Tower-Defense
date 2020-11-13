@@ -4,29 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 import ooga.backend.GamePiece;
 import ooga.backend.collections.GamePieceCollection;
-import ooga.backend.collections.Iterator;
+import ooga.backend.collections.GamePieceIterator;
 
-public class ProjectilesCollection implements GamePieceCollection {
+public class ProjectilesCollection implements GamePieceCollection<Projectile> {
 
-  List<Projectile> projectiles;
+  private List<Projectile> projectiles;
 
   public ProjectilesCollection(){
     projectiles = new ArrayList<>();
   }
 
   @Override
-  public boolean add(GamePiece gamePiece) {
-    if (gamePiece instanceof Projectile) {
-      projectiles.add((Projectile) gamePiece);
+  public boolean add(Projectile projectile) {
+    if (projectile != null) {
+      projectiles.add(projectile);
       return true;
     }
     return false;
   }
 
   @Override
-  public boolean remove(GamePiece gamePiece) {
-    if (gamePiece instanceof Projectile) {
-      return projectiles.remove(gamePiece);
+  public boolean remove(Projectile projectile) {
+    if (projectile != null) {
+      projectiles.remove(projectile);
     }
     return false;
   }
@@ -44,7 +44,7 @@ public class ProjectilesCollection implements GamePieceCollection {
   }
 
   @Override
-  public Iterator createIterator() {
-    return new ProjectilesIterator(projectiles);
+  public GamePieceIterator<Projectile> createIterator() {
+    return new GamePieceIterator<>(projectiles);
   }
 }

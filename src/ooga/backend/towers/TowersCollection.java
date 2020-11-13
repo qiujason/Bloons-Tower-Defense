@@ -2,31 +2,30 @@ package ooga.backend.towers;
 
 import java.util.ArrayList;
 import java.util.List;
-import ooga.backend.GamePiece;
 import ooga.backend.collections.GamePieceCollection;
-import ooga.backend.collections.Iterator;
+import ooga.backend.collections.GamePieceIterator;
 
-public class TowersCollection implements GamePieceCollection {
+public class TowersCollection implements GamePieceCollection<Tower> {
 
-  List<Tower> towers;
+  private List<Tower> towers;
 
   public TowersCollection(){
     towers = new ArrayList<>();
   }
 
   @Override
-  public boolean add(GamePiece gamePiece) {
-    if (gamePiece instanceof Tower) {
-      towers.add((Tower)gamePiece);
+  public boolean add(Tower tower) {
+    if (tower != null) {
+      towers.add(tower);
       return true;
     }
     return false;
   }
 
   @Override
-  public boolean remove(GamePiece gamePiece) {
-    if (gamePiece instanceof Tower) {
-      return towers.remove(gamePiece);
+  public boolean remove(Tower tower) {
+    if (tower != null) {
+      return towers.remove(tower);
     }
     return false;
   }
@@ -44,7 +43,8 @@ public class TowersCollection implements GamePieceCollection {
   }
 
   @Override
-  public Iterator createIterator() {
-    return new TowersIterator(towers);
+  public GamePieceIterator<Tower> createIterator() {
+    return new GamePieceIterator<>(towers);
   }
+
 }

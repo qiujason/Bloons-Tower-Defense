@@ -8,12 +8,11 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import ooga.backend.GameEngine;
-import ooga.backend.bloons.collection.BloonsCollection;
+import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.layout.Layout;
 import ooga.backend.readers.BloonReader;
 import ooga.backend.readers.LayoutReader;
-import ooga.backend.towers.TowersCollection;
 import ooga.visualization.AnimationHandler;
 import ooga.visualization.BloonsApplication;
 

@@ -2,16 +2,16 @@ package ooga.backend.collections;
 
 import ooga.backend.GamePiece;
 
-public interface GamePieceCollection {
+public interface GamePieceCollection<T extends GamePiece> {
 
-  boolean add(GamePiece gamePiece);
+  boolean add(T gamePiece);
 
-  boolean remove(GamePiece gamePiece);
+  boolean remove(T gamePiece);
 
   void updateAll();
 
   void clear();
 
-  Iterator createIterator();
+  GamePieceIterator<T> createIterator();
 
 }

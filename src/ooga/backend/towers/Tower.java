@@ -3,8 +3,9 @@ package ooga.backend.towers;
 import java.util.List;
 import ooga.backend.API.TowersAPI;
 import ooga.backend.GamePiece;
-import ooga.backend.bloons.collection.BloonsCollection;
-import ooga.backend.collections.Iterator;
+import ooga.backend.bloons.Bloon;
+import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
 
 public abstract class Tower extends GamePiece implements TowersAPI {
@@ -54,9 +55,9 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   }
 
   public boolean checkBalloonInRange(BloonsCollection bloonsCollection){
-    Iterator iterator = bloonsCollection.createIterator();
-    while(iterator.hasMore()){
-      GamePiece bloon = iterator.getNext();
+    GamePieceIterator<Bloon> iterator = bloonsCollection.createIterator();
+    while(iterator.hasNext()){
+      Bloon bloon = iterator.next();
       double distance = getDistance(bloon);
       if(distance <= radius){
         return true;

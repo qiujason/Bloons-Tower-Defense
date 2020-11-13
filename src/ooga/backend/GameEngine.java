@@ -3,12 +3,10 @@ package ooga.backend;
 import java.util.List;
 import ooga.backend.API.GameEngineAPI;
 import ooga.backend.bloons.Bloon;
-import ooga.backend.bloons.collection.BloonsCollection;
-import ooga.backend.bloons.collection.BloonsIterator;
-import ooga.backend.collections.Iterator;
+import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.layout.Layout;
 import ooga.backend.layout.LayoutBlock;
-import ooga.backend.towers.TowersCollection;
 
 public class GameEngine implements GameEngineAPI {
 
@@ -16,10 +14,10 @@ public class GameEngine implements GameEngineAPI {
 
   private final Layout layout;
   private final List<BloonsCollection> allBloonWaves;
-  private Iterator currentBloonsIterator;
+  private GamePieceIterator<Bloon> currentBloonsIterator;
   private BloonsCollection currentBloonWave;
 //  private final TowersCollection towers;
-  private Iterator towersIterator;
+  private GamePieceIterator<Bloon> towersIterator;
 
   private int wave;
 
@@ -35,8 +33,8 @@ public class GameEngine implements GameEngineAPI {
 
   @Override
   public void moveBloons() {
-    while (currentBloonsIterator.hasMore()) {
-      Bloon bloon = (Bloon)currentBloonsIterator.getNext();
+    while (currentBloonsIterator.hasNext()) {
+      Bloon bloon = (Bloon)currentBloonsIterator.next();
       LayoutBlock currentBlock = layout.getBlock(((int) (bloon.getXPosition()))
           ,((int) (bloon.getYPosition()) ));
 
