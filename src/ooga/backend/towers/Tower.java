@@ -6,6 +6,7 @@ import ooga.backend.GamePiece;
 import ooga.backend.bloons.collection.BloonsCollection;
 import ooga.backend.collections.Iterator;
 import ooga.backend.projectile.Projectile;
+import ooga.visualization.AnimationHandler;
 
 public abstract class Tower extends GamePiece implements TowersAPI {
 
@@ -22,13 +23,15 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     super(myXPosition, myYPosition);
     radius = myRadius;
     shootingSpeed = myShootingSpeed;
-    shootingRestRate = myShootingRestRate;
+    shootingRestRate = myShootingRestRate * AnimationHandler.FRAMES_PER_SECOND;
     countRestPeriod = 0;
     canShoot = true;
   }
 
   public abstract TowerType getTowerType();
-
+  public double getShootingRestRate(){
+    return shootingRestRate;
+  }
   public double getRadius(){
     return radius;
   }
@@ -42,6 +45,9 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     if(countRestPeriod == shootingRestRate){
       countRestPeriod = 0;
       canShoot = true;
+    }
+    else{
+      canShoot = false;
     }
   }
 

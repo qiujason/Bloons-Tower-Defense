@@ -9,17 +9,18 @@ import ooga.backend.projectile.factory.ProjectileFactory;
 import ooga.backend.projectile.factory.SingleProjectileFactory;
 import ooga.backend.towers.TowerType;
 
-public class MultiProjectileShooter extends SpreadShotTower {
+public class FrozenSpreadShooter extends SpreadShotTower{
 
-  // TackShooter
-  public MultiProjectileShooter(double myXPosition, double myYPosition, double myRadius,
+  // Ice monkey
+  public FrozenSpreadShooter(double myXPosition, double myYPosition, double myRadius,
       double myShootingSpeed, double myShootingRestRate) {
     super(myXPosition, myYPosition, myRadius, myShootingSpeed, myShootingRestRate);
   }
 
   @Override
   public TowerType getTowerType() {
-    return TowerType.MultiProjectileShooter;
+    return null;
+//    return TowerType.FrozenSpreadShooter;
   }
 
   @Override
@@ -32,9 +33,10 @@ public class MultiProjectileShooter extends SpreadShotTower {
         double projectileXVelocity = Math.cos(i*getDegreeIncrementPerShot());
         double projectileYVelocity = Math.sin(i*getDegreeIncrementPerShot());
         shot.add(projectileFactory
-            .createDart(ProjectileType.SingleTargetProjectile, getXPosition(), getYPosition(), projectileXVelocity, projectileYVelocity));
+            .createDart(ProjectileType.FreezeTargetProjectile, getXPosition(), getYPosition(), projectileXVelocity, projectileYVelocity));
       }
     }
     return shot;
   }
+
 }

@@ -60,7 +60,7 @@ public class TowerMenuController implements TowerMenuInterface {
 
 
   @Override
-  public void selectTower() {
+  public void selectTower(TowerNode tower) {
 
   }
 
