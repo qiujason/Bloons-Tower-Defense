@@ -40,7 +40,7 @@ public class BloonReaderTest {
     LayoutReader layoutReader = new LayoutReader();
     BloonReader reader = new BloonReader();
     Layout layout = layoutReader.generateLayout("layouts/level1.csv");
-    BloonsTypeChain chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
+    BloonsTypeChain chain = new BloonsTypeChain("tests/test_bloonstype_reader/ValidBloons");
     List<BloonsCollection> list = reader.generateBloonsCollectionMap(chain, "tests/test_bloon_waves/level1_test.csv", layout);
     String[][] expectedWaves =
         {{"RED","RED","RED","RED","RED","RED","RED","RED","RED","RED","RED","RED"},

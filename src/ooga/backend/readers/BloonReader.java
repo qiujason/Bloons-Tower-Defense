@@ -53,7 +53,7 @@ public class BloonReader extends Reader{
     double dx = layout.getBlock((int)startRow, (int)startCol).getDx() * bloonType.relativeSpeed()/1000;
     double dy = layout.getBlock((int)startRow, (int)startCol).getDy() * bloonType.relativeSpeed()/1000;
     startRow = startRow - offset;
-    return new BasicBloonsFactory().createBloon(chain, bloonType, startRow, startCol, dx, dy);
+    return new BasicBloonsFactory().createBloon(bloonType, startRow, startCol, dx, dy);
   }
 
 }
