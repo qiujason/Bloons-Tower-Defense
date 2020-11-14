@@ -11,9 +11,6 @@ import ooga.backend.towers.TowerType;
 public class TowerNode extends Circle {
 
   private TowerType towerType;
-  private double xPosition;
-  private double yPosition;
-  private double radius;
   private WeaponRange rangeDisplay;
 
   private static final String PACKAGE = "btd_towers/";
@@ -32,6 +29,10 @@ public class TowerNode extends Circle {
 
   public WeaponRange getRangeDisplay(){
     return rangeDisplay;
+  }
+
+  public TowerType getTowerType(){
+    return towerType;
   }
 
   public void hideRangeDisplay(){

@@ -33,7 +33,7 @@ public class AnimationHandler {
   public static final double ANIMATION_DELAY = 1 / FRAMES_PER_SECOND;
   public static final double BLOON_SPAWN_DELAY = 1 * FRAMES_PER_SECOND;
 
-  private Timeline myAnimation = new Timeline();
+  private Timeline myAnimation;
   private Layout myLayout;
   private Group myLevelLayout;
   private double myStartingX;
@@ -54,9 +54,10 @@ public class AnimationHandler {
 
   private int bloonSpawnDelay = 0;
 
-  public AnimationHandler(Layout layout, Group levelLayout, BloonsCollection bloons,
+  public AnimationHandler(Timeline animation, Layout layout, Group levelLayout, BloonsCollection bloons,
       double startingX,
       double startingY, double blockSize) {
+    myAnimation = animation;
     myAnimation.setCycleCount(Timeline.INDEFINITE);
     KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> animate());
     myAnimation.getKeyFrames().add(movement);

@@ -60,7 +60,7 @@ public class Controller extends Application {
     startGameEngine();
     initializeGameMenuController();
 
-    bloonsApplication = new BloonsApplication(gameController, layout, gameEngine.getCurrentBloonWave());
+    bloonsApplication = new BloonsApplication(myAnimation, gameController, layout, gameEngine.getCurrentBloonWave());
     bloonsApplication.fireInTheHole(primaryStage);
     animationHandler = bloonsApplication.getMyAnimationHandler();
 
@@ -111,8 +111,6 @@ public class Controller extends Application {
   }
 
   private void step() {
-    System.out.println(animationHandler);
-    System.out.println(gameEngine.getCurrentBloonWave());
     animationHandler.setBloonWave(gameEngine.getCurrentBloonWave());
     animationHandler.animate();
   }
