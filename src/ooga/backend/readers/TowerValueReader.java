@@ -26,7 +26,7 @@ public class TowerValueReader {
     }
   }
 
-  public Map<TowerType, Integer> getTowerValueMap(){
+  public Map<TowerType, Integer> getMap(){
     return towerValueMap;
   }
 
@@ -41,6 +41,10 @@ public class TowerValueReader {
       return TowerType.SpreadProjectileShooter;
     } else if(key.equals(TowerType.UnlimitedRangeProjectileShooter.name())){
       return TowerType.UnlimitedRangeProjectileShooter;
+    } else if(key.equals(TowerType.FrozenSpreadShooter.name())){
+      return TowerType.FrozenSpreadShooter;
+    } else if(key.equals(TowerType.SuperSpeedProjectileShooter.name())){
+      return TowerType.SuperSpeedProjectileShooter;
     }
    throw new ConfigurationException("Properties file includes invalid tower type name");
   }

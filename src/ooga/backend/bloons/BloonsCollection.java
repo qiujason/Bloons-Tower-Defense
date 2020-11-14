@@ -1,13 +1,11 @@
-package ooga.backend.bloons.collection;
+package ooga.backend.bloons;
 
 import java.util.ArrayList;
 import java.util.List;
-import ooga.backend.GamePiece;
-import ooga.backend.bloons.Bloon;
 import ooga.backend.collections.GamePieceCollection;
-import ooga.backend.collections.Iterator;
+import ooga.backend.collections.GamePieceIterator;
 
-public class BloonsCollection implements GamePieceCollection {
+public class BloonsCollection implements GamePieceCollection<Bloon> {
 
   private List<Bloon> bloons;
 
@@ -15,14 +13,14 @@ public class BloonsCollection implements GamePieceCollection {
     bloons = new ArrayList<>();
   }
 
-  public BloonsCollection(List<Bloon> bloonsList){
+  public BloonsCollection(List<Bloon> bloonsList) {
     bloons = bloonsList;
   }
 
   @Override
-  public boolean add(GamePiece bloon) {
-    if (bloon instanceof Bloon) {
-      bloons.add((Bloon)bloon);
+  public boolean add(Bloon bloon) {
+    if (bloon != null) {
+      bloons.add(bloon);
       sort();
       return true;
     }
@@ -30,8 +28,8 @@ public class BloonsCollection implements GamePieceCollection {
   }
 
   @Override
-  public boolean remove(GamePiece bloon) {
-    if (bloon instanceof Bloon) {
+  public boolean remove(Bloon bloon) {
+    if (bloon != null) {
       return bloons.remove(bloon);
     }
     return false;
@@ -51,8 +49,8 @@ public class BloonsCollection implements GamePieceCollection {
   }
 
   @Override
-  public Iterator createIterator() {
-    return new BloonsIterator(bloons);
+  public GamePieceIterator<Bloon> createIterator() {
+    return new GamePieceIterator<>(bloons);
   }
 
   private void sort() {

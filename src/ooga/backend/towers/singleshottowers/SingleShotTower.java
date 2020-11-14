@@ -3,8 +3,8 @@ package ooga.backend.towers.singleshottowers;
 import java.util.ArrayList;
 import java.util.List;
 import ooga.backend.bloons.Bloon;
-import ooga.backend.bloons.collection.BloonsCollection;
-import ooga.backend.collections.Iterator;
+import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
 import ooga.backend.projectile.factory.ProjectileFactory;
@@ -34,21 +34,21 @@ public abstract class SingleShotTower extends Tower {
 
   // should only be called IF known that there is a bloon in range OR ELSE will return null
   public Bloon getTarget(BloonsCollection bloonsCollection){
-    switch(getShootingChoice()){
-      case StrongestBloon: return findStrongestBloon(bloonsCollection);
-      case FirstBloon: return findFirstBloon(bloonsCollection);
-      case LastBloon: return findLastBloon(bloonsCollection);
-      default: return findClosestBloon(bloonsCollection);
-    }
+    return switch (getShootingChoice()) {
+      case StrongestBloon -> findStrongestBloon(bloonsCollection);
+      case FirstBloon -> findFirstBloon(bloonsCollection);
+      case LastBloon -> findLastBloon(bloonsCollection);
+      default -> findClosestBloon(bloonsCollection);
+    };
   }
 
   // should only be called IF known that there is a bloon in range OR ELSE will return null
   public Bloon findClosestBloon(BloonsCollection bloonsCollection){
-    Iterator iterator = bloonsCollection.createIterator();
+    GamePieceIterator<Bloon> iterator = bloonsCollection.createIterator();
     Bloon closestBloon = null;
     double minDistance = Integer.MAX_VALUE;
-    while(iterator.hasMore()){
-      Bloon bloon = (Bloon) iterator.getNext();
+    while(iterator.hasNext()){
+      Bloon bloon = iterator.next();
       double distance = getDistance(bloon);
       if(distance > getRadius()){
         continue;
@@ -63,11 +63,11 @@ public abstract class SingleShotTower extends Tower {
 
   // should only be called IF known that there is a bloon in range OR ELSE will return null
   public Bloon findStrongestBloon(BloonsCollection bloonsCollection){
-    Iterator iterator = bloonsCollection.createIterator();
+    GamePieceIterator<Bloon> iterator = bloonsCollection.createIterator();
     Bloon strongestBloon = null;
     double maxStrength = Integer.MIN_VALUE;
-    while(iterator.hasMore()){
-      Bloon bloon = (Bloon) iterator.getNext();
+    while(iterator.hasNext()){
+      Bloon bloon = iterator.next();
       if(getDistance(bloon) > getRadius()){
         continue;
       }
@@ -82,10 +82,10 @@ public abstract class SingleShotTower extends Tower {
 
   // should only be called IF known that there is a bloon in range OR ELSE will return null
   public Bloon findFirstBloon(BloonsCollection bloonsCollection){
-    Iterator iterator = bloonsCollection.createIterator();
+    GamePieceIterator<Bloon> iterator = bloonsCollection.createIterator();
     Bloon firstBloon = null;
-    while(iterator.hasMore()){
-      Bloon bloon = (Bloon) iterator.getNext();
+    while(iterator.hasNext()){
+      Bloon bloon = iterator.next();
       if(getDistance(bloon) <= getRadius()){
         firstBloon = bloon;
         break;
@@ -96,10 +96,10 @@ public abstract class SingleShotTower extends Tower {
 
   // should only be called IF known that there is a bloon in range OR ELSE will return null
   public Bloon findLastBloon(BloonsCollection bloonsCollection){
-    Iterator iterator = bloonsCollection.createIterator();
+    GamePieceIterator<Bloon> iterator = bloonsCollection.createIterator();
     Bloon lastBloon = null;
-    while(iterator.hasMore()){
-      Bloon bloon = (Bloon) iterator.getNext();
+    while(iterator.hasNext()){
+      Bloon bloon = iterator.next();
       if(getDistance(bloon) <= getRadius()){
         lastBloon = bloon;
       }
