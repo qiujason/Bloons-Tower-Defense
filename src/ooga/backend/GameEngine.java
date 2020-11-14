@@ -21,20 +21,23 @@ public class GameEngine implements GameEngineAPI {
   private BloonsCollection currentBloonWave;
   private BloonsCollection queuedBloons;
   private int spawnTimer;
+  private double myBlockSize;
 //  private final TowersCollection towers;
   private GamePieceIterator<Bloon> towersIterator;
 
   private int wave;
 
-  public GameEngine(Layout layout, List<BloonsCollection> allBloonWaves) {
+  public GameEngine(Layout layout, List<BloonsCollection> allBloonWaves, double blockSize) {
     this.layout = layout;
     this.allBloonWaves = allBloonWaves;
     queuedBloons = allBloonWaves.get(FIRST_WAVE);
     currentBloonWave = new BloonsCollection();
 //    towers = towersCollection;
 //    towersIterator = towers.createIterator();
+    myBlockSize = blockSize;
     wave = FIRST_WAVE;
     spawnTimer = SPAWN_DELAY;
+    System.out.println(queuedBloons.get(0).getBloonsType().name());
   }
 
   public void addQueuedBloon(){
@@ -59,22 +62,31 @@ public class GameEngine implements GameEngineAPI {
       Bloon bloon = waveIterator.next();
 
       LayoutBlock currentBlock;
+      //System.out.println((int) (bloon.getXPosition()) + " " + (int) bloon.getYPosition());
       try{
-        currentBlock = layout.getBlock(((int) (bloon.getYPosition()))
-            ,((int) (bloon.getXPosition()) ));
+        currentBlock = layout.getBlock((int) (bloon.getYPosition())
+            ,(int) bloon.getXPosition());
+
       }catch(IndexOutOfBoundsException e){
-        continue;
+        currentBlock = layout.getBlock((int) (bloon.getYPosition())
+            ,(int) bloon.getXPosition());
       }
 
-      if (bloon.getYVelocity() != 0){
-        System.out.println(bloon.getXVelocity() + " " + bloon.getYVelocity());
-        System.out.println(bloon.getXPosition() + " " + bloon.getYPosition());
+      //System.out.println(bloon.getXVelocity() + " " + bloon.getYVelocity());
+      if(isMiddleOfBlock(bloon.getXPosition(), bloon.getYPosition())){
+        bloon.setXVelocity((bloon.getBloonsType().relativeSpeed() * currentBlock.getDx()/myBlockSize));
+        bloon.setYVelocity((bloon.getBloonsType().relativeSpeed() * currentBlock.getDy()/myBlockSize));
       }
-      bloon.setXVelocity(bloon.getBloonsType().relativeSpeed() * currentBlock.getDx());
-      bloon.setYVelocity(bloon.getBloonsType().relativeSpeed() * currentBlock.getDy());
     }
 
     currentBloonWave.updateAll();
+  }
+
+  public boolean isMiddleOfBlock(double x, double y){
+    double xDecimal = x - (int) x;
+    double yDecimal = y - (int) y;
+    return (xDecimal > 0.45 && xDecimal < 0.55) && (yDecimal > 0.45 && yDecimal < 0.55);
+
   }
 
   @Override

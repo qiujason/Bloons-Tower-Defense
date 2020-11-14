@@ -53,18 +53,29 @@ public class Controller extends Application {
     bloonReader = new BloonReader();
     setUpBank();
     initializeLayout();
+
     initializeBloonTypes();
     initializeBloonWaves();
     startGameEngine();
 
+    System.out.println(getMyBlockSize());
+
     bloonsApplication = new BloonsApplication(layout, gameEngine.getCurrentBloonWave(), myAnimation);
     bloonsApplication.fireInTheHole(primaryStage);
-
 
     myAnimation.setCycleCount(Timeline.INDEFINITE);
 
     KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> step());
     myAnimation.getKeyFrames().add(movement);
+  }
+
+  private double getMyBlockSize() {
+    int numberOfRows = layout.getHeight();
+    int numberOfColumns = layout.getWidth();
+    double blockWidth = BloonsApplication.GAME_WIDTH / numberOfColumns;
+    double blockHeight = BloonsApplication.GAME_HEIGHT / numberOfRows;
+    double myBlockSize = Math.min(blockWidth, blockHeight);
+    return myBlockSize;
   }
 
   public void setUpBank(){
@@ -101,7 +112,7 @@ public class Controller extends Application {
   }
 
   private void startGameEngine() {
-    gameEngine = new GameEngine(layout, allBloonWaves);
+    gameEngine = new GameEngine(layout, allBloonWaves, getMyBlockSize());
   }
 
   private void step() {

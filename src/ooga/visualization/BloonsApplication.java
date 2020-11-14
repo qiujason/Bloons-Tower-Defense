@@ -63,6 +63,8 @@ public class BloonsApplication {
   private AnimationHandler myAnimationHandler;
   private double myStartingX;
   private double myStartingY;
+
+
   private double myBlockSize;
   private final ResourceBundle myBlockMappings = ResourceBundle
       .getBundle(getClass().getPackageName() + ".resources.blockMappings");
@@ -116,8 +118,6 @@ public class BloonsApplication {
   private void visualizeLayout(BorderPane level) {
     myLevelLayout = new Group();
     level.setLeft(myLevelLayout);
-
-    myLayout = myLayoutReader.generateLayout(LEVEL_FILE);
 
     int numberOfRows = myLayout.getHeight();
     int numberOfColumns = myLayout.getWidth();
@@ -229,5 +229,6 @@ public class BloonsApplication {
   public AnimationHandler getMyAnimationHandler() {
     return myAnimationHandler;
   }
+
 
 }

@@ -128,16 +128,18 @@ public class AnimationHandler {
         myBloons.remove(bloon);
         myBloonsInGame.remove(bloon);
       }
-      bloonNode.setXPosition(bloonNode.getXPosition() + bloon.getXVelocity());
-      bloonNode.setYPosition(bloonNode.getYPosition() + bloon.getYVelocity());
+      bloonNode.setXPosition(myBlockSize/2 + bloon.getXPosition() * myBlockSize);
+      bloonNode.setYPosition(myBlockSize/2  + bloon.getYPosition() * myBlockSize);
      // System.out.println(bloonNode.getXPosition() + " "  + bloonNode.getYPosition());
-      setCircleSides(currentBlock, bloonNode);
+      setCircleSides(bloon, bloonNode);
     }
   }
 
-  private void setCircleSides(LayoutBlock currentBlock, BloonNode bloonNode) {
-    myCircleSidesX.put(bloonNode, -myBlockSize * currentBlock.getDx() / 2);
-    myCircleSidesY.put(bloonNode, -myBlockSize * currentBlock.getDy() / 2);
+  private void setCircleSides(Bloon bloon, BloonNode bloonNode) {
+    myCircleSidesX.put(bloonNode, -myBlockSize * myLayout.getBlock((int) (bloon.getYPosition())
+        ,(int) bloon.getXPosition()).getDx()/ 2);
+    myCircleSidesY.put(bloonNode, -myBlockSize * myLayout.getBlock((int) (bloon.getYPosition())
+        ,(int) bloon.getXPosition()).getDy()/ 2);
   }
 
   private void animateTowers() {
