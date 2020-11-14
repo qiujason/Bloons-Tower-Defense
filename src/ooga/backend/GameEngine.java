@@ -27,6 +27,7 @@ public class GameEngine implements GameEngineAPI {
     this.layout = layout;
     this.allBloonWaves = allBloonWaves;
     currentBloonWave = allBloonWaves.get(FIRST_WAVE);
+    System.out.println(currentBloonWave.get(0).getXPosition());
     currentBloonsIterator = currentBloonWave.createIterator();
 //    towers = towersCollection;
 //    towersIterator = towers.createIterator();
@@ -35,10 +36,19 @@ public class GameEngine implements GameEngineAPI {
 
   @Override
   public void moveBloons() {
+//    System.out.println("Bloon: " + currentBloonWave.get(0).getXPosition());
+//    System.out.println("Bloon XVel: " + currentBloonWave.get(0).getXVelocity());
+
     while (currentBloonsIterator.hasMore()) {
       Bloon bloon = (Bloon)currentBloonsIterator.getNext();
-      LayoutBlock currentBlock = layout.getBlock(((int) (bloon.getXPosition()))
-          ,((int) (bloon.getYPosition()) ));
+      LayoutBlock currentBlock;
+      try{
+        currentBlock = layout.getBlock(((int) (bloon.getXPosition()))
+            ,((int) (bloon.getYPosition()) ));
+      }catch(IndexOutOfBoundsException e){
+        currentBlock = layout.getStartingBlock();
+      }
+
 
       if (currentBlock.isEndBlock()) {
         currentBloonWave.remove(bloon);
@@ -77,6 +87,11 @@ public class GameEngine implements GameEngineAPI {
 
   public BloonsCollection getCurrentBloonWave() {
     return currentBloonWave;
+  }
+
+  @Override
+  public void update(){
+    moveBloons();
   }
 
 }

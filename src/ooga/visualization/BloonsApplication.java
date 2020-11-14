@@ -3,6 +3,7 @@ package ooga.visualization;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import javafx.animation.Timeline;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -50,6 +51,7 @@ public class BloonsApplication {
   private Stage myStage;
   private Scene myScene;
   private Layout myLayout;
+  private Timeline myAnimation;
   private BloonsCollection myBloons;
   private Map<Node, Node> blockToTower;
   private LayoutReader myLayoutReader;
@@ -65,10 +67,10 @@ public class BloonsApplication {
   private final ResourceBundle myBlockMappings = ResourceBundle
       .getBundle(getClass().getPackageName() + ".resources.blockMappings");
 
-  public BloonsApplication(Layout layout, BloonsCollection bloons) {
+  public BloonsApplication(Layout layout, BloonsCollection bloons, Timeline animation) {
     myLayout = layout;
     myBloons = bloons;
-    //myAnimationHandler = new AnimationHandler(layout, new Group(), bloons)
+    myAnimation = animation;
   }
 
   public void fireInTheHole(Stage mainStage) {
@@ -99,7 +101,7 @@ public class BloonsApplication {
     myLayoutReader = new LayoutReader();
     visualizeLayout(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
-        myStartingX, myStartingY, myBlockSize);
+        myStartingX, myStartingY, myBlockSize, myAnimation);
     gameMenuController = new GameMenuController(myAnimationHandler.getAnimation());
     towerMenuController = new TowerMenuController();
     blockToTower = new HashMap<>();

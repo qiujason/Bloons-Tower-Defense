@@ -14,9 +14,9 @@ public class BloonNode extends GamePieceNode{
 
 
 
-  public BloonNode(BloonsType bloonType, double xPosition, double yPosition, double radius){
+  public BloonNode(double xPosition, double yPosition, double radius){
     super(xPosition, yPosition, radius);
-    this.bloonType = bloonType;
+    //this.bloonType = bloonType;
     this.setFill(findTowerImage());
   }
 

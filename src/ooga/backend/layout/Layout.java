@@ -79,4 +79,8 @@ public class Layout implements LayoutAPI {
     return blockSize;
   }
 
+  public LayoutBlock getStartingBlock(){
+    return layoutConfig.get(0).get(0);
+  }
+
 }
