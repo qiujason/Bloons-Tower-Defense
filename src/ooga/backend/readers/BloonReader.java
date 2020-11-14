@@ -50,7 +50,7 @@ public class BloonReader extends Reader{
 
     double dx = layout.getStartBlock().getDx() * bloonType.relativeSpeed();
     double dy = layout.getStartBlock().getDx() * bloonType.relativeSpeed();
-    return new Bloon(bloonType, layout.getStartCoordinates()[1], layout.getStartCoordinates()[0], dx, dy);
+    return new Bloon(bloonType, layout.getStartCoordinates()[1] + 0.5, layout.getStartCoordinates()[0] + 0.5, dx, dy);
   }
 
 }
