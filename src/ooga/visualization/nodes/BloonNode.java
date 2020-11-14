@@ -1,5 +1,6 @@
 package ooga.visualization.nodes;
 
+import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ResourceBundle;
 import javafx.scene.image.Image;
@@ -28,8 +29,10 @@ public class BloonNode extends GamePieceNode{
   @Override
   public ImagePattern findTowerImage() {
     Image towerImage = null;
+    System.out.println(bloonType.name());
     try {
-      towerImage = new Image(myBloonImages.getString(bloonType.name()).toURI());
+      towerImage = new Image(String.valueOf(getClass().getResource(myBloonImages.getString(
+          bloonType.name())).toURI()));
     } catch (
         URISyntaxException e) {
       e.printStackTrace();
