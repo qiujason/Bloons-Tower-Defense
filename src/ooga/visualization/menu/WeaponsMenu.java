@@ -47,12 +47,13 @@ public class WeaponsMenu extends FlowPane {
     String imageDirectory = nameToPicture.getString(towerName + BUTTON_TAG);
     Image towerImage = makeImage(imageDirectory);
     ImageView imageView = new ImageView(towerImage);
-    imageView.setFitHeight(50); //magic
-    imageView.setFitWidth(50); //magic
+    imageView.setFitHeight(40); //magic
+    imageView.setFitWidth(40); //magic
     Button button = new Button(towerName,imageView);
     button.setOnAction(handler);
     button.setId(towerName);
     button.setMinWidth(BUTTON_WIDTH);
+    button.setMaxHeight(50);
     return button;
   }
 
