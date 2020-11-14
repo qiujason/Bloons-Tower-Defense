@@ -23,14 +23,14 @@ class UnlimitedRangeSingleProjectileShooterTest {
 
   @BeforeEach
   void initializeBloonsTypes() {
-    chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
+    chain = new BloonsTypeChain("tests/test_bloonstype_reader/ValidBloons");
   }
 
   @Test
   void testShoot() {
     TowerFactory towerFactory = new SingleTowerFactory();
     Tower testTower = towerFactory.createTower(TowerType.UnlimitedRangeProjectileShooter, 0, 0);
-    Bloon target = new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 300,400,5,5);
+    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 300,400,5,5);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
@@ -46,9 +46,9 @@ class UnlimitedRangeSingleProjectileShooterTest {
     TowerFactory towerFactory = new SingleTowerFactory();
     Tower testTower = towerFactory.createTower(TowerType.UnlimitedRangeProjectileShooter, 10, 20);
     List<Bloon> bloonsList = new ArrayList<>();
-    bloonsList.add(new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 200,200,5,5));
-    bloonsList.add(new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 500,500,5,5));
-    bloonsList.add(new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 700,700,5,5));
+    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 200,200,5,5));
+    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 500,500,5,5));
+    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 700,700,5,5));
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
     assertTrue(testTower.checkBalloonInRange(bloonsCollection));
   }

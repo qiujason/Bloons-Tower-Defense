@@ -3,14 +3,18 @@ package ooga.backend.bloons.factory;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.special.CamoBloon;
 import ooga.backend.bloons.types.BloonsType;
-import ooga.backend.bloons.types.BloonsTypeChain;
 
 public class CamoBloonsFactory implements BloonsFactory {
 
+  public Bloon createBloon(Bloon bloon) {
+    return new CamoBloon(bloon.getBloonsType(), bloon.getXPosition(), bloon.getYPosition(),
+        bloon.getXVelocity(), bloon.getYVelocity());
+  }
+
   @Override
-  public Bloon createBloon(BloonsTypeChain chain, BloonsType bloonsType, double xPosition, double yPosition,
+  public Bloon createBloon(BloonsType bloonsType, double xPosition, double yPosition,
       double xVelocity, double yVelocity) {
-    return new CamoBloon(chain, bloonsType, xPosition, yPosition, xVelocity, yVelocity);
+    return new CamoBloon(bloonsType, xPosition, yPosition, xVelocity, yVelocity);
   }
 
 }

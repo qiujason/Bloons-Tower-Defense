@@ -1,8 +1,6 @@
 package ooga.backend.API;
 
 import ooga.backend.bloons.Bloon;
-import ooga.backend.bloons.types.BloonsTypeChain;
-import ooga.backend.towers.TowerType;
 
 public interface BloonsAPI {
 

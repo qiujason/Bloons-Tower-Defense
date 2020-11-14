@@ -74,11 +74,11 @@ public class AnimationHandler {
     myCircleSidesY = new HashMap<>();
 
     // The following code is merely to test a starting chain of 5 balloons
-    BloonsTypeChain chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
+    BloonsTypeChain chain = new BloonsTypeChain("tests/test_bloonstype_reader/ValidBloons");
     myWaitingBloons = new BloonsCollection();
     for (int i = 0; i < 10; i++) {
       myWaitingBloons
-          .add(new Bloon(chain, chain.getBloonsTypeRecord("RED"), myStartingX, myStartingY, 0, 0));
+          .add(new Bloon(chain.getBloonsTypeRecord("RED"), myStartingX, myStartingY, 0, 0));
     }
   }
 
