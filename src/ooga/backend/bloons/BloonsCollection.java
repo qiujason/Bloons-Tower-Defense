@@ -61,6 +61,10 @@ public class BloonsCollection implements GamePieceCollection<Bloon> {
     return bloons.get(index);
   }
 
+  public int size(){
+    return bloons.size();
+  }
+
 //  @Override
 //  public String toString(){
 //    return ""+ bloons.size();

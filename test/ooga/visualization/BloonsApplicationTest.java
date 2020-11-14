@@ -3,22 +3,49 @@ package ooga.visualization;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.util.List;
+import javafx.animation.Timeline;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.bloons.types.BloonsTypeChain;
+import ooga.backend.layout.Layout;
+import ooga.backend.readers.BloonReader;
+import ooga.backend.readers.LayoutReader;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
 
 public class BloonsApplicationTest extends DukeApplicationTest {
 
+  public static final String LAYOUTS_PATH = "layouts/";
+  public static final String BLOON_WAVES_PATH = "bloon_waves/";
+  public static final String LEVEL_FILE = "level1.csv";
+  public static final String BLOONS_TYPE_PATH = "bloon_resources/Bloons";
+
   Button myStartButton;
+  Layout myLayout;
+  BloonsCollection bloons;
+  Timeline myAnimation;
+
+
+  @BeforeEach
+  void initialize(){
+    LayoutReader layoutReader = new LayoutReader();
+    BloonReader bloonReader = new BloonReader();
+    myLayout = layoutReader.generateLayout(LAYOUTS_PATH + LEVEL_FILE);
+    List<BloonsCollection> bloonWaves = bloonReader.generateBloonsCollectionMap(new BloonsTypeChain(BLOONS_TYPE_PATH), BLOON_WAVES_PATH + LEVEL_FILE, myLayout);
+    bloons = bloonWaves.get(0);
+    myAnimation = new Timeline();
+  }
 
   @Override
   public void start(Stage testStage) {
-    BloonsApplication myBloonsApplication = new BloonsApplication();
-    myBloonsApplication.start(testStage);
+    BloonsApplication myBloonsApplication = new BloonsApplication(myLayout, bloons, myAnimation);
+    myBloonsApplication.fireInTheHole(testStage);
     myStartButton = lookup("#Start").query();
   }
 

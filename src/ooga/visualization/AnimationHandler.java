@@ -46,16 +46,14 @@ public class AnimationHandler {
   private TowersCollection myTowers = new TowersCollection();
   private Map<Tower, Node> myTowersInGame = new HashMap<>();
   private BloonsCollection myBloons;
-  private BloonsCollection myWaitingBloons;
   private Map<Bloon, BloonNode> myBloonsInGame = new HashMap<>();
   private ProjectilesCollection myProjectiles = new ProjectilesCollection();
   private Map<Projectile, Node> myProjectilesInGame = new HashMap<>();
   private ProjectileFactory myProjectileFactory = new SingleProjectileFactory();
 
-  private Map<Bloon, Double> myCircleSidesX;
-  private Map<Bloon, Double> myCircleSidesY;
+  private Map<BloonNode, Double> myCircleSidesX;
+  private Map<BloonNode, Double> myCircleSidesY;
 
-  private int bloonSpawnDelay = 0;
 
   public AnimationHandler(Layout layout, Group levelLayout, BloonsCollection bloons, double startingX,
       double startingY, double blockSize, Timeline animation) {
@@ -77,7 +75,6 @@ public class AnimationHandler {
     myCircleSidesX = new HashMap<>();
     myCircleSidesY = new HashMap<>();
 
-    readyUpBloons();
 
 //    // The following code is merely to test a starting chain of 5 balloons
 //    BloonsTypeChain chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
@@ -88,16 +85,15 @@ public class AnimationHandler {
 
   }
 
-  public void readyUpBloons(){
+  public void addBloonstoGame(){
     GamePieceIterator<Bloon> iterator = myBloons.createIterator();
-    if(iterator.hasNext()) {
-      Bloon bloonToSpawn = (Bloon) iterator.next();
-      if (bloonToSpawn.getXPosition() >= 1) {
+    while(iterator.hasNext()) {
+      Bloon bloonToSpawn = iterator.next();
+      if (!myBloonsInGame.containsKey(bloonToSpawn)) {
         BloonNode bloonNode = new BloonNode(myStartingX, myStartingY, myBlockSize / 2.5);
-        myBloonsInGame.putIfAbsent(bloonToSpawn, bloonNode);
+        myBloonsInGame.put(bloonToSpawn, bloonNode);
         myLevelLayout.getChildren().add(bloonNode);
       }
-
     }
   }
 
@@ -105,64 +101,43 @@ public class AnimationHandler {
     animateTowers();
     animateProjectiles();
     animateBloons();
-
   }
 
-//  private void spawnBloon() {
-//    BloonsIterator bloonsIterator = (BloonsIterator) myBloons.createIterator();
-//    if(bloonsIterator.hasMore()) {
-//      Bloon bloonToSpawn = (Bloon) bloonsIterator.getNext();
-//
-//      Circle myBloonInGame = new Circle(myStartingX, myStartingY, myBlockSize / 2.5, Color.RED);
-//      System.out.println(myBloonInGame);
-//      System.out.println("ADSF");
-//
-//      myBloonsInGame.put(bloonToSpawn, myBloonInGame);
-//      myLevelLayout.getChildren().add(myBloonInGame);
-//      myBloons.remove(bloonToSpawn);
-//    }
-//  }
 
   // TODO: Refactor
   private void animateBloons() {
 
+    addBloonstoGame();
     for(Bloon bloon : myBloonsInGame.keySet()){
-      BloonNode bnode = myBloonsInGame.get(bloon);
-      System.out.println("Node: "+ bnode.getXPosition());
 
-      myCircleSidesX.putIfAbsent(bloon, 0.0);
-      myCircleSidesY.putIfAbsent(bloon, 0.0);
-//System.out.println("circlesideX" + myCircleSidesX);
-//      System.out.println("circlesideY" +myCircleSidesX);
-//      System.out.println(myBlockSize);
+      BloonNode bloonNode = myBloonsInGame.get(bloon);
 
+      myCircleSidesX.putIfAbsent(bloonNode, 0.0);
+      myCircleSidesY.putIfAbsent(bloonNode, 0.0);
+
+
+      //System.out.println(myCircleSidesY.get(bloonNode) + " " + myCircleSidesX.get(bloonNode));
 
       LayoutBlock currentBlock =
-          myLayout.getBlock(((int) ((bnode.getCenterY() + myCircleSidesY.get(bloon)) / myBlockSize)),
-              ((int) ((bnode.getCenterX() + myCircleSidesX.get(bloon)) / myBlockSize)));
-
-
+          myLayout.getBlock(((int) ((bloonNode.getCenterY() - myCircleSidesY.get(bloonNode)) / myBlockSize)),
+              ((int) ((bloonNode.getCenterX() - myCircleSidesX.get(bloonNode)) / myBlockSize)));
+//      System.out.println((bloonNode.getCenterY() + myCircleSidesY.get(bloonNode)) / myBlockSize + " " +
+//          (bloonNode.getCenterX() + myCircleSidesX.get(bloonNode)) / myBlockSize);
       if (currentBlock.isEndBlock()) {
-        myLevelLayout.getChildren().remove(bnode);
+        myLevelLayout.getChildren().remove(bloonNode);
         myBloons.remove(bloon);
         myBloonsInGame.remove(bloon);
       }
-      bloon.setXVelocity(bloon.getBloonsType().relativeSpeed() * currentBlock.getDx());
-      bloon.setYVelocity(bloon.getBloonsType().relativeSpeed() * currentBlock.getDy());
-
-      bnode.setXPosition(bnode.getCenterX() + bloon.getXVelocity());
-      bnode.setYPosition(bnode.getCenterY() + bloon.getYVelocity());
-
-      setCircleSides(currentBlock, bloon);
-
+      bloonNode.setXPosition(bloonNode.getXPosition() + bloon.getXVelocity());
+      bloonNode.setYPosition(bloonNode.getYPosition() + bloon.getYVelocity());
+     // System.out.println(bloonNode.getXPosition() + " "  + bloonNode.getYPosition());
+      setCircleSides(currentBlock, bloonNode);
     }
-
-    myBloons.updateAll();
   }
 
-  private void setCircleSides(LayoutBlock currentBlock, Bloon currentBloon) {
-    myCircleSidesX.put(currentBloon, -myBlockSize * currentBlock.getDx() / 2);
-    myCircleSidesY.put(currentBloon, -myBlockSize * currentBlock.getDy() / 2);
+  private void setCircleSides(LayoutBlock currentBlock, BloonNode bloonNode) {
+    myCircleSidesX.put(bloonNode, -myBlockSize * currentBlock.getDx() / 2);
+    myCircleSidesY.put(bloonNode, -myBlockSize * currentBlock.getDy() / 2);
   }
 
   private void animateTowers() {
@@ -264,7 +239,7 @@ public class AnimationHandler {
   }
 
   public void setBloonWave(BloonsCollection bloonWave) {
-    //myWaitingBloons = bloonWave;
+    myBloons = bloonWave;
   }
 
   public Timeline getAnimation() {

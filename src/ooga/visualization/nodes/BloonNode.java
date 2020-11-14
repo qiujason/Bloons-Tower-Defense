@@ -10,7 +10,7 @@ public class BloonNode extends GamePieceNode{
 
   private BloonsType bloonType;
 
-  private static final String TOWER_IMAGE = "/gamePhotos/dartmonkey.png";
+  private static final String BLOON_IMAGE = "/gamePhotos/red_bloon.jpg";
 
 
 
@@ -26,7 +26,7 @@ public class BloonNode extends GamePieceNode{
   public ImagePattern findTowerImage() {
     Image towerImage = null;
     try {
-      towerImage = new Image(String.valueOf(getClass().getResource(TOWER_IMAGE).toURI()));
+      towerImage = new Image(String.valueOf(getClass().getResource(BLOON_IMAGE).toURI()));
     } catch (
         URISyntaxException e) {
       e.printStackTrace();

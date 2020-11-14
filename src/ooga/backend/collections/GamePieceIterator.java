@@ -2,7 +2,6 @@ package ooga.backend.collections;
 
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 import ooga.backend.GamePiece;

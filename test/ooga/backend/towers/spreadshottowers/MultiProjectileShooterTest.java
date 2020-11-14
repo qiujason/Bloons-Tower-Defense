@@ -23,14 +23,14 @@ class MultiProjectileShooterTest {
 
   @BeforeEach
   void initializeBloonsTypes() {
-    chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
+    chain = new BloonsTypeChain("tests/test_bloonstype_reader/ValidBloons");
   }
 
   @Test
   void testShootBalloonInRange() {
     TowerFactory towerFactory = new SingleTowerFactory();
     Tower testTower = towerFactory.createTower(TowerType.MultiProjectileShooter, 0,0);
-    Bloon target = new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 3,4,5,5);
+    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 3,4,5,5);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
@@ -80,7 +80,7 @@ class MultiProjectileShooterTest {
   void testShootNoBalloonInRange() {
     TowerFactory towerFactory = new SingleTowerFactory();
     Tower testTower = towerFactory.createTower(TowerType.MultiProjectileShooter, 0,0);
-    Bloon target = new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 20,20,5,5);
+    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 20,20,5,5);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);

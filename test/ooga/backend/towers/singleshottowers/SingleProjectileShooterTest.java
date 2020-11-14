@@ -22,7 +22,7 @@ class SingleProjectileShooterTest {
 
   @BeforeEach
   void initializeBloonsTypes() {
-    chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
+    chain = new BloonsTypeChain("tests/test_bloonstype_reader/ValidBloons");
   }
 
   @org.junit.jupiter.api.Test
@@ -30,9 +30,9 @@ class SingleProjectileShooterTest {
     TowerFactory towerFactory = new SingleTowerFactory();
     Tower testTower = towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
     List<Bloon> bloonsList = new ArrayList<>();
-    bloonsList.add(new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 10,10,5,5));
-    bloonsList.add(new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 15,30,5,5));
-    bloonsList.add(new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 12,22,5,5));
+    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 10,10,5,5));
+    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 15,30,5,5));
+    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 12,22,5,5));
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
     assertTrue(testTower.checkBalloonInRange(bloonsCollection));
   }
@@ -42,8 +42,8 @@ class SingleProjectileShooterTest {
     TowerFactory towerFactory = new SingleTowerFactory();
     Tower testTower = towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
     List<Bloon> bloonsList = new ArrayList<>();
-    bloonsList.add(new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 10,10,5,5));
-    bloonsList.add(new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 15,30,5,5));
+    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 10,10,5,5));
+    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 15,30,5,5));
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
     assertFalse(testTower.checkBalloonInRange(bloonsCollection));
   }
@@ -53,9 +53,9 @@ class SingleProjectileShooterTest {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
     List<Bloon> bloonsList = new ArrayList<>();
-    bloonsList.add(new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 10,10,5,5));
-    bloonsList.add(new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 15,30,5,5));
-    Bloon expected = new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 12,22,5,5);
+    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 10,10,5,5));
+    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 15,30,5,5));
+    Bloon expected = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 12,22,5,5);
     bloonsList.add(expected);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
     assertEquals(expected, testTower.findClosestBloon(bloonsCollection));
@@ -66,9 +66,9 @@ class SingleProjectileShooterTest {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
     List<Bloon> bloonsList = new ArrayList<>();
-    bloonsList.add(new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 10,21,5,5));
-    bloonsList.add(new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 10,22,5,5));
-    Bloon expected = new Bloon(chain, new BloonsType("BLACK", 1, 1, new HashSet<>()), 13,23,5,5);
+    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 10,21,5,5));
+    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 10,22,5,5));
+    Bloon expected = new Bloon(new BloonsType(chain, "BLACK", 1, 1, new HashSet<>()), 13,23,5,5);
     bloonsList.add(expected);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
     assertEquals(expected, testTower.findStrongestBloon(bloonsCollection));
@@ -79,10 +79,10 @@ class SingleProjectileShooterTest {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
     List<Bloon> bloonsList = new ArrayList<>();
-    Bloon expected = new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 11,22,5,5);
+    Bloon expected = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 11,22,5,5);
     bloonsList.add(expected);
-    bloonsList.add(new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 13,23,5,5));
-    bloonsList.add(new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 14,24,5,5));
+    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 13,23,5,5));
+    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 14,24,5,5));
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
     assertEquals(expected, testTower.findFirstBloon(bloonsCollection));
   }
@@ -92,9 +92,9 @@ class SingleProjectileShooterTest {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
     List<Bloon> bloonsList = new ArrayList<>();
-    bloonsList.add(new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 11,22,5,5));
-    bloonsList.add(new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 13,24,5,5));
-    Bloon expected = new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 14,23,5,5);
+    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 11,22,5,5));
+    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 13,24,5,5));
+    Bloon expected = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 14,23,5,5);
     bloonsList.add(expected);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
     assertEquals(expected, testTower.findLastBloon(bloonsCollection));
@@ -105,7 +105,7 @@ class SingleProjectileShooterTest {
   void testGetDistance() {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
-    Bloon target = new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 3,4,5,5);
+    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 3,4,5,5);
     assertEquals(5, testTower.getDistance(target));
   }
 
@@ -113,7 +113,7 @@ class SingleProjectileShooterTest {
   void testFindShootXVelocity() {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
-    Bloon target = new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 3,4,5,5);
+    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 3,4,5,5);
     assertEquals(-9, testTower.findShootXVelocity(target));
   }
 
@@ -121,7 +121,7 @@ class SingleProjectileShooterTest {
   void testFindShootYVelocity() {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
-    Bloon target = new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 3,4,5,5);
+    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 3,4,5,5);
     assertEquals(-12, testTower.findShootYVelocity(target));
   }
 
@@ -130,7 +130,7 @@ class SingleProjectileShooterTest {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower)
         towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
-    Bloon target = new Bloon(chain, new BloonsType("RED", 1, 1, new HashSet<>()), 3,4,5,5);
+    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 3,4,5,5);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);

@@ -17,17 +17,17 @@ public class BloonsTest {
 
   @BeforeEach
   void initializeBloonsTypes() {
-    chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
+    chain = new BloonsTypeChain("tests/test_bloonstype_reader/ValidBloons");
   }
 
   @Test
   void testCreateBloonsFromFactory() {
-    assertNotNull((new BasicBloonsFactory().createBloon(chain, chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0)));
+    assertNotNull((new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0)));
   }
 
   @Test
   void testBloonsPositionUpdate() {
-    Bloon bloon = new Bloon(chain, chain.getBloonsTypeRecord("RED"), 10, 10, 10, 10);
+    Bloon bloon = new Bloon(chain.getBloonsTypeRecord("RED"), 10, 10, 10, 10);
     bloon.update();
     assertEquals(20, bloon.getXPosition());
     assertEquals(20, bloon.getYPosition());
@@ -35,14 +35,14 @@ public class BloonsTest {
 
   @Test
   void testBloonsDistanceTraveled() {
-    Bloon bloon = new Bloon(chain, chain.getBloonsTypeRecord("RED"), 10, 10, 10, 10);
+    Bloon bloon = new Bloon(chain.getBloonsTypeRecord("RED"), 10, 10, 10, 10);
     bloon.update();
     assertEquals(20, bloon.getDistanceTraveled());
   }
 
   @Test
   void testBloonsChangedVelocityPositionUpdate() {
-    Bloon bloon = new Bloon(chain, chain.getBloonsTypeRecord("RED"), 10, 10, 10, 10);
+    Bloon bloon = new Bloon(chain.getBloonsTypeRecord("RED"), 10, 10, 10, 10);
     bloon.update();
     assertEquals(20, bloon.getXPosition());
     assertEquals(20, bloon.getYPosition());
@@ -58,14 +58,22 @@ public class BloonsTest {
 
   @Test
   void testMakeCamoBloonFromFactory() {
-    Bloon bloon = new CamoBloonsFactory().createBloon(chain, chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
+    Bloon bloon = new CamoBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
     assertTrue(bloon.getBloonsType().specials().contains(Specials.CAMO));
   }
 
   @Test
   void testMakeRegenBloonFromFactory() {
-    Bloon bloon = new RegenBloonsFactory().createBloon(chain, chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
+    Bloon bloon = new RegenBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
     assertTrue(bloon.getBloonsType().specials().contains(Specials.REGEN));
+  }
+
+  @Test
+  void testMakeCamoRegenBloonFromFactory() {
+    Bloon bloon = new RegenBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
+    bloon = new CamoBloonsFactory().createBloon(bloon);
+    assertTrue(bloon.getBloonsType().specials().contains(Specials.REGEN));
+    assertTrue(bloon.getBloonsType().specials().contains(Specials.CAMO));
   }
 
 }
