@@ -1,21 +1,15 @@
 package ooga.visualization;
 
-import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
-import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
@@ -23,11 +17,9 @@ import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.projectile.factory.ProjectileFactory;
 import ooga.backend.projectile.factory.SingleProjectileFactory;
 import ooga.backend.layout.Layout;
-import ooga.backend.layout.LayoutBlock;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowersCollection;
 import ooga.visualization.nodes.BloonNode;
-import ooga.visualization.nodes.BloonNodeFactory;
 
 
 public class AnimationHandler {
@@ -75,14 +67,6 @@ public class AnimationHandler {
     myCircleSidesX = new HashMap<>();
     myCircleSidesY = new HashMap<>();
 
-
-//    // The following code is merely to test a starting chain of 5 balloons
-//    BloonsTypeChain chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
-//    myWaitingBloons = new BloonsCollection();
-//    for(int i = 0; i < 10; i++){
-//      myWaitingBloons.add(new Bloon(chain.getBloonsTypeRecord("RED"), myStartingX, myStartingY, 0, 0));
-    //}
-
   }
 
   public void addBloonstoGame(){
@@ -90,7 +74,7 @@ public class AnimationHandler {
     while(iterator.hasNext()) {
       Bloon bloonToSpawn = iterator.next();
       if (!myBloonsInGame.containsKey(bloonToSpawn)) {
-        BloonNode bloonNode = new BloonNode(myStartingX, myStartingY, myBlockSize / 2.5);
+        BloonNode bloonNode = new BloonNode(bloonToSpawn.getBloonsType(), myStartingX, myStartingY, myBlockSize / 2.5);
         myBloonsInGame.put(bloonToSpawn, bloonNode);
         myLevelLayout.getChildren().add(bloonNode);
       }
@@ -111,36 +95,20 @@ public class AnimationHandler {
     for(Bloon bloon : myBloonsInGame.keySet()){
 
       BloonNode bloonNode = myBloonsInGame.get(bloon);
+      if (bloon.isDead()){
+        myLevelLayout.getChildren().remove(bloonNode);
+      }
 
       myCircleSidesX.putIfAbsent(bloonNode, 0.0);
       myCircleSidesY.putIfAbsent(bloonNode, 0.0);
 
 
-      //System.out.println(myCircleSidesY.get(bloonNode) + " " + myCircleSidesX.get(bloonNode));
-
-//      LayoutBlock currentBlock =
-//          myLayout.getBlock(((int) ((bloonNode.getCenterY() - myCircleSidesY.get(bloonNode)) / myBlockSize)),
-//              ((int) ((bloonNode.getCenterX() - myCircleSidesX.get(bloonNode)) / myBlockSize)));
-//      System.out.println((bloonNode.getCenterY() + myCircleSidesY.get(bloonNode)) / myBlockSize + " " +
-//          (bloonNode.getCenterX() + myCircleSidesX.get(bloonNode)) / myBlockSize);
-//      if (currentBlock.isEndBlock()) {
-//        myLevelLayout.getChildren().remove(bloonNode);
-//        myBloons.remove(bloon);
-//        myBloonsInGame.remove(bloon);
-//      }
       bloonNode.setXPosition(bloon.getXPosition() * myBlockSize);
       bloonNode.setYPosition(bloon.getYPosition() * myBlockSize);
-     // System.out.println(bloonNode.getXPosition() + " "  + bloonNode.getYPosition());
-//      setCircleSides(bloon, bloonNode);
+
     }
   }
 
-//  private void setCircleSides(Bloon bloon, BloonNode bloonNode) {
-//    myCircleSidesX.put(bloonNode, -myBlockSize * myLayout.getBlock((int) (bloon.getYPosition())
-//        ,(int) bloon.getXPosition()).getDx()/ 2);
-//    myCircleSidesY.put(bloonNode, -myBlockSize * myLayout.getBlock((int) (bloon.getYPosition())
-//        ,(int) bloon.getXPosition()).getDy()/ 2);
-//  }
 
   private void animateTowers() {
     GamePieceIterator<Tower> towersIterator = myTowers.createIterator();

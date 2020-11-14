@@ -1,6 +1,7 @@
 package ooga.visualization.nodes;
 
 import java.net.URISyntaxException;
+import java.util.ResourceBundle;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import ooga.backend.bloons.types.BloonsType;
@@ -9,14 +10,16 @@ import ooga.backend.towers.TowerType;
 public class BloonNode extends GamePieceNode{
 
   private BloonsType bloonType;
+  public static final String BLOON_IMAGES_PATH = "bloon_resources/BloonImages";
 
-  private static final String BLOON_IMAGE = "/gamePhotos/red_bloon.jpg";
+  private final ResourceBundle myBloonImages = ResourceBundle
+      .getBundle(BLOON_IMAGES_PATH);
 
 
 
-  public BloonNode(double xPosition, double yPosition, double radius){
+  public BloonNode(BloonsType bloonType, double xPosition, double yPosition, double radius){
     super(xPosition, yPosition, radius);
-    //this.bloonType = bloonType;
+    this.bloonType = bloonType;
     this.setFill(findTowerImage());
   }
 
@@ -26,7 +29,7 @@ public class BloonNode extends GamePieceNode{
   public ImagePattern findTowerImage() {
     Image towerImage = null;
     try {
-      towerImage = new Image(String.valueOf(getClass().getResource(BLOON_IMAGE).toURI()));
+      towerImage = new Image(myBloonImages.getString(bloonType.name()).toURI());
     } catch (
         URISyntaxException e) {
       e.printStackTrace();

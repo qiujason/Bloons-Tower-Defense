@@ -72,9 +72,12 @@ public class GameEngine implements GameEngineAPI {
       myBloonSidesY.putIfAbsent(bloon, 0.0);
 
       LayoutBlock currentBlock;
-      //System.out.println((int) (bloon.getXPosition()) + " " + (int) bloon.getYPosition());
       currentBlock = layout.getBlock((int) (bloon.getYPosition() + myBloonSidesY.get(bloon))
           ,(int) (bloon.getXPosition() + myBloonSidesX.get(bloon)));
+
+      if (currentBlock.isEndBlock()){
+        bloon.setDead();
+      }
 
       bloon.setXVelocity((bloon.getBloonsType().relativeSpeed() * currentBlock.getDx()/myBlockSize));
       bloon.setYVelocity((bloon.getBloonsType().relativeSpeed() * currentBlock.getDy()/myBlockSize));

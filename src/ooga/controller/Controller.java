@@ -58,8 +58,6 @@ public class Controller extends Application {
     initializeBloonWaves();
     startGameEngine();
 
-    System.out.println(getMyBlockSize());
-
     bloonsApplication = new BloonsApplication(layout, gameEngine.getCurrentBloonWave(), myAnimation);
     bloonsApplication.fireInTheHole(primaryStage);
 
