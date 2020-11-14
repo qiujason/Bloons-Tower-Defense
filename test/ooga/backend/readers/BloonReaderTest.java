@@ -1,4 +1,4 @@
-package readers;
+package ooga.backend.readers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -6,9 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import ooga.backend.bloons.Bloon;
-import ooga.backend.bloons.collection.BloonsCollection;
+import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.types.BloonsTypeChain;
-import ooga.backend.collections.Iterator;
+import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.layout.Layout;
 import ooga.backend.readers.BloonReader;
 import ooga.backend.readers.LayoutReader;
@@ -40,7 +40,7 @@ public class BloonReaderTest {
     LayoutReader layoutReader = new LayoutReader();
     BloonReader reader = new BloonReader();
     Layout layout = layoutReader.generateLayout("layouts/level1.csv");
-    BloonsTypeChain chain = new BloonsTypeChain("tests.test_bloonstype_reader.ValidBloons");
+    BloonsTypeChain chain = new BloonsTypeChain("tests/test_bloonstype_reader/ValidBloons");
     List<BloonsCollection> list = reader.generateBloonsCollectionMap(chain, "tests/test_bloon_waves/level1_test.csv", layout);
     String[][] expectedWaves =
         {{"RED","RED","RED","RED","RED","RED","RED","RED","RED","RED","RED","RED"},
@@ -51,9 +51,9 @@ public class BloonReaderTest {
 
   private boolean generateBloonsCollectionMapTestHelper(String[][] expectedWaves, List<BloonsCollection> list){
     for (int i = 0; i < expectedWaves.length; i++){
-      Iterator iterate = list.get(i).createIterator();
+      GamePieceIterator<Bloon> iterate = list.get(i).createIterator();
       for (int j = 0; j < expectedWaves[i].length; j++){
-        Bloon bloon = (Bloon) iterate.getNext();
+        Bloon bloon = iterate.next();
         if (!expectedWaves[i][j].equals(bloon.toString())){
           return false;
         }

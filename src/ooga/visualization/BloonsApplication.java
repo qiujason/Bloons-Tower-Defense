@@ -21,14 +21,21 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import ooga.backend.bloons.collection.BloonsCollection;
+import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.layout.Layout;
-import ooga.backend.layout.LayoutBlock;
 import ooga.backend.readers.LayoutReader;
+import ooga.backend.towers.TowerType;
+import ooga.backend.towers.factory.SingleTowerFactory;
+import ooga.backend.towers.factory.TowerFactory;
+import ooga.controller.GameMenuController;
 import ooga.controller.GameMenuInterface;
 import ooga.controller.TowerMenuController;
 import ooga.controller.TowerMenuInterface;
 import ooga.visualization.menu.GameMenu;
+import ooga.visualization.weapons.TowerNode;
+import ooga.visualization.weapons.TowerNodeFactory;
+import ooga.visualization.weapons.WeaponNodeFactory;
+import ooga.visualization.weapons.WeaponRange;
 
 public class BloonsApplication {
 
@@ -138,6 +145,7 @@ public class BloonsApplication {
     String blockColorAsString = myBlockMappings.getString(block);
     Color blockColor = Color.web(blockColorAsString);
     blockRectangle.setFill(blockColor);
+//    blockRectangle.setOnMouseClicked(e -> putTower(blockRectangle));
     if(block.charAt(0) == '*') {
       myStartingX = currentBlockX + blockSize / 2;
       myStartingY = currentBlockY + blockSize / 2;

@@ -3,7 +3,7 @@ package ooga.backend.towers.singleshottowers;
 import java.util.ArrayList;
 import java.util.List;
 import ooga.backend.bloons.Bloon;
-import ooga.backend.bloons.collection.BloonsCollection;
+import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
 import ooga.backend.projectile.factory.ProjectileFactory;
