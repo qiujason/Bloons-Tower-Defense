@@ -1,55 +1,103 @@
 package ooga.backend;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import ooga.backend.API.GameEngineAPI;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.layout.Layout;
 import ooga.backend.layout.LayoutBlock;
+import ooga.visualization.AnimationHandler;
+import ooga.visualization.nodes.BloonNode;
 
 public class GameEngine implements GameEngineAPI {
 
   private static final int FIRST_WAVE = 0;
+  public static final int SPAWN_DELAY = (int) (1 * AnimationHandler.FRAMES_PER_SECOND);
+
 
   private final Layout layout;
   private final List<BloonsCollection> allBloonWaves;
-  private GamePieceIterator<Bloon> currentBloonsIterator;
   private BloonsCollection currentBloonWave;
+  private BloonsCollection queuedBloons;
+  private int spawnTimer;
+  private double myBlockSize;
 //  private final TowersCollection towers;
   private GamePieceIterator<Bloon> towersIterator;
+  private Map<Bloon, Double > myBloonSidesX;
+  private Map<Bloon, Double> myBloonSidesY;
 
   private int wave;
 
-  public GameEngine(Layout layout, List<BloonsCollection> allBloonWaves) {
+  public GameEngine(Layout layout, List<BloonsCollection> allBloonWaves, double blockSize) {
     this.layout = layout;
     this.allBloonWaves = allBloonWaves;
-    currentBloonWave = allBloonWaves.get(FIRST_WAVE);
-    currentBloonsIterator = currentBloonWave.createIterator();
+    queuedBloons = allBloonWaves.get(FIRST_WAVE);
+    currentBloonWave = new BloonsCollection();
 //    towers = towersCollection;
 //    towersIterator = towers.createIterator();
+    myBlockSize = blockSize;
     wave = FIRST_WAVE;
+    spawnTimer = SPAWN_DELAY;
+    System.out.println(queuedBloons.get(0).getBloonsType().name());
+    myBloonSidesX = new HashMap<>();
+    myBloonSidesY = new HashMap<>();
+  }
+
+  public void addQueuedBloon(){
+    GamePieceIterator<Bloon> queueIterator = queuedBloons.createIterator();
+    if (queueIterator.hasNext()){
+      Bloon queuedBloon = queueIterator.next();
+      if (queuedBloon.getBloonsType().name().equals("DEAD")){
+        queuedBloons.remove(queuedBloon);
+        return;
+      }
+      currentBloonWave.add(queuedBloon);
+      queuedBloons.remove(queuedBloon);
+    }
   }
 
   @Override
   public void moveBloons() {
-    while (currentBloonsIterator.hasNext()) {
-      Bloon bloon = currentBloonsIterator.next();
-      LayoutBlock currentBlock = layout.getBlock(((int) (bloon.getXPosition()))
-          ,((int) (bloon.getYPosition()) ));
+    GamePieceIterator<Bloon> waveIterator = currentBloonWave.createIterator();
 
-      if (currentBlock.isEndBlock()) {
-        currentBloonWave.remove(bloon);
+    //updatevelocity -- extract helper
+    while (waveIterator.hasNext()) {
+      Bloon bloon = waveIterator.next();
+
+      myBloonSidesX.putIfAbsent(bloon, 0.0);
+      myBloonSidesY.putIfAbsent(bloon, 0.0);
+
+      LayoutBlock currentBlock;
+      currentBlock = layout.getBlock((int) (bloon.getYPosition() + myBloonSidesY.get(bloon))
+          ,(int) (bloon.getXPosition() + myBloonSidesX.get(bloon)));
+
+      if (currentBlock.isEndBlock()){
+        bloon.setDead();
       }
 
-      bloon.setXVelocity(bloon.getBloonsType().relativeSpeed() * currentBlock.getDx());
-      bloon.setYVelocity(bloon.getBloonsType().relativeSpeed() * currentBlock.getDy());
+      bloon.setXVelocity((bloon.getBloonsType().relativeSpeed() * currentBlock.getDx()/myBlockSize));
+      bloon.setYVelocity((bloon.getBloonsType().relativeSpeed() * currentBlock.getDy()/myBlockSize));
 
-      bloon.setXPosition(bloon.getXPosition() + bloon.getXVelocity());
-      bloon.setYPosition(bloon.getYPosition() + bloon.getYVelocity());
+      setBloonSides(bloon, currentBlock);
     }
 
     currentBloonWave.updateAll();
+  }
+
+  private void setBloonSides(Bloon bloon, LayoutBlock block) {
+    myBloonSidesX.put(bloon, -0.5 * block.getDx());
+    myBloonSidesY.put(bloon, -0.5 * block.getDy());
+  }
+
+  public boolean isMiddleOfBlock(double x, double y){
+    double xDecimal = x - (int) x;
+    double yDecimal = y - (int) y;
+    return (xDecimal > 0.45 && xDecimal < 0.55) && (yDecimal > 0.45 && yDecimal < 0.55);
+
   }
 
   @Override
@@ -61,20 +109,28 @@ public class GameEngine implements GameEngineAPI {
   public void nextWave() {
     wave++;
     currentBloonWave = allBloonWaves.get(wave);
-    currentBloonsIterator = currentBloonWave.createIterator();
   }
 
   @Override
   public void resetGame() {
     wave = FIRST_WAVE;
     currentBloonWave = allBloonWaves.get(FIRST_WAVE);
-    currentBloonsIterator = currentBloonWave.createIterator();
 //    towers.clear();
 //    towersIterator = towers.createIterator();
   }
 
   public BloonsCollection getCurrentBloonWave() {
     return currentBloonWave;
+  }
+
+  @Override
+  public void update(){
+    if (spawnTimer == SPAWN_DELAY){
+      addQueuedBloon();
+      spawnTimer = 0;
+    }
+    moveBloons();
+    spawnTimer++;
   }
 
 }
