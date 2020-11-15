@@ -39,8 +39,4 @@ public class BloonNode extends GamePieceNode{
     return new ImagePattern(towerImage);
   }
 
-  @Override
-  public ImagePattern findImage(String name){
-    return null;
-  }
 }

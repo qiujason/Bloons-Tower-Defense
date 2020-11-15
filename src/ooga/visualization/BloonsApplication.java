@@ -1,5 +1,6 @@
 package ooga.visualization;
 
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -13,8 +14,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
@@ -46,6 +52,7 @@ public class BloonsApplication {
   public static final double GAME_WIDTH = 0.75 * WIDTH;
   public static final String LAYOUTS_PATH = "layouts/";
   public static final String LEVEL_FILE = LAYOUTS_PATH + "level1.csv";
+  public static final String BACKGROUND_IMAGE = "/gamePhotos/startscreen.png";
 
   private Stage myStage;
   private Scene myScene;
@@ -85,6 +92,18 @@ public class BloonsApplication {
     Text titleText = new Text("Bloons Tower Defense");
     titleText.setScaleX(3);
     titleText.setScaleY(3);
+    Image backgroundImage = null;
+    try {
+      backgroundImage = new Image(String.valueOf(getClass().getResource(BACKGROUND_IMAGE).toURI()));
+    } catch (
+        URISyntaxException e) {
+      e.printStackTrace();
+    }
+    assert backgroundImage != null;
+    menu.setBackground(new Background(new BackgroundImage(backgroundImage, BackgroundRepeat.REPEAT,
+        BackgroundRepeat.REPEAT,
+        BackgroundPosition.DEFAULT,
+        BackgroundSize.DEFAULT)));
     menu.setCenter(titleText);
     Button startButton = new Button();
     startButton.setOnAction(e -> loadLevel());
@@ -170,19 +189,7 @@ public class BloonsApplication {
     level.setRight(myMenuPane);
   }
 
-  /**
-   * This class makes a new alert message when there is an error.
-   * @param header
-   * @param message
-   */
-  public void makeAlert(String header, String message) {
-    Alert a = new Alert(Alert.AlertType.NONE);
-    ButtonType close = new ButtonType("OK", ButtonBar.ButtonData.CANCEL_CLOSE);
-    a.getButtonTypes().addAll(close);
-    a.setHeaderText(header);
-    a.setContentText(message);
-    a.show();
-  }
+
 
   public void fullScreen(){
     myStage.setFullScreen(true);
