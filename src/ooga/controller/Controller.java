@@ -114,9 +114,13 @@ public class Controller extends Application {
   }
 
   private void step() {
+    //pass shit from front end to backend
     gameEngine.update();
+
+    //pass shit from backend to frontend
     animationHandler = bloonsApplication.getMyAnimationHandler();
     animationHandler.setBloonWave(gameEngine.getCurrentBloonWave());
+
     animationHandler.animate();
   }
 

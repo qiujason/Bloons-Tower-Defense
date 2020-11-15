@@ -10,6 +10,10 @@ import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.layout.Layout;
 import ooga.backend.layout.LayoutBlock;
+import ooga.backend.projectile.Projectile;
+import ooga.backend.projectile.ProjectilesCollection;
+import ooga.backend.towers.Tower;
+import ooga.backend.towers.TowersCollection;
 import ooga.visualization.AnimationHandler;
 import ooga.visualization.nodes.BloonNode;
 
@@ -25,7 +29,8 @@ public class GameEngine implements GameEngineAPI {
   private BloonsCollection queuedBloons;
   private int spawnTimer;
   private double myBlockSize;
-//  private final TowersCollection towers;
+  private TowersCollection towers;
+  private ProjectilesCollection projectiles;
   private GamePieceIterator<Bloon> towersIterator;
   private Map<Bloon, Double > myBloonSidesX;
   private Map<Bloon, Double> myBloonSidesY;
@@ -36,8 +41,10 @@ public class GameEngine implements GameEngineAPI {
     this.layout = layout;
     this.allBloonWaves = allBloonWaves;
     queuedBloons = allBloonWaves.get(FIRST_WAVE);
-    currentBloonWave = new BloonsCollection();
-//    towers = towersCollection;
+    currentBloonWave = new BloonsCollection(); //TODO: link to controller
+    projectiles = new ProjectilesCollection(); //TODO: link to controller
+
+    towers = new TowersCollection();
 //    towersIterator = towers.createIterator();
     myBlockSize = blockSize;
     wave = FIRST_WAVE;
@@ -119,18 +126,46 @@ public class GameEngine implements GameEngineAPI {
 //    towersIterator = towers.createIterator();
   }
 
+  private void shootAtBloons(){
+    GamePieceIterator<Tower> towerIterator = towers.createIterator();
+    while(towerIterator.hasNext()){
+      Tower currentTower = towerIterator.next();
+      currentTower.update();
+      if(currentTower.canShoot()){
+        currentTower.shoot(currentBloonWave, projectiles);
+      }
+    }
+  }
+
+  /**
+   * assumes all projectiles on screen should be moved
+   */
+  private void moveProjectiles() {
+    GamePieceIterator<Projectile> projectileIterator = projectiles.createIterator();
+    while (projectileIterator.hasNext()){
+      Projectile currentProjectile = projectileIterator.next();
+      currentProjectile.update();
+    }
+  }
+
   public BloonsCollection getCurrentBloonWave() {
     return currentBloonWave;
   }
 
   @Override
   public void update(){
+    //TODO: get projectile AND tower list from front end (maybe bloons? idk)
+
     if (spawnTimer == SPAWN_DELAY){
       addQueuedBloon();
       spawnTimer = 0;
     }
     moveBloons();
+    shootAtBloons();
+    moveProjectiles();
     spawnTimer++;
   }
+
+
 
 }

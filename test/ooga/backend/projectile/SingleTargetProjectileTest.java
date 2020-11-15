@@ -9,7 +9,7 @@ class SingleTargetProjectileTest {
   @Test
   void testUpdatePosition() {
     Projectile dart = new SingleTargetProjectile(ProjectileType.SingleTargetProjectile, 10,15,-5,5);
-    dart.updatePosition();
+    dart.update();
     assertEquals(5, dart.getXPosition());
     assertEquals(20, dart.getYPosition());
   }
