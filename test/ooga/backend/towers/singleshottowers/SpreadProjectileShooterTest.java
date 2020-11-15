@@ -9,8 +9,10 @@ import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.BloonsTypeChain;
+import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
+import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.factory.SingleTowerFactory;
 import ooga.backend.towers.factory.TowerFactory;
@@ -35,11 +37,14 @@ class SpreadProjectileShooterTest {
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
-    List<Projectile> dart = testTower.shoot(bloonsCollection);
-    assertEquals(0, dart.get(0).getXPosition());
-    assertEquals(0, dart.get(0).getYPosition());
-    assertEquals(-12, dart.get(0).getXVelocity());
-    assertEquals(-16, dart.get(0).getYVelocity());
-    assertEquals(ProjectileType.SpreadProjectile, dart.get(0).getType());
+    ProjectilesCollection projectilesCollection = new ProjectilesCollection();
+    testTower.shoot(bloonsCollection, projectilesCollection);
+    GamePieceIterator<Projectile> iterator = projectilesCollection.createIterator();
+    Projectile dart = iterator.next();
+    assertEquals(0, dart.getXPosition());
+    assertEquals(0, dart.getYPosition());
+    assertEquals(-12, dart.getXVelocity());
+    assertEquals(-16, dart.getYVelocity());
+    assertEquals(ProjectileType.SpreadProjectile, dart.getType());
   }
 }

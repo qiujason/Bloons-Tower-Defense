@@ -10,7 +10,9 @@ import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.factory.CamoBloonsFactory;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.BloonsTypeChain;
+import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
+import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.factory.SingleTowerFactory;
@@ -136,10 +138,13 @@ class SingleProjectileShooterTest {
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
-    List<Projectile> dart = testTower.shoot(bloonsCollection);
-    assertEquals(0, dart.get(0).getXPosition());
-    assertEquals(0, dart.get(0).getYPosition());
-    assertEquals(-9, dart.get(0).getXVelocity());
-    assertEquals(-12, dart.get(0).getYVelocity());
+    ProjectilesCollection projectilesCollection = new ProjectilesCollection();
+    testTower.shoot(bloonsCollection, projectilesCollection);
+    GamePieceIterator<Projectile> iterator = projectilesCollection.createIterator();
+    Projectile dart = iterator.next();
+    assertEquals(0, dart.getXPosition());
+    assertEquals(0, dart.getYPosition());
+    assertEquals(-9, dart.getXVelocity());
+    assertEquals(-12, dart.getYVelocity());
   }
 }
