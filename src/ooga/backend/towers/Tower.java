@@ -30,7 +30,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     shootingSpeed = myShootingSpeed;
     shootingRestRate = myShootingRestRate * AnimationHandler.FRAMES_PER_SECOND;
     countRestPeriod = 0;
-    canShoot = true;
+    canShoot = false;
   }
 
   public abstract TowerType getTowerType();

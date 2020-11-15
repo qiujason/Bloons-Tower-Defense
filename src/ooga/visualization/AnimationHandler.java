@@ -20,6 +20,8 @@ import ooga.backend.layout.Layout;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowersCollection;
 import ooga.visualization.nodes.BloonNode;
+import ooga.visualization.nodes.GamePieceNode;
+import ooga.visualization.nodes.TowerNode;
 
 
 public class AnimationHandler {
@@ -36,7 +38,7 @@ public class AnimationHandler {
   private double myBlockSize;
 
   private TowersCollection myTowers = new TowersCollection();
-  private Map<Tower, Node> myTowersInGame = new HashMap<>();
+  private Map<Tower, TowerNode> myTowersInGame = new HashMap<>();
   private BloonsCollection myBloons;
   private Map<Bloon, BloonNode> myBloonsInGame = new HashMap<>();
   private ProjectilesCollection myProjectiles = new ProjectilesCollection();
@@ -188,13 +190,15 @@ public class AnimationHandler {
     Circle projectileInGame = (Circle) myProjectilesInGame.get(projectile);
     Circle bloonInGame = (Circle) myBloonsInGame.get(bloon);
     return projectileInGame.getBoundsInParent().intersects(bloonInGame.getBoundsInParent());
-    //return false;
   }
 
-  public void addTower(Tower tower, Node towerInGame) {
+  public void addTower(Tower tower, TowerNode towerInGame) {
     myTowers.add(tower);
     myTowersInGame.put(tower, towerInGame);
-//    myLevelLayout.getChildren().add(towerInGame);
+    System.out.println(tower.getXPosition());
+    System.out.println(tower.getYPosition());
+    System.out.println(towerInGame.getCenterX());
+    System.out.println(towerInGame.getCenterY());
   }
 
   public void removeTower(Node towerInGame) {
