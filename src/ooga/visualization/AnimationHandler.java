@@ -88,24 +88,17 @@ public class AnimationHandler {
   }
 
 
-  // TODO: Refactor
   private void animateBloons() {
-
     addBloonstoGame();
     for(Bloon bloon : myBloonsInGame.keySet()){
-
       BloonNode bloonNode = myBloonsInGame.get(bloon);
       if (bloon.isDead()){
         myLevelLayout.getChildren().remove(bloonNode);
       }
-
       myCircleSidesX.putIfAbsent(bloonNode, 0.0);
       myCircleSidesY.putIfAbsent(bloonNode, 0.0);
-
-
       bloonNode.setXPosition(bloon.getXPosition() * myBlockSize);
       bloonNode.setYPosition(bloon.getYPosition() * myBlockSize);
-
     }
   }
 
