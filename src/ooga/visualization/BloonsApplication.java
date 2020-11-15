@@ -46,7 +46,6 @@ public class BloonsApplication {
   public static final double GAME_WIDTH = 0.75 * WIDTH;
   public static final String LAYOUTS_PATH = "layouts/";
   public static final String LEVEL_FILE = LAYOUTS_PATH + "level1.csv";
-  public static final String TOWER_IMAGE = "/gamePhotos/dartmonkey.png";
 
   private Stage myStage;
   private Scene myScene;
@@ -63,8 +62,6 @@ public class BloonsApplication {
   private AnimationHandler myAnimationHandler;
   private double myStartingX;
   private double myStartingY;
-
-
   private double myBlockSize;
   private final ResourceBundle myBlockMappings = ResourceBundle
       .getBundle(getClass().getPackageName() + ".resources.blockMappings");
@@ -104,15 +101,15 @@ public class BloonsApplication {
     visualizeLayout(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
         myStartingX, myStartingY, myBlockSize, myAnimation);
-    gameMenuController = new GameMenuController(myAnimationHandler.getAnimation());
-    towerMenuController = new TowerMenuController();
+    gameMenuController = new GameMenuController(myAnimation);
+    towerMenuController = new TowerMenuController(GAME_WIDTH, GAME_HEIGHT, myBlockSize, myLevelLayout,
+        myAnimationHandler);
     blockToTower = new HashMap<>();
     visualizePlayerGUI(level);
     level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
     myScene = new Scene(level, WIDTH, HEIGHT);
     myStage.setScene(myScene);
   }
-
 
   // TODO: Refactor
   private void visualizeLayout(BorderPane level) {
@@ -158,40 +155,6 @@ public class BloonsApplication {
     return blockRectangle;
   }
 
-  public void createTower() {
-    Color playableBlock = Color.valueOf(myBlockMappings.getString("0"));
-    Color nonPlayableBlock = Color.valueOf(myBlockMappings.getString(">"));
-    WeaponNodeFactory nodeFactory = new TowerNodeFactory();
-    TowerNode towerInGame = nodeFactory.createTowerNode(TowerType.SingleProjectileShooter, GAME_WIDTH/2,
-        GAME_HEIGHT/2, myBlockSize/2);
-    WeaponRange towerRange = towerInGame.getRangeDisplay();
-    myLevelLayout.getChildren().add(towerInGame);
-    myLevelLayout.getChildren().add(towerRange);
-    towerInGame.toFront();
-
-    TowerFactory towerFactory = new SingleTowerFactory();
-
-    myLevelLayout.setOnMouseMoved(e -> {
-
-      if(e.getX() >= 0 && e.getX() <= GAME_WIDTH){
-        if(e.getY() >= 0 && e.getY() <= GAME_HEIGHT){
-          towerInGame.setCenterX(e.getX());
-          towerInGame.setCenterY(e.getY());
-          towerRange.setCenterX(e.getX());
-          towerRange.setCenterY(e.getY());
-        }
-      }
-    });
-    towerInGame.setOnMouseClicked(e -> {
-      myLevelLayout.setOnMouseMoved(null);
-      towerRange.makeInvisible();
-      myAnimationHandler.addTower(towerFactory
-          .createTower(TowerType.SingleProjectileShooter, towerInGame.getCenterX(),
-              towerInGame.getCenterY()), towerInGame);
-      towerInGame.setOnMouseClicked(null);
-    });
-  }
-
   private void displaySettings(){
     FlowPane flow = new FlowPane();
     VBox settings = new VBox(new Label("EDDIE"));
@@ -203,7 +166,7 @@ public class BloonsApplication {
   private void visualizePlayerGUI(BorderPane level) {
     myMenuPane = new VBox();
     myMenuPane.setSpacing(10); //magic num
-    myMenu = new GameMenu(this, myMenuPane, gameMenuController, towerMenuController, myAnimationHandler);
+    myMenu = new GameMenu(myMenuPane, gameMenuController, towerMenuController);
     level.setRight(myMenuPane);
   }
 
@@ -229,6 +192,5 @@ public class BloonsApplication {
   public AnimationHandler getMyAnimationHandler() {
     return myAnimationHandler;
   }
-
 
 }

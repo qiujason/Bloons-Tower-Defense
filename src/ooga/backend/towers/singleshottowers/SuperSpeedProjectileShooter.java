@@ -13,6 +13,7 @@ public class SuperSpeedProjectileShooter extends SingleShotTower{
 
   @Override
   public TowerType getTowerType() {
-    return TowerType.SuperSpeedProjectileShooter;
+    return null;
+//    return TowerType.SuperSpeedProjectileShooter;
   }
 }

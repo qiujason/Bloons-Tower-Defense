@@ -14,7 +14,8 @@ public class FrozenSpreadShooter extends SpreadShotTower {
 
   @Override
   public TowerType getTowerType() {
-    return TowerType.FrozenSpreadShooter;
+    return null;
+//    return TowerType.FrozenSpreadShooter;
   }
 
 }
