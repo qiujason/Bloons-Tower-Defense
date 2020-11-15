@@ -1,4 +1,4 @@
-package ooga.visualization.weapons;
+package ooga.visualization.nodes;
 
 import java.net.URISyntaxException;
 import java.util.ResourceBundle;
@@ -7,9 +7,10 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import ooga.backend.towers.TowerType;
 
-public class TowerNode extends Circle {
+public class TowerNode extends GamePieceNode{
 
   private TowerType towerType;
+
   private WeaponRange rangeDisplay;
 
   private static final String PACKAGE = "btd_towers/";
@@ -22,7 +23,7 @@ public class TowerNode extends Circle {
   public TowerNode(TowerType towerType, double xPosition, double yPosition, double radius){
     super(xPosition, yPosition, radius);
     this.towerType = towerType;
-    this.setFill(findTowerImage(typeToName.getString(towerType.name())));
+    this.setFill(findImage(typeToName.getString(towerType.name())));
     rangeDisplay = new WeaponRange(xPosition, yPosition, towerType.getRadius());
   }
 
@@ -42,7 +43,13 @@ public class TowerNode extends Circle {
     rangeDisplay.makeVisible();
   }
 
-  private ImagePattern findTowerImage(String towerName){
+  @Override
+  public ImagePattern findImage(){
+    return null;
+  }
+
+  @Override
+  public ImagePattern findImage(String towerName){
     Image towerImage = null;
     try {
       towerImage = new Image(String.valueOf(getClass().getResource(nameToPicture.getString(towerName)).toURI()));

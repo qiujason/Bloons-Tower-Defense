@@ -52,7 +52,11 @@ public class Layout implements LayoutAPI {
     return getBlock(row, col).getDy();
   }
 
-  public int[] getStartBlockCoordinates(){
+  /**
+   * Gets grid coordinates of start block
+   * @return in row, col format, or y,x format
+   */
+  public int[] getStartCoordinates(){
     for (int i = 0; i < height; i++){
       for (int j = 0; j < width; j++){
         if (layoutConfig.get(i).get(j).getBlockType().equals("*")){
@@ -77,6 +81,17 @@ public class Layout implements LayoutAPI {
 
   public double getBlockSize() {
     return blockSize;
+  }
+
+  public LayoutBlock getStartBlock(){
+    for (int i = 0; i < height; i++){
+      for (int j = 0; j < width; j++){
+        if (layoutConfig.get(i).get(j).getBlockType().equals("*")){
+          return layoutConfig.get(i).get(j);
+        }
+      }
+    }
+    return layoutConfig.get(0).get(0);
   }
 
 }

@@ -1,4 +1,4 @@
-package ooga.visualization.weapons;
+package ooga.visualization.nodes;
 
 import ooga.backend.towers.TowerType;
 

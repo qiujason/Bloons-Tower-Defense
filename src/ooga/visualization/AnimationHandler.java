@@ -1,21 +1,15 @@
 package ooga.visualization;
 
-import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
-import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
@@ -23,9 +17,10 @@ import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.projectile.factory.ProjectileFactory;
 import ooga.backend.projectile.factory.SingleProjectileFactory;
 import ooga.backend.layout.Layout;
-import ooga.backend.layout.LayoutBlock;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowersCollection;
+import ooga.visualization.nodes.BloonNode;
+
 
 public class AnimationHandler {
 
@@ -43,21 +38,19 @@ public class AnimationHandler {
   private TowersCollection myTowers = new TowersCollection();
   private Map<Tower, Node> myTowersInGame = new HashMap<>();
   private BloonsCollection myBloons;
-  private BloonsCollection myWaitingBloons;
-  private Map<Bloon, Node> myBloonsInGame = new HashMap<>();
+  private Map<Bloon, BloonNode> myBloonsInGame = new HashMap<>();
   private ProjectilesCollection myProjectiles = new ProjectilesCollection();
   private Map<Projectile, Node> myProjectilesInGame = new HashMap<>();
   private ProjectileFactory myProjectileFactory = new SingleProjectileFactory();
 
-  private Map<Bloon, Double> myCircleSidesX;
-  private Map<Bloon, Double> myCircleSidesY;
+  private Map<BloonNode, Double> myCircleSidesX;
+  private Map<BloonNode, Double> myCircleSidesY;
 
-  private int bloonSpawnDelay = 0;
 
-  public AnimationHandler(Timeline animation, Layout layout, Group levelLayout, BloonsCollection bloons,
-      double startingX,
-      double startingY, double blockSize) {
+  public AnimationHandler(Layout layout, Group levelLayout, BloonsCollection bloons, double startingX,
+      double startingY, double blockSize, Timeline animation) {
     myAnimation = animation;
+
     myAnimation.setCycleCount(Timeline.INDEFINITE);
     KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> animate());
     myAnimation.getKeyFrames().add(movement);
@@ -65,7 +58,7 @@ public class AnimationHandler {
     myLayout = layout;
     myLevelLayout = levelLayout;
 
-    myBloons = new BloonsCollection();
+    myBloons = bloons;
 
     myStartingX = startingX;
     myStartingY = startingY;
@@ -74,91 +67,48 @@ public class AnimationHandler {
     myCircleSidesX = new HashMap<>();
     myCircleSidesY = new HashMap<>();
 
-    // The following code is merely to test a starting chain of 5 balloons
-    BloonsTypeChain chain = new BloonsTypeChain("tests/test_bloonstype_reader/ValidBloons");
-    myWaitingBloons = new BloonsCollection();
-    for (int i = 0; i < 10; i++) {
-      myWaitingBloons
-          .add(new Bloon(chain.getBloonsTypeRecord("RED"), myStartingX, myStartingY, 0, 0));
+  }
+
+  public void addBloonstoGame(){
+    GamePieceIterator<Bloon> iterator = myBloons.createIterator();
+    while(iterator.hasNext()) {
+      Bloon bloonToSpawn = iterator.next();
+      if (!myBloonsInGame.containsKey(bloonToSpawn)) {
+        BloonNode bloonNode = new BloonNode(bloonToSpawn.getBloonsType(), myStartingX, myStartingY, myBlockSize / 2.5);
+        myBloonsInGame.put(bloonToSpawn, bloonNode);
+        myLevelLayout.getChildren().add(bloonNode);
+      }
     }
   }
 
   public void animate() {
-    animateBloons();
     animateTowers();
     animateProjectiles();
-    if (bloonSpawnDelay == BLOON_SPAWN_DELAY) {
-      spawnBloon();
-      bloonSpawnDelay = 0;
-    } else {
-      bloonSpawnDelay++;
-    }
+    animateBloons();
   }
 
-  private void spawnBloon() {
-    GamePieceIterator<Bloon> bloonsIterator = myWaitingBloons.createIterator();
-    if (bloonsIterator.hasNext()) {
-      Bloon bloonToSpawn = bloonsIterator.next();
-      myBloons.add(bloonToSpawn);
-      Circle myBloonInGame = new Circle(myStartingX, myStartingY, myBlockSize / 2.5, Color.RED);
-      myBloonInGame.setFill(findBloonImage());
-      myBloonsInGame.put(bloonToSpawn, myBloonInGame);
-      myLevelLayout.getChildren().add(myBloonInGame);
-      myWaitingBloons.remove(bloonToSpawn);
-    }
-  }
-
-  private ImagePattern findBloonImage(){
-    Image bloonImage = null;
-    try {
-      bloonImage = new Image(String.valueOf(getClass().getResource("/gamePhotos/red_bloon.jpg").toURI()));
-    } catch (
-        URISyntaxException e) {
-      e.printStackTrace();
-    }
-    assert bloonImage != null;
-    return new ImagePattern(bloonImage);
-  }
 
   // TODO: Refactor
   private void animateBloons() {
-    GamePieceIterator<Bloon> bloonsIterator = myBloons.createIterator();
 
-    while (bloonsIterator.hasNext()) {
-      Bloon currentBloon = bloonsIterator.next();
-      Circle currentBloonInGame = (Circle) myBloonsInGame.get(currentBloon);
+    addBloonstoGame();
+    for(Bloon bloon : myBloonsInGame.keySet()){
 
-      myCircleSidesX.putIfAbsent(currentBloon, 0.0);
-      myCircleSidesY.putIfAbsent(currentBloon, 0.0);
-
-      LayoutBlock currentBlock =
-          myLayout.getBlock(
-              ((int) ((currentBloonInGame.getCenterY() + myCircleSidesY.get(currentBloon))
-                  / myBlockSize)),
-              ((int) ((currentBloonInGame.getCenterX() + myCircleSidesX.get(currentBloon))
-                  / myBlockSize)));
-      if (currentBlock.isEndBlock()) {
-        myLevelLayout.getChildren().remove(currentBloonInGame);
-        myBloons.remove(currentBloon);
-        myBloonsInGame.remove(currentBloon);
+      BloonNode bloonNode = myBloonsInGame.get(bloon);
+      if (bloon.isDead()){
+        myLevelLayout.getChildren().remove(bloonNode);
       }
-      currentBloon
-          .setXVelocity(currentBloon.getBloonsType().relativeSpeed() * currentBlock.getDx());
-      currentBloon
-          .setYVelocity(currentBloon.getBloonsType().relativeSpeed() * currentBlock.getDy());
 
-      currentBloonInGame.setCenterX(currentBloonInGame.getCenterX() + currentBloon.getXVelocity());
-      currentBloonInGame.setCenterY(currentBloonInGame.getCenterY() + currentBloon.getYVelocity());
+      myCircleSidesX.putIfAbsent(bloonNode, 0.0);
+      myCircleSidesY.putIfAbsent(bloonNode, 0.0);
 
-      setCircleSides(currentBlock, currentBloon);
+
+      bloonNode.setXPosition(bloon.getXPosition() * myBlockSize);
+      bloonNode.setYPosition(bloon.getYPosition() * myBlockSize);
+
     }
-    myBloons.updateAll();
   }
 
-  private void setCircleSides(LayoutBlock currentBlock, Bloon currentBloon) {
-    myCircleSidesX.put(currentBloon, -myBlockSize * currentBlock.getDx() / 2);
-    myCircleSidesY.put(currentBloon, -myBlockSize * currentBlock.getDy() / 2);
-  }
 
   private void animateTowers() {
     GamePieceIterator<Tower> towersIterator = myTowers.createIterator();
@@ -259,11 +209,15 @@ public class AnimationHandler {
   }
 
   public void setBloonWave(BloonsCollection bloonWave) {
-    //myWaitingBloons = bloonWave;
+    myBloons = bloonWave;
   }
 
   public Timeline getAnimation() {
     return myAnimation;
+  }
+
+  public String toString(){
+    return "YUH";
   }
 
 }

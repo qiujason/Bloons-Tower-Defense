@@ -86,4 +86,12 @@ public class Bloon extends GamePiece implements BloonsAPI {
     updateDistanceTraveled();
   }
 
+  public void setDead(){
+    setBloonsType(bloonsType.chain().getBloonsTypeRecord("DEAD"));
+  }
+
+  public boolean isDead(){
+    return bloonsType == bloonsType.chain().getBloonsTypeRecord("DEAD");
+  }
+
 }

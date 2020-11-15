@@ -6,10 +6,10 @@ import ooga.backend.towers.TowerType;
 import ooga.backend.towers.factory.SingleTowerFactory;
 import ooga.backend.towers.factory.TowerFactory;
 import ooga.visualization.AnimationHandler;
-import ooga.visualization.weapons.TowerNode;
-import ooga.visualization.weapons.TowerNodeFactory;
-import ooga.visualization.weapons.WeaponNodeFactory;
-import ooga.visualization.weapons.WeaponRange;
+import ooga.visualization.nodes.TowerNode;
+import ooga.visualization.nodes.TowerNodeFactory;
+import ooga.visualization.nodes.WeaponNodeFactory;
+import ooga.visualization.nodes.WeaponRange;
 
 public class TowerMenuController implements TowerMenuInterface {
 

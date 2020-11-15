@@ -45,7 +45,6 @@ public class Controller extends Application {
   private Layout layout;
   private List<BloonsCollection> allBloonWaves;
   private GameMenuInterface gameController;
-  private TowerMenuInterface towerController;
   private Bank bank;
 
   @Override
@@ -58,15 +57,23 @@ public class Controller extends Application {
     initializeBloonTypes();
     initializeBloonWaves();
     startGameEngine();
-    initializeGameMenuController();
 
-    bloonsApplication = new BloonsApplication(myAnimation, gameController, layout, gameEngine.getCurrentBloonWave());
+    bloonsApplication = new BloonsApplication(layout, gameEngine.getCurrentBloonWave(), myAnimation);
     bloonsApplication.fireInTheHole(primaryStage);
-    animationHandler = bloonsApplication.getMyAnimationHandler();
 
     myAnimation.setCycleCount(Timeline.INDEFINITE);
+
     KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> step());
     myAnimation.getKeyFrames().add(movement);
+  }
+
+  private double getMyBlockSize() {
+    int numberOfRows = layout.getHeight();
+    int numberOfColumns = layout.getWidth();
+    double blockWidth = BloonsApplication.GAME_WIDTH / numberOfColumns;
+    double blockHeight = BloonsApplication.GAME_HEIGHT / numberOfRows;
+    double myBlockSize = Math.min(blockWidth, blockHeight);
+    return myBlockSize;
   }
 
   public void setUpBank(){
@@ -102,15 +109,13 @@ public class Controller extends Application {
     allBloonWaves = bloonReader.generateBloonsCollectionMap(bloonsTypeChain, BLOON_WAVES_PATH + LEVEL_FILE, layout);
   }
 
-  private void initializeGameMenuController(){
-    gameController = new GameMenuController(myAnimation);
-  }
-
   private void startGameEngine() {
-    gameEngine = new GameEngine(layout, allBloonWaves);
+    gameEngine = new GameEngine(layout, allBloonWaves, getMyBlockSize());
   }
 
   private void step() {
+    gameEngine.update();
+    animationHandler = bloonsApplication.getMyAnimationHandler();
     animationHandler.setBloonWave(gameEngine.getCurrentBloonWave());
     animationHandler.animate();
   }

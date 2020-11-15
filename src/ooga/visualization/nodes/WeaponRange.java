@@ -1,4 +1,4 @@
-package ooga.visualization.weapons;
+package ooga.visualization.nodes;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;

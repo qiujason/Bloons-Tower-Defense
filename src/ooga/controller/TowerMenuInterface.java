@@ -1,7 +1,7 @@
 package ooga.controller;
 
 import ooga.backend.towers.TowerType;
-import ooga.visualization.weapons.TowerNode;
+import ooga.visualization.nodes.TowerNode;
 
 public interface TowerMenuInterface {
 
