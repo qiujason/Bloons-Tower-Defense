@@ -98,12 +98,13 @@ public class BloonsApplication {
   private void loadLevel() {
     BorderPane level = new BorderPane();
     myLayoutReader = new LayoutReader();
+    myMenuPane = new VBox();
     visualizeLayout(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
         myStartingX, myStartingY, myBlockSize, myAnimation);
     gameMenuController = new GameMenuController(myAnimation);
     towerMenuController = new TowerMenuController(GAME_WIDTH, GAME_HEIGHT, myBlockSize, myLevelLayout,
-        myAnimationHandler);
+        myAnimationHandler, myMenuPane);
     blockToTower = new HashMap<>();
     visualizePlayerGUI(level);
     level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
@@ -155,16 +156,7 @@ public class BloonsApplication {
     return blockRectangle;
   }
 
-  private void displaySettings(){
-    FlowPane flow = new FlowPane();
-    VBox settings = new VBox(new Label("EDDIE"));
-    settings.setAlignment(Pos.CENTER);
-    flow.getChildren().add(settings);
-    myMenuPane.getChildren().add(flow);
-  }
-
   private void visualizePlayerGUI(BorderPane level) {
-    myMenuPane = new VBox();
     myMenuPane.setSpacing(10); //magic num
     myMenu = new GameMenu(myMenuPane, gameMenuController, towerMenuController);
     level.setRight(myMenuPane);

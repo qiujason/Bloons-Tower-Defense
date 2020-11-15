@@ -2,10 +2,12 @@ package ooga.controller;
 
 import java.util.ResourceBundle;
 import javafx.scene.Group;
+import javafx.scene.layout.VBox;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.factory.SingleTowerFactory;
 import ooga.backend.towers.factory.TowerFactory;
 import ooga.visualization.AnimationHandler;
+import ooga.visualization.menu.WeaponMenu;
 import ooga.visualization.nodes.TowerNode;
 import ooga.visualization.nodes.TowerNodeFactory;
 import ooga.visualization.nodes.WeaponNodeFactory;
@@ -18,14 +20,16 @@ public class TowerMenuController implements TowerMenuInterface {
   private double blockSize;
   private Group layoutRoot;
   private AnimationHandler animationHandler;
+  private VBox menuPane;
 
   public TowerMenuController(double gameWidth, double gameHeight, double blockSize, Group layoutRoot,
-      AnimationHandler animationHandler){
+      AnimationHandler animationHandler, VBox menuPane){
     this.gameWidth = gameWidth;
     this.gameHeight = gameHeight;
     this.blockSize = blockSize;
     this.layoutRoot = layoutRoot;
     this.animationHandler = animationHandler;
+    this.menuPane = menuPane;
   }
 
   @Override
@@ -41,11 +45,12 @@ public class TowerMenuController implements TowerMenuInterface {
     else{
       tower.showRangeDisplay();
     }
+    openMenu(tower);
   }
 
   @Override
-  public void sellTower() {
-
+  public void sellTower(TowerNode tower) {
+    layoutRoot.getChildren().remove(tower);
   }
 
   @Override
@@ -53,10 +58,16 @@ public class TowerMenuController implements TowerMenuInterface {
 
   }
 
+  @Override
+  public void closeMenu(){
+
+  }
+
   private void makeTower(TowerType towerType) {
     WeaponNodeFactory nodeFactory = new TowerNodeFactory();
     TowerNode towerInGame = nodeFactory.createTowerNode(towerType, gameWidth/2,
         gameHeight/2, blockSize/2);
+    towerInGame.makeTowerMenu(this);
     WeaponRange towerRange = towerInGame.getRangeDisplay();
     layoutRoot.getChildren().add(towerRange);
     layoutRoot.getChildren().add(towerInGame);
@@ -84,5 +95,12 @@ public class TowerMenuController implements TowerMenuInterface {
     animationHandler.addTower(towerFactory
         .createTower(type, 14 * (tower.getCenterX() / gameWidth),
             9 * (tower.getCenterY() / gameHeight)), tower);
+  }
+
+  private void openMenu(TowerNode tower){
+    WeaponMenu towerMenu = tower.getTowerMenu();
+    if(!menuPane.getChildren().contains(towerMenu)){
+      menuPane.getChildren().add(towerMenu);
+    }
   }
 }
