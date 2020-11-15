@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 class SingleTargetProjectileTest {
 
   @Test
-  void updatePosition() {
+  void testUpdatePosition() {
     Projectile dart = new SingleTargetProjectile(ProjectileType.SingleTargetProjectile, 10,15,-5,5);
     dart.updatePosition();
     assertEquals(5, dart.getXPosition());
@@ -15,39 +15,39 @@ class SingleTargetProjectileTest {
   }
 
   @Test
-  void setXVelocity() {
+  void testSetXVelocity() {
     Projectile dart = new SingleTargetProjectile(ProjectileType.SingleTargetProjectile, 10,15,-5,5);
     dart.setXVelocity(0);
     assertEquals(0, dart.getXVelocity());
   }
 
   @Test
-  void setYVelocity() {
+  void testSetYVelocity() {
     Projectile dart = new SingleTargetProjectile(ProjectileType.SingleTargetProjectile, 10,15,-5,5);
     dart.setYVelocity(0);
     assertEquals(0, dart.getYVelocity());
   }
 
   @Test
-  void getXPosition() {
+  void testGetXPosition() {
     Projectile dart = new SingleTargetProjectile(ProjectileType.SingleTargetProjectile, 10,15,-5,5);
     assertEquals(10, dart.getXPosition());
   }
 
   @Test
-  void getYPosition() {
+  void testGetYPosition() {
     Projectile dart = new SingleTargetProjectile(ProjectileType.SingleTargetProjectile, 10,15,-5,5);
     assertEquals(15, dart.getYPosition());
   }
 
   @Test
-  void getXVelocity() {
+  void testGetXVelocity() {
     Projectile dart = new SingleTargetProjectile(ProjectileType.SingleTargetProjectile, 10,10,-5,5);
     assertEquals(-5, dart.getXVelocity());
   }
 
   @Test
-  void getYVelocity() {
+  void testGetYVelocity() {
     Projectile dart = new SingleTargetProjectile(ProjectileType.SingleTargetProjectile, 10,10,-5,5);
     assertEquals(5, dart.getYVelocity());
   }

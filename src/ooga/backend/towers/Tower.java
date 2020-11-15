@@ -1,12 +1,16 @@
 package ooga.backend.towers;
 
 import java.util.List;
+import java.util.ResourceBundle;
 import ooga.backend.API.TowersAPI;
 import ooga.backend.GamePiece;
-import ooga.backend.bloons.collection.BloonsCollection;
-import ooga.backend.collections.Iterator;
+import ooga.backend.bloons.Bloon;
+import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
+import ooga.backend.projectile.ProjectileType;
 import ooga.visualization.AnimationHandler;
+import org.apache.commons.lang3.StringUtils;
 
 public abstract class Tower extends GamePiece implements TowersAPI {
 
@@ -15,6 +19,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   private double shootingRestRate;
   private double countRestPeriod;
   private boolean canShoot;
+  private ProjectileType projectileType;
 
   // if canShoot = true, step function can call shoot method, if not, do not call shoot method
 
@@ -29,7 +34,9 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   }
 
   public abstract TowerType getTowerType();
-
+  public double getShootingRestRate(){
+    return shootingRestRate;
+  }
   public double getRadius(){
     return radius;
   }
@@ -40,7 +47,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     if(!canShoot) {
       countRestPeriod++;
     }
-    if(countRestPeriod == shootingRestRate){
+    if(countRestPeriod >= shootingRestRate){
       countRestPeriod = 0;
       canShoot = true;
     }
@@ -62,9 +69,12 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   }
 
   public boolean checkBalloonInRange(BloonsCollection bloonsCollection){
-    Iterator iterator = bloonsCollection.createIterator();
-    while(iterator.hasMore()){
-      GamePiece bloon = iterator.getNext();
+    GamePieceIterator<Bloon> iterator = bloonsCollection.createIterator();
+    while(iterator.hasNext()){
+      Bloon bloon = iterator.next();
+      if(ifCamoBloon(bloon)){
+        continue;
+      }
       double distance = getDistance(bloon);
       if(distance <= radius){
         return true;
@@ -79,4 +89,61 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     return Math.sqrt(Math.pow(getXPosition()-target.getXPosition(), 2) + Math.pow(getYPosition()-target.getYPosition(), 2));
   }
 
+  public void upgradeRadius(){
+    String key = "radiusUpgradeMultiplier";
+    try{
+      ResourceBundle bundle = ResourceBundle.getBundle("towers/" + getTowerType().name());
+      upgrade(bundle, key);
+    } catch(Exception e){
+      radius *= 1.05;
+    }
+  }
+
+  public void upgradeShootingSpeed(){
+    String key = "shootingSpeedUpgradeMultiplier";
+    try{
+      ResourceBundle bundle = ResourceBundle.getBundle("towers/" + getTowerType().name());
+      upgrade(bundle, key);
+    } catch(Exception e){
+      shootingSpeed *= 1.05;
+    }
+  }
+
+  public void upgradeShootingRestRate(){
+    String key = "shootingRestRateUpgradeMultiplier";
+    try{
+      ResourceBundle bundle = ResourceBundle.getBundle("towers/" + getTowerType().name());
+      upgrade(bundle, key);
+    } catch(Exception e){
+      shootingRestRate /= 1.05;
+    }
+  }
+
+  private void upgrade(ResourceBundle bundle, String key){
+    if(bundle.containsKey(key) && StringUtils.isNumeric(bundle.getString(key))){
+      switch(key){
+        case "radiusUpgradeMultiplier": radius *= Integer.valueOf(bundle.getString(key));
+        case "shootingSpeedUpgradeMultiplier": shootingSpeed *= Integer.valueOf(bundle.getString(key));
+        case "shootingRestRateUpgradeMultiplier": shootingRestRate /= Integer.valueOf(bundle.getString(key));
+      }
+    } else{
+      switch(key){
+        case "radiusUpgradeMultiplier": radius *= 1.05;
+        case "shootingSpeedUpgradeMultiplier": shootingSpeed *= 1.05;
+        case "shootingRestRateUpgradeMultiplier": shootingRestRate /= 1.05;
+      }
+    }
+  }
+
+  public boolean ifCamoBloon(Bloon bloon){
+    return getTowerType() != TowerType.CamoProjectileShooter && bloon.isCamo();
+  }
+
+  public void setProjectileType(ProjectileType update){
+    projectileType = update;
+  }
+
+  public ProjectileType getProjectileType(){
+    return projectileType;
+  }
 }

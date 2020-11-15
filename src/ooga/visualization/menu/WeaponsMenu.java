@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,30 +25,35 @@ public class WeaponsMenu extends FlowPane {
   private static final String PICTURES = "MonkeyPics";
   private static final String BUTTON_TAG = "Button";
 
+  private static final Double BUTTON_WIDTH = 150.0;
+
   private ResourceBundle typeToName = ResourceBundle.getBundle(PACKAGE + NAMES);
   private ResourceBundle nameToPicture = ResourceBundle.getBundle(PACKAGE + PICTURES);
 
   public WeaponsMenu(TowerMenuInterface controller){
     this.controller = controller;
     makeAllWeaponButtons();
+    this.setOrientation(Orientation.VERTICAL);
   }
 
   private void makeAllWeaponButtons(){
     for(TowerType type : weaponTypeList){
-      this.getChildren().add(makeWeaponButton(typeToName.getString(type.name()) + BUTTON_TAG,
+      this.getChildren().add(makeWeaponButton(typeToName.getString(type.name()),
           event -> controller.buyTower(type)));
     }
   }
 
   private Button makeWeaponButton(String towerName, EventHandler<ActionEvent> handler){
-    String imageDirectory = nameToPicture.getString(towerName);
+    String imageDirectory = nameToPicture.getString(towerName + BUTTON_TAG);
     Image towerImage = makeImage(imageDirectory);
     ImageView imageView = new ImageView(towerImage);
-    imageView.setFitHeight(60); //magic
-    imageView.setFitWidth(60); //magic
+    imageView.setFitHeight(40); //magic
+    imageView.setFitWidth(40); //magic
     Button button = new Button(towerName,imageView);
     button.setOnAction(handler);
     button.setId(towerName);
+    button.setMinWidth(BUTTON_WIDTH);
+    button.setMaxHeight(50);
     return button;
   }
 

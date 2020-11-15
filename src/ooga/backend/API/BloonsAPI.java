@@ -1,8 +1,6 @@
 package ooga.backend.API;
 
 import ooga.backend.bloons.Bloon;
-import ooga.backend.bloons.types.BloonsTypeChain;
-import ooga.backend.towers.TowerType;
 
 public interface BloonsAPI {
 
@@ -16,6 +14,6 @@ public interface BloonsAPI {
    */
   void setYVelocity(double newYVelocity);
 
-  Bloon[] shootBloon(BloonsTypeChain chain, TowerType towerCaller, int hits);
+  Bloon[] shootBloon();
 
 }

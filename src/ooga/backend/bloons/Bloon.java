@@ -5,8 +5,7 @@ import ooga.backend.API.BloonsAPI;
 import ooga.backend.GamePiece;
 import ooga.backend.bloons.factory.BasicBloonsFactory;
 import ooga.backend.bloons.types.BloonsType;
-import ooga.backend.bloons.types.BloonsTypeChain;
-import ooga.backend.towers.TowerType;
+import ooga.backend.bloons.types.Specials;
 
 public class Bloon extends GamePiece implements BloonsAPI {
 
@@ -21,8 +20,8 @@ public class Bloon extends GamePiece implements BloonsAPI {
     this.bloonsType = bloonsType;
     this.xVelocity = xVelocity;
     this.yVelocity = yVelocity;
-    distanceTraveled = 0;
-    relativeSpeed = bloonsType.relativeSpeed();
+    this.distanceTraveled = 0;
+    this.relativeSpeed = bloonsType.relativeSpeed();
   }
 
   public BloonsType getBloonsType(){
@@ -40,14 +39,14 @@ public class Bloon extends GamePiece implements BloonsAPI {
   }
 
   @Override
-  public Bloon[] shootBloon(BloonsTypeChain chain, TowerType towerCaller, int hits) {
-    BloonsType nextBloonsType = chain.getNextBloonsType(bloonsType);
-    int numBloonsProduced = chain.getNumNextBloons(bloonsType);
+  public Bloon[] shootBloon() {
+    BloonsType nextBloonsType = getBloonsType().chain().getNextBloonsType(bloonsType);
+    int numBloonsProduced = getBloonsType().chain().getNumNextBloons(bloonsType);
 
     Bloon[] bloons = new Bloon[numBloonsProduced];
     BasicBloonsFactory factory = new BasicBloonsFactory();
     for (int i = 0; i < numBloonsProduced; i++) {
-      bloons[i] = (Bloon) factory.createBloon(nextBloonsType, getXPosition(), getYPosition(), xVelocity, yVelocity);
+      bloons[i] = factory.createBloon(nextBloonsType, getXPosition(), getYPosition(), xVelocity, yVelocity);
     }
     return bloons;
   }
@@ -74,6 +73,10 @@ public class Bloon extends GamePiece implements BloonsAPI {
     return "" + bloonsType.name();
   }
 
+  protected void setBloonsType(BloonsType type) {
+    bloonsType = type;
+  }
+
   private void updateDistanceTraveled() {
     distanceTraveled += (Math.abs(xVelocity) + Math.abs(yVelocity)) * relativeSpeed;
   }
@@ -84,4 +87,15 @@ public class Bloon extends GamePiece implements BloonsAPI {
     updateDistanceTraveled();
   }
 
+  public void setDead(){
+    setBloonsType(bloonsType.chain().getBloonsTypeRecord("DEAD"));
+  }
+
+  public boolean isDead(){
+    return bloonsType == bloonsType.chain().getBloonsTypeRecord("DEAD");
+  }
+
+  public boolean isCamo(){
+    return getBloonsType().specials().contains(Specials.CAMO);
+  }
 }

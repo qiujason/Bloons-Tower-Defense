@@ -1,6 +1,7 @@
 package ooga.backend.bloons.types;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -36,7 +37,7 @@ public class BloonsTypeChain {
     }
 
     if (bloonTypes[0].equals("DEAD")) {
-      head = new BloonsTypeNode(new BloonsType("DEAD", 0, 0));
+      head = new BloonsTypeNode(new BloonsType(this, "DEAD", 0, 0, new HashSet<>()));
       bloonsTypeBloonMap.put("DEAD", head); // dead bloon
     } else {
       //TODO: throw exception (dead is not the first bloon)
@@ -45,8 +46,8 @@ public class BloonsTypeChain {
     for (int i = 1; i < bloonTypes.length; i++) {
       String[] attributes = bundle.getString(bloonTypes[i]).split(",", 3);
       BloonsTypeNode currentBloon = new BloonsTypeNode(
-          new BloonsType(bloonTypes[i], Integer.parseInt(attributes[0]),
-              Double.parseDouble(attributes[1])));
+          new BloonsType(this, bloonTypes[i], Integer.parseInt(attributes[0]),
+              Double.parseDouble(attributes[1]), new HashSet<>()));
       initializeNextBloons(currentBloon, attributes[2]);
       if (!bloonsTypeBloonMap.containsKey(bloonTypes[i])) {
         bloonsTypeBloonMap.put(bloonTypes[i], currentBloon);
