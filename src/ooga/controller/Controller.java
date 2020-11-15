@@ -49,6 +49,9 @@ public class Controller extends Application {
 
   @Override
   public void start(Stage primaryStage) {
+
+    //splash screen
+
     myAnimation = new Timeline();
     layoutReader = new LayoutReader();
     bloonReader = new BloonReader();

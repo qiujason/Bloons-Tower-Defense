@@ -35,6 +35,7 @@ public class TowerMenuController implements TowerMenuInterface {
 
   @Override
   public void buyTower(TowerType towerType) {
+    //money
     makeTower(towerType);
   }
 
