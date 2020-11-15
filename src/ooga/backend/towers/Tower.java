@@ -8,6 +8,7 @@ import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
+import ooga.backend.projectile.ProjectileType;
 import ooga.visualization.AnimationHandler;
 import org.apache.commons.lang3.StringUtils;
 
@@ -18,6 +19,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   private double shootingRestRate;
   private double countRestPeriod;
   private boolean canShoot;
+  private ProjectileType projectileType;
 
   // if canShoot = true, step function can call shoot method, if not, do not call shoot method
 
@@ -70,6 +72,9 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     GamePieceIterator<Bloon> iterator = bloonsCollection.createIterator();
     while(iterator.hasNext()){
       Bloon bloon = iterator.next();
+      if(ifCamoBloon(bloon)){
+        continue;
+      }
       double distance = getDistance(bloon);
       if(distance <= radius){
         return true;
@@ -130,4 +135,15 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     }
   }
 
+  public boolean ifCamoBloon(Bloon bloon){
+    return getTowerType() != TowerType.CamoProjectileShooter && bloon.isCamo();
+  }
+
+  public void setProjectileType(ProjectileType update){
+    projectileType = update;
+  }
+
+  public ProjectileType getProjectileType(){
+    return projectileType;
+  }
 }

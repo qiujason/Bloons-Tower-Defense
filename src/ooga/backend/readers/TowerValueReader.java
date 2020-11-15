@@ -2,6 +2,7 @@ package ooga.backend.readers;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -32,20 +33,10 @@ public class TowerValueReader {
 
 
   // Map property file key to TowerType enum
-  public TowerType getTowerType(String key){ //TODO: use reflection soon
-    if(key.equals(TowerType.SingleProjectileShooter.name())){
-      return TowerType.SingleProjectileShooter;
-    } else if(key.equals(TowerType.MultiProjectileShooter.name())){
-      return TowerType.MultiProjectileShooter;
-    } else if(key.equals(TowerType.SpreadProjectileShooter.name())){
-      return TowerType.SpreadProjectileShooter;
-    } else if(key.equals(TowerType.UnlimitedRangeProjectileShooter.name())){
-      return TowerType.UnlimitedRangeProjectileShooter;
-    } else if(key.equals(TowerType.FrozenSpreadShooter.name())){
-      return TowerType.FrozenSpreadShooter;
-    } else if(key.equals(TowerType.SuperSpeedProjectileShooter.name())){
-      return TowerType.SuperSpeedProjectileShooter;
+  public TowerType getTowerType(String key){
+    if(!TowerType.isEnumName(key)){
+      throw new ConfigurationException("Properties file includes invalid tower type name");
     }
-   throw new ConfigurationException("Properties file includes invalid tower type name");
+    return TowerType.fromString(key);
   }
 }
