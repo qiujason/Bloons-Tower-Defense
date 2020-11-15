@@ -12,6 +12,7 @@ public class TowerNode extends GamePieceNode{
   private TowerType towerType;
 
   private WeaponRange rangeDisplay;
+  private Boolean rangeBoolean;
 
   private static final String PACKAGE = "btd_towers/";
   private static final String NAMES = "TowerMonkey";
@@ -25,6 +26,7 @@ public class TowerNode extends GamePieceNode{
     this.towerType = towerType;
     this.setFill(findImage(typeToName.getString(towerType.name())));
     rangeDisplay = new WeaponRange(xPosition, yPosition, towerType.getRadius());
+    rangeBoolean = true;
   }
 
   public WeaponRange getRangeDisplay(){
@@ -35,12 +37,18 @@ public class TowerNode extends GamePieceNode{
     return towerType;
   }
 
+  public Boolean rangeShown(){
+    return rangeBoolean;
+  }
+
   public void hideRangeDisplay(){
     rangeDisplay.makeInvisible();
+    rangeBoolean = false;
   }
 
   public void showRangeDisplay(){
     rangeDisplay.makeVisible();
+    rangeBoolean = true;
   }
 
   @Override

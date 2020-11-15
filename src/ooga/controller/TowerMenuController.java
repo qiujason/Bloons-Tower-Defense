@@ -30,38 +30,17 @@ public class TowerMenuController implements TowerMenuInterface {
 
   @Override
   public void buyTower(TowerType towerType) {
-    WeaponNodeFactory nodeFactory = new TowerNodeFactory();
-    TowerNode towerInGame = nodeFactory.createTowerNode(towerType, gameWidth/2,
-          gameHeight/2, blockSize/2);
-    WeaponRange towerRange = towerInGame.getRangeDisplay();
-    layoutRoot.getChildren().add(towerRange);
-    layoutRoot.getChildren().add(towerInGame);
-
-    TowerFactory towerFactory = new SingleTowerFactory();
-    layoutRoot.setOnMouseMoved(e -> {
-      if(e.getX() >= 0 && e.getX() <= gameWidth){
-        if(e.getY() >= 0 && e.getY() <= gameHeight){
-          towerInGame.setCenterX(e.getX());
-          towerInGame.setCenterY(e.getY());
-          towerRange.setCenterX(e.getX());
-          towerRange.setCenterY(e.getY());
-        }
-      }
-    });
-    towerInGame.setOnMouseClicked(e -> {
-      layoutRoot.setOnMouseMoved(null);
-      towerRange.makeInvisible();
-      animationHandler.addTower(towerFactory
-          .createTower(towerType, 14 * (towerInGame.getCenterX() / gameWidth),
-              9 * (towerInGame.getCenterY() / gameHeight)), towerInGame);
-      towerInGame.setOnMouseClicked(null);
-    });
+    makeTower(towerType);
   }
-
 
   @Override
   public void selectTower(TowerNode tower) {
-
+    if(tower.rangeShown()){
+      tower.hideRangeDisplay();
+    }
+    else{
+      tower.showRangeDisplay();
+    }
   }
 
   @Override
@@ -72,5 +51,38 @@ public class TowerMenuController implements TowerMenuInterface {
   @Override
   public void upgradeTower() {
 
+  }
+
+  private void makeTower(TowerType towerType) {
+    WeaponNodeFactory nodeFactory = new TowerNodeFactory();
+    TowerNode towerInGame = nodeFactory.createTowerNode(towerType, gameWidth/2,
+        gameHeight/2, blockSize/2);
+    WeaponRange towerRange = towerInGame.getRangeDisplay();
+    layoutRoot.getChildren().add(towerRange);
+    layoutRoot.getChildren().add(towerInGame);
+    placeTower(towerType, towerInGame, towerRange);
+  }
+
+  private void placeTower(TowerType type, TowerNode tower, WeaponRange range){
+    layoutRoot.setOnMouseMoved(e -> {
+      if(e.getX() >= 0 && e.getX() <= gameWidth){
+        if(e.getY() >= 0 && e.getY() <= gameHeight){
+          tower.setXPosition(e.getX());
+          tower.setYPosition(e.getY());
+          range.setCenterX(e.getX());
+          range.setCenterY(e.getY());
+        }
+      }
+    });
+    tower.setOnMouseClicked(e -> {
+      layoutRoot.setOnMouseMoved(null);
+      range.makeInvisible();
+      tower.setOnMouseClicked(null);
+      tower.setOnMouseClicked(h -> selectTower(tower));
+    });
+    TowerFactory towerFactory = new SingleTowerFactory();
+    animationHandler.addTower(towerFactory
+        .createTower(type, 14 * (tower.getCenterX() / gameWidth),
+            9 * (tower.getCenterY() / gameHeight)), tower);
   }
 }
