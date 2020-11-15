@@ -22,7 +22,7 @@ public abstract class Projectile extends GamePiece {
     return type.getRadius();
   }
 
-  public void updatePosition() {
+  private void updatePosition() {
     setXPosition(getXPosition() + xVelocity);
     setYPosition(getYPosition() + yVelocity);
   }
@@ -37,7 +37,7 @@ public abstract class Projectile extends GamePiece {
 
   @Override
   public void update() {
-
+    updatePosition();
   }
 
   public double getXVelocity(){
