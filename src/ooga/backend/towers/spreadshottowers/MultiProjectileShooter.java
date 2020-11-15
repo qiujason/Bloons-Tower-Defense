@@ -9,7 +9,7 @@ public class MultiProjectileShooter extends SpreadShotTower {
   public MultiProjectileShooter(double myXPosition, double myYPosition, double myRadius,
       double myShootingSpeed, double myShootingRestRate) {
     super(myXPosition, myYPosition, myRadius, myShootingSpeed, myShootingRestRate);
-    setProjectileType(getProjectileType());
+    setProjectileType(ProjectileType.SingleTargetProjectile);
   }
 
   @Override
@@ -17,8 +17,4 @@ public class MultiProjectileShooter extends SpreadShotTower {
     return TowerType.MultiProjectileShooter;
   }
 
-  @Override
-  public ProjectileType getProjectileType(){
-    return ProjectileType.SingleTargetProjectile;
-  }
 }
