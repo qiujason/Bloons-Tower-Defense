@@ -89,9 +89,6 @@ public class BloonsApplication {
   }
 
   private void setupMenuLayout(BorderPane menu) {
-    Text titleText = new Text("Bloons Tower Defense");
-    titleText.setScaleX(3);
-    titleText.setScaleY(3);
     Image backgroundImage = null;
     try {
       backgroundImage = new Image(String.valueOf(getClass().getResource(BACKGROUND_IMAGE).toURI()));
@@ -104,14 +101,12 @@ public class BloonsApplication {
         BackgroundRepeat.REPEAT,
         BackgroundPosition.DEFAULT,
         BackgroundSize.DEFAULT)));
-    menu.setCenter(titleText);
     Button startButton = new Button();
     startButton.setOnAction(e -> loadLevel());
     startButton.setText("Start");
     startButton.setId("Start");
     BorderPane.setAlignment(startButton, Pos.CENTER);
     menu.setBottom(startButton);
-    menu.setBackground(new Background(new BackgroundFill(Color.web("#83b576"), null, null)));
   }
 
   private void loadLevel() {
