@@ -10,4 +10,6 @@ public interface GameEngineAPI {
 
   void resetGame();
 
+  void update();
+
 }

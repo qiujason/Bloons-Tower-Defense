@@ -9,6 +9,7 @@ import ooga.backend.bloons.factory.BasicBloonsFactory;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.layout.Layout;
+import ooga.visualization.AnimationHandler;
 
 public class BloonReader extends Reader{
 
@@ -26,7 +27,6 @@ public class BloonReader extends Reader{
     List<BloonsCollection> listOfBloons = new ArrayList<>();
     List<List<String>> bloonWaves = getDataFromFile(fileName);
     BloonsCollection currentCollection = new BloonsCollection();
-    int offset = 0;
     for (List<String> row : bloonWaves){
       if (row.get(0).equals("=")){
         listOfBloons.add(currentCollection);
@@ -35,8 +35,7 @@ public class BloonReader extends Reader{
       }
       else{
         for (String bloonInfo : row){
-          Bloon bloon = createBloon(chain, bloonInfo, layout, offset);
-          offset++;
+          Bloon bloon = createBloon(chain, bloonInfo, layout);
           currentCollection.add(bloon);
         }
       }
@@ -45,15 +44,13 @@ public class BloonReader extends Reader{
     return listOfBloons;
   }
 
-  private Bloon createBloon(BloonsTypeChain chain, String bloon, Layout layout, int offset) {
+  private Bloon createBloon(BloonsTypeChain chain, String bloon, Layout layout) {
     int bloonLives = Integer.parseInt(bloon);
     BloonsType bloonType = chain.getBloonsTypeRecord(bloonLives);
-    double startRow = layout.getStartBlockCoordinates()[0];
-    double startCol = layout.getStartBlockCoordinates()[1];
-    double dx = layout.getBlock((int)startRow, (int)startCol).getDx() * bloonType.relativeSpeed()/1000;
-    double dy = layout.getBlock((int)startRow, (int)startCol).getDy() * bloonType.relativeSpeed()/1000;
-    startRow = startRow - offset;
-    return new BasicBloonsFactory().createBloon(bloonType, startRow, startCol, dx, dy);
+
+    double dx = layout.getStartBlock().getDx() * bloonType.relativeSpeed();
+    double dy = layout.getStartBlock().getDx() * bloonType.relativeSpeed();
+    return new Bloon(bloonType, layout.getStartCoordinates()[1] + 0.5, layout.getStartCoordinates()[0] + 0.5, dx, dy);
   }
 
 }
