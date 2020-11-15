@@ -33,4 +33,21 @@ class SuperSpeedProjectileShooterTest {
     assertEquals(60, testTower.getShootingRestRate());
   }
 
+  @Test
+  void testUpgradeRadius(){
+    testTower.upgradeRadius();
+    assertEquals(1200, testTower.getRadius());
+  }
+
+  @Test
+  void testUpgradeShootingSpeed(){
+    testTower.upgradeShootingSpeed();
+    assertEquals(31.5, testTower.getShootingSpeed());
+  }
+
+  @Test
+  void testUpgradeRestRate(){
+    testTower.upgradeShootingRestRate();
+    assertEquals(60/1.05, testTower.getShootingRestRate());
+  }
 }

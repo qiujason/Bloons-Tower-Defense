@@ -1,6 +1,7 @@
 package ooga.backend.towers;
 
 import java.util.List;
+import java.util.ResourceBundle;
 import ooga.backend.API.TowersAPI;
 import ooga.backend.GamePiece;
 import ooga.backend.bloons.Bloon;
@@ -8,6 +9,7 @@ import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
 import ooga.visualization.AnimationHandler;
+import org.apache.commons.lang3.StringUtils;
 
 public abstract class Tower extends GamePiece implements TowersAPI {
 
@@ -43,7 +45,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     if(!canShoot) {
       countRestPeriod++;
     }
-    if(countRestPeriod == shootingRestRate){
+    if(countRestPeriod >= shootingRestRate){
       countRestPeriod = 0;
       canShoot = true;
     }
@@ -80,6 +82,52 @@ public abstract class Tower extends GamePiece implements TowersAPI {
 
   public double getDistance(GamePiece target){
     return Math.sqrt(Math.pow(getXPosition()-target.getXPosition(), 2) + Math.pow(getYPosition()-target.getYPosition(), 2));
+  }
+
+  public void upgradeRadius(){
+    String key = "radiusUpgradeMultiplier";
+    try{
+      ResourceBundle bundle = ResourceBundle.getBundle("towers/" + getTowerType().name());
+      upgrade(bundle, key);
+    } catch(Exception e){
+      radius *= 1.05;
+    }
+  }
+
+  public void upgradeShootingSpeed(){
+    String key = "shootingSpeedUpgradeMultiplier";
+    try{
+      ResourceBundle bundle = ResourceBundle.getBundle("towers/" + getTowerType().name());
+      upgrade(bundle, key);
+    } catch(Exception e){
+      shootingSpeed *= 1.05;
+    }
+  }
+
+  public void upgradeShootingRestRate(){
+    String key = "shootingRestRateUpgradeMultiplier";
+    try{
+      ResourceBundle bundle = ResourceBundle.getBundle("towers/" + getTowerType().name());
+      upgrade(bundle, key);
+    } catch(Exception e){
+      shootingRestRate /= 1.05;
+    }
+  }
+
+  private void upgrade(ResourceBundle bundle, String key){
+    if(bundle.containsKey(key) && StringUtils.isNumeric(bundle.getString(key))){
+      switch(key){
+        case "radiusUpgradeMultiplier": radius *= Integer.valueOf(bundle.getString(key));
+        case "shootingSpeedUpgradeMultiplier": shootingSpeed *= Integer.valueOf(bundle.getString(key));
+        case "shootingRestRateUpgradeMultiplier": shootingRestRate /= Integer.valueOf(bundle.getString(key));
+      }
+    } else{
+      switch(key){
+        case "radiusUpgradeMultiplier": radius *= 1.05;
+        case "shootingSpeedUpgradeMultiplier": shootingSpeed *= 1.05;
+        case "shootingRestRateUpgradeMultiplier": shootingRestRate /= 1.05;
+      }
+    }
   }
 
 }

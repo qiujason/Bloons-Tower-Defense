@@ -15,6 +15,7 @@ public class FrozenSpreadShooter extends SpreadShotTower {
   public FrozenSpreadShooter(double myXPosition, double myYPosition, double myRadius,
       double myShootingSpeed, double myShootingRestRate) {
     super(myXPosition, myYPosition, myRadius, myShootingSpeed, myShootingRestRate);
+    setProjectileType(ProjectileType.FreezeTargetProjectile);
   }
 
   @Override
@@ -23,19 +24,7 @@ public class FrozenSpreadShooter extends SpreadShotTower {
   }
 
   @Override
-  public List<Projectile> shoot(BloonsCollection bloonsCollection) {
-    updateCanShoot(false);
-    List<Projectile> shot = new ArrayList<>();
-    if(checkBalloonInRange(bloonsCollection)){
-      for(int i = 0; i < getNumberOfShots(); i++){
-        ProjectileFactory projectileFactory = new SingleProjectileFactory();
-        double projectileXVelocity = Math.cos(i*getDegreeIncrementPerShot());
-        double projectileYVelocity = Math.sin(i*getDegreeIncrementPerShot());
-        shot.add(projectileFactory
-            .createDart(ProjectileType.FreezeTargetProjectile, getXPosition(), getYPosition(), projectileXVelocity, projectileYVelocity));
-      }
-    }
-    return shot;
+  public ProjectileType getProjectileType(){
+    return ProjectileType.FreezeTargetProjectile;
   }
-
 }

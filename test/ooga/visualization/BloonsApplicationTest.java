@@ -15,12 +15,12 @@ public class BloonsApplicationTest extends DukeApplicationTest {
 
   Button myStartButton;
 
-  @Override
+  /* @Override
   public void start(Stage testStage) {
     BloonsApplication myBloonsApplication = new BloonsApplication();
     myBloonsApplication.start(testStage);
     myStartButton = lookup("#Start").query();
-  }
+  } */
 
   @Test
   public void testStartMenu() {
