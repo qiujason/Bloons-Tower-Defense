@@ -51,7 +51,6 @@ public class BloonsApplication {
   public static final double GAME_HEIGHT = 0.875 * HEIGHT;
   public static final double GAME_WIDTH = 0.75 * WIDTH;
   public static final String LAYOUTS_PATH = "layouts/";
-  public static final String LEVEL_FILE = LAYOUTS_PATH + "level1.csv";
   public static final String BACKGROUND_IMAGE = "/gamePhotos/startscreen.png";
 
   private Stage myStage;
@@ -59,8 +58,6 @@ public class BloonsApplication {
   private Layout myLayout;
   private Timeline myAnimation;
   private BloonsCollection myBloons;
-  private Map<Node, Node> blockToTower;
-  private LayoutReader myLayoutReader;
   private Group myLevelLayout;
   private GameMenu myMenu;
   private VBox myMenuPane;
@@ -111,14 +108,12 @@ public class BloonsApplication {
 
   private void loadLevel() {
     BorderPane level = new BorderPane();
-    myLayoutReader = new LayoutReader();
     visualizeLayout(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
         myStartingX, myStartingY, myBlockSize, myAnimation);
     gameMenuController = new GameMenuController(myAnimation);
     towerMenuController = new TowerMenuController(GAME_WIDTH, GAME_HEIGHT, myBlockSize, myLevelLayout,
         myAnimationHandler);
-    blockToTower = new HashMap<>();
     visualizePlayerGUI(level);
     level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
     myScene = new Scene(level, WIDTH, HEIGHT);
