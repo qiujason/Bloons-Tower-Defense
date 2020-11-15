@@ -1,12 +1,10 @@
 package ooga.visualization.nodes;
 
-import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ResourceBundle;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import ooga.backend.bloons.types.BloonsType;
-import ooga.backend.towers.TowerType;
 
 public class BloonNode extends GamePieceNode{
 
