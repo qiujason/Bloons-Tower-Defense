@@ -1,12 +1,16 @@
 package ooga.backend.towers;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 public enum TowerType {
   SingleProjectileShooter(100, 5, 15, true),
   MultiProjectileShooter(5, 10, 10, false),
   SpreadProjectileShooter(15, 20, 20, true),
   UnlimitedRangeProjectileShooter(800, 5, 10, true),
   SuperSpeedProjectileShooter(600, 1, 30, true),
-  FrozenSpreadShooter(15, 10, 20, false);
+  FrozenSpreadShooter(15, 10, 20, false),
+  CamoProjectileShooter(20, 10,20, true);
 
   private double radius;
   private double shootingRestRate;
@@ -53,5 +57,25 @@ public enum TowerType {
     } else{
       return "spreadshottowers." + super.toString();
     }
+  }
+
+  private static final Map<String, TowerType> stringToEnum = new ConcurrentHashMap<>();
+  static {
+    for (TowerType type: values()){
+      stringToEnum.put(type.name(), type);
+    }
+  }
+
+  public static boolean isEnumName(String key){
+    for (TowerType type: values()){
+      if(key.equals(type.name())){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static TowerType fromString(String name){
+    return stringToEnum.get(name);
   }
 }

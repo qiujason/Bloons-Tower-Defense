@@ -1,12 +1,6 @@
 package ooga.backend.towers.spreadshottowers;
 
-import java.util.ArrayList;
-import java.util.List;
-import ooga.backend.bloons.BloonsCollection;
-import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
-import ooga.backend.projectile.factory.ProjectileFactory;
-import ooga.backend.projectile.factory.SingleProjectileFactory;
 import ooga.backend.towers.TowerType;
 
 public class FrozenSpreadShooter extends SpreadShotTower {
@@ -23,8 +17,4 @@ public class FrozenSpreadShooter extends SpreadShotTower {
     return TowerType.FrozenSpreadShooter;
   }
 
-  @Override
-  public ProjectileType getProjectileType(){
-    return ProjectileType.FreezeTargetProjectile;
-  }
 }

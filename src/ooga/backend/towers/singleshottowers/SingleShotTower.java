@@ -22,6 +22,7 @@ public abstract class SingleShotTower extends Tower {
       double myShootingSpeed, double myShootingRestRate) {
     super(myXPosition, myYPosition, myRadius, myShootingSpeed, myShootingRestRate);
     shootingChoice = defaultShootingChoice;
+    setProjectileType(ProjectileType.SingleTargetProjectile);
   }
 
   public ShootingChoice getShootingChoice(){
@@ -50,7 +51,7 @@ public abstract class SingleShotTower extends Tower {
     while(iterator.hasNext()){
       Bloon bloon = iterator.next();
       double distance = getDistance(bloon);
-      if(distance > getRadius()){
+      if(ifCamoBloon(bloon) || distance > getRadius()){
         continue;
       }
       if(minDistance > distance){
@@ -68,7 +69,7 @@ public abstract class SingleShotTower extends Tower {
     double maxStrength = Integer.MIN_VALUE;
     while(iterator.hasNext()){
       Bloon bloon = iterator.next();
-      if(getDistance(bloon) > getRadius()){
+      if(ifCamoBloon(bloon) || getDistance(bloon) > getRadius()){
         continue;
       }
       double strength = bloon.getBloonsType().RBE();
@@ -86,6 +87,9 @@ public abstract class SingleShotTower extends Tower {
     Bloon firstBloon = null;
     while(iterator.hasNext()){
       Bloon bloon = iterator.next();
+      if(ifCamoBloon(bloon)){
+        continue;
+      }
       if(getDistance(bloon) <= getRadius()){
         firstBloon = bloon;
         break;
@@ -100,6 +104,9 @@ public abstract class SingleShotTower extends Tower {
     Bloon lastBloon = null;
     while(iterator.hasNext()){
       Bloon bloon = iterator.next();
+      if(ifCamoBloon(bloon)){
+        continue;
+      }
       if(getDistance(bloon) <= getRadius()){
         lastBloon = bloon;
       }
@@ -127,7 +134,7 @@ public abstract class SingleShotTower extends Tower {
       double projectileXVelocity = findShootXVelocity(target);
       double projectileYVelocity = findShootYVelocity(target);
       shot.add(
-          projectileFactory.createDart(ProjectileType.SingleTargetProjectile, getXPosition(),
+          projectileFactory.createDart(getProjectileType(), getXPosition(),
               getYPosition(), projectileXVelocity, projectileYVelocity));
     }
     return shot;

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.bloons.factory.CamoBloonsFactory;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.projectile.Projectile;
@@ -53,6 +54,7 @@ class SingleProjectileShooterTest {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
     List<Bloon> bloonsList = new ArrayList<>();
+    bloonsList.add(new CamoBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 11, 21, 0, 0));
     bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 10,10,5,5));
     bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 15,30,5,5));
     Bloon expected = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 12,22,5,5);
