@@ -43,10 +43,6 @@ public class AnimationHandler {
   private Map<Projectile, Node> myProjectilesInGame = new HashMap<>();
   private ProjectileFactory myProjectileFactory = new SingleProjectileFactory();
 
-  private Map<BloonNode, Double> myCircleSidesX;
-  private Map<BloonNode, Double> myCircleSidesY;
-
-
   public AnimationHandler(Layout layout, Group levelLayout, BloonsCollection bloons, double startingX,
       double startingY, double blockSize, Timeline animation) {
     myAnimation = animation;
@@ -63,10 +59,6 @@ public class AnimationHandler {
     myStartingX = startingX;
     myStartingY = startingY;
     myBlockSize = blockSize;
-
-    myCircleSidesX = new HashMap<>();
-    myCircleSidesY = new HashMap<>();
-
   }
 
   public void addBloonstoGame(){
@@ -90,7 +82,6 @@ public class AnimationHandler {
 
   // TODO: Refactor
   private void animateBloons() {
-
     addBloonstoGame();
     for(Bloon bloon : myBloonsInGame.keySet()){
 
@@ -98,10 +89,6 @@ public class AnimationHandler {
       if (bloon.isDead()){
         myLevelLayout.getChildren().remove(bloonNode);
       }
-
-      myCircleSidesX.putIfAbsent(bloonNode, 0.0);
-      myCircleSidesY.putIfAbsent(bloonNode, 0.0);
-
 
       bloonNode.setXPosition(bloon.getXPosition() * myBlockSize);
       bloonNode.setYPosition(bloon.getYPosition() * myBlockSize);
@@ -137,6 +124,7 @@ public class AnimationHandler {
     } else {
       towerInGame.setRotate(180 - angle);
     }
+    System.out.println(bloon.getXPosition());
   }
 
   // TODO: use shoot method
@@ -149,7 +137,7 @@ public class AnimationHandler {
           tower.getShootingSpeed() * (bloon.getYPosition() - tower.getYPosition()) / tower
               .getDistance(bloon);
       Projectile newProjectile = myProjectileFactory
-          .createDart(ProjectileType.SingleTargetProjectile, tower.getXPosition(),
+          .createDart(tower.getProjectileType(), tower.getXPosition(),
               tower.getYPosition(), projectileXSpeed, projectileYSpeed);
       Circle projectileInGame = new Circle(newProjectile.getXPosition(),
           newProjectile.getYPosition(), myBlockSize / 8);
@@ -193,7 +181,7 @@ public class AnimationHandler {
 
   private boolean checkBloonCollision(Projectile projectile, Bloon bloon) {
     Circle projectileInGame = (Circle) myProjectilesInGame.get(projectile);
-    Circle bloonInGame = (Circle) myBloonsInGame.get(bloon);
+    Circle bloonInGame = myBloonsInGame.get(bloon);
     return projectileInGame.getBoundsInParent().intersects(bloonInGame.getBoundsInParent());
     //return false;
   }
@@ -204,9 +192,9 @@ public class AnimationHandler {
 //    myLevelLayout.getChildren().add(towerInGame);
   }
 
-  public void removeTower(Node towerInGame) {
-    myLevelLayout.getChildren().remove(towerInGame);
-  }
+//  public void removeTower(Node towerInGame) {
+//    myLevelLayout.getChildren().remove(towerInGame);
+//  }
 
   public void setBloonWave(BloonsCollection bloonWave) {
     myBloons = bloonWave;

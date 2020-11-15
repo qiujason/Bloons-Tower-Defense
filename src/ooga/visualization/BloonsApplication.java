@@ -17,6 +17,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -45,7 +46,6 @@ public class BloonsApplication {
   public static final double GAME_HEIGHT = 0.875 * HEIGHT;
   public static final double GAME_WIDTH = 0.75 * WIDTH;
   public static final String LAYOUTS_PATH = "layouts/";
-  public static final String LEVEL_FILE = LAYOUTS_PATH + "level1.csv";
 
   private Stage myStage;
   private Scene myScene;
@@ -87,12 +87,38 @@ public class BloonsApplication {
     titleText.setScaleY(3);
     menu.setCenter(titleText);
     Button startButton = new Button();
-    startButton.setOnAction(e -> loadLevel());
+    startButton.setOnAction(e -> levelSelect());
     startButton.setText("Start");
     startButton.setId("Start");
     BorderPane.setAlignment(startButton, Pos.CENTER);
     menu.setBottom(startButton);
     menu.setBackground(new Background(new BackgroundFill(Color.web("#83b576"), null, null)));
+  }
+
+  private void levelSelect() {
+    BorderPane levelSelectScreen = new BorderPane();
+    Text levelSelectText = new Text("Select Level");
+    levelSelectText.setScaleX(3);
+    levelSelectText.setScaleY(3);
+    levelSelectScreen.setCenter(levelSelectText);
+    BorderPane.setAlignment(levelSelectText, Pos.CENTER);
+
+    HBox levelButtons = new HBox();
+    Button level1Button = new Button();
+    Button level2Button = new Button();
+    Button level3Button = new Button();
+    level1Button.setText("Level 1");
+    level1Button.setOnAction(e -> loadLevel());
+    level2Button.setText("Level 2");
+    level2Button.setOnAction(e -> loadLevel());
+    level3Button.setText("Level 3");
+    level3Button.setOnAction(e -> loadLevel());
+    levelButtons.getChildren().addAll(level1Button, level2Button, level3Button);
+    levelSelectScreen.setBottom(levelButtons);
+    BorderPane.setAlignment(levelButtons, Pos.CENTER_RIGHT);
+
+    myScene = new Scene(levelSelectScreen, WIDTH, HEIGHT);
+    myStage.setScene(myScene);
   }
 
   private void loadLevel() {
