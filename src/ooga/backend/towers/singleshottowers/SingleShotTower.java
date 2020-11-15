@@ -7,6 +7,7 @@ import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
+import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.projectile.factory.ProjectileFactory;
 import ooga.backend.projectile.factory.SingleProjectileFactory;
 import ooga.backend.towers.ShootingChoice;
@@ -22,6 +23,7 @@ public abstract class SingleShotTower extends Tower {
       double myShootingSpeed, double myShootingRestRate) {
     super(myXPosition, myYPosition, myRadius, myShootingSpeed, myShootingRestRate);
     shootingChoice = defaultShootingChoice;
+    setProjectileType(ProjectileType.SingleTargetProjectile);
   }
 
   public ShootingChoice getShootingChoice(){
@@ -50,7 +52,7 @@ public abstract class SingleShotTower extends Tower {
     while(iterator.hasNext()){
       Bloon bloon = iterator.next();
       double distance = getDistance(bloon);
-      if(distance > getRadius()){
+      if(ifCamoBloon(bloon) || distance > getRadius()){
         continue;
       }
       if(minDistance > distance){
@@ -68,7 +70,7 @@ public abstract class SingleShotTower extends Tower {
     double maxStrength = Integer.MIN_VALUE;
     while(iterator.hasNext()){
       Bloon bloon = iterator.next();
-      if(getDistance(bloon) > getRadius()){
+      if(ifCamoBloon(bloon) || getDistance(bloon) > getRadius()){
         continue;
       }
       double strength = bloon.getBloonsType().RBE();
@@ -86,6 +88,9 @@ public abstract class SingleShotTower extends Tower {
     Bloon firstBloon = null;
     while(iterator.hasNext()){
       Bloon bloon = iterator.next();
+      if(ifCamoBloon(bloon)){
+        continue;
+      }
       if(getDistance(bloon) <= getRadius()){
         firstBloon = bloon;
         break;
@@ -100,6 +105,9 @@ public abstract class SingleShotTower extends Tower {
     Bloon lastBloon = null;
     while(iterator.hasNext()){
       Bloon bloon = iterator.next();
+      if(ifCamoBloon(bloon)){
+        continue;
+      }
       if(getDistance(bloon) <= getRadius()){
         lastBloon = bloon;
       }
@@ -118,19 +126,17 @@ public abstract class SingleShotTower extends Tower {
   }
 
   @Override
-  public List<Projectile> shoot(BloonsCollection bloonsCollection) {
+  public void shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection) {
     updateCanShoot(false);
-    List<Projectile> shot = new ArrayList<>();
     if(checkBalloonInRange(bloonsCollection)){
       Bloon target = getTarget(bloonsCollection);
       ProjectileFactory projectileFactory = new SingleProjectileFactory();
       double projectileXVelocity = findShootXVelocity(target);
       double projectileYVelocity = findShootYVelocity(target);
-      shot.add(
-          projectileFactory.createDart(ProjectileType.SingleTargetProjectile, getXPosition(),
+      projectilesCollection.add(
+          projectileFactory.createDart(getProjectileType(), getXPosition(),
               getYPosition(), projectileXVelocity, projectileYVelocity));
     }
-    return shot;
   }
 
 }

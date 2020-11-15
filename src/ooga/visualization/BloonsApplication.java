@@ -1,5 +1,6 @@
 package ooga.visualization;
 
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -13,8 +14,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
@@ -33,6 +39,7 @@ import ooga.controller.GameMenuInterface;
 import ooga.controller.TowerMenuController;
 import ooga.controller.TowerMenuInterface;
 import ooga.visualization.menu.GameMenu;
+import ooga.visualization.menu.WeaponButtonsMenu;
 import ooga.visualization.nodes.TowerNode;
 import ooga.visualization.nodes.TowerNodeFactory;
 import ooga.visualization.nodes.WeaponNodeFactory;
@@ -45,15 +52,13 @@ public class BloonsApplication {
   public static final double GAME_HEIGHT = 0.875 * HEIGHT;
   public static final double GAME_WIDTH = 0.75 * WIDTH;
   public static final String LAYOUTS_PATH = "layouts/";
-  public static final String LEVEL_FILE = LAYOUTS_PATH + "level1.csv";
+  public static final String BACKGROUND_IMAGE = "/gamePhotos/startscreen.png";
 
   private Stage myStage;
   private Scene myScene;
   private Layout myLayout;
   private Timeline myAnimation;
   private BloonsCollection myBloons;
-  private Map<Node, Node> blockToTower;
-  private LayoutReader myLayoutReader;
   private Group myLevelLayout;
   private GameMenu myMenu;
   private VBox myMenuPane;
@@ -82,22 +87,28 @@ public class BloonsApplication {
   }
 
   private void setupMenuLayout(BorderPane menu) {
-    Text titleText = new Text("Bloons Tower Defense");
-    titleText.setScaleX(3);
-    titleText.setScaleY(3);
-    menu.setCenter(titleText);
+    Image backgroundImage = null;
+    try {
+      backgroundImage = new Image(String.valueOf(getClass().getResource(BACKGROUND_IMAGE).toURI()));
+    } catch (
+        URISyntaxException e) {
+      e.printStackTrace();
+    }
+    assert backgroundImage != null;
+    menu.setBackground(new Background(new BackgroundImage(backgroundImage, BackgroundRepeat.REPEAT,
+        BackgroundRepeat.REPEAT,
+        BackgroundPosition.DEFAULT,
+        BackgroundSize.DEFAULT)));
     Button startButton = new Button();
     startButton.setOnAction(e -> loadLevel());
     startButton.setText("Start");
     startButton.setId("Start");
     BorderPane.setAlignment(startButton, Pos.CENTER);
     menu.setBottom(startButton);
-    menu.setBackground(new Background(new BackgroundFill(Color.web("#83b576"), null, null)));
   }
 
   private void loadLevel() {
     BorderPane level = new BorderPane();
-    myLayoutReader = new LayoutReader();
     myMenuPane = new VBox();
     visualizeLayout(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
@@ -105,7 +116,6 @@ public class BloonsApplication {
     gameMenuController = new GameMenuController(myAnimation);
     towerMenuController = new TowerMenuController(GAME_WIDTH, GAME_HEIGHT, myBlockSize, myLevelLayout,
         myAnimationHandler, myMenuPane);
-    blockToTower = new HashMap<>();
     visualizePlayerGUI(level);
     level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
     myScene = new Scene(level, WIDTH, HEIGHT);
@@ -162,19 +172,7 @@ public class BloonsApplication {
     level.setRight(myMenuPane);
   }
 
-  /**
-   * This class makes a new alert message when there is an error.
-   * @param header
-   * @param message
-   */
-  public void makeAlert(String header, String message) {
-    Alert a = new Alert(Alert.AlertType.NONE);
-    ButtonType close = new ButtonType("OK", ButtonBar.ButtonData.CANCEL_CLOSE);
-    a.getButtonTypes().addAll(close);
-    a.setHeaderText(header);
-    a.setContentText(message);
-    a.show();
-  }
+
 
   public void fullScreen(){
     myStage.setFullScreen(true);

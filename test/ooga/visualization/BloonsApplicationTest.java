@@ -42,12 +42,12 @@ public class BloonsApplicationTest extends DukeApplicationTest {
     myAnimation = new Timeline();
   }
 
-  @Override
+  /* @Override
   public void start(Stage testStage) {
     BloonsApplication myBloonsApplication = new BloonsApplication(myLayout, bloons, myAnimation);
     myBloonsApplication.fireInTheHole(testStage);
     myStartButton = lookup("#Start").query();
-  }
+  } */
 
   @Test
   public void testStartMenu() {

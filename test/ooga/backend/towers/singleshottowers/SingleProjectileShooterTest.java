@@ -7,9 +7,12 @@ import java.util.HashSet;
 import java.util.List;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.bloons.factory.CamoBloonsFactory;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.BloonsTypeChain;
+import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
+import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.factory.SingleTowerFactory;
@@ -42,8 +45,8 @@ class SingleProjectileShooterTest {
     TowerFactory towerFactory = new SingleTowerFactory();
     Tower testTower = towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
     List<Bloon> bloonsList = new ArrayList<>();
-    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 10,10,5,5));
-    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 15,30,5,5));
+    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 500,10,5,5));
+    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 600,30,5,5));
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
     assertFalse(testTower.checkBalloonInRange(bloonsCollection));
   }
@@ -53,6 +56,7 @@ class SingleProjectileShooterTest {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
     List<Bloon> bloonsList = new ArrayList<>();
+    bloonsList.add(new CamoBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 11, 21, 0, 0));
     bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 10,10,5,5));
     bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 15,30,5,5));
     Bloon expected = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 12,22,5,5);
@@ -68,7 +72,7 @@ class SingleProjectileShooterTest {
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 10,21,5,5));
     bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 10,22,5,5));
-    Bloon expected = new Bloon(new BloonsType(chain, "BLACK", 1, 1, new HashSet<>()), 13,23,5,5);
+    Bloon expected = new Bloon(new BloonsType(chain, "BLACK", 3, 1, new HashSet<>()), 11,22,5,5);
     bloonsList.add(expected);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
     assertEquals(expected, testTower.findStrongestBloon(bloonsCollection));
@@ -134,10 +138,13 @@ class SingleProjectileShooterTest {
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
-    List<Projectile> dart = testTower.shoot(bloonsCollection);
-    assertEquals(0, dart.get(0).getXPosition());
-    assertEquals(0, dart.get(0).getYPosition());
-    assertEquals(-9, dart.get(0).getXVelocity());
-    assertEquals(-12, dart.get(0).getYVelocity());
+    ProjectilesCollection projectilesCollection = new ProjectilesCollection();
+    testTower.shoot(bloonsCollection, projectilesCollection);
+    GamePieceIterator<Projectile> iterator = projectilesCollection.createIterator();
+    Projectile dart = iterator.next();
+    assertEquals(0, dart.getXPosition());
+    assertEquals(0, dart.getYPosition());
+    assertEquals(-9, dart.getXVelocity());
+    assertEquals(-12, dart.getYVelocity());
   }
 }

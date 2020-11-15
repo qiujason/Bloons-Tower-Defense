@@ -25,13 +25,13 @@ public class TowerNode extends GamePieceNode{
   public TowerNode(TowerType towerType, double xPosition, double yPosition, double radius){
     super(xPosition, yPosition, radius);
     this.towerType = towerType;
-    this.setFill(findImage(typeToName.getString(towerType.name())));
+    this.setFill(findImage());
     rangeDisplay = new WeaponRange(xPosition, yPosition, towerType.getRadius());
     rangeBoolean = true;
   }
 
   public void makeTowerMenu(TowerMenuInterface controller){
-    towerMenu = new WeaponMenu(controller);
+    towerMenu = new WeaponMenu(this, controller);
   }
 
   public WeaponMenu getTowerMenu(){
@@ -62,14 +62,9 @@ public class TowerNode extends GamePieceNode{
 
   @Override
   public ImagePattern findImage(){
-    return null;
-  }
-
-  @Override
-  public ImagePattern findImage(String towerName){
     Image towerImage = null;
     try {
-      towerImage = new Image(String.valueOf(getClass().getResource(nameToPicture.getString(towerName)).toURI()));
+      towerImage = new Image(String.valueOf(getClass().getResource(nameToPicture.getString(typeToName.getString(towerType.name()))).toURI()));
     } catch (
         URISyntaxException e) {
       e.printStackTrace();

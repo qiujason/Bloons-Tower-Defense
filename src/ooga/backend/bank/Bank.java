@@ -19,12 +19,13 @@ import ooga.backend.towers.TowerType;
 public class Bank implements BankAPI {
 
   public static int STARTING_ROUND_BONUS = 100;
-  int currentMoney = 0;
-  int currentLevel = 0;
-  int numberOfTotalRounds;
-  List<Integer> roundBonus;
-  Map<TowerType, Integer> towerBuyMap;
-  Map<TowerType, Integer> towerSellMap;
+
+  private int currentMoney = 0;
+  private int currentLevel = 0;
+  private int numberOfTotalRounds;
+  private List<Integer> roundBonus;
+  private Map<TowerType, Integer> towerBuyMap;
+  private Map<TowerType, Integer> towerSellMap;
 
   // Provided list of round bonuses read from csv
   public Bank(Map<TowerType, Integer> towerBuyMap, Map<TowerType, Integer> towerSellMap,

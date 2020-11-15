@@ -21,6 +21,7 @@ public class TowerMenuController implements TowerMenuInterface {
   private Group layoutRoot;
   private AnimationHandler animationHandler;
   private VBox menuPane;
+  private WeaponMenu towerMenu;
 
   public TowerMenuController(double gameWidth, double gameHeight, double blockSize, Group layoutRoot,
       AnimationHandler animationHandler, VBox menuPane){
@@ -39,28 +40,24 @@ public class TowerMenuController implements TowerMenuInterface {
 
   @Override
   public void selectTower(TowerNode tower) {
-    if(tower.rangeShown()){
-      tower.hideRangeDisplay();
-    }
-    else{
-      tower.showRangeDisplay();
-    }
+    tower.showRangeDisplay();
     openMenu(tower);
   }
 
   @Override
   public void sellTower(TowerNode tower) {
+    layoutRoot.getChildren().remove(tower.getRangeDisplay());
     layoutRoot.getChildren().remove(tower);
   }
 
   @Override
-  public void upgradeTower() {
+  public void upgradeTower(TowerNode tower) {
 
   }
 
   @Override
   public void closeMenu(){
-
+    layoutRoot.getChildren().remove(towerMenu);
   }
 
   private void makeTower(TowerType towerType) {
@@ -85,20 +82,20 @@ public class TowerMenuController implements TowerMenuInterface {
         }
       }
     });
+    TowerFactory towerFactory = new SingleTowerFactory();
     tower.setOnMouseClicked(e -> {
       layoutRoot.setOnMouseMoved(null);
       range.makeInvisible();
+      animationHandler.addTower(towerFactory
+          .createTower(type, 14 * (tower.getCenterX() / gameWidth),
+              9 * (tower.getCenterY() / gameHeight)), tower);
       tower.setOnMouseClicked(null);
       tower.setOnMouseClicked(h -> selectTower(tower));
     });
-    TowerFactory towerFactory = new SingleTowerFactory();
-    animationHandler.addTower(towerFactory
-        .createTower(type, 14 * (tower.getCenterX() / gameWidth),
-            9 * (tower.getCenterY() / gameHeight)), tower);
   }
 
   private void openMenu(TowerNode tower){
-    WeaponMenu towerMenu = tower.getTowerMenu();
+    towerMenu = tower.getTowerMenu();
     if(!menuPane.getChildren().contains(towerMenu)){
       menuPane.getChildren().add(towerMenu);
     }

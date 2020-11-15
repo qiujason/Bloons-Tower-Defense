@@ -13,6 +13,6 @@ public interface TowerMenuInterface {
 
   void sellTower(TowerNode tower);
 
-  void upgradeTower();
+  void upgradeTower(TowerNode tower);
 
 }

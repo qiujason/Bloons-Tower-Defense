@@ -90,24 +90,17 @@ public class AnimationHandler {
   }
 
 
-  // TODO: Refactor
   private void animateBloons() {
-
     addBloonstoGame();
     for(Bloon bloon : myBloonsInGame.keySet()){
-
       BloonNode bloonNode = myBloonsInGame.get(bloon);
       if (bloon.isDead()){
         myLevelLayout.getChildren().remove(bloonNode);
       }
-
       myCircleSidesX.putIfAbsent(bloonNode, 0.0);
       myCircleSidesY.putIfAbsent(bloonNode, 0.0);
-
-
       bloonNode.setXPosition(bloon.getXPosition() * myBlockSize);
       bloonNode.setYPosition(bloon.getYPosition() * myBlockSize);
-
     }
   }
 
@@ -143,7 +136,7 @@ public class AnimationHandler {
 
   // TODO: use shoot method
   private void attemptToFire(Bloon bloon, Tower tower) {
-    if (tower.getCanShoot()) {
+    if (tower.canShoot()) {
       double projectileXSpeed =
           tower.getShootingSpeed() * (bloon.getXPosition() - tower.getXPosition()) / tower
               .getDistance(bloon);
