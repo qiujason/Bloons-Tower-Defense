@@ -5,9 +5,6 @@ import javafx.scene.shape.Circle;
 
 public class WeaponRange extends Circle {
 
-  private double xPosition;
-  private double yPosition;
-  private double hitRadius;
   private static final Color OPAQUE = Color.rgb(255, 255, 255, 0.5);
   private static final Color OPAQUE_STROKE = Color.rgb(0, 0, 0, 0.5);
   private static final Color HIDDEN = Color.rgb(255, 255, 255, 0);
@@ -17,14 +14,6 @@ public class WeaponRange extends Circle {
     super(xPosition, yPosition, hitRadius);
     this.setFill(OPAQUE);
     this.setStroke(OPAQUE_STROKE);
-  }
-
-  public double getHitRadius() {
-    return hitRadius;
-  }
-
-  public void setHitRadius(double hitRadius) {
-    this.hitRadius = hitRadius;
   }
 
   public void makeInvisible(){

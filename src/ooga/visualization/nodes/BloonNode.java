@@ -21,13 +21,11 @@ public class BloonNode extends GamePieceNode{
   public BloonNode(BloonsType bloonType, double xPosition, double yPosition, double radius){
     super(xPosition, yPosition, radius);
     this.bloonType = bloonType;
-    this.setFill(findTowerImage());
+    this.setFill(findImage());
   }
 
-
-
   @Override
-  public ImagePattern findTowerImage() {
+  public ImagePattern findImage() {
     Image towerImage = null;
     System.out.println(bloonType.name());
     try {
@@ -39,5 +37,10 @@ public class BloonNode extends GamePieceNode{
     }
     assert towerImage != null;
     return new ImagePattern(towerImage);
+  }
+
+  @Override
+  public ImagePattern findImage(String name){
+    return null;
   }
 }

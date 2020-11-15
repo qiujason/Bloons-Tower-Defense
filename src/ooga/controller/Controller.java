@@ -44,6 +44,7 @@ public class Controller extends Application {
   private GameEngine gameEngine;
   private Layout layout;
   private List<BloonsCollection> allBloonWaves;
+  private GameMenuInterface gameController;
   private Bank bank;
 
   @Override
@@ -53,7 +54,6 @@ public class Controller extends Application {
     bloonReader = new BloonReader();
     setUpBank();
     initializeLayout();
-
     initializeBloonTypes();
     initializeBloonWaves();
     startGameEngine();

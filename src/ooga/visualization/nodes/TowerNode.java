@@ -1,6 +1,7 @@
 package ooga.visualization.nodes;
 
 import java.net.URISyntaxException;
+import java.util.ResourceBundle;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
@@ -12,17 +13,26 @@ public class TowerNode extends GamePieceNode{
 
   private WeaponRange rangeDisplay;
 
-  private static final String TOWER_IMAGE = "/gamePhotos/dartmonkey.png";
+  private static final String PACKAGE = "btd_towers/";
+  private static final String NAMES = "TowerMonkey";
+  private static final String PICTURES = "MonkeyPics";
+
+  private ResourceBundle typeToName = ResourceBundle.getBundle(PACKAGE + NAMES);
+  private ResourceBundle nameToPicture = ResourceBundle.getBundle(PACKAGE + PICTURES);
 
   public TowerNode(TowerType towerType, double xPosition, double yPosition, double radius){
     super(xPosition, yPosition, radius);
     this.towerType = towerType;
-    this.setFill(findTowerImage());
+    this.setFill(findImage(typeToName.getString(towerType.name())));
     rangeDisplay = new WeaponRange(xPosition, yPosition, towerType.getRadius());
   }
 
   public WeaponRange getRangeDisplay(){
     return rangeDisplay;
+  }
+
+  public TowerType getTowerType(){
+    return towerType;
   }
 
   public void hideRangeDisplay(){
@@ -34,10 +44,15 @@ public class TowerNode extends GamePieceNode{
   }
 
   @Override
-  public ImagePattern findTowerImage(){
+  public ImagePattern findImage(){
+    return null;
+  }
+
+  @Override
+  public ImagePattern findImage(String towerName){
     Image towerImage = null;
     try {
-      towerImage = new Image(String.valueOf(getClass().getResource(TOWER_IMAGE).toURI()));
+      towerImage = new Image(String.valueOf(getClass().getResource(nameToPicture.getString(towerName)).toURI()));
     } catch (
         URISyntaxException e) {
       e.printStackTrace();
