@@ -136,7 +136,7 @@ public class AnimationHandler {
 
   // TODO: use shoot method
   private void attemptToFire(Bloon bloon, Tower tower) {
-    if (tower.getCanShoot()) {
+    if (tower.canShoot()) {
       double projectileXSpeed =
           tower.getShootingSpeed() * (bloon.getXPosition() - tower.getXPosition()) / tower
               .getDistance(bloon);

@@ -9,6 +9,7 @@ import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
+import ooga.backend.projectile.ProjectilesCollection;
 import ooga.visualization.AnimationHandler;
 import org.apache.commons.lang3.StringUtils;
 
@@ -60,7 +61,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     canShoot = update;
   }
 
-  public boolean getCanShoot(){
+  public boolean canShoot(){
     return canShoot;
   }
 
@@ -83,7 +84,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     return false;
   }
 
-  public abstract List<Projectile> shoot(BloonsCollection bloonsCollection);
+  public abstract void shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection);
 
   public double getDistance(GamePiece target){
     return Math.sqrt(Math.pow(getXPosition()-target.getXPosition(), 2) + Math.pow(getYPosition()-target.getYPosition(), 2));
