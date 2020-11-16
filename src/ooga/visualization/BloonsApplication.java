@@ -41,6 +41,7 @@ import ooga.controller.GameMenuInterface;
 import ooga.controller.TowerMenuController;
 import ooga.controller.TowerMenuInterface;
 import ooga.visualization.menu.GameMenu;
+import ooga.visualization.menu.WeaponButtonsMenu;
 import ooga.visualization.nodes.TowerNode;
 import ooga.visualization.nodes.TowerNodeFactory;
 import ooga.visualization.nodes.WeaponNodeFactory;
@@ -115,12 +116,13 @@ public class BloonsApplication {
 
   private void loadLevel() {
     BorderPane level = new BorderPane();
+    myMenuPane = new VBox();
     visualizeLayout(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
         myTowers, myProjectiles, myStartingX, myStartingY, myBlockSize, myAnimation);
     gameMenuController = new GameMenuController(myAnimation);
-    towerMenuController = new TowerMenuController(GAME_WIDTH, GAME_HEIGHT, myBlockSize, myLevelLayout,
-        myAnimationHandler);
+    towerMenuController = new TowerMenuController(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize, myLevelLayout,
+        myAnimationHandler, myMenuPane);
     visualizePlayerGUI(level);
     level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
     myScene = new Scene(level, WIDTH, HEIGHT);
@@ -171,16 +173,7 @@ public class BloonsApplication {
     return blockRectangle;
   }
 
-  private void displaySettings(){
-    FlowPane flow = new FlowPane();
-    VBox settings = new VBox(new Label("EDDIE"));
-    settings.setAlignment(Pos.CENTER);
-    flow.getChildren().add(settings);
-    myMenuPane.getChildren().add(flow);
-  }
-
   private void visualizePlayerGUI(BorderPane level) {
-    myMenuPane = new VBox();
     myMenuPane.setSpacing(10); //magic num
     myMenu = new GameMenu(myMenuPane, gameMenuController, towerMenuController);
     level.setRight(myMenuPane);

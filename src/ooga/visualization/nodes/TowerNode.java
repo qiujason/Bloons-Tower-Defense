@@ -4,15 +4,16 @@ import java.net.URISyntaxException;
 import java.util.ResourceBundle;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import ooga.backend.towers.TowerType;
+import ooga.controller.TowerMenuInterface;
+import ooga.visualization.menu.WeaponMenu;
 
 public class TowerNode extends GamePieceNode{
 
   private TowerType towerType;
-
   private WeaponRange rangeDisplay;
   private Boolean rangeBoolean;
+  private WeaponMenu towerMenu;
 
   private static final String PACKAGE = "btd_towers/";
   private static final String NAMES = "TowerMonkey";
@@ -27,6 +28,14 @@ public class TowerNode extends GamePieceNode{
     this.setFill(findImage());
     rangeDisplay = new WeaponRange(xPosition, yPosition, towerType.getRadius());
     rangeBoolean = true;
+  }
+
+  public void makeTowerMenu(TowerMenuInterface controller){
+    towerMenu = new WeaponMenu(this, controller);
+  }
+
+  public WeaponMenu getTowerMenu(){
+    return towerMenu;
   }
 
   public WeaponRange getRangeDisplay(){

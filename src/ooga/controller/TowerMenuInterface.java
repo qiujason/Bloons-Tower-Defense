@@ -9,8 +9,10 @@ public interface TowerMenuInterface {
 
   void selectTower(TowerNode tower);
 
-  void sellTower();
+  void closeMenu(TowerNode tower);
 
-  void upgradeTower();
+  void sellTower(TowerNode tower);
+
+  void upgradeTower(TowerNode tower);
 
 }
