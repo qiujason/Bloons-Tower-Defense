@@ -14,8 +14,6 @@ public class BloonNode extends GamePieceNode{
   private final ResourceBundle myBloonImages = ResourceBundle
       .getBundle(BLOON_IMAGES_PATH);
 
-
-
   public BloonNode(BloonsType bloonType, double xPosition, double yPosition, double radius){
     super(xPosition, yPosition, radius);
     this.bloonType = bloonType;
@@ -25,7 +23,6 @@ public class BloonNode extends GamePieceNode{
   @Override
   public ImagePattern findImage() {
     Image towerImage = null;
-    System.out.println(bloonType.name());
     try {
       towerImage = new Image(String.valueOf(getClass().getResource(myBloonImages.getString(
           bloonType.name())).toURI()));

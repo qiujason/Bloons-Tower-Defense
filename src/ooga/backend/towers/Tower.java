@@ -45,6 +45,8 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   // update canShoot to true after resting period has elapsed
   @Override
   public void update() {
+    System.out.println("countrestperiod " + countRestPeriod);
+
     if(!canShoot) {
       countRestPeriod++;
     }
@@ -77,6 +79,8 @@ public abstract class Tower extends GamePiece implements TowersAPI {
         continue;
       }
       double distance = getDistance(bloon);
+      System.out.println("distance " + getDistance(bloon));
+      System.out.println("radius: " + radius);
       if(distance <= radius){
         return true;
       }
@@ -84,7 +88,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     return false;
   }
 
-  public abstract void shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection);
+  public abstract Bloon shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection);
 
   public double getDistance(GamePiece target){
     return Math.sqrt(Math.pow(getXPosition()-target.getXPosition(), 2) + Math.pow(getYPosition()-target.getYPosition(), 2));

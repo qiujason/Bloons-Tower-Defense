@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public enum TowerType {
 
-  SingleProjectileShooter(75, 5, 15, true),
+  SingleProjectileShooter(100, 15, 3, true),
   MultiProjectileShooter(50, 10, 10, false),
   SpreadProjectileShooter(75, 20, 20, true),
   UnlimitedRangeProjectileShooter(150, 5, 10, true),

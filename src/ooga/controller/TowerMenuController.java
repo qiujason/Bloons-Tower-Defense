@@ -1,6 +1,5 @@
 package ooga.controller;
 
-import java.util.ResourceBundle;
 import javafx.scene.Group;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.factory.SingleTowerFactory;
@@ -77,12 +76,13 @@ public class TowerMenuController implements TowerMenuInterface {
     tower.setOnMouseClicked(e -> {
       layoutRoot.setOnMouseMoved(null);
       range.makeInvisible();
+      TowerFactory towerFactory = new SingleTowerFactory();
+      animationHandler.addTower(towerFactory
+          .createTower(type, 14 * (tower.getCenterX() / gameWidth),
+              9 * (tower.getCenterY() / gameHeight)), tower);
       tower.setOnMouseClicked(null);
       tower.setOnMouseClicked(h -> selectTower(tower));
     });
-    TowerFactory towerFactory = new SingleTowerFactory();
-    animationHandler.addTower(towerFactory
-        .createTower(type, 14 * (tower.getCenterX() / gameWidth),
-            9 * (tower.getCenterY() / gameHeight)), tower);
+
   }
 }

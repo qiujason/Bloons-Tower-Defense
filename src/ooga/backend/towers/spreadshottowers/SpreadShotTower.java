@@ -2,6 +2,7 @@ package ooga.backend.towers.spreadshottowers;
 
 import java.util.ArrayList;
 import java.util.List;
+import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectilesCollection;
@@ -28,7 +29,7 @@ public abstract class SpreadShotTower extends Tower {
   }
 
   @Override
-  public void shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection) {
+  public Bloon shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection) {
     updateCanShoot(false);
     if(checkBalloonInRange(bloonsCollection)){
       for(int i = 0; i < getNumberOfShots(); i++){
@@ -36,8 +37,9 @@ public abstract class SpreadShotTower extends Tower {
         double projectileXVelocity = Math.cos(i*getDegreeIncrementPerShot());
         double projectileYVelocity = Math.sin(i*getDegreeIncrementPerShot());
         projectilesCollection.add(projectileFactory
-            .createDart(getProjectileType(), getXPosition(), getYPosition(), projectileXVelocity, projectileYVelocity));
+            .createDart(getProjectileType(), getXPosition(), getYPosition(), projectileXVelocity, projectileYVelocity, 0));
       }
     }
+    return null;
   }
 }

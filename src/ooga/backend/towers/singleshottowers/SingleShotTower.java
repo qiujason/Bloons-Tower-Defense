@@ -60,6 +60,8 @@ public abstract class SingleShotTower extends Tower {
         closestBloon = bloon;
       }
     }
+    System.out.println("YARDY KNOW: " +closestBloon.getXPosition() + " " + closestBloon.getYPosition());
+
     return closestBloon;
   }
 
@@ -117,25 +119,42 @@ public abstract class SingleShotTower extends Tower {
 
   public double findShootXVelocity(Bloon target){
     double distance = getDistance(target);
-    return (getXPosition()-target.getXPosition())/distance*getShootingSpeed();
+    return (target.getXPosition()-this.getXPosition())/distance*getShootingSpeed();
   }
 
   public double findShootYVelocity(Bloon target){
     double distance = getDistance(target);
-    return (getYPosition()-target.getYPosition())/distance*getShootingSpeed();
+    return (target.getYPosition()-this.getYPosition())/distance*getShootingSpeed();
   }
 
   @Override
-  public void shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection) {
+  public Bloon shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection) {
     updateCanShoot(false);
+    Bloon target;
     if(checkBalloonInRange(bloonsCollection)){
-      Bloon target = getTarget(bloonsCollection);
+      System.out.println("shootas shoot");
+      target = getTarget(bloonsCollection);
       ProjectileFactory projectileFactory = new SingleProjectileFactory();
       double projectileXVelocity = findShootXVelocity(target);
       double projectileYVelocity = findShootYVelocity(target);
-      projectilesCollection.add(
-          projectileFactory.createDart(getProjectileType(), getXPosition(),
-              getYPosition(), projectileXVelocity, projectileYVelocity));
+      System.out.println("CURRENT COORS: " + this.getXPosition() + " " + this.getYPosition());
+      Projectile p =projectileFactory.createDart(getProjectileType(), this.getXPosition(),
+          this.getYPosition(), projectileXVelocity, projectileYVelocity, findAngle(this, target));
+      System.out.println("Backend projectile coords: " + p.getXPosition() + " " + p.getYPosition());
+      projectilesCollection.add(p);
+
+      return target;
+    }
+    return null;
+  }
+
+  public double findAngle(Tower tower, Bloon bloon){
+    double angle = Math.toDegrees(
+        Math.asin((bloon.getXPosition() - tower.getXPosition()) / tower.getDistance(bloon)));
+    if (bloon.getYPosition() < tower.getYPosition()) {
+      return angle;
+    } else {
+      return 180 - angle;
     }
   }
 

@@ -61,6 +61,7 @@ public class BloonsCollection implements GamePieceCollection<Bloon> {
     return bloons.get(index);
   }
 
+  @Override
   public int size(){
     return bloons.size();
   }
