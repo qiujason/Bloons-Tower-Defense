@@ -30,8 +30,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.layout.Layout;
+import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.readers.LayoutReader;
 import ooga.backend.towers.TowerType;
+import ooga.backend.towers.TowersCollection;
 import ooga.backend.towers.factory.SingleTowerFactory;
 import ooga.backend.towers.factory.TowerFactory;
 import ooga.controller.GameMenuController;
@@ -58,6 +60,8 @@ public class BloonsApplication {
   private Layout myLayout;
   private Timeline myAnimation;
   private BloonsCollection myBloons;
+  private TowersCollection myTowers;
+  private ProjectilesCollection myProjectiles;
   private Group myLevelLayout;
   private GameMenu myMenu;
   private VBox myMenuPane;
@@ -70,9 +74,12 @@ public class BloonsApplication {
   private final ResourceBundle myBlockMappings = ResourceBundle
       .getBundle(getClass().getPackageName() + ".resources.blockMappings");
 
-  public BloonsApplication(Layout layout, BloonsCollection bloons, Timeline animation) {
+  public BloonsApplication(Layout layout, BloonsCollection bloons, TowersCollection towers,
+      ProjectilesCollection projectiles, Timeline animation) {
     myLayout = layout;
     myBloons = bloons;
+    myTowers = towers;
+    myProjectiles = projectiles;
     myAnimation = animation;
   }
 
@@ -110,7 +117,7 @@ public class BloonsApplication {
     BorderPane level = new BorderPane();
     visualizeLayout(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
-        myStartingX, myStartingY, myBlockSize, myAnimation);
+        myTowers, myProjectiles, myStartingX, myStartingY, myBlockSize, myAnimation);
     gameMenuController = new GameMenuController(myAnimation);
     towerMenuController = new TowerMenuController(GAME_WIDTH, GAME_HEIGHT, myBlockSize, myLevelLayout,
         myAnimationHandler);

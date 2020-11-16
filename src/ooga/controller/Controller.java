@@ -1,6 +1,7 @@
 package ooga.controller;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.animation.KeyFrame;
@@ -10,15 +11,19 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import ooga.backend.ConfigurationException;
 import ooga.backend.GameEngine;
+import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bank.Bank;
 import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.layout.Layout;
+import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.readers.BloonReader;
 import ooga.backend.readers.LayoutReader;
 import ooga.backend.readers.RoundBonusReader;
 import ooga.backend.readers.TowerValueReader;
+import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
+import ooga.backend.towers.TowersCollection;
 import ooga.visualization.AnimationHandler;
 import ooga.visualization.BloonsApplication;
 
@@ -28,7 +33,7 @@ public class Controller extends Application {
   public static final double ANIMATION_DELAY = 1 / FRAMES_PER_SECOND;
 
   public static final String LAYOUTS_PATH = "layouts/";
-  public static final String BLOON_WAVES_PATH = "bloon_waves/";
+  public static final String BLOON_WAVES_PATH = "bloon_waves/level1.csv";
   public static final String LEVEL_FILE = "level1.csv";
   public static final String BLOONS_TYPE_PATH = "bloon_resources/Bloons";
   public static final String TOWER_BUY_VALUES_PATH = "towervalues/TowerBuyValues.properties";
@@ -44,21 +49,31 @@ public class Controller extends Application {
   private GameEngine gameEngine;
   private Layout layout;
   private List<BloonsCollection> allBloonWaves;
+  private TowersCollection towersCollection;
+  private ProjectilesCollection projectilesCollection;
+
+
+
+  private Map<Tower, Bloon> shootingTargets;
   private GameMenuInterface gameController;
   private Bank bank;
 
   @Override
-  public void start(Stage primaryStage) {
+  public void start(Stage primaryStage) { //TODO: refactor into helpers
     myAnimation = new Timeline();
     layoutReader = new LayoutReader();
     bloonReader = new BloonReader();
+    towersCollection = new TowersCollection();
+    projectilesCollection = new ProjectilesCollection();
+    shootingTargets = new HashMap<>();
     setUpBank();
     initializeLayout();
     initializeBloonTypes();
     initializeBloonWaves();
     startGameEngine();
 
-    bloonsApplication = new BloonsApplication(layout, gameEngine.getCurrentBloonWave(), myAnimation);
+    bloonsApplication = new BloonsApplication(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
+        gameEngine.getProjectiles(), myAnimation);
     bloonsApplication.fireInTheHole(primaryStage);
 
     myAnimation.setCycleCount(Timeline.INDEFINITE);
@@ -106,22 +121,37 @@ public class Controller extends Application {
   }
 
   private void initializeBloonWaves() {
-    allBloonWaves = bloonReader.generateBloonsCollectionMap(bloonsTypeChain, BLOON_WAVES_PATH + LEVEL_FILE, layout);
+    allBloonWaves = bloonReader.generateBloonsCollectionMap(bloonsTypeChain, BLOON_WAVES_PATH, layout);
   }
 
   private void startGameEngine() {
-    gameEngine = new GameEngine(layout, allBloonWaves, getMyBlockSize());
+    gameEngine = new GameEngine(layout, allBloonWaves, towersCollection, projectilesCollection, getMyBlockSize());
   }
 
   private void step() {
+    animationHandler = bloonsApplication.getMyAnimationHandler();
+
     //pass shit from front end to backend
+    gameEngine.setProjectiles(animationHandler.getProjectiles());
+    gameEngine.setTowers(animationHandler.getTowers());
+
+    //update game engine
     gameEngine.update();
 
     //pass shit from backend to frontend
-    animationHandler = bloonsApplication.getMyAnimationHandler();
     animationHandler.setBloonWave(gameEngine.getCurrentBloonWave());
 
+    animationHandler.setShootingTargets(gameEngine.getShootingTargets());
+    animationHandler.setTowers(gameEngine.getTowers());
+    animationHandler.setProjectiles(gameEngine.getProjectiles());
+
+    //animate animationhandler
     animationHandler.animate();
+  }
+
+  public void setShootingTargets(
+      Map<Tower, Bloon> shootingTargets) {
+    this.shootingTargets = shootingTargets;
   }
 
 }

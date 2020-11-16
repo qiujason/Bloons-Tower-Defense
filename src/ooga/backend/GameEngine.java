@@ -27,29 +27,32 @@ public class GameEngine implements GameEngineAPI {
   private final List<BloonsCollection> allBloonWaves;
   private BloonsCollection currentBloonWave;
   private BloonsCollection queuedBloons;
+
+
+
+  private Map<Tower, Bloon> shootingTargets;
   private int spawnTimer;
   private double myBlockSize;
   private TowersCollection towers;
+
   private ProjectilesCollection projectiles;
-  private GamePieceIterator<Bloon> towersIterator;
   private Map<Bloon, Double > myBloonSidesX;
   private Map<Bloon, Double> myBloonSidesY;
 
   private int wave;
 
-  public GameEngine(Layout layout, List<BloonsCollection> allBloonWaves, double blockSize) {
+  public GameEngine(Layout layout, List<BloonsCollection> allBloonWaves, TowersCollection towers,
+      ProjectilesCollection projectiles, double blockSize) {
     this.layout = layout;
     this.allBloonWaves = allBloonWaves;
-    queuedBloons = allBloonWaves.get(FIRST_WAVE);
-    currentBloonWave = new BloonsCollection(); //TODO: link to controller
-    projectiles = new ProjectilesCollection(); //TODO: link to controller
-
-    towers = new TowersCollection();
-//    towersIterator = towers.createIterator();
+    this.queuedBloons = allBloonWaves.get(FIRST_WAVE);
+    this.currentBloonWave = new BloonsCollection();
+    this.towers = towers;
+    this.projectiles = projectiles;
     myBlockSize = blockSize;
     wave = FIRST_WAVE;
     spawnTimer = SPAWN_DELAY;
-    System.out.println(queuedBloons.get(0).getBloonsType().name());
+    this.shootingTargets = new HashMap<>();
     myBloonSidesX = new HashMap<>();
     myBloonSidesY = new HashMap<>();
   }
@@ -86,8 +89,8 @@ public class GameEngine implements GameEngineAPI {
         bloon.setDead();
       }
 
-      bloon.setXVelocity((bloon.getBloonsType().relativeSpeed() * currentBlock.getDx()/myBlockSize));
-      bloon.setYVelocity((bloon.getBloonsType().relativeSpeed() * currentBlock.getDy()/myBlockSize));
+      bloon.setXVelocity((bloon.getBloonsType().relativeSpeed() * currentBlock.getDx())/myBlockSize);
+      bloon.setYVelocity((bloon.getBloonsType().relativeSpeed() * currentBlock.getDy())/myBlockSize);
 
       setBloonSides(bloon, currentBlock);
     }
@@ -100,17 +103,6 @@ public class GameEngine implements GameEngineAPI {
     myBloonSidesY.put(bloon, -0.5 * block.getDy());
   }
 
-  public boolean isMiddleOfBlock(double x, double y){
-    double xDecimal = x - (int) x;
-    double yDecimal = y - (int) y;
-    return (xDecimal > 0.45 && xDecimal < 0.55) && (yDecimal > 0.45 && yDecimal < 0.55);
-
-  }
-
-  @Override
-  public void shootBloons() {
-//    towers.updateAll();
-  }
 
   @Override
   public void nextWave() {
@@ -125,14 +117,15 @@ public class GameEngine implements GameEngineAPI {
 //    towers.clear();
 //    towersIterator = towers.createIterator();
   }
-
-  private void shootAtBloons(){
+  @Override
+  public void shootBloons(){
     GamePieceIterator<Tower> towerIterator = towers.createIterator();
     while(towerIterator.hasNext()){
       Tower currentTower = towerIterator.next();
       currentTower.update();
       if(currentTower.canShoot()){
-        currentTower.shoot(currentBloonWave, projectiles);
+        shootingTargets.put(currentTower,currentTower.shoot(currentBloonWave, projectiles));
+
       }
     }
   }
@@ -141,15 +134,47 @@ public class GameEngine implements GameEngineAPI {
    * assumes all projectiles on screen should be moved
    */
   private void moveProjectiles() {
+    removeOffScreenProjectiles();
     GamePieceIterator<Projectile> projectileIterator = projectiles.createIterator();
     while (projectileIterator.hasNext()){
       Projectile currentProjectile = projectileIterator.next();
-      currentProjectile.update();
+      currentProjectile.setXVelocity((currentProjectile.getXVelocity()/10));
+      currentProjectile.setYVelocity((currentProjectile.getYVelocity()/10));
+    }
+    projectiles.updateAll();
+  }
+
+  private void removeOffScreenProjectiles(){
+    GamePieceIterator<Projectile> projectileIterator = projectiles.createIterator();
+    while (projectileIterator.hasNext()){
+      Projectile currentProjectile = projectileIterator.next();
+      if (currentProjectile.getXPosition() < 0 || currentProjectile.getXPosition() > layout.getWidth()
+          || currentProjectile.getYPosition() < 0 || currentProjectile.getYPosition() > layout.getHeight()){
+        System.out.println("WHAT THE FUCK");
+
+        projectiles.remove(currentProjectile);
+      }
     }
   }
 
   public BloonsCollection getCurrentBloonWave() {
     return currentBloonWave;
+  }
+
+  public TowersCollection getTowers() {
+    return towers;
+  }
+
+  public ProjectilesCollection getProjectiles() {
+    return projectiles;
+  }
+
+  public void setTowers(TowersCollection towers) {
+    this.towers = towers;
+  }
+
+  public void setProjectiles(ProjectilesCollection projectiles) {
+    this.projectiles = projectiles;
   }
 
   @Override
@@ -161,9 +186,14 @@ public class GameEngine implements GameEngineAPI {
       spawnTimer = 0;
     }
     moveBloons();
-    shootAtBloons();
     moveProjectiles();
+
+    shootBloons();
     spawnTimer++;
+  }
+
+  public Map<Tower, Bloon> getShootingTargets() {
+    return shootingTargets;
   }
 
 
