@@ -59,6 +59,7 @@ public class GameMenu {
     button.setOnAction(handler);
     button.setId(name);
     button.setMinWidth(BUTTON_WIDTH);
+    button.setMaxWidth(BUTTON_WIDTH);
     return button;
   }
 }
