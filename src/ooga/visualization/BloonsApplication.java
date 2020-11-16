@@ -114,7 +114,7 @@ public class BloonsApplication {
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
         myStartingX, myStartingY, myBlockSize, myAnimation);
     gameMenuController = new GameMenuController(myAnimation);
-    towerMenuController = new TowerMenuController(GAME_WIDTH, GAME_HEIGHT, myBlockSize, myLevelLayout,
+    towerMenuController = new TowerMenuController(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize, myLevelLayout,
         myAnimationHandler, myMenuPane);
     visualizePlayerGUI(level);
     level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));

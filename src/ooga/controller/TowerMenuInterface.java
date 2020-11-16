@@ -9,7 +9,7 @@ public interface TowerMenuInterface {
 
   void selectTower(TowerNode tower);
 
-  void closeMenu();
+  void closeMenu(TowerNode tower);
 
   void sellTower(TowerNode tower);
 

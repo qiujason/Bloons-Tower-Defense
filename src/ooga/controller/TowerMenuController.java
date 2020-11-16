@@ -1,8 +1,9 @@
 package ooga.controller;
 
-import java.util.ResourceBundle;
 import javafx.scene.Group;
 import javafx.scene.layout.VBox;
+import ooga.backend.layout.Layout;
+import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.factory.SingleTowerFactory;
 import ooga.backend.towers.factory.TowerFactory;
@@ -15,16 +16,17 @@ import ooga.visualization.nodes.WeaponRange;
 
 public class TowerMenuController implements TowerMenuInterface {
 
+  private Layout layout;
   private double gameWidth;
   private double gameHeight;
   private double blockSize;
   private Group layoutRoot;
   private AnimationHandler animationHandler;
   private VBox menuPane;
-  private WeaponMenu towerMenu;
 
-  public TowerMenuController(double gameWidth, double gameHeight, double blockSize, Group layoutRoot,
+  public TowerMenuController(Layout layout, double gameWidth, double gameHeight, double blockSize, Group layoutRoot,
       AnimationHandler animationHandler, VBox menuPane){
+    this.layout = layout;
     this.gameWidth = gameWidth;
     this.gameHeight = gameHeight;
     this.blockSize = blockSize;
@@ -46,9 +48,11 @@ public class TowerMenuController implements TowerMenuInterface {
   }
 
   @Override
-  public void sellTower(TowerNode tower) {
-    layoutRoot.getChildren().remove(tower.getRangeDisplay());
-    layoutRoot.getChildren().remove(tower);
+  public void sellTower(TowerNode towerNode) {
+    layoutRoot.getChildren().remove(towerNode);
+    layoutRoot.getChildren().remove(towerNode.getRangeDisplay());
+    animationHandler.removeTower(towerNode);
+    closeMenu(towerNode);
   }
 
   @Override
@@ -57,8 +61,9 @@ public class TowerMenuController implements TowerMenuInterface {
   }
 
   @Override
-  public void closeMenu(){
-    layoutRoot.getChildren().remove(towerMenu);
+  public void closeMenu(TowerNode towerNode){
+    menuPane.getChildren().remove(towerNode.getTowerMenu());
+    towerNode.hideRangeDisplay();
   }
 
   private void makeTower(TowerType towerType) {
@@ -72,31 +77,31 @@ public class TowerMenuController implements TowerMenuInterface {
     placeTower(towerType, towerInGame, towerRange);
   }
 
-  private void placeTower(TowerType type, TowerNode tower, WeaponRange range){
+  private void placeTower(TowerType type, TowerNode towerNode, WeaponRange range){
     layoutRoot.setOnMouseMoved(e -> {
       if(e.getX() >= 0 && e.getX() <= gameWidth){
         if(e.getY() >= 0 && e.getY() <= gameHeight){
-          tower.setXPosition(e.getX());
-          tower.setYPosition(e.getY());
+          towerNode.setXPosition(e.getX());
+          towerNode.setYPosition(e.getY());
           range.setCenterX(e.getX());
           range.setCenterY(e.getY());
         }
       }
     });
     TowerFactory towerFactory = new SingleTowerFactory();
-    tower.setOnMouseClicked(e -> {
+    towerNode.setOnMouseClicked(e -> {
       layoutRoot.setOnMouseMoved(null);
       range.makeInvisible();
       animationHandler.addTower(towerFactory
-          .createTower(type, 14 * (tower.getCenterX() / gameWidth),
-              9 * (tower.getCenterY() / gameHeight)), tower);
-      tower.setOnMouseClicked(null);
-      tower.setOnMouseClicked(h -> selectTower(tower));
+          .createTower(type, layout.getHeight() * (towerNode.getCenterX() / gameWidth),
+              layout.getWidth() * (towerNode.getCenterY() / gameHeight)), towerNode);
+      towerNode.setOnMouseClicked(null);
+      towerNode.setOnMouseClicked(h -> selectTower(towerNode));
     });
   }
 
-  private void openMenu(TowerNode tower){
-    towerMenu = tower.getTowerMenu();
+  private void openMenu(TowerNode towerNode){
+    WeaponMenu towerMenu = towerNode.getTowerMenu();
     if(!menuPane.getChildren().contains(towerMenu)){
       menuPane.getChildren().add(towerMenu);
     }

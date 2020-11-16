@@ -2,6 +2,7 @@ package ooga.visualization;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
@@ -195,14 +196,17 @@ public class AnimationHandler {
   public void addTower(Tower tower, TowerNode towerInGame) {
     myTowers.add(tower);
     myTowersInGame.put(tower, towerInGame);
-    System.out.println(tower.getXPosition());
-    System.out.println(tower.getYPosition());
-    System.out.println(towerInGame.getCenterX());
-    System.out.println(towerInGame.getCenterY());
   }
 
-  public void removeTower(Node towerInGame) {
-    myLevelLayout.getChildren().remove(towerInGame);
+  public void removeTower(TowerNode towerInGame) {
+    for(Entry<Tower, TowerNode> entry: myTowersInGame.entrySet()){
+      if(entry.getValue().equals(towerInGame)){
+        Tower tower = entry.getKey();
+        myTowers.remove(tower);
+        myTowersInGame.remove(tower, towerInGame);
+        break;
+      }
+    }
   }
 
   public void setBloonWave(BloonsCollection bloonWave) {
