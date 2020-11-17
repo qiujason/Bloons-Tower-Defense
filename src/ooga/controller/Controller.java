@@ -1,7 +1,9 @@
 package ooga.controller;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -21,6 +23,7 @@ import ooga.backend.layout.Layout;
 import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.readers.BloonReader;
 import ooga.backend.readers.LayoutReader;
+import ooga.backend.readers.PropertyFileValidator;
 import ooga.backend.readers.RoundBonusReader;
 import ooga.backend.readers.TowerValueReader;
 import ooga.backend.towers.Tower;
@@ -66,6 +69,7 @@ public class Controller extends Application {
   @Override
   public void start(Stage primaryStage) { //TODO: refactor into helpers
     errorResource = ResourceBundle.getBundle("ErrorResource");
+    checkTowerPropertyFiles();
     myAnimation = new Timeline();
     layoutReader = new LayoutReader();
     bloonReader = new BloonReader();
@@ -86,6 +90,25 @@ public class Controller extends Application {
 
     KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> step());
     myAnimation.getKeyFrames().add(movement);
+  }
+
+  private void checkTowerPropertyFiles(){
+    PropertyFileValidator towerPicsValidator = new PropertyFileValidator("btd_towers/MonkeyPics.properties",
+        new HashSet<>(Arrays.asList("DartMonkey", "DartMonkeyButton", "TackShooter", "TackShooterButton",
+            "BombShooter", "BombShooterButton", "SniperMonkey", "SniperMonkeyButton", "SuperMonkey",
+            "SuperMonkeyButton", "IceMonkey", "IceMonkeyButton", "NinjaMonkey", "NinjaMonkeyButton")));
+    PropertyFileValidator towerNameValidator = new PropertyFileValidator("btd_towers/TowerMonkey.properties",
+        new HashSet<>(Arrays.asList("SingleProjectileShooter", "MultiProjectileShooter",
+            "SpreadProjectileShooter", "UnlimitedRangeProjectileShooter", "SuperSpeedProjectileShooter",
+            "FrozenSpreadShooter", "CamoProjectileShooter")));
+    if(!towerPicsValidator.checkIfValid()){
+      AlertHandler alert = new AlertHandler(errorResource.getString("InvalidPropertyFile"),
+          errorResource.getString("RequiredKeysMissingPics"));
+    }
+    if(!towerNameValidator.checkIfValid()){
+      AlertHandler alert = new AlertHandler(errorResource.getString("InvalidPropertyFile"),
+          errorResource.getString("RequiredKeysMissingTowerNames"));
+    }
   }
 
   private double getMyBlockSize() {
