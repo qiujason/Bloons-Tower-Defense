@@ -156,6 +156,7 @@ public class BloonsApplication {
       Button levelButton = new Button();
       levelButton.setText(level.getName().split("\\.")[0]);
       levelButton.setOnAction(e -> loadLevel(level.getName()));
+      levelButton.setId(level.getName().split("\\.")[0]);
       levelButtons.getChildren().add(levelButton);
     }
     return levelButtons;

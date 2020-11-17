@@ -3,75 +3,46 @@ package ooga.visualization;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import java.util.List;
-import javafx.animation.Timeline;
+import java.io.File;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import ooga.backend.bloons.BloonsCollection;
-import ooga.backend.bloons.types.BloonsTypeChain;
-import ooga.backend.layout.Layout;
-import ooga.backend.readers.BloonReader;
-import ooga.backend.readers.LayoutReader;
-import org.junit.jupiter.api.BeforeEach;
+import ooga.controller.Controller;
 import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
 
-public class BloonsApplicationTest extends DukeApplicationTest {
+public class BloonsApplicationGameTest extends DukeApplicationTest {
 
   public static final String LAYOUTS_PATH = "layouts/";
-  public static final String BLOON_WAVES_PATH = "bloon_waves/";
-  public static final String LEVEL_FILE = "level1.csv";
-  public static final String BLOONS_TYPE_PATH = "bloon_resources/Bloons";
 
-  Button myStartButton;
-  Layout myLayout;
-  BloonsCollection bloons;
-  Timeline myAnimation;
+  private Button myStartButton;
+  private File[] myLevels;
 
-
-  @BeforeEach
-  void initialize(){
-    LayoutReader layoutReader = new LayoutReader();
-    BloonReader bloonReader = new BloonReader();
-    myLayout = layoutReader.generateLayout(LAYOUTS_PATH + LEVEL_FILE);
-    List<BloonsCollection> bloonWaves = bloonReader.generateBloonsCollectionMap(new BloonsTypeChain(BLOONS_TYPE_PATH), BLOON_WAVES_PATH + LEVEL_FILE, myLayout);
-    bloons = bloonWaves.get(0);
-    myAnimation = new Timeline();
-  }
-
-  /* @Override
+  @Override
   public void start(Stage testStage) {
-    BloonsApplication myBloonsApplication = new BloonsApplication(myLayout, bloons, myAnimation);
-    myBloonsApplication.fireInTheHole(testStage);
+    Controller myController = new Controller();
+    myController.start(testStage);
     myStartButton = lookup("#Start").query();
-  } */
-
-  @Test
-  public void testStartMenu() {
-    assertEquals("Start", myStartButton.getText());
+    try {
+      myLevels = Paths.get(getClass().getClassLoader().getResource(LAYOUTS_PATH).toURI()).toFile()
+          .listFiles();
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
   }
 
-  @Test // Not general: text
-  public void testStartButton() {
-    clickOn(myStartButton);
-    Button myPlayButton = lookup("#Play").query();
-    Button myPauseButton = lookup("#Pause").query();
-    Button mySpeedUpButton = lookup("#SpeedUp").query();
-    Button mySlowDownButton = lookup("#SlowDown").query();
-    assertEquals("Play", myPlayButton.getText());
-    assertEquals("Pause", myPauseButton.getText());
-    assertEquals("SpeedUp", mySpeedUpButton.getText());
-    assertEquals("SlowDown", mySlowDownButton.getText());
+  private String getLevelName(File levelName){
+    return levelName.getName().split("\\.")[0];
   }
 
-  @Test // Not general
-  public void testLayoutDisplay() {
+  private void startRandomLevel(){
     clickOn(myStartButton);
-    Rectangle myRectangle = lookup("#LayoutBlock00").query();
-    assertEquals(Color.GREEN, myRectangle.getFill());
+    Button levelButton = lookup("#" + getLevelName(myLevels[0])).query();
+    clickOn(levelButton);
   }
 
   @Test // Not general
@@ -91,14 +62,6 @@ public class BloonsApplicationTest extends DukeApplicationTest {
     Rectangle myRectangle = lookup("#LayoutBlock01").query();
     clickOn(myRectangle);
     assertEquals(Color.TAN, myRectangle.getFill());
-  }
-
-  @Test
-  public void testMyTestCircle(){
-    clickOn(myStartButton);
-    Circle myTestCircle = lookup("#TestCircle").query();
-    assertEquals(21, (int) myTestCircle.getCenterX());
-    assertEquals(64, (int) myTestCircle.getCenterY());
   }
 
   @Test
@@ -178,5 +141,4 @@ public class BloonsApplicationTest extends DukeApplicationTest {
     clickOn(myPlayButton);
     assertNotEquals(0, myTower.getRotate());
   }
-
 }
