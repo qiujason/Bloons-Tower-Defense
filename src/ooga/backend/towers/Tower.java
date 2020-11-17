@@ -5,6 +5,7 @@ import ooga.backend.API.TowersAPI;
 import ooga.backend.GamePiece;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.bloons.types.Specials;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.ProjectileType;
 import ooga.backend.projectile.ProjectilesCollection;
@@ -134,7 +135,8 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   }
 
   public boolean ifCamoBloon(Bloon bloon){
-    return getTowerType() != TowerType.CamoProjectileShooter && bloon.isCamo();
+    return getTowerType() != TowerType.CamoProjectileShooter && bloon.getBloonsType().specials().contains(
+        Specials.CAMO);
   }
 
   public void setProjectileType(ProjectileType update){

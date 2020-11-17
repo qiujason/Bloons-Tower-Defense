@@ -16,4 +16,8 @@ public interface BloonsAPI {
 
   Bloon[] shootBloon();
 
+  void setDead();
+
+  boolean isDead();
+
 }
