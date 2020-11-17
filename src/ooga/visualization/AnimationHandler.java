@@ -9,6 +9,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import ooga.backend.bloons.Bloon;
@@ -49,11 +50,6 @@ public class AnimationHandler {
   private Map<Tower, TowerNode> myTowersInGame;
   private Map<Projectile, ProjectileNode> myProjectilesInGame;
   private Map<Tower, Bloon> myShootingTargets;
-  private ProjectileFactory myProjectileFactory = new SingleProjectileFactory();
-
-  private Map<BloonNode, Double> myCircleSidesX;
-  private Map<BloonNode, Double> myCircleSidesY;
-
 
   public AnimationHandler(Layout layout, Group levelLayout, BloonsCollection bloons,
       TowersCollection towers, ProjectilesCollection projectiles, double startingX,
@@ -77,10 +73,6 @@ public class AnimationHandler {
     myStartingX = startingX;
     myStartingY = startingY;
     myBlockSize = blockSize;
-
-    myCircleSidesX = new HashMap<>();
-    myCircleSidesY = new HashMap<>();
-
   }
 
   public void addBloonstoGame(){
@@ -128,8 +120,6 @@ public class AnimationHandler {
       if (bloon.isDead()){
         myLevelLayout.getChildren().remove(bloonNode);
       }
-      myCircleSidesX.putIfAbsent(bloonNode, 0.0);
-      myCircleSidesY.putIfAbsent(bloonNode, 0.0);
       bloonNode.setXPosition(bloon.getXPosition() * myBlockSize);
       bloonNode.setYPosition(bloon.getYPosition() * myBlockSize);
     }
@@ -156,6 +146,7 @@ public class AnimationHandler {
     } else {
       towerInGame.setRotate(180 - angle);
     }
+    System.out.println(bloon.getXPosition());
   }
 
   private void animateProjectiles() {

@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
@@ -23,6 +24,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -95,6 +97,16 @@ public class BloonsApplication {
   }
 
   private void setupMenuLayout(BorderPane menu) {
+    setBackgroundImage(menu);
+    Button startButton = new Button();
+    startButton.setOnAction(e -> levelSelect());
+    startButton.setText("Start");
+    startButton.setId("Start");
+    BorderPane.setAlignment(startButton, Pos.CENTER);
+    menu.setBottom(startButton);
+  }
+
+  private void setBackgroundImage(BorderPane menu) {
     Image backgroundImage = null;
     try {
       backgroundImage = new Image(String.valueOf(getClass().getResource(BACKGROUND_IMAGE).toURI()));
@@ -107,16 +119,37 @@ public class BloonsApplication {
         BackgroundRepeat.REPEAT,
         BackgroundPosition.DEFAULT,
         BackgroundSize.DEFAULT)));
-    Button startButton = new Button();
-    startButton.setOnAction(e -> loadLevel());
-    startButton.setText("Start");
-    startButton.setId("Start");
-    BorderPane.setAlignment(startButton, Pos.CENTER);
-    menu.setBottom(startButton);
+  }
+
+  private void levelSelect() {
+    BorderPane levelSelectScreen = new BorderPane();
+    Text levelSelectText = new Text("Select Level");
+    levelSelectText.setFill(Color.WHITE);
+    levelSelectText.setScaleX(3);
+    levelSelectText.setScaleY(3);
+    levelSelectScreen.setCenter(levelSelectText);
+    BorderPane.setAlignment(levelSelectText, Pos.CENTER);
+
+    HBox levelButtons = new HBox();
+    Button level1Button = new Button();
+    Button level2Button = new Button();
+    Button level3Button = new Button();
+    level1Button.setText("Level 1");
+    level1Button.setOnAction(e -> loadLevel());
+    level2Button.setText("Level 2");
+    level2Button.setOnAction(e -> loadLevel());
+    level3Button.setText("Level 3");
+    level3Button.setOnAction(e -> loadLevel());
+    levelButtons.getChildren().addAll(level1Button, level2Button, level3Button);
+    levelSelectScreen.setBottom(levelButtons);
+    BorderPane.setAlignment(levelButtons, Pos.CENTER_RIGHT);
+
+    myScene = new Scene(levelSelectScreen, WIDTH, HEIGHT);
+    myStage.setScene(myScene);
   }
 
   private void loadLevel() {
-    BorderPane level = new BorderPane();
+    Group level = new Group();
     myMenuPane = new VBox();
     visualizeLayout(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
@@ -125,15 +158,14 @@ public class BloonsApplication {
     towerMenuController = new TowerMenuController(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize, myLevelLayout,
         myAnimationHandler, myMenuPane);
     visualizePlayerGUI(level);
-    level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
     myScene = new Scene(level, WIDTH, HEIGHT);
     myStage.setScene(myScene);
   }
 
   // TODO: Refactor
-  private void visualizeLayout(BorderPane level) {
+  private void visualizeLayout(Group level) {
     myLevelLayout = new Group();
-    level.setLeft(myLevelLayout);
+    level.getChildren().add(myLevelLayout);
 
     int numberOfRows = myLayout.getHeight();
     int numberOfColumns = myLayout.getWidth();
@@ -174,13 +206,12 @@ public class BloonsApplication {
     return blockRectangle;
   }
 
-  private void visualizePlayerGUI(BorderPane level) {
+  private void visualizePlayerGUI(Group level) {
     myMenuPane.setSpacing(10); //magic num
     myMenu = new GameMenu(myMenuPane, gameMenuController, towerMenuController);
-    level.setRight(myMenuPane);
+    myMenuPane.setLayoutX(GAME_WIDTH);
+    level.getChildren().add(myMenuPane);
   }
-
-
 
   public void fullScreen(){
     myStage.setFullScreen(true);
