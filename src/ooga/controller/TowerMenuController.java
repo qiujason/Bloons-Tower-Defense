@@ -93,8 +93,8 @@ public class TowerMenuController implements TowerMenuInterface {
       layoutRoot.setOnMouseMoved(null);
       range.makeInvisible();
       animationHandler.addTower(towerFactory
-          .createTower(type, layout.getHeight() * (towerNode.getCenterX() / gameWidth),
-              layout.getWidth() * (towerNode.getCenterY() / gameHeight)), towerNode);
+          .createTower(type, layout.getWidth() * (towerNode.getCenterX() / gameWidth),
+              layout.getHeight() * (towerNode.getCenterY() / gameHeight)), towerNode);
       towerNode.setOnMouseClicked(null);
       towerNode.setOnMouseClicked(h -> selectTower(towerNode));
     });

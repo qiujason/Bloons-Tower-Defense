@@ -87,7 +87,6 @@ public class AnimationHandler {
       Bloon bloonToSpawn = iterator.next();
       if (!myBloonsInGame.containsKey(bloonToSpawn)) {
         BloonNode bloonNode = new BloonNode(bloonToSpawn.getBloonsType(), myStartingX, myStartingY, myBlockSize / 2.5);
-        System.out.println("BLOONNODE: " + bloonNode.getXPosition() + " " + bloonNode.getYPosition());
 
         myBloonsInGame.put(bloonToSpawn, bloonNode);
         myLevelLayout.getChildren().add(bloonNode);
@@ -100,15 +99,11 @@ public class AnimationHandler {
     while(iterator.hasNext()) {
 
       Projectile projectileToSpawn = iterator.next();
-      System.out.println("Projectile coords: " + projectileToSpawn.getXPosition() + " " +
-          projectileToSpawn.getYPosition());
 
       if (!myProjectilesInGame.containsKey(projectileToSpawn)) {
         ProjectileNode projectileNode = new ProjectileNode(projectileToSpawn.getType(),
             projectileToSpawn.getXPosition()*myBlockSize, projectileToSpawn.getYPosition()*myBlockSize, myBlockSize / 8);
         projectileNode.setRotate(projectileToSpawn.getAngle());
-
-        System.out.println("PROJECTILENODE: " + projectileNode.getXPosition() + " " + projectileNode.getYPosition());
 
         myProjectilesInGame.put(projectileToSpawn, projectileNode);
         myLevelLayout.getChildren().add(projectileNode);
@@ -151,7 +146,6 @@ public class AnimationHandler {
 
 
   private void rotateTower(Tower tower, Bloon bloon) {
-    System.out.println(tower.getDistance(bloon)*myBlockSize);
     Node towerInGame = myTowersInGame.get(tower);
     double angle = Math.toDegrees(
         Math.asin((bloon.getXPosition() - tower.getXPosition()) / tower.getDistance(bloon)));
@@ -186,10 +180,6 @@ public class AnimationHandler {
   }
 
   public void addTower(Tower tower, TowerNode towerInGame) {
-    System.out.println("Tower: " + tower.getRadius());
-    System.out.println("RANGE: " + towerInGame.getRangeDisplay().getRadius());
-    System.out.println("tower coordinates: " + tower.getXPosition() + " " + tower.getYPosition());
-    System.out.println("tower rest :" + tower.getShootingRestRate());
     myTowers.add(tower);
     myTowersInGame.put(tower, towerInGame);
   }

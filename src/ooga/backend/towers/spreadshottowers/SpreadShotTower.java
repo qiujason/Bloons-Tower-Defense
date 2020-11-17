@@ -1,10 +1,7 @@
 package ooga.backend.towers.spreadshottowers;
 
-import java.util.ArrayList;
-import java.util.List;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
-import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.projectile.factory.ProjectileFactory;
 import ooga.backend.projectile.factory.SingleProjectileFactory;
@@ -30,7 +27,7 @@ public abstract class SpreadShotTower extends Tower {
 
   @Override
   public Bloon shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection) {
-    updateCanShoot(false);
+    updateRestPeriodActive(true);
     if(checkBalloonInRange(bloonsCollection)){
       for(int i = 0; i < getNumberOfShots(); i++){
         ProjectileFactory projectileFactory = new SingleProjectileFactory();
