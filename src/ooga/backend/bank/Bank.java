@@ -74,12 +74,16 @@ public class Bank implements BankAPI {
     return currentMoney;
   }
 
-  public void buyTower(Tower buyTower) {
-    currentMoney -= towerBuyMap.get(buyTower.getTowerType());
+  public boolean buyTower(TowerType buyTower) {
+    if (currentMoney >= towerBuyMap.get(buyTower)){
+      currentMoney -= towerBuyMap.get(buyTower);
+      return true;
+    }
+    return false;
   }
 
-  public void sellTower(Tower sellTower) {
-    currentMoney += towerSellMap.get(sellTower.getTowerType());
+  public void sellTower(TowerType sellTower) {
+    currentMoney += towerSellMap.get(sellTower);
   }
 
   public void addPoppedBloonValue(){

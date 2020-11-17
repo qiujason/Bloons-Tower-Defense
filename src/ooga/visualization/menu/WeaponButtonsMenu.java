@@ -25,7 +25,6 @@ public class WeaponButtonsMenu extends FlowPane {
   private static final String PICTURES = "MonkeyPics";
   private static final String BUTTON_TAG = "Button";
   private static final String TOWER_COST_DIRECTORY = "towervalues/TowerBuyValues";
-  private static final String DOLLARS = "$";
 
   private static final Double BUTTON_MAX_WIDTH = 50.0;
 
@@ -43,7 +42,7 @@ public class WeaponButtonsMenu extends FlowPane {
   private void makeAllWeaponButtons(){
     for(TowerType type : weaponTypeList){
       this.getChildren().add(makeWeaponButton(type,
-          event -> controller.buyTower(type)));
+          event -> newclass.makeTOwer.buyTower(type)));
     }
   }
 

@@ -40,7 +40,7 @@ class BankTest {
     assertEquals(303, bank.getCurrentMoney());
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
-    bank.buyTower(testTower);
+    bank.buyTower(testTower.getTowerType());
     assertEquals(53, bank.getCurrentMoney());
   }
 
@@ -50,7 +50,7 @@ class BankTest {
     assertEquals(303, bank.getCurrentMoney());
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
-    bank.sellTower(testTower);
+    bank.sellTower(testTower.getTowerType());
     assertEquals(503, bank.getCurrentMoney());
   }
 

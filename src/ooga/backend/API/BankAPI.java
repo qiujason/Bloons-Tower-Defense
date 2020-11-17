@@ -1,12 +1,12 @@
 package ooga.backend.API;
 
-import ooga.backend.towers.Tower;
+import ooga.backend.towers.TowerType;
 
 public interface BankAPI {
   void advanceToLevel(int level);
   void advanceOneLevel();
   int getCurrentMoney();
-  void buyTower(Tower buyTower);
-  void sellTower(Tower sellTower);
+  boolean buyTower(TowerType buyTower);
+  void sellTower(TowerType sellTower);
   void addPoppedBloonValue();
 }

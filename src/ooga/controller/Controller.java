@@ -72,6 +72,9 @@ public class Controller extends Application {
     initializeBloonWaves();
     startGameEngine();
 
+    new TowerMenuController();
+
+
     bloonsApplication = new BloonsApplication(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
         gameEngine.getProjectiles(), myAnimation);
     bloonsApplication.fireInTheHole(primaryStage);
@@ -149,9 +152,6 @@ public class Controller extends Application {
     animationHandler.animate();
   }
 
-  public void setShootingTargets(
-      Map<Tower, Bloon> shootingTargets) {
-    this.shootingTargets = shootingTargets;
-  }
+
 
 }
