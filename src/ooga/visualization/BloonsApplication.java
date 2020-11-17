@@ -1,6 +1,9 @@
 package ooga.visualization;
 
+import java.io.File;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -9,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
@@ -23,6 +27,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -74,8 +79,14 @@ public class BloonsApplication {
   private double myBlockSize;
   private final ResourceBundle myBlockMappings = ResourceBundle
       .getBundle(getClass().getPackageName() + ".resources.blockMappings");
+  private Button myLevelStartButton;
+  private String myCurrentLevel;
 
-  public BloonsApplication(Layout layout, BloonsCollection bloons, TowersCollection towers,
+  public BloonsApplication(Button startLevelButton){
+    myLevelStartButton = startLevelButton;
+  }
+
+  public void initializeBloonsApplication(Layout layout, BloonsCollection bloons, TowersCollection towers,
       ProjectilesCollection projectiles, Timeline animation) {
     myLayout = layout;
     myBloons = bloons;
@@ -94,6 +105,16 @@ public class BloonsApplication {
   }
 
   private void setupMenuLayout(BorderPane menu) {
+    setBackgroundImage(menu);
+    Button startButton = new Button();
+    startButton.setOnAction(e -> levelSelect());
+    startButton.setText("Start");
+    startButton.setId("Start");
+    BorderPane.setAlignment(startButton, Pos.CENTER);
+    menu.setBottom(startButton);
+  }
+
+  private void setBackgroundImage(BorderPane menu) {
     Image backgroundImage = null;
     try {
       backgroundImage = new Image(String.valueOf(getClass().getResource(BACKGROUND_IMAGE).toURI()));
@@ -106,16 +127,44 @@ public class BloonsApplication {
         BackgroundRepeat.REPEAT,
         BackgroundPosition.DEFAULT,
         BackgroundSize.DEFAULT)));
-    Button startButton = new Button();
-    startButton.setOnAction(e -> loadLevel());
-    startButton.setText("Start");
-    startButton.setId("Start");
-    BorderPane.setAlignment(startButton, Pos.CENTER);
-    menu.setBottom(startButton);
   }
 
-  private void loadLevel() {
-    BorderPane level = new BorderPane();
+  private void levelSelect() {
+    BorderPane levelSelectScreen = new BorderPane();
+    Text levelSelectText = new Text("Select Level");
+    levelSelectText.setScaleX(3);
+    levelSelectText.setScaleY(3);
+    levelSelectScreen.setCenter(levelSelectText);
+    BorderPane.setAlignment(levelSelectText, Pos.CENTER);
+    HBox levelButtons = initializeLevelButtons();
+    levelSelectScreen.setBottom(levelButtons);
+    BorderPane.setAlignment(levelButtons, Pos.CENTER_RIGHT);
+
+    myScene = new Scene(levelSelectScreen, WIDTH, HEIGHT);
+    myStage.setScene(myScene);
+  }
+
+  private HBox initializeLevelButtons(){
+    HBox levelButtons = new HBox();
+    Path levels = null;
+    try {
+      levels = Paths.get(getClass().getClassLoader().getResource(LAYOUTS_PATH).toURI());
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
+    for(File level : levels.toFile().listFiles()){
+      Button levelButton = new Button();
+      levelButton.setText(level.getName().split("\\.")[0]);
+      levelButton.setOnAction(e -> loadLevel(level.getName()));
+      levelButtons.getChildren().add(levelButton);
+    }
+    return levelButtons;
+  }
+
+  private void loadLevel(String levelName) {
+    myCurrentLevel = levelName;
+    myLevelStartButton.fire();
+    Group level = new Group();
     myMenuPane = new VBox();
     visualizeLayout(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
@@ -124,15 +173,14 @@ public class BloonsApplication {
     towerMenuController = new TowerMenuController(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize, myLevelLayout,
         myAnimationHandler, myMenuPane);
     visualizePlayerGUI(level);
-    level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
     myScene = new Scene(level, WIDTH, HEIGHT);
     myStage.setScene(myScene);
   }
 
   // TODO: Refactor
-  private void visualizeLayout(BorderPane level) {
+  private void visualizeLayout(Group level) {
     myLevelLayout = new Group();
-    level.setLeft(myLevelLayout);
+    level.getChildren().add(myLevelLayout);
 
     int numberOfRows = myLayout.getHeight();
     int numberOfColumns = myLayout.getWidth();
@@ -173,17 +221,20 @@ public class BloonsApplication {
     return blockRectangle;
   }
 
-  private void visualizePlayerGUI(BorderPane level) {
+  private void visualizePlayerGUI(Group level) {
     myMenuPane.setSpacing(10); //magic num
     myMenu = new GameMenu(myMenuPane, gameMenuController, towerMenuController);
-    level.setRight(myMenuPane);
+    myMenuPane.setLayoutX(GAME_WIDTH);
+    level.getChildren().add(myMenuPane);
   }
-
-
 
   public void fullScreen(){
     myStage.setFullScreen(true);
     myStage.show();
+  }
+
+  public String getCurrentLevel(){
+    return myCurrentLevel;
   }
 
   public AnimationHandler getMyAnimationHandler() {

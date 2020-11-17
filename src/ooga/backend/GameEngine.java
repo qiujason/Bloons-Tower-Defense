@@ -121,9 +121,8 @@ public class GameEngine implements GameEngineAPI {
     while(towerIterator.hasNext()){
       Tower currentTower = towerIterator.next();
       currentTower.update();
-      if(!currentTower.isRestPeriodActive()){
+      if(!currentTower.isIfRestPeriod()){
         shootingTargets.put(currentTower,currentTower.shoot(currentBloonWave, projectiles));
-
       }
     }
   }
@@ -140,9 +139,9 @@ public class GameEngine implements GameEngineAPI {
     GamePieceIterator<Projectile> projectileIterator = projectiles.createIterator();
     while (projectileIterator.hasNext()){
       Projectile currentProjectile = projectileIterator.next();
+
       if (currentProjectile.getXPosition() < 0 || currentProjectile.getXPosition() > layout.getWidth()
           || currentProjectile.getYPosition() < 0 || currentProjectile.getYPosition() > layout.getHeight()){
-
         projectiles.remove(currentProjectile);
       }
     }

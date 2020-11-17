@@ -51,4 +51,9 @@ public class RoadItemsCollection implements GamePieceCollection<RoadItem> {
   public int size(){
     return roadItems.size();
   }
+
+  @Override
+  public boolean contains(RoadItem roadItem) {
+    return roadItems.contains(roadItem);
+  }
 }
