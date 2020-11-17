@@ -1,13 +1,11 @@
 package ooga.backend.towers;
 
-import java.util.List;
 import java.util.ResourceBundle;
 import ooga.backend.API.TowersAPI;
 import ooga.backend.GamePiece;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.collections.GamePieceIterator;
-import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
 import ooga.backend.projectile.ProjectilesCollection;
 import ooga.visualization.AnimationHandler;
@@ -19,7 +17,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   private double shootingSpeed;
   private double shootingRestRate;
   private double countRestPeriod;
-  private boolean restPeriodActive;
+  private boolean ifRestPeriod;
   private ProjectileType projectileType;
 
   // if canShoot = true, step function can call shoot method, if not, do not call shoot method
@@ -31,7 +29,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     shootingSpeed = myShootingSpeed;
     shootingRestRate = myShootingRestRate * AnimationHandler.FRAMES_PER_SECOND;
     countRestPeriod = 0;
-    restPeriodActive = false;
+    ifRestPeriod = false;
   }
 
   public abstract TowerType getTowerType();
@@ -47,21 +45,21 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   // update canShoot to true after resting period has elapsed
   @Override
   public void update() {
-    if(restPeriodActive) {
+    if(ifRestPeriod) {
       countRestPeriod++;
       if(countRestPeriod >= shootingRestRate){
         countRestPeriod = 0;
-        restPeriodActive = false;
+        ifRestPeriod = false;
       }
     }
   }
 
-  public void updateRestPeriodActive(boolean update){
-    restPeriodActive = update;
+  public void updateIfRestPeriod(boolean update){
+    ifRestPeriod = update;
   }
 
-  public boolean isRestPeriodActive(){
-    return restPeriodActive;
+  public boolean isIfRestPeriod(){
+    return ifRestPeriod;
   }
 
   public double getShootingSpeed(){

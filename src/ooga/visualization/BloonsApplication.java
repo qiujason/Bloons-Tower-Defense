@@ -77,6 +77,7 @@ public class BloonsApplication {
 
   public BloonsApplication(Layout layout, BloonsCollection bloons, TowersCollection towers,
       ProjectilesCollection projectiles, Timeline animation) {
+
     myLayout = layout;
     myBloons = bloons;
     myTowers = towers;
