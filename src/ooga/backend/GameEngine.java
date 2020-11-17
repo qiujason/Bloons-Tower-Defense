@@ -137,12 +137,14 @@ public class GameEngine implements GameEngineAPI {
   }
 
   private void removeOffScreenProjectiles(){
+    System.out.println("Projectiles: " + projectiles.size());
     GamePieceIterator<Projectile> projectileIterator = projectiles.createIterator();
     while (projectileIterator.hasNext()){
       Projectile currentProjectile = projectileIterator.next();
-      if (currentProjectile.getXPosition() < 0 || currentProjectile.getXPosition() > layout.getWidth()
-          || currentProjectile.getYPosition() < 0 || currentProjectile.getYPosition() > layout.getHeight()){
+      if (currentProjectile.getXPosition() < 0.5 || currentProjectile.getXPosition() > layout.getWidth()-.5
+          || currentProjectile.getYPosition() < 0.5 || currentProjectile.getYPosition() > layout.getHeight()-.5){
         System.out.println("true");
+        System.out.println("Projectiles: " + projectiles.size());
 
         projectiles.remove(currentProjectile);
       }

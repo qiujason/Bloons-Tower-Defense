@@ -157,17 +157,30 @@ public class AnimationHandler {
   }
 
   private void animateProjectiles() {
-    removeDeadProjectiles();
     addProjectilestoGame();
+    removeDeadProjectiles();
     for(Projectile projectile : myProjectilesInGame.keySet()){
       ProjectileNode projectileNode = myProjectilesInGame.get(projectile);
      //todo: REMOVE NONEXISITNG PROJECTIELS
       projectileNode.setXPosition(projectile.getXPosition()*myBlockSize);
       projectileNode.setYPosition(projectile.getYPosition()*myBlockSize);
+      myLevelLayout.getChildren().add(projectileNode);
+
     }
   }
 
   private void removeDeadProjectiles(){
+    removeProjectileNodes();
+    recreateProjectileMap();
+  }
+
+  public void removeProjectileNodes(){
+    for (ProjectileNode projectileNode : myProjectilesInGame.values()){
+      myLevelLayout.getChildren().remove(projectileNode);
+    }
+  }
+
+  private void recreateProjectileMap(){
     Map<Projectile, ProjectileNode> updatedProjectilesInGame = new HashMap<>();
     GamePieceIterator<Projectile> projectileIterator= myProjectiles.createIterator();
     while(projectileIterator.hasNext()){
