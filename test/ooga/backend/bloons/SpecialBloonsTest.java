@@ -23,13 +23,13 @@ public class SpecialBloonsTest {
   @Test
   void testGetCamoBloonType() {
     Bloon bloon = new CamoBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
-    assertTrue(bloon.getBloonsType().specials().contains(Specials.CAMO));
+    assertTrue(bloon.getBloonsType().specials().contains(Specials.Camo));
   }
 
   @Test
   void testGetRegenBloonType() {
     Bloon bloon = new RegenBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
-    assertTrue(bloon.getBloonsType().specials().contains(Specials.REGEN));
+    assertTrue(bloon.getBloonsType().specials().contains(Specials.Regen));
   }
 
   @Test
@@ -37,7 +37,7 @@ public class SpecialBloonsTest {
     Bloon bloon = new RegenBloonsFactory().createBloon(chain.getBloonsTypeRecord("BLUE"), 0, 0, 0, 0);
     Bloon[] bloons = bloon.shootBloon();
     assertEquals(chain.getBloonsTypeRecord("RED"), bloons[0].getBloonsType());
-    assertTrue(bloons[0].getBloonsType().specials().contains(Specials.REGEN));
+    assertTrue(bloons[0].getBloonsType().specials().contains(Specials.Regen));
   }
 
   @Test
@@ -46,8 +46,8 @@ public class SpecialBloonsTest {
     Bloon[] bloons = bloon.shootBloon();
     assertEquals(chain.getBloonsTypeRecord("WHITE"), bloons[0].getBloonsType());
     assertEquals(chain.getBloonsTypeRecord("WHITE"), bloons[1].getBloonsType());
-    assertTrue(bloons[0].getBloonsType().specials().contains(Specials.REGEN));
-    assertTrue(bloons[1].getBloonsType().specials().contains(Specials.REGEN));
+    assertTrue(bloons[0].getBloonsType().specials().contains(Specials.Regen));
+    assertTrue(bloons[1].getBloonsType().specials().contains(Specials.Regen));
   }
 
   @Test
@@ -56,22 +56,22 @@ public class SpecialBloonsTest {
     bloon = new CamoBloonsFactory().createBloon(bloon);
     Bloon[] bloons = bloon.shootBloon();
     assertEquals(chain.getBloonsTypeRecord("RED"), bloons[0].getBloonsType());
-    assertTrue(bloons[0].getBloonsType().specials().contains(Specials.REGEN));
-    assertTrue(bloons[0].getBloonsType().specials().contains(Specials.CAMO));
+    assertTrue(bloons[0].getBloonsType().specials().contains(Specials.Regen));
+    assertTrue(bloons[0].getBloonsType().specials().contains(Specials.Camo));
   }
 
   @Test
   void testGetSpecialBloonNextType() {
     Bloon bloon = new CamoBloonsFactory().createBloon(chain.getBloonsTypeRecord("YELLOW"), 0, 0, 0, 0);
     assertEquals(chain.getBloonsTypeRecord("GREEN"), chain.getNextBloonsType(bloon.getBloonsType()));
-    assertTrue(bloon.getBloonsType().specials().contains(Specials.CAMO));
+    assertTrue(bloon.getBloonsType().specials().contains(Specials.Camo));
   }
 
   @Test
   void testGetSpecialBloonPrevType() {
     Bloon bloon = new CamoBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
     assertEquals(chain.getBloonsTypeRecord("BLUE"), chain.getPrevBloonsType(bloon.getBloonsType()));
-    assertTrue(bloon.getBloonsType().specials().contains(Specials.CAMO));
+    assertTrue(bloon.getBloonsType().specials().contains(Specials.Camo));
   }
 
   @Test

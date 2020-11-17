@@ -8,8 +8,6 @@ import ooga.backend.bloons.types.BloonsType;
 
 public class Bloon extends GamePiece implements BloonsAPI {
 
-  public static final String FACTORY_FILE_PATH = "ooga.backend.bloons.factory.";
-
   private BloonsType bloonsType;
   private double xVelocity;
   private double yVelocity;

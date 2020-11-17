@@ -59,21 +59,21 @@ public class BloonsTest {
   @Test
   void testMakeCamoBloonFromFactory() {
     Bloon bloon = new CamoBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
-    assertTrue(bloon.getBloonsType().specials().contains(Specials.CAMO));
+    assertTrue(bloon.getBloonsType().specials().contains(Specials.Camo));
   }
 
   @Test
   void testMakeRegenBloonFromFactory() {
     Bloon bloon = new RegenBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
-    assertTrue(bloon.getBloonsType().specials().contains(Specials.REGEN));
+    assertTrue(bloon.getBloonsType().specials().contains(Specials.Regen));
   }
 
   @Test
   void testMakeCamoRegenBloonFromFactory() {
     Bloon bloon = new RegenBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
     bloon = new CamoBloonsFactory().createBloon(bloon);
-    assertTrue(bloon.getBloonsType().specials().contains(Specials.REGEN));
-    assertTrue(bloon.getBloonsType().specials().contains(Specials.CAMO));
+    assertTrue(bloon.getBloonsType().specials().contains(Specials.Regen));
+    assertTrue(bloon.getBloonsType().specials().contains(Specials.Camo));
   }
 
   @Test

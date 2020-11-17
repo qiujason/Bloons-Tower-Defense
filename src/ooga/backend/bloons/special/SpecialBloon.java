@@ -8,6 +8,8 @@ import ooga.backend.bloons.types.Specials;
 
 public abstract class SpecialBloon extends Bloon {
 
+  private static final String FACTORY_FILE_PATH = "ooga.backend.bloons.factory.";
+
   public SpecialBloon(BloonsType bloonsType, double xPosition, double yPosition,
       double xVelocity, double yVelocity) {
     super(bloonsType, xPosition, yPosition, xVelocity, yVelocity);
@@ -21,8 +23,6 @@ public abstract class SpecialBloon extends Bloon {
       for (int i = 0; i < numBloonsToProduce; i++) {
         try {
           String specialName = special.toString();
-          specialName = specialName.substring(0,1).toUpperCase() +
-              specialName.substring(1).toLowerCase();
           Class<?> specialBloonClass = Class.forName(FACTORY_FILE_PATH + specialName + "BloonsFactory");
           Constructor<?> specialBloonConstructor = specialBloonClass.getConstructor();
           BloonsFactory specialFactory = (BloonsFactory)specialBloonConstructor.newInstance();
