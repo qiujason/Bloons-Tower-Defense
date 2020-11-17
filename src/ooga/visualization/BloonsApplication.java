@@ -10,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -44,6 +45,8 @@ public class BloonsApplication {
   public static final String BACKGROUND_IMAGE = "/gamePhotos/";
   public static final String START_SCREEN_BACKGROUND = "startscreen.png";
   public static final String DEFAULT_LANGUAGE = "English";
+  public static final ResourceBundle LANGUAGES = ResourceBundle
+      .getBundle(BloonsApplication.class.getPackageName() + ".resources.languageList");
 
   private Stage myStage;
   private Scene myScene;
@@ -64,6 +67,7 @@ public class BloonsApplication {
   private final ResourceBundle myBlockMappings = ResourceBundle
       .getBundle(getClass().getPackageName() + ".resources.blockMappings");
   private final Button myLevelStartButton;
+  private ResourceBundle myMenuButtonNames;
   private ResourceBundle myApplicationErrors;
   private String myCurrentLevel;
   private String myCurrentLanguage;
@@ -71,9 +75,13 @@ public class BloonsApplication {
   public BloonsApplication(Button startLevelButton) {
     myLevelStartButton = startLevelButton;
     myCurrentLanguage = DEFAULT_LANGUAGE;
+    myMenuButtonNames = ResourceBundle
+        .getBundle(
+            getClass().getPackageName() + ".resources.languages." + myCurrentLanguage + ".startMenuButtonNames"
+                + myCurrentLanguage);
     myApplicationErrors = ResourceBundle
         .getBundle(
-            getClass().getPackageName() + ".resources." + myCurrentLanguage + ".applicationErrors"
+            getClass().getPackageName() + ".resources.languages." + myCurrentLanguage + ".applicationErrors"
                 + myCurrentLanguage);
   }
 
@@ -88,13 +96,42 @@ public class BloonsApplication {
 
   private void displayStartMenu(BorderPane menu) {
     setBackgroundImage(menu, START_SCREEN_BACKGROUND);
+    HBox buttonGroup = new HBox();
+    buttonGroup.setAlignment(Pos.CENTER);
     Button startButton = new Button();
     startButton.setOnAction(e -> displayLevelSelectScreen());
-    startButton.setText("Start");
-    startButton.setId("Start");
-    BorderPane.setAlignment(startButton, Pos.CENTER);
-    menu.setBottom(startButton);
+    startButton.setText(myMenuButtonNames.getString("Start"));
+    startButton.setId(myMenuButtonNames.getString("Start"));
+    buttonGroup.getChildren().add(startButton);
+    setupLanguageOptions(buttonGroup);
+    BorderPane.setAlignment(buttonGroup, Pos.CENTER);
+    menu.setBottom(buttonGroup);
   }
+
+  private void setupLanguageOptions(HBox buttonGroup){
+    ComboBox<String> languageOptions = new ComboBox<>();
+    languageOptions.setPromptText(myMenuButtonNames.getString("SetLanguage"));
+    for(String language : LANGUAGES.keySet()){
+      languageOptions.getItems().add(language);
+    }
+    languageOptions.setId("LanguageOptions");
+    languageOptions.setOnAction(e -> changeLanguage(languageOptions.getValue()));
+    buttonGroup.getChildren().add(languageOptions);
+  }
+
+  private void changeLanguage(String language){
+    myCurrentLanguage = language;
+    myMenuButtonNames = ResourceBundle
+        .getBundle(
+            getClass().getPackageName() + ".resources.languages." + myCurrentLanguage + ".startMenuButtonNames"
+                + myCurrentLanguage);
+    myApplicationErrors = ResourceBundle
+        .getBundle(
+            getClass().getPackageName() + ".resources.languages." + myCurrentLanguage + ".applicationErrors"
+                + myCurrentLanguage);
+    startApplication(myStage);
+  }
+
 
   private void setBackgroundImage(BorderPane menu, String imageName) {
     Image backgroundImage = null;
@@ -128,6 +165,7 @@ public class BloonsApplication {
 
   private HBox initializeLevelButtons() {
     HBox levelButtons = new HBox();
+    levelButtons.setAlignment(Pos.CENTER);
     Path levels = getLevels();
     if (levels == null || levels.toFile().listFiles() == null) {
       return levelButtons;
