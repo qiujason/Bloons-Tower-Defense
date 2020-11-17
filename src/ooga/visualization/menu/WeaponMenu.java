@@ -12,7 +12,7 @@ public class WeaponMenu extends FlowPane {
 
   private static final String LANGUAGE = "English";
   private final ResourceBundle menuProperties =
-      ResourceBundle.getBundle("ooga.visualization.resources.menu" + LANGUAGE);
+      ResourceBundle.getBundle("ooga.visualization.resources." + LANGUAGE + ".menu" + LANGUAGE);
 
   private static final String UPGRADE_RANGE_TEXT = "RangeUpgradeButton";
   private static final String UPGRADE_RATE_TEXT = "RateUpgradeButton";

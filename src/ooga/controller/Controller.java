@@ -9,8 +9,6 @@ import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.event.Event;
-import javafx.event.EventType;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -80,7 +78,7 @@ public class Controller extends Application {
     Button startLevelButton = new Button();
     startLevelButton.setOnAction(e -> startLevel());
     bloonsApplication = new BloonsApplication(startLevelButton);
-    bloonsApplication.fireInTheHole(primaryStage);
+    bloonsApplication.startApplication(primaryStage);
   }
 
   private void startLevel(){
@@ -89,7 +87,7 @@ public class Controller extends Application {
     initializeBloonWaves();
     startGameEngine();
 
-    bloonsApplication.initializeBloonsApplication(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
+    bloonsApplication.initializeGameObjects(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
         gameEngine.getProjectiles(), myAnimation);
 
     myAnimation.setCycleCount(Timeline.INDEFINITE);
