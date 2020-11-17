@@ -3,7 +3,7 @@
     * Backend: 
         * API for Towers, Balloons
         * API for Layout
-        * AlertHandler
+        * ooga.AlertHandler
     * Frontend:
         * Find a way to visualize everything in the backend
         * Balloon movement (hopefully popping)?
