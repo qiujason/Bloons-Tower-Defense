@@ -4,5 +4,5 @@ import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
 
 public interface ProjectileFactory {
-  Projectile createDart(ProjectileType type, double xPosition, double yPosition, double xVelocity, double yVelocity);
+  Projectile createDart(ProjectileType type, double xPosition, double yPosition, double xVelocity, double yVelocity, double angle);
 }

@@ -1,14 +1,13 @@
 package ooga.backend.towers;
 
-import java.util.List;
 import java.util.ResourceBundle;
 import ooga.backend.API.TowersAPI;
 import ooga.backend.GamePiece;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.collections.GamePieceIterator;
-import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
+import ooga.backend.projectile.ProjectilesCollection;
 import ooga.visualization.AnimationHandler;
 import org.apache.commons.lang3.StringUtils;
 
@@ -18,7 +17,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   private double shootingSpeed;
   private double shootingRestRate;
   private double countRestPeriod;
-  private boolean canShoot;
+  private boolean ifRestPeriod;
   private ProjectileType projectileType;
 
   // if canShoot = true, step function can call shoot method, if not, do not call shoot method
@@ -30,13 +29,15 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     shootingSpeed = myShootingSpeed;
     shootingRestRate = myShootingRestRate * AnimationHandler.FRAMES_PER_SECOND;
     countRestPeriod = 0;
-    canShoot = true;
+    ifRestPeriod = false;
   }
 
   public abstract TowerType getTowerType();
+
   public double getShootingRestRate(){
     return shootingRestRate;
   }
+
   public double getRadius(){
     return radius;
   }
@@ -44,24 +45,21 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   // update canShoot to true after resting period has elapsed
   @Override
   public void update() {
-    if(!canShoot) {
+    if(ifRestPeriod) {
       countRestPeriod++;
-    }
-    if(countRestPeriod >= shootingRestRate){
-      countRestPeriod = 0;
-      canShoot = true;
-    }
-    else{
-      canShoot = false;
+      if(countRestPeriod >= shootingRestRate){
+        countRestPeriod = 0;
+        ifRestPeriod = false;
+      }
     }
   }
 
-  public void updateCanShoot(boolean update){
-    canShoot = update;
+  public void updateIfRestPeriod(boolean update){
+    ifRestPeriod = update;
   }
 
-  public boolean getCanShoot(){
-    return canShoot;
+  public boolean isIfRestPeriod(){
+    return ifRestPeriod;
   }
 
   public double getShootingSpeed(){
@@ -83,7 +81,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     return false;
   }
 
-  public abstract List<Projectile> shoot(BloonsCollection bloonsCollection);
+  public abstract Bloon shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection);
 
   public double getDistance(GamePiece target){
     return Math.sqrt(Math.pow(getXPosition()-target.getXPosition(), 2) + Math.pow(getYPosition()-target.getYPosition(), 2));

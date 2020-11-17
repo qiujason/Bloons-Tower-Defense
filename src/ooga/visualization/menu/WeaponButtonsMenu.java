@@ -14,7 +14,7 @@ import javafx.scene.layout.FlowPane;
 import ooga.backend.towers.TowerType;
 import ooga.controller.TowerMenuInterface;
 
-public class WeaponsMenu extends FlowPane {
+public class WeaponButtonsMenu extends FlowPane {
 
   private TowerMenuInterface controller;
   private List<TowerType> weaponTypeList = Arrays.asList(TowerType.values());
@@ -24,36 +24,41 @@ public class WeaponsMenu extends FlowPane {
   private static final String NAMES = "TowerMonkey";
   private static final String PICTURES = "MonkeyPics";
   private static final String BUTTON_TAG = "Button";
+  private static final String TOWER_COST_DIRECTORY = "towervalues/TowerBuyValues";
+  private static final String DOLLARS = "$";
 
-  private static final Double BUTTON_WIDTH = 150.0;
+  private static final Double BUTTON_MAX_WIDTH = 50.0;
 
   private ResourceBundle typeToName = ResourceBundle.getBundle(PACKAGE + NAMES);
   private ResourceBundle nameToPicture = ResourceBundle.getBundle(PACKAGE + PICTURES);
+  private ResourceBundle towerCost = ResourceBundle.getBundle(TOWER_COST_DIRECTORY);
 
-  public WeaponsMenu(TowerMenuInterface controller){
+  public WeaponButtonsMenu(TowerMenuInterface controller){
     this.controller = controller;
     makeAllWeaponButtons();
-    this.setOrientation(Orientation.VERTICAL);
+    this.setPrefWrapLength(200);
+    this.setOrientation(Orientation.HORIZONTAL);
   }
 
   private void makeAllWeaponButtons(){
     for(TowerType type : weaponTypeList){
-      this.getChildren().add(makeWeaponButton(typeToName.getString(type.name()),
+      this.getChildren().add(makeWeaponButton(type,
           event -> controller.buyTower(type)));
     }
   }
 
-  private Button makeWeaponButton(String towerName, EventHandler<ActionEvent> handler){
+  private Button makeWeaponButton(TowerType type, EventHandler<ActionEvent> handler){
+    String towerName = typeToName.getString(type.name());
     String imageDirectory = nameToPicture.getString(towerName + BUTTON_TAG);
     Image towerImage = makeImage(imageDirectory);
     ImageView imageView = new ImageView(towerImage);
-    imageView.setFitHeight(40); //magic
-    imageView.setFitWidth(40); //magic
-    Button button = new Button(towerName,imageView);
+    imageView.setFitWidth(25);
+    imageView.setFitHeight(25);
+    Button button = new Button("",imageView);
     button.setOnAction(handler);
     button.setId(towerName);
-    button.setMinWidth(BUTTON_WIDTH);
-    button.setMaxHeight(50);
+    button.setMinHeight(25);
+    button.setMinWidth(50);
     return button;
   }
 

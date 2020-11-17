@@ -7,15 +7,16 @@ import ooga.backend.projectile.ProjectileType;
 
 public class SingleProjectileFactory implements ProjectileFactory {
 
+  public static final String DART_PATH = "ooga.backend.projectile.";
+
   @Override
   public Projectile createDart(ProjectileType type, double xPosition, double yPosition,
-      double xVelocity, double yVelocity) {
-    String DART_PATH = "ooga.backend.projectile.";
+      double xVelocity, double yVelocity, double angle) {
     try {
       Class<?> dartClass = Class.forName(DART_PATH + type.toString());
       Constructor<?> dartConstructor = dartClass
-          .getDeclaredConstructor(ProjectileType.class, double.class, double.class, double.class, double.class);
-      return (Projectile) dartConstructor.newInstance(type, xPosition, yPosition, xVelocity, yVelocity);
+          .getDeclaredConstructor(ProjectileType.class, double.class, double.class, double.class, double.class, double.class);
+      return (Projectile) dartConstructor.newInstance(type, xPosition, yPosition, xVelocity, yVelocity, angle);
     } catch (Exception e) {
       throw new ConfigurationException("No dart class found for created dart.");
     }

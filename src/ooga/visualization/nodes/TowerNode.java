@@ -4,14 +4,16 @@ import java.net.URISyntaxException;
 import java.util.ResourceBundle;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import ooga.backend.towers.TowerType;
+import ooga.controller.TowerMenuInterface;
+import ooga.visualization.menu.WeaponMenu;
 
 public class TowerNode extends GamePieceNode{
 
   private TowerType towerType;
-
   private WeaponRange rangeDisplay;
+  private Boolean rangeBoolean;
+  private WeaponMenu towerMenu;
 
   private static final String PACKAGE = "btd_towers/";
   private static final String NAMES = "TowerMonkey";
@@ -23,8 +25,21 @@ public class TowerNode extends GamePieceNode{
   public TowerNode(TowerType towerType, double xPosition, double yPosition, double radius){
     super(xPosition, yPosition, radius);
     this.towerType = towerType;
-    this.setFill(findImage(typeToName.getString(towerType.name())));
-    rangeDisplay = new WeaponRange(xPosition, yPosition, towerType.getRadius());
+    this.setFill(findImage());
+    rangeDisplay = new WeaponRange(xPosition, yPosition, 0);
+    rangeBoolean = true;
+  }
+
+  public void setWeaponRange(double blockSize){
+    rangeDisplay.setRadius(towerType.getRadius() * blockSize);
+  }
+
+  public void makeTowerMenu(TowerMenuInterface controller){
+    towerMenu = new WeaponMenu(this, controller);
+  }
+
+  public WeaponMenu getTowerMenu(){
+    return towerMenu;
   }
 
   public WeaponRange getRangeDisplay(){
@@ -35,24 +50,25 @@ public class TowerNode extends GamePieceNode{
     return towerType;
   }
 
+  public Boolean rangeShown(){
+    return rangeBoolean;
+  }
+
   public void hideRangeDisplay(){
     rangeDisplay.makeInvisible();
+    rangeBoolean = false;
   }
 
   public void showRangeDisplay(){
     rangeDisplay.makeVisible();
+    rangeBoolean = true;
   }
 
   @Override
   public ImagePattern findImage(){
-    return null;
-  }
-
-  @Override
-  public ImagePattern findImage(String towerName){
     Image towerImage = null;
     try {
-      towerImage = new Image(String.valueOf(getClass().getResource(nameToPicture.getString(towerName)).toURI()));
+      towerImage = new Image(String.valueOf(getClass().getResource(nameToPicture.getString(typeToName.getString(towerType.name()))).toURI()));
     } catch (
         URISyntaxException e) {
       e.printStackTrace();

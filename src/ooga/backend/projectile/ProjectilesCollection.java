@@ -47,4 +47,9 @@ public class ProjectilesCollection implements GamePieceCollection<Projectile> {
   public GamePieceIterator<Projectile> createIterator() {
     return new GamePieceIterator<>(projectiles);
   }
+
+  @Override
+  public int size(){
+    return projectiles.size();
+  }
 }

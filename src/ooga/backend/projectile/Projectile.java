@@ -5,12 +5,16 @@ public abstract class Projectile extends GamePiece {
 
   private double xVelocity;
   private double yVelocity;
-  private ProjectileType type;
+  private final double angle;
+  private final ProjectileType type;
 
-  public Projectile(ProjectileType type, double xPosition, double yPosition, double xVelocity, double yVelocity){
+
+
+  public Projectile(ProjectileType type, double xPosition, double yPosition, double xVelocity, double yVelocity, double angle){
     super(xPosition, yPosition);
     this.xVelocity = xVelocity;
     this.yVelocity = yVelocity;
+    this.angle = angle;
     this.type = type;
   }
 
@@ -22,7 +26,7 @@ public abstract class Projectile extends GamePiece {
     return type.getRadius();
   }
 
-  public void updatePosition() {
+  private void updatePosition() {
     setXPosition(getXPosition() + xVelocity);
     setYPosition(getYPosition() + yVelocity);
   }
@@ -37,7 +41,7 @@ public abstract class Projectile extends GamePiece {
 
   @Override
   public void update() {
-
+    updatePosition();
   }
 
   public double getXVelocity(){
@@ -46,6 +50,10 @@ public abstract class Projectile extends GamePiece {
 
   public double getYVelocity(){
     return yVelocity;
+  }
+
+  public double getAngle() {
+    return angle;
   }
 
 }

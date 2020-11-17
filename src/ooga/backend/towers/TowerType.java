@@ -3,9 +3,10 @@ package ooga.backend.towers;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+
 public enum TowerType {
 
-  SingleProjectileShooter(75, 5, 15, true),
+  SingleProjectileShooter(3, 5, 3, true),
   MultiProjectileShooter(50, 10, 10, false),
   SpreadProjectileShooter(75, 20, 20, true),
   UnlimitedRangeProjectileShooter(150, 5, 10, true),

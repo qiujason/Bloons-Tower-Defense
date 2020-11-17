@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 class SuperSpeedProjectileShooterTest {
 
   TowerFactory towerFactory = new SingleTowerFactory();
-  SingleShotTower testTower = (SingleShotTower)
+  SuperSpeedProjectileShooter testTower = (SuperSpeedProjectileShooter)
       towerFactory.createTower(TowerType.SuperSpeedProjectileShooter, 0,0);
 
   @Test

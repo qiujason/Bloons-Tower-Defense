@@ -1,12 +1,11 @@
 package ooga.backend.towers.singleshottowers;
 
-import java.util.ArrayList;
-import java.util.List;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
+import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.projectile.factory.ProjectileFactory;
 import ooga.backend.projectile.factory.SingleProjectileFactory;
 import ooga.backend.towers.ShootingChoice;
@@ -14,7 +13,7 @@ import ooga.backend.towers.Tower;
 
 public abstract class SingleShotTower extends Tower {
 
-  private static final ShootingChoice defaultShootingChoice = ShootingChoice.ClosestBloon;
+  private static final ShootingChoice defaultShootingChoice = ShootingChoice.FirstBloon;
 
   private ShootingChoice shootingChoice;
 
@@ -37,9 +36,9 @@ public abstract class SingleShotTower extends Tower {
   public Bloon getTarget(BloonsCollection bloonsCollection){
     return switch (getShootingChoice()) {
       case StrongestBloon -> findStrongestBloon(bloonsCollection);
-      case FirstBloon -> findFirstBloon(bloonsCollection);
+      case ClosestBloon -> findClosestBloon(bloonsCollection);
       case LastBloon -> findLastBloon(bloonsCollection);
-      default -> findClosestBloon(bloonsCollection);
+      default -> findFirstBloon(bloonsCollection);
     };
   }
 
@@ -59,6 +58,7 @@ public abstract class SingleShotTower extends Tower {
         closestBloon = bloon;
       }
     }
+
     return closestBloon;
   }
 
@@ -116,28 +116,38 @@ public abstract class SingleShotTower extends Tower {
 
   public double findShootXVelocity(Bloon target){
     double distance = getDistance(target);
-    return (getXPosition()-target.getXPosition())/distance*getShootingSpeed();
+    return (target.getXPosition()-this.getXPosition())/distance*getShootingSpeed()/10;
   }
 
   public double findShootYVelocity(Bloon target){
     double distance = getDistance(target);
-    return (getYPosition()-target.getYPosition())/distance*getShootingSpeed();
+    return (target.getYPosition()-this.getYPosition())/distance*getShootingSpeed()/10;
   }
 
   @Override
-  public List<Projectile> shoot(BloonsCollection bloonsCollection) {
-    updateCanShoot(false);
-    List<Projectile> shot = new ArrayList<>();
+  public Bloon shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection) {
     if(checkBalloonInRange(bloonsCollection)){
       Bloon target = getTarget(bloonsCollection);
       ProjectileFactory projectileFactory = new SingleProjectileFactory();
       double projectileXVelocity = findShootXVelocity(target);
       double projectileYVelocity = findShootYVelocity(target);
-      shot.add(
-          projectileFactory.createDart(getProjectileType(), getXPosition(),
-              getYPosition(), projectileXVelocity, projectileYVelocity));
+      Projectile p =projectileFactory.createDart(getProjectileType(), this.getXPosition(),
+          this.getYPosition(), projectileXVelocity, projectileYVelocity, findAngle(this, target));
+      projectilesCollection.add(p);
+      updateIfRestPeriod(true);
+      return target;
     }
-    return shot;
+    return null;
+  }
+
+  public double findAngle(Tower tower, Bloon bloon){
+    double angle = Math.toDegrees(
+        Math.asin((bloon.getXPosition() - tower.getXPosition()) / tower.getDistance(bloon)));
+    if (bloon.getYPosition() < tower.getYPosition()) {
+      return angle;
+    } else {
+      return 180 - angle;
+    }
   }
 
 }

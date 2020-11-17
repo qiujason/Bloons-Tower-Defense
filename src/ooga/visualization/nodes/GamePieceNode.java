@@ -28,8 +28,6 @@ public abstract class GamePieceNode extends Circle {
 
   public abstract ImagePattern findImage();
 
-  public abstract ImagePattern findImage(String name);
-
   public double getXPosition() {
     return xPosition;
   }

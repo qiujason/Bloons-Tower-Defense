@@ -2,6 +2,7 @@ package ooga.backend.readers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
 import java.util.Map;
 import ooga.backend.towers.TowerType;
 import org.junit.jupiter.api.Test;
@@ -9,7 +10,7 @@ import org.junit.jupiter.api.Test;
 class TowerValueReaderTest {
 
   @Test
-  void getTowerValueMap() {
+  void getTowerValueMap() throws IOException {
     TowerValueReader towerValueReader = new TowerValueReader("towervalues/TowerBuyValues.properties");
     Map<TowerType, Integer> towerValueMap = towerValueReader.getMap();
     assertEquals(250, towerValueMap.get(TowerType.SingleProjectileShooter));
@@ -19,7 +20,7 @@ class TowerValueReaderTest {
   }
 
   @Test
-  void testGetTowerType() {
+  void testGetTowerType() throws IOException {
     TowerValueReader towerValueReader = new TowerValueReader("towervalues/TowerBuyValues.properties");
     assertEquals(TowerType.SingleProjectileShooter, towerValueReader.getTowerType("SingleProjectileShooter"));
     assertEquals(TowerType.MultiProjectileShooter, towerValueReader.getTowerType("MultiProjectileShooter"));

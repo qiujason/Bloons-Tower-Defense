@@ -6,7 +6,8 @@ public enum ProjectileType {
   FreezeTargetProjectile(0),
   CamoTargetProjectile(0);
 
-  double radius;
+  private final double radius;
+
   ProjectileType(double radius){
     this.radius = radius;
   }

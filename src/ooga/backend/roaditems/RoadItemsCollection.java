@@ -46,4 +46,9 @@ public class RoadItemsCollection implements GamePieceCollection<RoadItem> {
   public GamePieceIterator<RoadItem> createIterator() {
     return new GamePieceIterator<>(roadItems);
   }
+
+  @Override
+  public int size(){
+    return roadItems.size();
+  }
 }
