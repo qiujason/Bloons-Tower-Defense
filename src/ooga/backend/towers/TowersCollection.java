@@ -47,4 +47,9 @@ public class TowersCollection implements GamePieceCollection<Tower> {
     return new GamePieceIterator<>(towers);
   }
 
+  @Override
+  public int size(){
+    return towers.size();
+  }
+
 }

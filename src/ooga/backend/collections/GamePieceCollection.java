@@ -14,4 +14,6 @@ public interface GamePieceCollection<T extends GamePiece> {
 
   GamePieceIterator<T> createIterator();
 
+  int size();
+
 }

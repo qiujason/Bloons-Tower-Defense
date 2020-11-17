@@ -5,12 +5,16 @@ public abstract class Projectile extends GamePiece {
 
   private double xVelocity;
   private double yVelocity;
+  private double angle;
   private ProjectileType type;
 
-  public Projectile(ProjectileType type, double xPosition, double yPosition, double xVelocity, double yVelocity){
+
+
+  public Projectile(ProjectileType type, double xPosition, double yPosition, double xVelocity, double yVelocity, double angle){
     super(xPosition, yPosition);
     this.xVelocity = xVelocity;
     this.yVelocity = yVelocity;
+    this.angle = angle;
     this.type = type;
   }
 
@@ -46,6 +50,10 @@ public abstract class Projectile extends GamePiece {
 
   public double getYVelocity(){
     return yVelocity;
+  }
+
+  public double getAngle() {
+    return angle;
   }
 
 }
