@@ -1,12 +1,15 @@
 package ooga.visualization;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import ooga.backend.bloons.Bloon;
@@ -47,11 +50,6 @@ public class AnimationHandler {
   private Map<Tower, TowerNode> myTowersInGame;
   private Map<Projectile, ProjectileNode> myProjectilesInGame;
   private Map<Tower, Bloon> myShootingTargets;
-  private ProjectileFactory myProjectileFactory = new SingleProjectileFactory();
-
-  private Map<BloonNode, Double> myCircleSidesX;
-  private Map<BloonNode, Double> myCircleSidesY;
-
 
   public AnimationHandler(Layout layout, Group levelLayout, BloonsCollection bloons,
       TowersCollection towers, ProjectilesCollection projectiles, double startingX,
@@ -75,19 +73,14 @@ public class AnimationHandler {
     myStartingX = startingX;
     myStartingY = startingY;
     myBlockSize = blockSize;
-
-    myCircleSidesX = new HashMap<>();
-    myCircleSidesY = new HashMap<>();
-
   }
 
   public void addBloonstoGame(){
     GamePieceIterator<Bloon> iterator = myBloons.createIterator();
     while(iterator.hasNext()) {
       Bloon bloonToSpawn = iterator.next();
-      if (!myBloonsInGame.containsKey(bloonToSpawn)) {
+      if (!myBloonsInGame.containsKey(bloonToSpawn) && !bloonToSpawn.isDead()) {
         BloonNode bloonNode = new BloonNode(bloonToSpawn.getBloonsType(), myStartingX, myStartingY, myBlockSize / 2.5);
-
         myBloonsInGame.put(bloonToSpawn, bloonNode);
         myLevelLayout.getChildren().add(bloonNode);
       }
@@ -116,6 +109,7 @@ public class AnimationHandler {
     animateTowers();
     animateProjectiles();
     animateBloons();
+    animateShotBloon();
   }
 
 
@@ -126,8 +120,6 @@ public class AnimationHandler {
       if (bloon.isDead()){
         myLevelLayout.getChildren().remove(bloonNode);
       }
-      myCircleSidesX.putIfAbsent(bloonNode, 0.0);
-      myCircleSidesY.putIfAbsent(bloonNode, 0.0);
       bloonNode.setXPosition(bloon.getXPosition() * myBlockSize);
       bloonNode.setYPosition(bloon.getYPosition() * myBlockSize);
     }
@@ -158,36 +150,19 @@ public class AnimationHandler {
 
   private void animateProjectiles() {
     addProjectilestoGame();
-    removeDeadProjectiles();
+    ProjectilesCollection projectileToRemove = new ProjectilesCollection();
     for(Projectile projectile : myProjectilesInGame.keySet()){
       ProjectileNode projectileNode = myProjectilesInGame.get(projectile);
-     //todo: REMOVE NONEXISITNG PROJECTIELS
       projectileNode.setXPosition(projectile.getXPosition()*myBlockSize);
       projectileNode.setYPosition(projectile.getYPosition()*myBlockSize);
-      myLevelLayout.getChildren().add(projectileNode);
-
+      //todo: REMOVE NONEXISITNG PROJECTILES: DONE
+      if(checkOutOfBoundsProjectile(projectileNode)){
+        myProjectiles.remove(projectile);
+        projectileToRemove.add(projectile);
+        myLevelLayout.getChildren().remove(projectileNode);
+      }
     }
-  }
-
-  private void removeDeadProjectiles(){
-    removeProjectileNodes();
-    recreateProjectileMap();
-  }
-
-  public void removeProjectileNodes(){
-    for (ProjectileNode projectileNode : myProjectilesInGame.values()){
-      myLevelLayout.getChildren().remove(projectileNode);
-    }
-  }
-
-  private void recreateProjectileMap(){
-    Map<Projectile, ProjectileNode> updatedProjectilesInGame = new HashMap<>();
-    GamePieceIterator<Projectile> projectileIterator= myProjectiles.createIterator();
-    while(projectileIterator.hasNext()){
-      Projectile currentProjectile = projectileIterator.next();
-      updatedProjectilesInGame.put(currentProjectile, myProjectilesInGame.get(currentProjectile));
-    }
-    myProjectilesInGame = updatedProjectilesInGame;
+    removeShotProjectiles(projectileToRemove);
   }
 
 
@@ -198,8 +173,60 @@ public class AnimationHandler {
         || projectile.getCenterY() >= BloonsApplication.GAME_HEIGHT;
   }
 
+  private void animateShotBloon(){
+    BloonsCollection bloonsToRemove = new BloonsCollection();
+    ProjectilesCollection projectilesToRemove = new ProjectilesCollection();
+    BloonsCollection bloonsToAdd = new BloonsCollection();
+    for(Bloon bloon : myBloonsInGame.keySet()){
+      for(Projectile projectile : myProjectilesInGame.keySet()){
+        if(checkBloonCollision(projectile, bloon)){
+          Bloon[] spawnedBloons = bloon.shootBloon();
+          //double offset = myBlockSize/8;
+          for(int i = 0; i < spawnedBloons.length; i++){
+            bloonsToAdd.add(spawnedBloons[i]);
+          }
+          bloon.setDead();
+          bloonsToRemove.add(bloon);
+          projectilesToRemove.add(projectile);
+        }
+      }
+    }
+    spawnBloons(bloonsToAdd);
+    removeShotBloon(bloonsToRemove);
+    removeShotProjectiles(projectilesToRemove);
+  }
+
+  private void spawnBloons(BloonsCollection bloonsToAdd){
+    GamePieceIterator<Bloon> iterator = bloonsToAdd.createIterator();
+    while(iterator.hasNext()){
+      Bloon toAdd = iterator.next();
+      myBloons.add(toAdd);
+    }
+    addBloonstoGame();
+  }
+
+  private void removeShotBloon(BloonsCollection bloonsToRemove){
+    GamePieceIterator<Bloon> iterator = bloonsToRemove.createIterator();
+    while(iterator.hasNext()){
+      Bloon toRemove = iterator.next();
+      myLevelLayout.getChildren().remove(myBloonsInGame.get(toRemove));
+      myBloonsInGame.remove(toRemove);
+      myBloons.remove(toRemove);
+    }
+  }
+
+  private void removeShotProjectiles(ProjectilesCollection projectilesToRemove){
+    GamePieceIterator<Projectile> projectileIterator = projectilesToRemove.createIterator();
+    while(projectileIterator.hasNext()){
+      Projectile toRemove = projectileIterator.next();
+      myLevelLayout.getChildren().remove(myProjectilesInGame.get(toRemove));
+      myProjectilesInGame.remove(toRemove);
+      myProjectiles.remove(toRemove);
+    }
+  }
+
   private boolean checkBloonCollision(Projectile projectile, Bloon bloon) {
-    Circle projectileInGame = (Circle) myProjectilesInGame.get(projectile);
+    Circle projectileInGame = myProjectilesInGame.get(projectile);
     Circle bloonInGame = myBloonsInGame.get(bloon);
     return projectileInGame.getBoundsInParent().intersects(bloonInGame.getBoundsInParent());
   }

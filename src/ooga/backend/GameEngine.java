@@ -121,9 +121,8 @@ public class GameEngine implements GameEngineAPI {
     while(towerIterator.hasNext()){
       Tower currentTower = towerIterator.next();
       currentTower.update();
-      if(!currentTower.isRestPeriodActive()){
+      if(!currentTower.isIfRestPeriod()){
         shootingTargets.put(currentTower,currentTower.shoot(currentBloonWave, projectiles));
-
       }
     }
   }
@@ -137,15 +136,12 @@ public class GameEngine implements GameEngineAPI {
   }
 
   private void removeOffScreenProjectiles(){
-    System.out.println("Projectiles: " + projectiles.size());
     GamePieceIterator<Projectile> projectileIterator = projectiles.createIterator();
     while (projectileIterator.hasNext()){
       Projectile currentProjectile = projectileIterator.next();
-      if (currentProjectile.getXPosition() < 0.5 || currentProjectile.getXPosition() > layout.getWidth()-.5
-          || currentProjectile.getYPosition() < 0.5 || currentProjectile.getYPosition() > layout.getHeight()-.5){
-        System.out.println("true");
-        System.out.println("Projectiles: " + projectiles.size());
 
+      if (currentProjectile.getXPosition() < 0 || currentProjectile.getXPosition() > layout.getWidth()
+          || currentProjectile.getYPosition() < 0 || currentProjectile.getYPosition() > layout.getHeight()){
         projectiles.remove(currentProjectile);
       }
     }
