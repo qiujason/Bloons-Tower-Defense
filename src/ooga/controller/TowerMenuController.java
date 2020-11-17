@@ -1,6 +1,8 @@
 package ooga.controller;
 
 import ooga.backend.bank.Bank;
+import ooga.backend.bloons.Bloon;
+import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.TowersCollection;
@@ -11,7 +13,7 @@ public class TowerMenuController implements TowerMenuInterface {
 
   private TowersCollection towers;
   private Bank bank;
-  private static final double towerDefaultPosition = 0;
+  private static final double towerDefaultPosition = -1;
 
   public TowerMenuController(TowersCollection towers, Bank bank){
     this.towers = towers;
@@ -21,10 +23,13 @@ public class TowerMenuController implements TowerMenuInterface {
   @Override
   public void buyTower(TowerType towerType) {
     Boolean bought = bank.buyTower(towerType);
-    if(bought){
-      TowerFactory towerFactory = new SingleTowerFactory();
-      Tower tower = towerFactory.createTower(towerType, towerDefaultPosition, towerDefaultPosition);
-      towers.add(tower);
+    if(bought) {
+      if (canMakeTower()) {
+        TowerFactory towerFactory = new SingleTowerFactory();
+        Tower tower = towerFactory
+            .createTower(towerType, towerDefaultPosition, towerDefaultPosition);
+        towers.add(tower);
+      }
     }
     else{
       System.out.println("make more money cuh");
@@ -49,5 +54,17 @@ public class TowerMenuController implements TowerMenuInterface {
 
   @Override
   public void setTargetingOption(){
+  }
+
+  private Boolean canMakeTower() {
+    Boolean canMake = true;
+    GamePieceIterator<Tower> iterator = towers.createIterator();
+    while (iterator.hasNext()) {
+      Tower checkTower = iterator.next();
+      if (!checkTower.checkIfPlaced()) {
+        canMake = false;
+      }
+    }
+    return canMake;
   }
 }
