@@ -101,17 +101,15 @@ public class BloonsApplication {
     HBox buttonGroup = new HBox();
     buttonGroup.setAlignment(Pos.CENTER);
 
-    Button startButton = new Button();
+    Button startButton = new Button(myMenuButtonNames.getString("Start"));
     startButton.setOnAction(e -> displayLevelSelectScreen());
-    startButton.setText(myMenuButtonNames.getString("Start"));
     startButton.setId("Start");
     buttonGroup.getChildren().add(startButton);
 
     setupLanguageOptions(buttonGroup);
 
-    Button newGameWindowButton = new Button();
+    Button newGameWindowButton = new Button(myMenuButtonNames.getString("NewGameWindow"));
     newGameWindowButton.setId("NewGameWindowButton");
-    newGameWindowButton.setText(myMenuButtonNames.getString("NewGameWindow"));
     newGameWindowButton.setOnAction(e -> {
       Controller newWindow = new Controller();
       newWindow.start(new Stage());
@@ -184,12 +182,14 @@ public class BloonsApplication {
       return levelButtons;
     }
     for (File level : levels.toFile().listFiles()) {
-      Button levelButton = new Button();
-      levelButton.setText(level.getName().split("\\.")[0]);
+      Button levelButton = new Button(level.getName().split("\\.")[0]);
       levelButton.setOnAction(e -> loadLevel(level.getName()));
       levelButton.setId(level.getName().split("\\.")[0]);
       levelButtons.getChildren().add(levelButton);
     }
+    Button backButton = new Button(myMenuButtonNames.getString("ReturnToStart"));
+    backButton.setOnAction(e -> startApplication(myStage));
+    levelButtons.getChildren().add(backButton);
     return levelButtons;
   }
 
