@@ -52,4 +52,9 @@ public class ProjectilesCollection implements GamePieceCollection<Projectile> {
   public int size(){
     return projectiles.size();
   }
+
+  @Override
+  public boolean contains(Projectile projectile) {
+    return projectiles.contains(projectile);
+  }
 }

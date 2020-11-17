@@ -16,4 +16,6 @@ public interface GamePieceCollection<T extends GamePiece> {
 
   int size();
 
+  boolean contains(T gamePiece);
+
 }

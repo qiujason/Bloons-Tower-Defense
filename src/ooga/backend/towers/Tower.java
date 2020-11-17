@@ -70,7 +70,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     GamePieceIterator<Bloon> iterator = bloonsCollection.createIterator();
     while(iterator.hasNext()){
       Bloon bloon = iterator.next();
-      if(ifCamoBloon(bloon)){
+      if(ifCamoBloon(bloon) || bloon.isDead()){
         continue;
       }
       double distance = getDistance(bloon);
