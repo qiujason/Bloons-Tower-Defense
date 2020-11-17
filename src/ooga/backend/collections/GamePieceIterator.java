@@ -31,18 +31,6 @@ public class GamePieceIterator<T extends GamePiece> implements Iterator<T> {
     return null;
   }
 
-  public void remove(T element) {
-    for (int i = 0; i < collection.size(); i++) {
-      if (collection.get(i) == element) {
-        collection.remove(collection.get(i));
-        if (i < index) {
-          index = Math.max(1, index)-1; // ignore warning: floors index at 0
-        }
-        break;
-      }
-    }
-  }
-
   public void reset() {
     index = 0;
   }

@@ -5,15 +5,16 @@ import ooga.backend.API.BloonsAPI;
 import ooga.backend.GamePiece;
 import ooga.backend.bloons.factory.BasicBloonsFactory;
 import ooga.backend.bloons.types.BloonsType;
-import ooga.backend.bloons.types.Specials;
 
 public class Bloon extends GamePiece implements BloonsAPI {
+
+  public static final String FACTORY_FILE_PATH = "ooga.backend.bloons.factory.";
 
   private BloonsType bloonsType;
   private double xVelocity;
   private double yVelocity;
   private double distanceTraveled;
-  private double relativeSpeed;
+  private final double relativeSpeed;
 
   public Bloon(BloonsType bloonsType, double xPosition, double yPosition, double xVelocity, double yVelocity) {
     super(xPosition, yPosition);
@@ -29,6 +30,11 @@ public class Bloon extends GamePiece implements BloonsAPI {
   }
 
   @Override
+  public void update() {
+    updatePosition();
+  }
+
+  @Override
   public void setXVelocity(double newXVelocity) {
     xVelocity = newXVelocity;
   }
@@ -36,28 +42,6 @@ public class Bloon extends GamePiece implements BloonsAPI {
   @Override
   public void setYVelocity(double newYVelocity) {
     yVelocity = newYVelocity;
-  }
-
-  @Override
-  public Bloon[] shootBloon() {
-    BloonsType nextBloonsType = getBloonsType().chain().getNextBloonsType(bloonsType);
-    int numBloonsProduced = getBloonsType().chain().getNumNextBloons(bloonsType);
-
-    Bloon[] bloons = new Bloon[numBloonsProduced];
-    BasicBloonsFactory factory = new BasicBloonsFactory();
-    for (int i = 0; i < numBloonsProduced; i++) {
-      bloons[i] = factory.createBloon(nextBloonsType, getXPosition(), getYPosition(), xVelocity, yVelocity);
-    }
-    return bloons;
-  }
-
-  @Override
-  public void update() {
-    updatePosition();
-  }
-
-  public double getDistanceTraveled() {
-    return distanceTraveled;
   }
 
   public double getXVelocity() {
@@ -69,8 +53,34 @@ public class Bloon extends GamePiece implements BloonsAPI {
   }
 
   @Override
+  public Bloon[] shootBloon() {
+    int numBloonsToProduce = getBloonsType().chain().getNumNextBloons(bloonsType);
+
+    Bloon[] bloons = new Bloon[numBloonsToProduce];
+    BasicBloonsFactory factory = new BasicBloonsFactory();
+    for (int i = 0; i < numBloonsToProduce; i++) {
+      bloons[i] = factory.createNextBloon(this);
+    }
+    return bloons;
+  }
+
+  @Override
+  public void setDead(){
+    setBloonsType(bloonsType.chain().getBloonsTypeRecord("DEAD"));
+  }
+
+  @Override
+  public boolean isDead(){
+    return bloonsType == bloonsType.chain().getBloonsTypeRecord("DEAD");
+  }
+
+  @Override
   public String toString(){
     return "" + bloonsType.name();
+  }
+
+  protected double getDistanceTraveled() {
+    return distanceTraveled;
   }
 
   protected void setBloonsType(BloonsType type) {
@@ -87,15 +97,4 @@ public class Bloon extends GamePiece implements BloonsAPI {
     updateDistanceTraveled();
   }
 
-  public void setDead(){
-    setBloonsType(bloonsType.chain().getBloonsTypeRecord("DEAD"));
-  }
-
-  public boolean isDead(){
-    return bloonsType == bloonsType.chain().getBloonsTypeRecord("DEAD");
-  }
-
-  public boolean isCamo(){
-    return getBloonsType().specials().contains(Specials.CAMO);
-  }
 }
