@@ -147,6 +147,17 @@ public class AnimationHandler {
         rotateTower(currentTower, myShootingTargets.get(currentTower));
       }
     }
+
+    GamePieceIterator<Bloon> iterator = myBloons.createIterator();
+    while(iterator.hasNext()) {
+      Bloon bloonToSpawn = iterator.next();
+      if (!myBloonsInGame.containsKey(bloonToSpawn)) {
+        BloonNode bloonNode = new BloonNode(bloonToSpawn.getBloonsType(), myStartingX, myStartingY, myBlockSize / 2.5);
+
+        myBloonsInGame.put(bloonToSpawn, bloonNode);
+        myLevelLayout.getChildren().add(bloonNode);
+      }
+    }
   }
 
 

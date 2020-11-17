@@ -11,6 +11,7 @@ public class TowerMenuController implements TowerMenuInterface {
 
   private TowersCollection towers;
   private Bank bank;
+  private static final double towerDefaultPosition = 0;
 
   public TowerMenuController(TowersCollection towers, Bank bank){
     this.towers = towers;
@@ -22,7 +23,7 @@ public class TowerMenuController implements TowerMenuInterface {
     Boolean bought = bank.buyTower(towerType);
     if(bought){
       TowerFactory towerFactory = new SingleTowerFactory();
-      Tower tower = towerFactory.createTower(towerType, 0, 0);
+      Tower tower = towerFactory.createTower(towerType, towerDefaultPosition, towerDefaultPosition);
       towers.add(tower);
     }
     else{

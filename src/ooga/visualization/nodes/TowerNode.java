@@ -4,15 +4,16 @@ import java.net.URISyntaxException;
 import java.util.ResourceBundle;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
+import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.controller.TowerMenuInterface;
 import ooga.visualization.menu.WeaponMenu;
 
 public class TowerNode extends GamePieceNode{
 
+  private Tower tower;
   private TowerType towerType;
   private WeaponRange rangeDisplay;
-  private Boolean rangeBoolean;
   private WeaponMenu towerMenu;
 
   private static final String PACKAGE = "btd_towers/";
@@ -22,16 +23,16 @@ public class TowerNode extends GamePieceNode{
   private ResourceBundle typeToName = ResourceBundle.getBundle(PACKAGE + NAMES);
   private ResourceBundle nameToPicture = ResourceBundle.getBundle(PACKAGE + PICTURES);
 
-  public TowerNode(TowerType towerType, double xPosition, double yPosition, double radius){
+  public TowerNode(Tower tower, double xPosition, double yPosition, double radius){
     super(xPosition, yPosition, radius);
-    this.towerType = towerType;
+    this.tower = tower;
+    this.towerType = tower.getTowerType();
     this.setFill(findImage());
     rangeDisplay = new WeaponRange(xPosition, yPosition, towerType.getRadius());
-    rangeBoolean = true;
   }
 
   public void makeTowerMenu(TowerMenuInterface controller){
-    towerMenu = new WeaponMenu(this, controller);
+    towerMenu = new WeaponMenu(tower, controller);
   }
 
   public WeaponMenu getTowerMenu(){
@@ -46,18 +47,12 @@ public class TowerNode extends GamePieceNode{
     return towerType;
   }
 
-  public Boolean rangeShown(){
-    return rangeBoolean;
-  }
-
   public void hideRangeDisplay(){
     rangeDisplay.makeInvisible();
-    rangeBoolean = false;
   }
 
   public void showRangeDisplay(){
     rangeDisplay.makeVisible();
-    rangeBoolean = true;
   }
 
   @Override
