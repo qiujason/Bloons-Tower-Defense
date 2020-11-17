@@ -200,4 +200,8 @@ public class Controller extends Application {
     this.shootingTargets = shootingTargets;
   }
 
+  public BloonsApplication getMyBloonsApplication(){
+    return bloonsApplication;
+  }
+
 }

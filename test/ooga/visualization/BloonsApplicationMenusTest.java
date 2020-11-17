@@ -6,7 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
+import java.util.ResourceBundle;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import ooga.controller.Controller;
@@ -20,14 +22,22 @@ public class BloonsApplicationMenusTest extends DukeApplicationTest {
 //  public static final String LEVEL_FILE = "level1.csv";
 //  public static final String BLOONS_TYPE_PATH = "bloon_resources/Bloons";
 
+  private BloonsApplication myBloonsApplication;
   private Button myStartButton;
+  private Button myNewWindowButton;
+  private ComboBox<String> myLanguages;
   private File[] myLevels;
+  private ResourceBundle myMenuButtonNames;
 
   @Override
   public void start(Stage testStage) {
     Controller myController = new Controller();
     myController.start(testStage);
+    myBloonsApplication = myController.getMyBloonsApplication();
+    myMenuButtonNames = myBloonsApplication.getMenuButtonNames();
     myStartButton = lookup("#Start").query();
+    myLanguages = lookup("#LanguageOptions").query();
+    myNewWindowButton = lookup("#NewGameWindowButton").query();
     try {
       myLevels = Paths.get(getClass().getClassLoader().getResource(LAYOUTS_PATH).toURI()).toFile()
           .listFiles();
@@ -48,7 +58,9 @@ public class BloonsApplicationMenusTest extends DukeApplicationTest {
 
   @Test
   public void testStartMenu() {
-    assertEquals("Start", myStartButton.getText());
+    assertEquals(myMenuButtonNames.getString("Start"), myStartButton.getText());
+    assertEquals(myMenuButtonNames.getString("SetLanguage"), myLanguages.getPromptText());
+    assertEquals(myMenuButtonNames.getString("NewGameWindow"), myNewWindowButton.getText());
   }
 
   @Test
@@ -58,6 +70,24 @@ public class BloonsApplicationMenusTest extends DukeApplicationTest {
       Button levelButton = lookup("#" + getLevelName(level)).query();
       assertEquals(level.getName().split("\\.")[0], levelButton.getText());
     }
+  }
+
+  @Test
+  public void testLanguageSelect(){
+    select(myLanguages, "Spanish");
+    myMenuButtonNames = myBloonsApplication.getMenuButtonNames();
+    myStartButton = lookup("#Start").query();
+    myLanguages = lookup("#LanguageOptions").query();
+    myNewWindowButton = lookup("#NewGameWindowButton").query();
+
+    assertEquals(myMenuButtonNames.getString("Start"), myStartButton.getText());
+    assertEquals(myMenuButtonNames.getString("SetLanguage"), myLanguages.getPromptText());
+    assertEquals(myMenuButtonNames.getString("NewGameWindow"), myNewWindowButton.getText());
+  }
+
+  @Test
+  public void testNewWindow(){
+    clickOn(myNewWindowButton);
   }
 
   @Test
