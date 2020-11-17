@@ -7,7 +7,7 @@ import ooga.backend.bloons.types.BloonsType;
 public class CamoBloonsFactory implements BloonsFactory {
 
   public Bloon createBloon(Bloon bloon) {
-    return new CamoBloon(bloon.getBloonsType(), bloon.getXPosition(), bloon.getYPosition(),
+    return createBloon(bloon.getBloonsType(), bloon.getXPosition(), bloon.getYPosition(),
         bloon.getXVelocity(), bloon.getYVelocity());
   }
 

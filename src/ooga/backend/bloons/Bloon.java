@@ -13,7 +13,7 @@ public class Bloon extends GamePiece implements BloonsAPI {
   private double xVelocity;
   private double yVelocity;
   private double distanceTraveled;
-  private double relativeSpeed;
+  private final double relativeSpeed;
 
   public Bloon(BloonsType bloonsType, double xPosition, double yPosition, double xVelocity, double yVelocity) {
     super(xPosition, yPosition);
@@ -50,6 +50,11 @@ public class Bloon extends GamePiece implements BloonsAPI {
     }
     return bloons;
   }
+
+  //TODO: ISSUES - generating new bloons that keep special abilities
+  //TODO: ensuring the regen bloon stops at its actual parent
+  //change bloonstype of bloon raather than spaawning new ones?
+  //how will I deal with new bloons
 
   @Override
   public void update() {

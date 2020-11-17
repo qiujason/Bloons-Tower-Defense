@@ -7,7 +7,7 @@ import ooga.backend.bloons.types.BloonsType;
 public class RegenBloonsFactory implements BloonsFactory {
 
   public Bloon createBloon(Bloon bloon) {
-    return new RegenBloon(bloon.getBloonsType(), bloon.getXPosition(), bloon.getYPosition(),
+    return createBloon(bloon.getBloonsType(), bloon.getXPosition(), bloon.getYPosition(),
         bloon.getXVelocity(), bloon.getYVelocity());
   }
 
