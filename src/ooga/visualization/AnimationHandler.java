@@ -146,7 +146,6 @@ public class AnimationHandler {
     } else {
       towerInGame.setRotate(180 - angle);
     }
-    System.out.println(bloon.getXPosition());
   }
 
   private void animateProjectiles() {
@@ -166,6 +165,7 @@ public class AnimationHandler {
     removeShotProjectiles(projectileToRemove);
   }
 
+
   private boolean checkOutOfBoundsProjectile(Circle projectile) {
     return projectile.getCenterX() <= 0
         || projectile.getCenterX() >= BloonsApplication.GAME_WIDTH
@@ -181,8 +181,9 @@ public class AnimationHandler {
       for(Projectile projectile : myProjectilesInGame.keySet()){
         if(checkBloonCollision(projectile, bloon)){
           Bloon[] spawnedBloons = bloon.shootBloon();
-          for(Bloon spawned : spawnedBloons){
-            bloonsToAdd.add(spawned);
+          //double offset = myBlockSize/8;
+          for(int i = 0; i < spawnedBloons.length; i++){
+            bloonsToAdd.add(spawnedBloons[i]);
           }
           bloon.setDead();
           bloonsToRemove.add(bloon);

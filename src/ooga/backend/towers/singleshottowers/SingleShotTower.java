@@ -90,7 +90,7 @@ public abstract class SingleShotTower extends Tower {
       if(ifCamoBloon(bloon)){
         continue;
       }
-      if(getDistance(bloon) <= getRadius()){
+      if(!bloon.isDead() && getDistance(bloon) <= getRadius()){
         firstBloon = bloon;
         break;
       }
@@ -137,6 +137,7 @@ public abstract class SingleShotTower extends Tower {
       updateIfRestPeriod(true);
       return target;
     }
+
     return null;
   }
 

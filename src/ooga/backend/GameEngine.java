@@ -139,6 +139,7 @@ public class GameEngine implements GameEngineAPI {
     GamePieceIterator<Projectile> projectileIterator = projectiles.createIterator();
     while (projectileIterator.hasNext()){
       Projectile currentProjectile = projectileIterator.next();
+
       if (currentProjectile.getXPosition() < 0 || currentProjectile.getXPosition() > layout.getWidth()
           || currentProjectile.getYPosition() < 0 || currentProjectile.getYPosition() > layout.getHeight()){
         projectiles.remove(currentProjectile);

@@ -52,4 +52,9 @@ public class TowersCollection implements GamePieceCollection<Tower> {
     return towers.size();
   }
 
+  @Override
+  public boolean contains(Tower tower) {
+    return towers.contains(tower);
+  }
+
 }

@@ -19,7 +19,7 @@ public class ProjectileNode extends GamePieceNode {
   public ProjectileNode(ProjectileType projectileType, double xPosition, double yPosition, double radius){
     super(xPosition, yPosition, radius);
     this.projectileType = projectileType;
-    this.setFill(Color.AQUA);
+    this.setFill(findImage());
   }
 
   @Override
