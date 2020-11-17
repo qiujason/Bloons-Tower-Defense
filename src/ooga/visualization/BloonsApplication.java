@@ -1,6 +1,9 @@
 package ooga.visualization;
 
+import java.io.File;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -76,10 +79,15 @@ public class BloonsApplication {
   private double myBlockSize;
   private final ResourceBundle myBlockMappings = ResourceBundle
       .getBundle(getClass().getPackageName() + ".resources.blockMappings");
+  private Button myLevelStartButton;
+  private String myCurrentLevel;
 
-  public BloonsApplication(Layout layout, BloonsCollection bloons, TowersCollection towers,
+  public BloonsApplication(Button startLevelButton){
+    myLevelStartButton = startLevelButton;
+  }
+
+  public void initializeBloonsApplication(Layout layout, BloonsCollection bloons, TowersCollection towers,
       ProjectilesCollection projectiles, Timeline animation) {
-
     myLayout = layout;
     myBloons = bloons;
     myTowers = towers;
@@ -124,23 +132,11 @@ public class BloonsApplication {
   private void levelSelect() {
     BorderPane levelSelectScreen = new BorderPane();
     Text levelSelectText = new Text("Select Level");
-    levelSelectText.setFill(Color.WHITE);
     levelSelectText.setScaleX(3);
     levelSelectText.setScaleY(3);
     levelSelectScreen.setCenter(levelSelectText);
     BorderPane.setAlignment(levelSelectText, Pos.CENTER);
-
-    HBox levelButtons = new HBox();
-    Button level1Button = new Button();
-    Button level2Button = new Button();
-    Button level3Button = new Button();
-    level1Button.setText("Level 1");
-    level1Button.setOnAction(e -> loadLevel());
-    level2Button.setText("Level 2");
-    level2Button.setOnAction(e -> loadLevel());
-    level3Button.setText("Level 3");
-    level3Button.setOnAction(e -> loadLevel());
-    levelButtons.getChildren().addAll(level1Button, level2Button, level3Button);
+    HBox levelButtons = initializeLevelButtons();
     levelSelectScreen.setBottom(levelButtons);
     BorderPane.setAlignment(levelButtons, Pos.CENTER_RIGHT);
 
@@ -148,7 +144,26 @@ public class BloonsApplication {
     myStage.setScene(myScene);
   }
 
-  private void loadLevel() {
+  private HBox initializeLevelButtons(){
+    HBox levelButtons = new HBox();
+    Path levels = null;
+    try {
+      levels = Paths.get(getClass().getClassLoader().getResource(LAYOUTS_PATH).toURI());
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
+    for(File level : levels.toFile().listFiles()){
+      Button levelButton = new Button();
+      levelButton.setText(level.getName().split("\\.")[0]);
+      levelButton.setOnAction(e -> loadLevel(level.getName()));
+      levelButtons.getChildren().add(levelButton);
+    }
+    return levelButtons;
+  }
+
+  private void loadLevel(String levelName) {
+    myCurrentLevel = levelName;
+    myLevelStartButton.fire();
     Group level = new Group();
     myMenuPane = new VBox();
     visualizeLayout(level);
@@ -216,6 +231,10 @@ public class BloonsApplication {
   public void fullScreen(){
     myStage.setFullScreen(true);
     myStage.show();
+  }
+
+  public String getCurrentLevel(){
+    return myCurrentLevel;
   }
 
   public AnimationHandler getMyAnimationHandler() {
