@@ -91,6 +91,22 @@ public class BloonsApplicationMenusTest extends DukeApplicationTest {
   }
 
   @Test
+  public void testReturnButton(){
+    clickOn(myStartButton);
+    Button returnButton = lookup("#BackButton").query();
+    assertEquals(myMenuButtonNames.getString("ReturnToStart"), returnButton.getText());
+
+    clickOn(returnButton);
+    myStartButton = lookup("#Start").query();
+    myLanguages = lookup("#LanguageOptions").query();
+    myNewWindowButton = lookup("#NewGameWindowButton").query();
+
+    assertEquals(myMenuButtonNames.getString("Start"), myStartButton.getText());
+    assertEquals(myMenuButtonNames.getString("SetLanguage"), myLanguages.getPromptText());
+    assertEquals(myMenuButtonNames.getString("NewGameWindow"), myNewWindowButton.getText());
+  }
+
+  @Test
   public void testLoadLevelButton() {
     startRandomLevel();
     Button myPlayButton = lookup("#Play").query();

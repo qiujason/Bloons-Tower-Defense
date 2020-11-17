@@ -189,6 +189,7 @@ public class BloonsApplication {
     }
     Button backButton = new Button(myMenuButtonNames.getString("ReturnToStart"));
     backButton.setOnAction(e -> startApplication(myStage));
+    backButton.setId("BackButton");
     levelButtons.getChildren().add(backButton);
     return levelButtons;
   }
