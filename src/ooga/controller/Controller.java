@@ -1,14 +1,16 @@
 package ooga.controller;
 
-
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import ooga.AlertHandler;
 import ooga.backend.ConfigurationException;
 import ooga.backend.GameEngine;
 import ooga.backend.bloons.Bloon;
@@ -40,7 +42,8 @@ public class Controller extends Application {
   public static final String TOWER_SELL_VALUES_PATH = "towervalues/TowerSellValues.properties";
   public static String ROUND_BONUSES_PATH = "roundBonuses/BTD5_default_level1_to_10.csv";
 
-  private Timeline myAnimation = new Timeline();
+  private ResourceBundle errorResource;
+  private Timeline myAnimation;
   private BloonsApplication bloonsApplication;
   private AnimationHandler animationHandler;
   private LayoutReader layoutReader;
@@ -56,10 +59,13 @@ public class Controller extends Application {
 
   private Map<Tower, Bloon> shootingTargets;
   private GameMenuInterface gameController;
+  private Map<TowerType, Integer> towerBuyMap;
+  private Map<TowerType, Integer> towerSellMap;
   private Bank bank;
 
   @Override
   public void start(Stage primaryStage) { //TODO: refactor into helpers
+    errorResource = ResourceBundle.getBundle("ErrorResource");
     myAnimation = new Timeline();
     layoutReader = new LayoutReader();
     bloonReader = new BloonReader();
@@ -91,14 +97,27 @@ public class Controller extends Application {
     return myBlockSize;
   }
 
+
   public void setUpBank(){
-    Map<TowerType, Integer> towerBuyMap = new TowerValueReader(TOWER_BUY_VALUES_PATH).getMap();
-    Map<TowerType, Integer> towerSellMap = new TowerValueReader(TOWER_SELL_VALUES_PATH).getMap();
-    RoundBonusReader roundBonusReader = new RoundBonusReader();
-    List<List<String>> roundBonuses = roundBonusReader.getDataFromFile(ROUND_BONUSES_PATH);
-    if(roundBonuses.size() == 0){
-      throw new ConfigurationException("Round bonuses csv is empty.");
+    try {
+      towerBuyMap = new TowerValueReader(TOWER_BUY_VALUES_PATH).getMap();
+      towerSellMap = new TowerValueReader(TOWER_SELL_VALUES_PATH).getMap();
+    } catch (Exception e) {
+      AlertHandler alert = new AlertHandler(errorResource.getString("InvalidPropertyFile"),
+          errorResource.getString("InvalidPropertyFormat"));
     }
+    RoundBonusReader roundBonusReader = new RoundBonusReader();
+    List<List<String>> roundBonuses = null;
+    try {
+      roundBonuses = roundBonusReader.getDataFromFile(ROUND_BONUSES_PATH);
+      createBank(roundBonuses);
+    } catch(ConfigurationException e){
+      AlertHandler alert = new AlertHandler(errorResource.getString("InvalidPropertyFile"),
+          errorResource.getString(e.getMessage()));
+    }
+  }
+
+  private void createBank(List<List<String>> roundBonuses){
     int rounds = Integer.parseInt(roundBonuses.get(0).get(0));
     if(roundBonuses.size() == 1) {
       if (roundBonuses.get(0).size() == 1) {
