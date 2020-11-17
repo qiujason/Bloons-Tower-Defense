@@ -9,6 +9,9 @@ import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.event.Event;
+import javafx.event.EventType;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import ooga.AlertHandler;
@@ -37,8 +40,7 @@ public class Controller extends Application {
   public static final double ANIMATION_DELAY = 1 / FRAMES_PER_SECOND;
 
   public static final String LAYOUTS_PATH = "layouts/";
-  public static final String BLOON_WAVES_PATH = "bloon_waves/level1.csv";
-  public static final String LEVEL_FILE = "level1.csv";
+  public static final String BLOON_WAVES_PATH = "bloon_waves/";
   public static final String BLOONS_TYPE_PATH = "bloon_resources/Bloons";
   public static final String TOWER_BUY_VALUES_PATH = "towervalues/TowerBuyValues.properties";
   public static final String TOWER_SELL_VALUES_PATH = "towervalues/TowerSellValues.properties";
@@ -57,8 +59,6 @@ public class Controller extends Application {
   private TowersCollection towersCollection;
   private ProjectilesCollection projectilesCollection;
 
-
-
   private Map<Tower, Bloon> shootingTargets;
   private GameMenuInterface gameController;
   private Map<TowerType, Integer> towerBuyMap;
@@ -76,20 +76,26 @@ public class Controller extends Application {
     projectilesCollection = new ProjectilesCollection();
     shootingTargets = new HashMap<>();
     setUpBank();
+
+    Button startLevelButton = new Button();
+    startLevelButton.setOnAction(e -> startLevel());
+    bloonsApplication = new BloonsApplication(startLevelButton);
+    bloonsApplication.fireInTheHole(primaryStage);
+  }
+
+  private void startLevel(){
     initializeLayout();
     initializeBloonTypes();
     initializeBloonWaves();
     startGameEngine();
 
-    bloonsApplication = new BloonsApplication(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
+    bloonsApplication.initializeBloonsApplication(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
         gameEngine.getProjectiles(), myAnimation);
-    bloonsApplication.fireInTheHole(primaryStage);
 
     myAnimation.setCycleCount(Timeline.INDEFINITE);
 
     KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> step());
     myAnimation.getKeyFrames().add(movement);
-
   }
 
   private void checkTowerPropertyFiles(){
@@ -155,7 +161,7 @@ public class Controller extends Application {
   }
 
   private void initializeLayout() {
-    layout = layoutReader.generateLayout(LAYOUTS_PATH + LEVEL_FILE);
+    layout = layoutReader.generateLayout(LAYOUTS_PATH + bloonsApplication.getCurrentLevel());
   }
 
   private void initializeBloonTypes() {
@@ -163,7 +169,7 @@ public class Controller extends Application {
   }
 
   private void initializeBloonWaves() {
-    allBloonWaves = bloonReader.generateBloonsCollectionMap(bloonsTypeChain, BLOON_WAVES_PATH, layout);
+    allBloonWaves = bloonReader.generateBloonsCollectionMap(bloonsTypeChain, BLOON_WAVES_PATH + bloonsApplication.getCurrentLevel(), layout);
   }
 
   private void startGameEngine() {
