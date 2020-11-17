@@ -27,7 +27,6 @@ public abstract class SpreadShotTower extends Tower {
 
   @Override
   public Bloon shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection) {
-    updateRestPeriodActive(true);
     if(checkBalloonInRange(bloonsCollection)){
       for(int i = 0; i < getNumberOfShots(); i++){
         ProjectileFactory projectileFactory = new SingleProjectileFactory();
@@ -35,6 +34,7 @@ public abstract class SpreadShotTower extends Tower {
         double projectileYVelocity = Math.sin(i*getDegreeIncrementPerShot());
         projectilesCollection.add(projectileFactory
             .createDart(getProjectileType(), getXPosition(), getYPosition(), projectileXVelocity, projectileYVelocity, 0));
+        updateIfRestPeriod(true);
       }
     }
     return null;

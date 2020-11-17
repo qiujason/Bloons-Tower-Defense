@@ -134,8 +134,7 @@ public abstract class SingleShotTower extends Tower {
       Projectile p =projectileFactory.createDart(getProjectileType(), this.getXPosition(),
           this.getYPosition(), projectileXVelocity, projectileYVelocity, findAngle(this, target));
       projectilesCollection.add(p);
-      updateRestPeriodActive(true);
-
+      updateIfRestPeriod(true);
       return target;
     }
     return null;
