@@ -76,12 +76,15 @@ public class BloonsApplication {
       .getBundle(getClass().getPackageName() + ".resources.blockMappings");
 
   public BloonsApplication(Layout layout, BloonsCollection bloons, TowersCollection towers,
-      ProjectilesCollection projectiles, Timeline animation) {
+      ProjectilesCollection projectiles, Timeline animation, GameMenuInterface gameController,
+      TowerMenuInterface towerController) {
     myLayout = layout;
     myBloons = bloons;
     myTowers = towers;
     myProjectiles = projectiles;
     myAnimation = animation;
+    gameMenuController = gameController;
+    towerMenuController = towerController;
   }
 
   public void fireInTheHole(Stage mainStage) {
@@ -116,14 +119,10 @@ public class BloonsApplication {
 
   private void loadLevel() {
     BorderPane level = new BorderPane();
-    myMenuPane = new VBox();
     visualizeLayout(level);
+    visualizePlayerGUI(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
         myTowers, myProjectiles, myStartingX, myStartingY, myBlockSize, myAnimation);
-    gameMenuController = new GameMenuController(myAnimation);
-    towerMenuController = new TowerMenuController(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize, myLevelLayout,
-        myAnimationHandler, myMenuPane);
-    visualizePlayerGUI(level);
     level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
     myScene = new Scene(level, WIDTH, HEIGHT);
     myStage.setScene(myScene);
@@ -174,12 +173,11 @@ public class BloonsApplication {
   }
 
   private void visualizePlayerGUI(BorderPane level) {
+    myMenuPane = new VBox();
     myMenuPane.setSpacing(10); //magic num
     myMenu = new GameMenu(myMenuPane, gameMenuController, towerMenuController);
     level.setRight(myMenuPane);
   }
-
-
 
   public void fullScreen(){
     myStage.setFullScreen(true);

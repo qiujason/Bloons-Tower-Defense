@@ -27,8 +27,8 @@ public class WeaponMenu extends FlowPane {
 
   public WeaponMenu(TowerNode tower, TowerMenuInterface controller){
     this.setPrefWrapLength(200);
-    upgradeRangeButton = makeButton(menuProperties.getString(UPGRADE_RANGE_TEXT), event -> controller.upgradeTower(tower));
-    upgradeRateButton = makeButton(menuProperties.getString(UPGRADE_RATE_TEXT), event -> controller.upgradeTower(tower));
+    upgradeRangeButton = makeButton(menuProperties.getString(UPGRADE_RANGE_TEXT), event -> controller.upgradeRange(tower));
+    upgradeRateButton = makeButton(menuProperties.getString(UPGRADE_RATE_TEXT), event -> controller.upgradeRate(tower));
     sellTowerButton = makeButton(menuProperties.getString(SELL_TOWER_TEXT), event -> controller.sellTower(tower));
     //targetingOption ...
     closeMenuButton = makeButton(menuProperties.getString(CLOSE_MENU_TEXT), event -> controller.closeMenu(tower));

@@ -1,35 +1,19 @@
 package ooga.controller;
 
 import ooga.backend.bank.Bank;
-import ooga.backend.layout.Layout;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.TowersCollection;
 import ooga.backend.towers.factory.SingleTowerFactory;
 import ooga.backend.towers.factory.TowerFactory;
-import ooga.visualization.menu.WeaponMenu;
-import ooga.visualization.nodes.TowerNode;
-import ooga.visualization.nodes.TowerNodeFactory;
-import ooga.visualization.nodes.WeaponNodeFactory;
-import ooga.visualization.nodes.WeaponRange;
 
 public class TowerMenuController implements TowerMenuInterface {
 
-  private Layout layout;
-  private double gameWidth;
-  private double gameHeight;
-  private double blockSize;
   private TowersCollection towers;
-
   private Bank bank;
 
-  public TowerMenuController(Layout layout, TowersCollection towers,
-      Bank bank){
+  public TowerMenuController(TowersCollection towers, Bank bank){
     this.towers = towers;
-    this.layout = layout;
-    this.gameWidth = gameWidth;
-    this.gameHeight = gameHeight;
-    this.blockSize = blockSize;
     this.bank = bank;
   }
 
@@ -38,7 +22,7 @@ public class TowerMenuController implements TowerMenuInterface {
     Boolean bought = bank.buyTower(towerType);
     if(bought){
       TowerFactory towerFactory = new SingleTowerFactory();
-      Tower tower = towerFactory.createTower(towerType, gameWidth/2, gameHeight/2);
+      Tower tower = towerFactory.createTower(towerType, 0, 0);
       towers.add(tower);
     }
     else{

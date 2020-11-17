@@ -1,3 +1,0 @@
-// makeTower()
-  buyTower
-  createTowerNode

@@ -42,7 +42,7 @@ public class WeaponButtonsMenu extends FlowPane {
   private void makeAllWeaponButtons(){
     for(TowerType type : weaponTypeList){
       this.getChildren().add(makeWeaponButton(type,
-          event -> newclass.makeTOwer.buyTower(type)));
+          event -> controller.buyTower(type)));
     }
   }
 

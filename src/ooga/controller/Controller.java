@@ -56,6 +56,7 @@ public class Controller extends Application {
 
   private Map<Tower, Bloon> shootingTargets;
   private GameMenuInterface gameController;
+  private TowerMenuInterface towerController;
   private Bank bank;
 
   @Override
@@ -72,11 +73,11 @@ public class Controller extends Application {
     initializeBloonWaves();
     startGameEngine();
 
-    new TowerMenuController();
-
+    gameController = new GameMenuController(myAnimation);
+    towerController = new TowerMenuController(towersCollection, bank);
 
     bloonsApplication = new BloonsApplication(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
-        gameEngine.getProjectiles(), myAnimation);
+        gameEngine.getProjectiles(), myAnimation, gameController, towerController);
     bloonsApplication.fireInTheHole(primaryStage);
 
     myAnimation.setCycleCount(Timeline.INDEFINITE);
