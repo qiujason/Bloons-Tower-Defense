@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentHashMap;
 import javafx.animation.Timeline;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -29,6 +30,7 @@ import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.layout.Layout;
 import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.towers.TowersCollection;
+import ooga.controller.Controller;
 import ooga.controller.GameMenuController;
 import ooga.controller.GameMenuInterface;
 import ooga.controller.TowerMenuController;
@@ -98,12 +100,21 @@ public class BloonsApplication {
     setBackgroundImage(menu, START_SCREEN_BACKGROUND);
     HBox buttonGroup = new HBox();
     buttonGroup.setAlignment(Pos.CENTER);
+
     Button startButton = new Button();
     startButton.setOnAction(e -> displayLevelSelectScreen());
     startButton.setText(myMenuButtonNames.getString("Start"));
     startButton.setId(myMenuButtonNames.getString("Start"));
     buttonGroup.getChildren().add(startButton);
+
     setupLanguageOptions(buttonGroup);
+
+    Button newGameWindowButton = new Button();
+    newGameWindowButton.setId("newGameWindowButton");
+    newGameWindowButton.setText(myMenuButtonNames.getString("NewGameWindow"));
+    newGameWindowButton.setOnAction(e -> newGameWindow());
+    buttonGroup.getChildren().add(newGameWindowButton);
+
     BorderPane.setAlignment(buttonGroup, Pos.CENTER);
     menu.setBottom(buttonGroup);
   }
@@ -132,6 +143,10 @@ public class BloonsApplication {
     startApplication(myStage);
   }
 
+  private void newGameWindow(){
+    Controller newWindow = new Controller();
+    newWindow.start(new Stage());
+  }
 
   private void setBackgroundImage(BorderPane menu, String imageName) {
     Image backgroundImage = null;
