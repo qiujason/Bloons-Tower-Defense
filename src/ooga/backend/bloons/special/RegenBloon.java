@@ -13,12 +13,16 @@ public class RegenBloon extends Bloon {
   private int timer;
 
   public RegenBloon(BloonsType bloonsType, double xPosition, double yPosition, double xVelocity, double yVelocity) {
+    this(bloonsType, bloonsType, xPosition, yPosition, xVelocity, yVelocity);
+  }
+
+  public RegenBloon(BloonsType bloonsType, BloonsType originalType, double xPosition, double yPosition, double xVelocity, double yVelocity) {
     super(bloonsType, xPosition, yPosition, xVelocity, yVelocity);
     BloonsType newRegenType = new BloonsType(bloonsType.chain(), bloonsType.name(), bloonsType.RBE(), bloonsType.relativeSpeed(), bloonsType.specials());
     newRegenType.specials().add(Specials.REGEN);
     setBloonsType(newRegenType);
+    this.originalType = originalType;
     ResourceBundle gameMechanics = ResourceBundle.getBundle(RESOURCE_BUNDLE_PATH);
-    this.originalType = bloonsType;
     this.fullTimer = Integer.parseInt(gameMechanics.getString("RegrowthTimer"));
     this.timer = fullTimer;
   }
@@ -34,6 +38,10 @@ public class RegenBloon extends Bloon {
       }
     }
     super.update();
+  }
+
+  public BloonsType getOriginalType() {
+    return originalType;
   }
 
 }

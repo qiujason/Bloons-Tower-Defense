@@ -46,34 +46,18 @@ public class Bloon extends GamePiece implements BloonsAPI {
 
   @Override
   public Bloon[] shootBloon() {
-    BloonsType nextBloonsType = getBloonsType().chain().getNextBloonsType(bloonsType);
-    int numBloonsProduced = getBloonsType().chain().getNumNextBloons(bloonsType);
+    int numBloonsToProduce = getBloonsType().chain().getNumNextBloons(bloonsType);
 
-    Bloon[] bloons = new Bloon[numBloonsProduced];
-    BasicBloonsFactory factory = new BasicBloonsFactory();
-    for (int i = 0; i < numBloonsProduced; i++) {
-      bloons[i] = factory.createBloon(nextBloonsType, getXPosition(), getYPosition(), xVelocity, yVelocity);
-    }
-
-    for (Specials special : getBloonsType().specials()) {
-      for (int i = 0; i < numBloonsProduced; i++) {
-        try {
-          String specialName = special.toString();
-          specialName = specialName.substring(0,1).toUpperCase() +
-              specialName.substring(1).toLowerCase();
-          Class<?> specialBloonClass = Class.forName(FACTORY_FILE_PATH + specialName + "BloonsFactory");
-          Constructor<?> specialBloonConstructor = specialBloonClass.getConstructor();
-          BloonsFactory specialFactory = (BloonsFactory)specialBloonConstructor.newInstance();
-          bloons[i] = specialFactory.createBloon(bloons[i]);
-        } catch (ClassNotFoundException e) {
-          //TODO: handle
-        } catch (Exception e) {
-          //TODO: handle
-        }
+    if (getBloonsType().specials().size() == 0) {
+      Bloon[] bloons = new Bloon[numBloonsToProduce];
+      BasicBloonsFactory factory = new BasicBloonsFactory();
+      for (int i = 0; i < numBloonsToProduce; i++) {
+        bloons[i] = factory.createNextBloon(this);
       }
+      return bloons;
     }
 
-    return bloons;
+    return makeNextSpecialBloons(numBloonsToProduce);
   }
 
   @Override
@@ -122,5 +106,31 @@ public class Bloon extends GamePiece implements BloonsAPI {
 
   public boolean isCamo(){
     return getBloonsType().specials().contains(Specials.CAMO);
+  }
+
+  private Bloon[] makeNextSpecialBloons(int numBloonsToProduce) {
+    Bloon[] bloons = new Bloon[numBloonsToProduce];
+    for (Specials special : getBloonsType().specials()) {
+      for (int i = 0; i < numBloonsToProduce; i++) {
+        try {
+          String specialName = special.toString();
+          specialName = specialName.substring(0,1).toUpperCase() +
+              specialName.substring(1).toLowerCase();
+          Class<?> specialBloonClass = Class.forName(FACTORY_FILE_PATH + specialName + "BloonsFactory");
+          Constructor<?> specialBloonConstructor = specialBloonClass.getConstructor();
+          BloonsFactory specialFactory = (BloonsFactory)specialBloonConstructor.newInstance();
+          if (bloons[i] != null) {
+            bloons[i] = specialFactory.createBloon(bloons[i]);
+          } else {
+            bloons[i] = specialFactory.createNextBloon(this);
+          }
+        } catch (ClassNotFoundException e) {
+          //TODO: handle
+        } catch (Exception e) {
+          //TODO: handle
+        }
+      }
+    }
+    return bloons;
   }
 }

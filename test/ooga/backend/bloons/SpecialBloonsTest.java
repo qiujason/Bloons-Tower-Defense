@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import ooga.backend.bloons.factory.CamoBloonsFactory;
 import ooga.backend.bloons.factory.RegenBloonsFactory;
+import ooga.backend.bloons.special.RegenBloon;
 import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.bloons.types.Specials;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,8 +62,8 @@ public class SpecialBloonsTest {
 
   @Test
   void testGetSpecialBloonNextType() {
-    Bloon bloon = new CamoBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
-    assertEquals(chain.getBloonsTypeRecord("DEAD"), chain.getNextBloonsType(bloon.getBloonsType()));
+    Bloon bloon = new CamoBloonsFactory().createBloon(chain.getBloonsTypeRecord("YELLOW"), 0, 0, 0, 0);
+    assertEquals(chain.getBloonsTypeRecord("GREEN"), chain.getNextBloonsType(bloon.getBloonsType()));
     assertTrue(bloon.getBloonsType().specials().contains(Specials.CAMO));
   }
 
@@ -71,6 +72,20 @@ public class SpecialBloonsTest {
     Bloon bloon = new CamoBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
     assertEquals(chain.getBloonsTypeRecord("BLUE"), chain.getPrevBloonsType(bloon.getBloonsType()));
     assertTrue(bloon.getBloonsType().specials().contains(Specials.CAMO));
+  }
+
+  @Test
+  void testMakeRegenBloonEstablishOriginalType() {
+    Bloon regenBloon = new RegenBloonsFactory().createBloon(chain.getBloonsTypeRecord("PINK"), 0, 0, 0, 0);
+    assertEquals(chain.getBloonsTypeRecord("PINK"), ((RegenBloon)regenBloon).getOriginalType());
+  }
+
+  @Test
+  void testOriginalTypeNewBloonSpawn() {
+    Bloon regenBloon = new RegenBloonsFactory().createBloon(chain.getBloonsTypeRecord("PINK"), 0, 0, 0, 0);
+    Bloon[] spawnedBloons = regenBloon.shootBloon();
+    assertEquals(chain.getBloonsTypeRecord("PINK"), ((RegenBloon)spawnedBloons[0]).getOriginalType());
+    assertEquals(chain.getBloonsTypeRecord("YELLOW"), (spawnedBloons[0]).getBloonsType());
   }
 
 }
