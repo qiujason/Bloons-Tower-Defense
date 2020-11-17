@@ -66,6 +66,11 @@ public class BloonsCollection implements GamePieceCollection<Bloon> {
     return bloons.size();
   }
 
+  @Override
+  public boolean contains(Bloon bloon) {
+    return bloons.contains(bloon);
+  }
+
 //  @Override
 //  public String toString(){
 //    return ""+ bloons.size();

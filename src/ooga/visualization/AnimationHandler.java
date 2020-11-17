@@ -157,6 +157,7 @@ public class AnimationHandler {
   }
 
   private void animateProjectiles() {
+    removeDeadProjectiles();
     addProjectilestoGame();
     for(Projectile projectile : myProjectilesInGame.keySet()){
       ProjectileNode projectileNode = myProjectilesInGame.get(projectile);
@@ -165,6 +166,17 @@ public class AnimationHandler {
       projectileNode.setYPosition(projectile.getYPosition()*myBlockSize);
     }
   }
+
+  private void removeDeadProjectiles(){
+    Map<Projectile, ProjectileNode> updatedProjectilesInGame = new HashMap<>();
+    GamePieceIterator<Projectile> projectileIterator= myProjectiles.createIterator();
+    while(projectileIterator.hasNext()){
+      Projectile currentProjectile = projectileIterator.next();
+      updatedProjectilesInGame.put(currentProjectile, myProjectilesInGame.get(currentProjectile));
+    }
+    myProjectilesInGame = updatedProjectilesInGame;
+  }
+
 
   private boolean checkOutOfBoundsProjectile(Circle projectile) {
     return projectile.getCenterX() <= 0
