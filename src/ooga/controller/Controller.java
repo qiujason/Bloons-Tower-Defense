@@ -90,6 +90,7 @@ public class Controller extends Application {
 
     KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> step());
     myAnimation.getKeyFrames().add(movement);
+
   }
 
   private void checkTowerPropertyFiles(){

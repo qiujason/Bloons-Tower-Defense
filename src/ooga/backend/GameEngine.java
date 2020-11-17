@@ -6,7 +6,6 @@ import java.util.Map;
 import ooga.backend.API.GameEngineAPI;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
-import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.layout.Layout;
 import ooga.backend.layout.LayoutBlock;
@@ -15,7 +14,6 @@ import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowersCollection;
 import ooga.visualization.AnimationHandler;
-import ooga.visualization.nodes.BloonNode;
 
 public class GameEngine implements GameEngineAPI {
 
@@ -123,7 +121,7 @@ public class GameEngine implements GameEngineAPI {
     while(towerIterator.hasNext()){
       Tower currentTower = towerIterator.next();
       currentTower.update();
-      if(currentTower.canShoot()){
+      if(!currentTower.isRestPeriodActive()){
         shootingTargets.put(currentTower,currentTower.shoot(currentBloonWave, projectiles));
 
       }
@@ -135,12 +133,6 @@ public class GameEngine implements GameEngineAPI {
    */
   private void moveProjectiles() {
     removeOffScreenProjectiles();
-    GamePieceIterator<Projectile> projectileIterator = projectiles.createIterator();
-    while (projectileIterator.hasNext()){
-      Projectile currentProjectile = projectileIterator.next();
-      currentProjectile.setXVelocity((currentProjectile.getXVelocity()/10));
-      currentProjectile.setYVelocity((currentProjectile.getYVelocity()/10));
-    }
     projectiles.updateAll();
   }
 
@@ -150,7 +142,6 @@ public class GameEngine implements GameEngineAPI {
       Projectile currentProjectile = projectileIterator.next();
       if (currentProjectile.getXPosition() < 0 || currentProjectile.getXPosition() > layout.getWidth()
           || currentProjectile.getYPosition() < 0 || currentProjectile.getYPosition() > layout.getHeight()){
-        System.out.println("WHAT THE FUCK");
 
         projectiles.remove(currentProjectile);
       }

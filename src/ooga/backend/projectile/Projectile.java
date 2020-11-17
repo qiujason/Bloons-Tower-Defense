@@ -5,8 +5,8 @@ public abstract class Projectile extends GamePiece {
 
   private double xVelocity;
   private double yVelocity;
-  private double angle;
-  private ProjectileType type;
+  private final double angle;
+  private final ProjectileType type;
 
 
 

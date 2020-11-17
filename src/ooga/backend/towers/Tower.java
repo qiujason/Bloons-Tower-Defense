@@ -19,7 +19,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   private double shootingSpeed;
   private double shootingRestRate;
   private double countRestPeriod;
-  private boolean canShoot;
+  private boolean restPeriodActive;
   private ProjectileType projectileType;
 
   // if canShoot = true, step function can call shoot method, if not, do not call shoot method
@@ -31,13 +31,15 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     shootingSpeed = myShootingSpeed;
     shootingRestRate = myShootingRestRate * AnimationHandler.FRAMES_PER_SECOND;
     countRestPeriod = 0;
-    canShoot = false;
+    restPeriodActive = false;
   }
 
   public abstract TowerType getTowerType();
+
   public double getShootingRestRate(){
     return shootingRestRate;
   }
+
   public double getRadius(){
     return radius;
   }
@@ -45,26 +47,21 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   // update canShoot to true after resting period has elapsed
   @Override
   public void update() {
-    System.out.println("countrestperiod " + countRestPeriod);
-
-    if(!canShoot) {
+    if(restPeriodActive) {
       countRestPeriod++;
-    }
-    if(countRestPeriod >= shootingRestRate){
-      countRestPeriod = 0;
-      canShoot = true;
-    }
-    else{
-      canShoot = false;
+      if(countRestPeriod >= shootingRestRate){
+        countRestPeriod = 0;
+        restPeriodActive = false;
+      }
     }
   }
 
-  public void updateCanShoot(boolean update){
-    canShoot = update;
+  public void updateRestPeriodActive(boolean update){
+    restPeriodActive = update;
   }
 
-  public boolean canShoot(){
-    return canShoot;
+  public boolean isRestPeriodActive(){
+    return restPeriodActive;
   }
 
   public double getShootingSpeed(){
@@ -79,8 +76,6 @@ public abstract class Tower extends GamePiece implements TowersAPI {
         continue;
       }
       double distance = getDistance(bloon);
-      System.out.println("distance " + getDistance(bloon));
-      System.out.println("radius: " + radius);
       if(distance <= radius){
         return true;
       }
