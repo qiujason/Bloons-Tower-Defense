@@ -55,12 +55,10 @@ public class Bloon extends GamePiece implements BloonsAPI {
       bloons[i] = factory.createBloon(nextBloonsType, getXPosition(), getYPosition(), xVelocity, yVelocity);
     }
 
-    Set<Specials> specials = getBloonsType().specials();
-    Iterator<Specials> specialsIterator = specials.iterator();
-    while (specialsIterator.hasNext()) {
+    for (Specials special : getBloonsType().specials()) {
       for (int i = 0; i < numBloonsProduced; i++) {
         try {
-          String specialName = specialsIterator.next().toString();
+          String specialName = special.toString();
           specialName = specialName.substring(0,1).toUpperCase() +
               specialName.substring(1).toLowerCase();
           Class<?> specialBloonClass = Class.forName(FACTORY_FILE_PATH + specialName + "BloonsFactory");
