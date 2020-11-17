@@ -104,15 +104,18 @@ public class BloonsApplication {
     Button startButton = new Button();
     startButton.setOnAction(e -> displayLevelSelectScreen());
     startButton.setText(myMenuButtonNames.getString("Start"));
-    startButton.setId(myMenuButtonNames.getString("Start"));
+    startButton.setId("Start");
     buttonGroup.getChildren().add(startButton);
 
     setupLanguageOptions(buttonGroup);
 
     Button newGameWindowButton = new Button();
-    newGameWindowButton.setId("newGameWindowButton");
+    newGameWindowButton.setId("NewGameWindowButton");
     newGameWindowButton.setText(myMenuButtonNames.getString("NewGameWindow"));
-    newGameWindowButton.setOnAction(e -> newGameWindow());
+    newGameWindowButton.setOnAction(e -> {
+      Controller newWindow = new Controller();
+      newWindow.start(new Stage());
+    });
     buttonGroup.getChildren().add(newGameWindowButton);
 
     BorderPane.setAlignment(buttonGroup, Pos.CENTER);
@@ -141,11 +144,6 @@ public class BloonsApplication {
             getClass().getPackageName() + ".resources.languages." + myCurrentLanguage + ".applicationErrors"
                 + myCurrentLanguage);
     startApplication(myStage);
-  }
-
-  private void newGameWindow(){
-    Controller newWindow = new Controller();
-    newWindow.start(new Stage());
   }
 
   private void setBackgroundImage(BorderPane menu, String imageName) {
@@ -301,6 +299,10 @@ public class BloonsApplication {
 
   public String getCurrentLevel() {
     return myCurrentLevel;
+  }
+
+  public ResourceBundle getMenuButtonNames() {
+    return myMenuButtonNames;
   }
 
   public AnimationHandler getMyAnimationHandler() {
