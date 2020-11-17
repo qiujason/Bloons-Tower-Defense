@@ -15,7 +15,7 @@ import ooga.backend.towers.Tower;
 
 public abstract class SingleShotTower extends Tower {
 
-  private static final ShootingChoice defaultShootingChoice = ShootingChoice.ClosestBloon;
+  private static final ShootingChoice defaultShootingChoice = ShootingChoice.FirstBloon;
 
   private ShootingChoice shootingChoice;
 
@@ -38,9 +38,9 @@ public abstract class SingleShotTower extends Tower {
   public Bloon getTarget(BloonsCollection bloonsCollection){
     return switch (getShootingChoice()) {
       case StrongestBloon -> findStrongestBloon(bloonsCollection);
-      case FirstBloon -> findFirstBloon(bloonsCollection);
+      case ClosestBloon -> findClosestBloon(bloonsCollection);
       case LastBloon -> findLastBloon(bloonsCollection);
-      default -> findClosestBloon(bloonsCollection);
+      default -> findFirstBloon(bloonsCollection);
     };
   }
 

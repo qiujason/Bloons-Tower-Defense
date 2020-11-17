@@ -30,7 +30,7 @@ BloonsApplicationTest, backend test
 * describe how much of the planned features were completed this Sprint and what helped or impeded
 progress (or if the estimate was just too much)
 
-API for Tower, Bloons, and Layout completed.  AlertHandler completed as well. Towers and Bloons
+API for Tower, Bloons, and Layout completed.  ooga.AlertHandler completed as well. Towers and Bloons
 visualization and relevant GUI buttons.  Didn't quite get to physics.
 
 * describe a specific significant event that occurred this Sprint and what was learned from it
