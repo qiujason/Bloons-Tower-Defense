@@ -1,13 +1,19 @@
 package ooga.backend.bloons;
 
 
+import java.lang.reflect.Constructor;
+import java.util.Iterator;
+import java.util.Set;
 import ooga.backend.API.BloonsAPI;
 import ooga.backend.GamePiece;
 import ooga.backend.bloons.factory.BasicBloonsFactory;
+import ooga.backend.bloons.factory.BloonsFactory;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.Specials;
 
 public class Bloon extends GamePiece implements BloonsAPI {
+
+  private static final String FACTORY_FILE_PATH = "ooga.backend.bloons.factory.";
 
   private BloonsType bloonsType;
   private double xVelocity;
@@ -48,13 +54,29 @@ public class Bloon extends GamePiece implements BloonsAPI {
     for (int i = 0; i < numBloonsProduced; i++) {
       bloons[i] = factory.createBloon(nextBloonsType, getXPosition(), getYPosition(), xVelocity, yVelocity);
     }
+
+    Set<Specials> specials = getBloonsType().specials();
+    Iterator<Specials> specialsIterator = specials.iterator();
+    while (specialsIterator.hasNext()) {
+      for (int i = 0; i < numBloonsProduced; i++) {
+        try {
+          String specialName = specialsIterator.next().toString();
+          specialName = specialName.substring(0,1).toUpperCase() +
+              specialName.substring(1).toLowerCase();
+          Class<?> specialBloonClass = Class.forName(FACTORY_FILE_PATH + specialName + "BloonsFactory");
+          Constructor<?> specialBloonConstructor = specialBloonClass.getConstructor();
+          BloonsFactory specialFactory = (BloonsFactory)specialBloonConstructor.newInstance();
+          bloons[i] = specialFactory.createBloon(bloons[i]);
+        } catch (ClassNotFoundException e) {
+          //TODO: handle
+        } catch (Exception e) {
+          //TODO: handle
+        }
+      }
+    }
+
     return bloons;
   }
-
-  //TODO: ISSUES - generating new bloons that keep special abilities
-  //TODO: ensuring the regen bloon stops at its actual parent
-  //change bloonstype of bloon raather than spaawning new ones?
-  //how will I deal with new bloons
 
   @Override
   public void update() {

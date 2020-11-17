@@ -14,9 +14,9 @@ public class RegenBloon extends Bloon {
 
   public RegenBloon(BloonsType bloonsType, double xPosition, double yPosition, double xVelocity, double yVelocity) {
     super(bloonsType, xPosition, yPosition, xVelocity, yVelocity);
-    BloonsType newCamoType = new BloonsType(bloonsType.chain(), bloonsType.name(), bloonsType.RBE(), bloonsType.relativeSpeed(), bloonsType.specials());
-    newCamoType.specials().add(Specials.REGEN);
-    setBloonsType(newCamoType);
+    BloonsType newRegenType = new BloonsType(bloonsType.chain(), bloonsType.name(), bloonsType.RBE(), bloonsType.relativeSpeed(), bloonsType.specials());
+    newRegenType.specials().add(Specials.REGEN);
+    setBloonsType(newRegenType);
     ResourceBundle gameMechanics = ResourceBundle.getBundle(RESOURCE_BUNDLE_PATH);
     this.originalType = bloonsType;
     this.fullTimer = Integer.parseInt(gameMechanics.getString("RegrowthTimer"));

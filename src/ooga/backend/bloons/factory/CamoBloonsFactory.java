@@ -6,6 +6,7 @@ import ooga.backend.bloons.types.BloonsType;
 
 public class CamoBloonsFactory implements BloonsFactory {
 
+  @Override
   public Bloon createBloon(Bloon bloon) {
     return createBloon(bloon.getBloonsType(), bloon.getXPosition(), bloon.getYPosition(),
         bloon.getXVelocity(), bloon.getYVelocity());
