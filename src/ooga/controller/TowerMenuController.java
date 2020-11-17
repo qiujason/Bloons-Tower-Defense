@@ -70,6 +70,7 @@ public class TowerMenuController implements TowerMenuInterface {
     TowerNode towerInGame = nodeFactory.createTowerNode(towerType, gameWidth/2,
         gameHeight/2, blockSize/2);
     towerInGame.makeTowerMenu(this);
+    towerInGame.setWeaponRange(blockSize);
     WeaponRange towerRange = towerInGame.getRangeDisplay();
     layoutRoot.getChildren().add(towerRange);
     layoutRoot.getChildren().add(towerInGame);

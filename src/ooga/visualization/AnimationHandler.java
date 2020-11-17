@@ -162,26 +162,6 @@ public class AnimationHandler {
     }
   }
 
-//  // TODO: use shoot method
-//  private void attemptToFire(Bloon bloon, Tower tower) {
-//    if (tower.canShoot()) {
-//      double projectileXSpeed =
-//          tower.getShootingSpeed() * (bloon.getXPosition() - tower.getXPosition()) / tower
-//              .getDistance(bloon);
-//      double projectileYSpeed =
-//          tower.getShootingSpeed() * (bloon.getYPosition() - tower.getYPosition()) / tower
-//              .getDistance(bloon);
-//      Projectile newProjectile = myProjectileFactory
-//          .createDart(ProjectileType.SingleTargetProjectile, tower.getXPosition(),
-//              tower.getYPosition(), projectileXSpeed, projectileYSpeed);
-//      Circle projectileInGame = new Circle(newProjectile.getXPosition(),
-//          newProjectile.getYPosition(), myBlockSize / 8);
-//      myLevelLayout.getChildren().add(projectileInGame);
-//      myProjectiles.add(newProjectile);
-//      myProjectilesInGame.put(newProjectile, projectileInGame);
-//    }
-//  }
-
   private void animateProjectiles() {
     addProjectilestoGame();
     for(Projectile projectile : myProjectilesInGame.keySet()){
@@ -190,29 +170,6 @@ public class AnimationHandler {
       projectileNode.setXPosition(projectile.getXPosition()*myBlockSize);
       projectileNode.setYPosition(projectile.getYPosition()*myBlockSize);
     }
-
-//
-//    GamePieceIterator<Bloon> bloonsIterator = myBloons.createIterator();
-//    while (projectilesIterator.hasNext()) {
-//      Projectile projectile = projectilesIterator.next();
-//      Circle projectileInGame = (Circle) myProjectilesInGame.get(projectile);
-//      projectileInGame.setCenterX(projectileInGame.getCenterX() + projectile.getXVelocity());
-//      projectileInGame.setCenterY(projectileInGame.getCenterY() + projectile.getYVelocity());
-//      while (bloonsIterator.hasNext()) {
-//        Bloon bloon = bloonsIterator.next();
-//        if (checkBloonCollision(projectile, bloon)) {
-//          myLevelLayout.getChildren().remove(myProjectilesInGame.remove(projectile));
-//          myLevelLayout.getChildren().remove(myBloonsInGame.remove(bloon));
-//          myProjectiles.remove(projectile);
-//          myBloons.remove(bloon);
-//        }
-//      }
-//      if (checkOutOfBoundsProjectile(projectileInGame)) {
-//        myLevelLayout.getChildren().remove(projectileInGame);
-//      }
-//      bloonsIterator.reset();
-//    }
-//    myProjectiles.updateAll();
   }
 
   private boolean checkOutOfBoundsProjectile(Circle projectile) {
