@@ -73,7 +73,7 @@ public class BloonsApplication {
     myCurrentLanguage = DEFAULT_LANGUAGE;
     myApplicationErrors = ResourceBundle
         .getBundle(
-            getClass().getPackageName() + ".resources." + myCurrentLanguage + ".applicationErrors"
+            getClass().getPackageName() + "/resources/" + myCurrentLanguage + "/applicationErrors"
                 + myCurrentLanguage);
   }
 
