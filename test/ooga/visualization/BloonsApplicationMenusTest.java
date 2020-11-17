@@ -60,7 +60,7 @@ public class BloonsApplicationMenusTest extends DukeApplicationTest {
     }
   }
 
-  @Test // Not general: text
+  @Test
   public void testLoadLevelButton() {
     startRandomLevel();
     Button myPlayButton = lookup("#Play").query();
@@ -73,7 +73,7 @@ public class BloonsApplicationMenusTest extends DukeApplicationTest {
     assertEquals("SlowDown", mySlowDownButton.getText());
   }
 
-  @Test // Not general
+  @Test
   public void testLayoutDisplay() {
     startRandomLevel();
     Rectangle myRectangle = lookup("#LayoutBlock00").query();
