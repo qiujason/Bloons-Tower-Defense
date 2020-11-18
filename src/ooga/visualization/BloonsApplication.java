@@ -315,10 +315,11 @@ public class BloonsApplication {
     try {
       gameModesClass = Class.forName("something");
     } catch (ClassNotFoundException e) {
-      new AlertHandler(myApplicationMessages.getString("NoGameModes"), myApplicationMessages.getString("NoGameModes"));
+      new AlertHandler(myApplicationMessages.getString("NoGameModes"),
+          myApplicationMessages.getString("NoGameModes"));
       return gameModes;
     }
-    for(Object mode : gameModesClass.getEnumConstants()){
+    for (Object mode : gameModesClass.getEnumConstants()) {
       gameModes.getItems().add((Enum<?>) mode);
     }
     return gameModes;
