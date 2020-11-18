@@ -142,18 +142,20 @@ public class TowerNodeHandler {
         }
         if(checkInvalidPlacement(towerNode)){
           towerNode.getRangeDisplay().invalidPlacement();
+        }else{
+          towerNode.getRangeDisplay().validPlacement();
+
         }
       }
     });
     towerNode.setOnMouseClicked(e -> {
-      if(checkInvalidPlacement(towerNode)){
+      if(!checkInvalidPlacement(towerNode)){
         layoutRoot.setOnMouseMoved(null);
         animationHandler.addTower(tower, towerNode);
         towerNode.setOnMouseClicked(null);
         selectWeapon();
         canMakeTower = true;
       }
-
     });
   }
 
@@ -214,14 +216,14 @@ public class TowerNodeHandler {
 
   private boolean checkInvalidPlacement(TowerNode towerNode){
     System.out.println(checkOnPath(towerNode));
-    return checkOnPath(towerNode) && checkOverlapTower(towerNode);
+    return checkOnPath(towerNode);
   }
 
   private boolean checkOnPath(TowerNode towerNode){
     for(Node layoutBlock : layoutRoot.getChildren()){
-      System.out.println(layoutBlock.getId().substring(0,4));
-      if(layoutBlock.getId().substring(0,4).equals("Path")){
+     if(layoutBlock.getId().contains("Path")){
         if (towerNode.getBoundsInParent().intersects(layoutBlock.getBoundsInParent())){
+          System.out.println(layoutBlock.getId());
           return true;
         }
       }
