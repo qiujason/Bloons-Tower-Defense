@@ -89,14 +89,16 @@ public class WeaponNodeHandler {
   }
 
   public void makeRoadWeapon(RoadItemType roadItemType){
-    if (canMakeRoadItem){
+    if (canMakeRoadItem) {
       canMakeRoadItem = false;
-      RoadItem roadItem = roadItemFactory
-          .createTower(roadItemType, towerDefaultPosition, towerDefaultPosition);
-      RoadItemNode itemNode = itemNodeFactory.createItemNode(roadItemType, gameWidth / 2,
-          gameHeight / 2, blockSize /2);
-      layoutRoot.getChildren().add(itemNode);
-      placeRoadItem(roadItem, itemNode);
+      if (menuController.buyRoadItem(roadItemType)) {
+        RoadItem roadItem = roadItemFactory
+            .createTower(roadItemType, towerDefaultPosition, towerDefaultPosition);
+        RoadItemNode itemNode = itemNodeFactory.createItemNode(roadItemType, gameWidth / 2,
+            gameHeight / 2, blockSize / 2);
+        layoutRoot.getChildren().add(itemNode);
+        placeRoadItem(roadItem, itemNode);
+      }
     }
   }
 

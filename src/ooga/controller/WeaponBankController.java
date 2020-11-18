@@ -1,6 +1,7 @@
 package ooga.controller;
 
 import ooga.backend.bank.Bank;
+import ooga.backend.roaditems.RoadItemType;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.UpgradeChoice;
@@ -17,6 +18,12 @@ public class WeaponBankController implements WeaponBankInterface {
   public boolean buyTower(TowerType tower) {
     return bank.buyTower(tower);
   }
+
+  @Override
+  public boolean buyRoadItem(RoadItemType itemType) {
+    return true;
+  }
+
 
   @Override
   public void sellTower(Tower tower) {
