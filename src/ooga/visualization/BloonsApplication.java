@@ -305,7 +305,6 @@ public class BloonsApplication {
     visualizeLayout(myLevel);
     myAnimationHandler = new AnimationHandler(myLevelLayout, myBloons,
         myTowers, myProjectiles, myBlockSize, myAnimation);
-
     towerNodeHandler = new TowerNodeHandler(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize,
         myLevelLayout, myMenuPane, myTowers, myTowerMenuController, myAnimationHandler);
     visualizePlayerGUI(myLevel);
@@ -341,7 +340,6 @@ public class BloonsApplication {
       for (int j = 0; j < numberOfColumns; j++) {
         Rectangle newBlock = createBlock(myLayout.getBlock(i, j).getBlockType(), currentBlockX,
             currentBlockY, myBlockSize);
-        newBlock.setId("LayoutBlock" + blockNumberX + blockNumberY);
         myLevelLayout.getChildren().add(newBlock);
         currentBlockX += myBlockSize;
         blockNumberX++;
@@ -358,13 +356,12 @@ public class BloonsApplication {
     Rectangle blockRectangle = new Rectangle(currentBlockX, currentBlockY, blockSize, blockSize);
     if (block.equals("0")) {
       blockRectangle.getStyleClass().add("non-path-block");
+      blockRectangle.setId("LayoutBlock" + currentBlockX + currentBlockY);
+
     } else {
       blockRectangle.getStyleClass().add("path-block");
+      blockRectangle.setId("PathLayoutBlock" + currentBlockX + currentBlockY);
     }
-//    if (block.charAt(0) == '*') {
-//      myStartingX = currentBlockX + blockSize / 2;
-//      myStartingY = currentBlockY + blockSize / 2;
-//    }
     return blockRectangle;
   }
 

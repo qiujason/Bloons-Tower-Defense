@@ -25,7 +25,6 @@ public class LayoutBlock {
     velocityMap.put("^", new double[]{0,-1});
     velocityMap.put("*", new double[]{1,0});
     velocityMap.put("@", new double[]{1,0});
-
   }
 
   private void setDxDy(String blockType) {

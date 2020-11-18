@@ -2,7 +2,9 @@ package ooga.controller;
 
 import java.util.ResourceBundle;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import ooga.AlertHandler;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.layout.Layout;
@@ -138,14 +140,20 @@ public class TowerNodeHandler {
           tower.setXPosition(toGridXPosition(e.getX()));
           tower.setYPosition(toGridYPosition(e.getY()));
         }
+        if(checkInvalidPlacement(towerNode)){
+          towerNode.getRangeDisplay().invalidPlacement();
+        }
       }
     });
     towerNode.setOnMouseClicked(e -> {
-      layoutRoot.setOnMouseMoved(null);
-      animationHandler.addTower(tower, towerNode);
-      towerNode.setOnMouseClicked(null);
-      selectWeapon();
-      canMakeTower = true;
+      if(checkInvalidPlacement(towerNode)){
+        layoutRoot.setOnMouseMoved(null);
+        animationHandler.addTower(tower, towerNode);
+        towerNode.setOnMouseClicked(null);
+        selectWeapon();
+        canMakeTower = true;
+      }
+
     });
   }
 
@@ -202,5 +210,33 @@ public class TowerNodeHandler {
 
   private double toGridYPosition(double gameYPosition){
     return layout.getHeight() * gameYPosition / gameHeight;
+  }
+
+  private boolean checkInvalidPlacement(TowerNode towerNode){
+    System.out.println(checkOnPath(towerNode));
+    return checkOnPath(towerNode) && checkOverlapTower(towerNode);
+  }
+
+  private boolean checkOnPath(TowerNode towerNode){
+    for(Node layoutBlock : layoutRoot.getChildren()){
+      System.out.println(layoutBlock.getId().substring(0,4));
+      if(layoutBlock.getId().substring(0,4).equals("Path")){
+        if (towerNode.getBoundsInParent().intersects(layoutBlock.getBoundsInParent())){
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  private boolean checkOverlapTower(TowerNode towerNode){
+    GamePieceIterator<Tower> towerIterator = towersCollection.createIterator();
+    while(towerIterator.hasNext()){
+      TowerNode checkTowerNode = animationHandler.getNodeFromTower(towerIterator.next());
+      if (towerNode.getBoundsInParent().intersects(checkTowerNode.getBoundsInParent())){
+        return true;
+      }
+    }
+    return false;
   }
 }
