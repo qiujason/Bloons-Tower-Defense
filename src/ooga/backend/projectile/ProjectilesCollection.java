@@ -57,4 +57,9 @@ public class ProjectilesCollection implements GamePieceCollection<Projectile> {
   public boolean contains(Projectile projectile) {
     return projectiles.contains(projectile);
   }
+
+  @Override
+  public boolean isEmpty(){
+    return projectiles.isEmpty();
+  }
 }

@@ -7,6 +7,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -35,14 +36,12 @@ public class BloonsApplicationGameTest extends DukeApplicationTest {
     }
   }
 
-  private String getLevelName(File levelName){
-    return levelName.getName().split("\\.")[0];
-  }
-
   private void startRandomLevel(){
     clickOn(myStartButton);
-    Button levelButton = lookup("#" + getLevelName(myLevels[0])).query();
-    clickOn(levelButton);
+    ComboBox<String> levelOptions = lookup("#LevelOptions").query();
+    select(levelOptions, levelOptions.getItems().get(0));
+    Button startLevelButton = lookup("#StartLevelButton").query();
+    clickOn(startLevelButton);
   }
 
   @Test // Not general

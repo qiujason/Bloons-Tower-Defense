@@ -56,4 +56,9 @@ public class RoadItemsCollection implements GamePieceCollection<RoadItem> {
   public boolean contains(RoadItem roadItem) {
     return roadItems.contains(roadItem);
   }
+
+  @Override
+  public boolean isEmpty(){
+    return roadItems.isEmpty();
+  }
 }

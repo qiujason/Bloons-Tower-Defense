@@ -18,4 +18,7 @@ public interface GamePieceCollection<T extends GamePiece> {
 
   boolean contains(T gamePiece);
 
+  boolean isEmpty();
+
+
 }

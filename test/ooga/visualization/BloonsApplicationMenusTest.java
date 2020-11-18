@@ -3,9 +3,6 @@ package ooga.visualization;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.io.File;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -18,17 +15,11 @@ import util.DukeApplicationTest;
 
 public class BloonsApplicationMenusTest extends DukeApplicationTest {
 
-  public static final String LAYOUTS_PATH = "layouts/";
-//  public static final String BLOON_WAVES_PATH = "bloon_waves/";
-//  public static final String LEVEL_FILE = "level1.csv";
-//  public static final String BLOONS_TYPE_PATH = "bloon_resources/Bloons";
-
   private BloonsApplication myBloonsApplication;
   private Button myStartButton;
   private Button myNewWindowButton;
   private ComboBox<String> myLanguages;
   private ComboBox<String> myStyles;
-  private File[] myLevels;
   private ResourceBundle myMenuButtonNames;
 
   @Override
@@ -41,22 +32,14 @@ public class BloonsApplicationMenusTest extends DukeApplicationTest {
     myLanguages = lookup("#LanguageOptions").query();
     myNewWindowButton = lookup("#NewGameWindowButton").query();
     myStyles = lookup("#StyleOptions").query();
-    try {
-      myLevels = Paths.get(getClass().getClassLoader().getResource(LAYOUTS_PATH).toURI()).toFile()
-          .listFiles();
-    } catch (URISyntaxException e) {
-      e.printStackTrace();
-    }
-  }
-
-  private String getLevelName(File levelName){
-    return levelName.getName().split("\\.")[0];
   }
 
   private void startRandomLevel(){
     clickOn(myStartButton);
-    Button levelButton = lookup("#" + getLevelName(myLevels[0])).query();
-    clickOn(levelButton);
+    ComboBox<String> levelOptions = lookup("#LevelOptions").query();
+    select(levelOptions, levelOptions.getItems().get(0));
+    Button startLevelButton = lookup("#StartLevelButton").query();
+    clickOn(startLevelButton);
   }
 
   @Test
@@ -69,10 +52,8 @@ public class BloonsApplicationMenusTest extends DukeApplicationTest {
   @Test
   public void testStartButton() {
     clickOn(myStartButton);
-    for(File level : myLevels){
-      Button levelButton = lookup("#" + getLevelName(level)).query();
-      assertEquals(level.getName().split("\\.")[0], levelButton.getText());
-    }
+    ComboBox<String> levelOptions = lookup("#LevelOptions").query();
+    assertEquals(myMenuButtonNames.getString("SelectLevel"), levelOptions.getPromptText());
   }
 
   @Test
@@ -114,6 +95,15 @@ public class BloonsApplicationMenusTest extends DukeApplicationTest {
     assertEquals(myMenuButtonNames.getString("Start"), myStartButton.getText());
     assertEquals(myMenuButtonNames.getString("SetLanguage"), myLanguages.getPromptText());
     assertEquals(myMenuButtonNames.getString("NewGameWindow"), myNewWindowButton.getText());
+  }
+
+  @Test
+  public void testLevelImageDisplay() {
+    clickOn(myStartButton);
+    ComboBox<String> levelOptions = lookup("#LevelOptions").query();
+    select(levelOptions, levelOptions.getItems().get(0));
+    Rectangle imageRectangle = lookup("#ImageRectangle").query();
+    assertNotNull(imageRectangle.getFill());
   }
 
   @Test

@@ -7,10 +7,10 @@ public class GameMenuController implements GameMenuInterface {
 
   private Timeline myTimeline;
 
-  private static final double MAX_RATE = 1.5;
+  private static final double MAX_RATE = 2.5;
   private static final double MIN_RATE = 0.5;
   private static final double DEFAULT_RATE = 1.0;
-  private static final double DELTA_RATE = 0.25;
+  private static final double DELTA_RATE = 0.5;
 
   private double currentRate;
 
