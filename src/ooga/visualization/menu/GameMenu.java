@@ -29,8 +29,7 @@ public class GameMenu {
   private Button speedUpButton;
   private Button slowDownButton;
 
-  public GameMenu(VBox MenuPane, GameMenuInterface gameController,
-      TowerMenuInterface towerController, TowerNodeHandler towerNodeController) {
+  public GameMenu(VBox MenuPane, GameMenuInterface gameController, TowerNodeHandler towerNodeController) {
     myMenuPane = MenuPane;
 
     playButton = makeButton(menuProperties.getString(PLAY_TEXT), event -> gameController.play());
@@ -40,6 +39,8 @@ public class GameMenu {
     speedUpButton = makeButton(menuProperties.getString(SPEEDUP_TEXT), event -> gameController.speedUp());
     slowDownButton = makeButton(menuProperties.getString(SLOWDOWN_TEXT), event -> gameController.slowDown());
     makeButtonRow(speedUpButton, slowDownButton);
+
+    myMenuPane.getChildren().add(makeButton("ChooseImage", event -> {}));
 
     myMenuPane.getChildren().add(new WeaponButtonsMenu(towerNodeController));
   }
