@@ -174,7 +174,7 @@ public class Controller extends Application {
 
     gameEngine.setProjectiles(animationHandler.getProjectiles());
     gameEngine.setTowers(animationHandler.getTowers());
-
+    gameEngine.setRoadItems(animationHandler.getRoadItems());
     gameEngine.update();
 
     animationHandler.setBloonWave(gameEngine.getCurrentBloonWave());
@@ -183,6 +183,8 @@ public class Controller extends Application {
     animationHandler.setShootingTargets(gameEngine.getShootingTargets());
     animationHandler.setTowers(gameEngine.getTowers());
     animationHandler.setProjectiles(gameEngine.getProjectiles());
+    animationHandler.setRoadItems(gameEngine.getRoadItems());
+
 
 
 
