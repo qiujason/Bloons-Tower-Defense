@@ -296,7 +296,7 @@ public class BloonsApplication {
     level.getStyleClass().add("level-background");
     myMenuPane = new VBox();
     visualizeLayout(level);
-    myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
+    myAnimationHandler = new AnimationHandler(myLevelLayout, myBloons,
         myTowers, myProjectiles, myBlockSize, myAnimation);
     towerNodeHandler = new TowerNodeHandler(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize,
         myLevelLayout, myMenuPane, myTowers, myTowerMenuController, myAnimationHandler);

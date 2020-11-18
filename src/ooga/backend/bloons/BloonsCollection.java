@@ -71,9 +71,10 @@ public class BloonsCollection implements GamePieceCollection<Bloon> {
     return bloons.contains(bloon);
   }
 
-//  @Override
-//  public String toString(){
-//    return ""+ bloons.size();
-//  }
+  @Override
+  public boolean isEmpty(){
+    return bloons.isEmpty();
+  }
+
 
 }

@@ -17,7 +17,7 @@ import ooga.visualization.AnimationHandler;
 
 public class GameEngine implements GameEngineAPI {
 
-  private static final int FIRST_WAVE = 0;
+  private static final int STARTING_ROUND = 0;
   public static final int SPAWN_DELAY = (int) (1 * AnimationHandler.FRAMES_PER_SECOND);
 
 
@@ -37,22 +37,31 @@ public class GameEngine implements GameEngineAPI {
   private Map<Bloon, Double > myBloonSidesX;
   private Map<Bloon, Double> myBloonSidesY;
 
-  private int wave;
+  private int round;
+
+
+
+  private boolean roundEnd;
+  private boolean gameEnd;
+
+
 
   public GameEngine(Layout layout, List<BloonsCollection> allBloonWaves, TowersCollection towers,
       ProjectilesCollection projectiles, double blockSize) {
     this.layout = layout;
     this.allBloonWaves = allBloonWaves;
-    this.queuedBloons = allBloonWaves.get(FIRST_WAVE);
+    this.queuedBloons = allBloonWaves.get(STARTING_ROUND);
     this.currentBloonWave = new BloonsCollection();
     this.towers = towers;
     this.projectiles = projectiles;
     myBlockSize = blockSize;
-    wave = FIRST_WAVE;
     spawnTimer = SPAWN_DELAY;
     this.shootingTargets = new HashMap<>();
     myBloonSidesX = new HashMap<>();
     myBloonSidesY = new HashMap<>();
+    this.round = STARTING_ROUND;
+    this.roundEnd = false;
+    this.gameEnd = false;
   }
 
   public void addQueuedBloon(){
@@ -70,6 +79,7 @@ public class GameEngine implements GameEngineAPI {
 
   @Override
   public void moveBloons() {
+    removeDeadBloons();
     GamePieceIterator<Bloon> waveIterator = currentBloonWave.createIterator();
 
     //updatevelocity -- extract helper
@@ -97,24 +107,32 @@ public class GameEngine implements GameEngineAPI {
   }
 
   private void setBloonSides(Bloon bloon, LayoutBlock block) {
-    myBloonSidesX.put(bloon, -0.5 * block.getDx());
-    myBloonSidesY.put(bloon, -0.5 * block.getDy());
+    myBloonSidesX.put(bloon, -0.5* block.getDx());
+    myBloonSidesY.put(bloon, -0.5* block.getDy());
   }
 
-
+  private void removeDeadBloons(){
+    GamePieceIterator<Bloon> bloonsIterator = currentBloonWave.createIterator();
+    while (bloonsIterator.hasNext()) {
+      Bloon bloon = bloonsIterator.next();
+      if(bloon.isDead()){
+        currentBloonWave.remove(bloon);
+      }
+    }
+  }
   @Override
   public void nextWave() {
-    wave++;
-    currentBloonWave = allBloonWaves.get(wave);
+    round++;
+    queuedBloons = allBloonWaves.get(round);
   }
 
   @Override
   public void resetGame() {
-    wave = FIRST_WAVE;
-    currentBloonWave = allBloonWaves.get(FIRST_WAVE);
-//    towers.clear();
-//    towersIterator = towers.createIterator();
+    round = STARTING_ROUND;
+    queuedBloons = allBloonWaves.get(STARTING_ROUND);
+
   }
+
   @Override
   public void shootBloons(){
     GamePieceIterator<Tower> towerIterator = towers.createIterator();
@@ -170,20 +188,55 @@ public class GameEngine implements GameEngineAPI {
   @Override
   public void update(){
     //TODO: get projectile AND tower list from front end (maybe bloons? idk)
+    if (roundEnd){
+      nextWave();
+      roundEnd = false;
+    }
+    spawnBloons();
+    moveBloons();
+    moveProjectiles();
+    shootBloons();
+    checkRoundEnd();
+    checkGameEnd();
+  }
 
+  private void spawnBloons() {
     if (spawnTimer == SPAWN_DELAY){
       addQueuedBloon();
       spawnTimer = 0;
     }
-    moveBloons();
-    moveProjectiles();
-
-    shootBloons();
     spawnTimer++;
+  }
+
+  private void checkRoundEnd(){
+    if (isLevelClear()){
+      System.out.println("round end has been detected loooool");
+      roundEnd = true;
+    }
+
+  }
+
+  private boolean isLevelClear(){
+    return queuedBloons.isEmpty() && currentBloonWave.isEmpty() && projectiles.isEmpty();
+  }
+
+  private void checkGameEnd(){
+    if(isLevelClear() && round >= allBloonWaves.size() - 1){
+      gameEnd = true;
+      System.out.println("game endedLOLOLOL");
+    }
   }
 
   public Map<Tower, Bloon> getShootingTargets() {
     return shootingTargets;
+  }
+
+  public boolean isRoundEnd() {
+    return roundEnd;
+  }
+
+  public boolean isGameEnd() {
+    return gameEnd;
   }
 
 
