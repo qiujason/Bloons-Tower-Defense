@@ -4,6 +4,10 @@ import javafx.scene.Group;
 import javafx.scene.layout.VBox;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.layout.Layout;
+import ooga.backend.roaditems.RoadItem;
+import ooga.backend.roaditems.RoadItemType;
+import ooga.backend.roaditems.factory.RoadItemFactory;
+import ooga.backend.roaditems.factory.SingleRoadItemFactory;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.TowersCollection;
@@ -11,6 +15,9 @@ import ooga.backend.towers.factory.SingleTowerFactory;
 import ooga.backend.towers.factory.TowerFactory;
 import ooga.visualization.AnimationHandler;
 import ooga.visualization.menu.WeaponMenu;
+import ooga.visualization.nodes.ItemNodeFactory;
+import ooga.visualization.nodes.RoadItemNode;
+import ooga.visualization.nodes.RoadItemNodeFactory;
 import ooga.visualization.nodes.TowerNode;
 import ooga.visualization.nodes.TowerNodeFactory;
 import ooga.visualization.nodes.WeaponNodeFactory;
@@ -29,9 +36,12 @@ public class TowerNodeHandler {
   private TowersCollection towersCollection;
 
   private boolean canMakeTower;
+  private boolean canMakeRoadItem;
 
   private TowerFactory towerFactory;
-  private WeaponNodeFactory nodeFactory;
+  private WeaponNodeFactory towerNodeFactory;
+  private RoadItemFactory roadItemFactory;
+  private ItemNodeFactory itemNodeFactory;
 
   private static final double towerDefaultPosition = -1;
 
@@ -49,9 +59,12 @@ public class TowerNodeHandler {
     this.animationHandler = animationHandler;
 
     canMakeTower = true;
+    canMakeRoadItem = true;
 
     towerFactory = new SingleTowerFactory();
-    nodeFactory = new TowerNodeFactory();
+    towerNodeFactory = new TowerNodeFactory();
+    roadItemFactory = new SingleRoadItemFactory();
+    itemNodeFactory = new RoadItemNodeFactory();
   }
 
   public void makeWeapon(TowerType towerType) {
@@ -60,7 +73,7 @@ public class TowerNodeHandler {
       if (menuController.buyTower(towerType)) {
         Tower tower = towerFactory
             .createTower(towerType, towerDefaultPosition, towerDefaultPosition);
-        TowerNode towerNode = nodeFactory.createTowerNode(towerType, gameWidth / 2,
+        TowerNode towerNode = towerNodeFactory.createTowerNode(towerType, gameWidth / 2,
             gameHeight / 2, blockSize / 2);
         towerNode.makeTowerMenu(this);
         towerNode.setWeaponRange(tower.getRadius(), blockSize);
@@ -70,6 +83,18 @@ public class TowerNodeHandler {
         placeTower(tower, towerNode);
       }
       System.out.println("make more money cuh");
+    }
+  }
+
+  public void makeRoadWeapon(RoadItemType roadItemType){
+    if (canMakeRoadItem){
+      canMakeRoadItem = false;
+      RoadItem roadItem = roadItemFactory
+          .createTower(roadItemType, towerDefaultPosition, towerDefaultPosition);
+      RoadItemNode itemNode = itemNodeFactory.createItemNode(roadItemType, gameWidth / 2,
+          gameHeight / 2, blockSize /2);
+      layoutRoot.getChildren().add(itemNode);
+      placeRoadItem(roadItem, itemNode);
     }
   }
 
@@ -110,6 +135,25 @@ public class TowerNodeHandler {
       towerNode.setOnMouseClicked(null);
       selectWeapon();
       canMakeTower = true;
+    });
+  }
+
+  private void placeRoadItem(RoadItem roadItem, RoadItemNode itemNode){
+    layoutRoot.setOnMouseMoved(e -> {
+      if (e.getX() >= 0 && e.getX() <= gameWidth) {
+        if (e.getY() >= 0 && e.getY() <= gameHeight) {
+          itemNode.setXPosition(e.getX());
+          itemNode.setYPosition(e.getY());
+          roadItem.setXPosition(toGridXPosition(e.getX()));
+          roadItem.setYPosition(toGridYPosition(e.getY()));
+        }
+      }
+    });
+    itemNode.setOnMouseClicked(e -> {
+      layoutRoot.setOnMouseMoved(null);
+//      animationHandler.addRoadItem(roadItem, itemNode);
+      itemNode.setOnMouseClicked(null);
+      canMakeRoadItem = true;
     });
   }
 
