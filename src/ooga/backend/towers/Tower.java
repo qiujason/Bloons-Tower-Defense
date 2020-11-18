@@ -87,7 +87,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   }
 
   public boolean checkIfPlaced(){
-    if ((this.getXPosition() == -1) && (this.getYPosition() ==   -1)){
+    if ((this.getXPosition() == -1) && (this.getYPosition() == -1)){
       return false;
     }
     else {

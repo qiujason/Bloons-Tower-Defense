@@ -102,10 +102,11 @@ public class BloonsApplication {
   private void loadLevel() {
     BorderPane level = new BorderPane();
     visualizeLayout(level);
+    myMenuPane = new VBox();
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
         myTowers, myProjectiles, myStartingX, myStartingY, myBlockSize, myAnimation);
     towerNodeHandler = new TowerNodeHandler(GAME_WIDTH, GAME_HEIGHT, myBlockSize,
-        myLevelLayout, myAnimationHandler);
+        myLevelLayout, myMenuPane, myTowers, towerMenuController, myAnimationHandler);
     visualizePlayerGUI(level);
     level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
     myScene = new Scene(level, WIDTH, HEIGHT);
@@ -157,7 +158,6 @@ public class BloonsApplication {
   }
 
   private void visualizePlayerGUI(BorderPane level) {
-    myMenuPane = new VBox();
     myMenuPane.setSpacing(10); //magic num
     myMenu = new GameMenu(myMenuPane, gameMenuController, towerMenuController, towerNodeHandler);
     level.setRight(myMenuPane);

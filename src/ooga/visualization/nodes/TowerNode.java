@@ -7,11 +7,11 @@ import javafx.scene.paint.ImagePattern;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.controller.TowerMenuInterface;
+import ooga.controller.TowerNodeHandler;
 import ooga.visualization.menu.WeaponMenu;
 
 public class TowerNode extends GamePieceNode{
 
-  private Tower tower;
   private TowerType towerType;
   private WeaponRange rangeDisplay;
   private WeaponMenu towerMenu;
@@ -23,19 +23,19 @@ public class TowerNode extends GamePieceNode{
   private ResourceBundle typeToName = ResourceBundle.getBundle(PACKAGE + NAMES);
   private ResourceBundle nameToPicture = ResourceBundle.getBundle(PACKAGE + PICTURES);
 
-  public TowerNode(TowerType tower, double xPosition, double yPosition, double radius){
+  public TowerNode(TowerType towerType, double xPosition, double yPosition, double radius){
     super(xPosition, yPosition, radius);
-    this.towerType = tower;
+    this.towerType = towerType;
     this.setFill(findImage());
-    rangeDisplay = new WeaponRange(xPosition, yPosition, tower.getRadius());
+    rangeDisplay = new WeaponRange(xPosition, yPosition, 0);
   }
 
   public void setWeaponRange(double blockSize){
-    rangeDisplay.setRadius(tower.getRadius());
+    rangeDisplay.setRadius(towerType.getRadius() * blockSize);
   }
 
-  public void makeTowerMenu(Tower tower, TowerMenuInterface controller){
-    towerMenu = new WeaponMenu(tower, controller);
+  public void makeTowerMenu(TowerNodeHandler towerNodeHandler){
+    towerMenu = new WeaponMenu(this, towerNodeHandler);
   }
 
   public WeaponMenu getTowerMenu(){

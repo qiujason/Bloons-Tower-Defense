@@ -245,15 +245,23 @@ public class AnimationHandler {
     myTowersInGame.put(tower, towerInGame);
   }
 
-  public void removeTower(TowerNode towerInGame) {
-    for(Entry<Tower, TowerNode> entry: myTowersInGame.entrySet()){
-      if(entry.getValue().equals(towerInGame)){
-        Tower tower = entry.getKey();
-        myTowers.remove(tower);
-        myTowersInGame.remove(tower, towerInGame);
-        break;
+  public TowerNode getNodeFromTower(Tower tower){
+    return myTowersInGame.get(tower);
+  }
+
+  public Tower getTowerFromNode(TowerNode towerInGame){
+    Tower tower = null;
+    for(Entry<Tower, TowerNode> entry: myTowersInGame.entrySet()) {
+      if (entry.getValue().equals(towerInGame)) {
+        tower = entry.getKey();
       }
     }
+    return tower;
+  }
+
+  public void removeTower(Tower tower, TowerNode towerInGame) {
+    myTowers.remove(tower);
+    myTowersInGame.remove(tower, towerInGame);
   }
 
   public void setBloonWave(BloonsCollection bloonWave) {

@@ -5,8 +5,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
-import ooga.backend.towers.Tower;
 import ooga.controller.TowerMenuInterface;
+import ooga.controller.TowerNodeHandler;
 import ooga.visualization.nodes.TowerNode;
 
 public class WeaponMenu extends FlowPane {
@@ -26,11 +26,11 @@ public class WeaponMenu extends FlowPane {
   private Button sellTowerButton;
   private Button closeMenuButton;
 
-  public WeaponMenu(Tower tower, TowerMenuInterface controller){
+  public WeaponMenu(TowerNode tower, TowerNodeHandler towerNodeHandler){
     this.setPrefWrapLength(200);
-    upgradeRangeButton = makeButton(menuProperties.getString(UPGRADE_RANGE_TEXT), event -> controller.upgradeRange(tower));
-    upgradeRateButton = makeButton(menuProperties.getString(UPGRADE_RATE_TEXT), event -> controller.upgradeRate(tower));
-    sellTowerButton = makeButton(menuProperties.getString(SELL_TOWER_TEXT), event -> controller.sellTower(tower));
+    upgradeRangeButton = makeButton(menuProperties.getString(UPGRADE_RANGE_TEXT), event -> towerNodeHandler.removeWeapon(tower));
+    upgradeRateButton = makeButton(menuProperties.getString(UPGRADE_RATE_TEXT), event -> towerNodeHandler.removeWeapon(tower));
+    sellTowerButton = makeButton(menuProperties.getString(SELL_TOWER_TEXT), event -> towerNodeHandler.removeWeapon(tower));
     //targetingOption ...
   }
 

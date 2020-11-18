@@ -17,43 +17,13 @@ public class TowerMenuController implements TowerMenuInterface {
   }
 
   @Override
-  public boolean buyTower(TowerType towerType, TowerNodeHandler towerNodeHandler) {
-    Boolean bought = bank.buyTower(towerType);
-    if (bought && canMakeTower()){
-      towerNodeHandler.makeWeaponNode(towerType);
-    }
-    return (bought && canMakeTower());
+  public boolean buyTower(TowerType towerType) {
+    return bank.buyTower(towerType);
   }
 
   @Override
-  public void sellTower(Tower tower, TowerNodeHandler towerNodeHandler) {
+  public void sellTower(Tower tower) {
     bank.sellTower(tower.getTowerType());
-    towers.remove(tower);
   }
 
-  @Override
-  public void upgradeRange(Tower tower, TowerNodeHandler towerNodeHandler){
-    tower.upgradeRadius();
-  }
-
-  @Override
-  public void upgradeRate(Tower tower, TowerNodeHandler towerNodeHandler) {
-    tower.upgradeShootingRestRate();
-  }
-
-  @Override
-  public void setTargetingOption(){
-  }
-
-  private Boolean canMakeTower() {
-    Boolean canMake = true;
-    GamePieceIterator<Tower> iterator = towers.createIterator();
-    while (iterator.hasNext()) {
-      Tower checkTower = iterator.next();
-      if (!checkTower.checkIfPlaced()) {
-        canMake = false;
-      }
-    }
-    return canMake;
-  }
 }
