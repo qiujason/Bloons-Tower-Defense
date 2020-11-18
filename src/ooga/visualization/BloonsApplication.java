@@ -298,7 +298,7 @@ public class BloonsApplication {
     visualizeLayout(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
         myTowers, myProjectiles, myBlockSize, myAnimation);
-    towerNodeHandler = new TowerNodeHandler(GAME_WIDTH, GAME_HEIGHT, myBlockSize,
+    towerNodeHandler = new TowerNodeHandler(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize,
         myLevelLayout, myMenuPane, myTowers, myTowerMenuController, myAnimationHandler);
     visualizePlayerGUI(level);
     myScene.setRoot(level);
