@@ -6,7 +6,6 @@ import ooga.backend.bloons.types.Specials;
 
 public class RegenBloon extends SpecialBloon {
 
-  private static final String RESOURCE_BUNDLE_PATH = "bloon_resources/GameMechanics";
   private final BloonsType originalType;
   private final int fullTimer;
   private int timer;
