@@ -20,7 +20,7 @@ public class Bank implements BankAPI {
 
   public static int STARTING_ROUND_BONUS = 100;
 
-  private int currentMoney = 0;
+  private int currentMoney = 500;
   private int currentLevel = 0;
   private int numberOfTotalRounds;
   private List<Integer> roundBonus;

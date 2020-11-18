@@ -3,17 +3,14 @@ package ooga.visualization;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.shape.Circle;
-import javafx.util.Duration;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
-import ooga.backend.projectile.ProjectileType;
 import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.projectile.factory.ProjectileFactory;
 import ooga.backend.projectile.factory.SingleProjectileFactory;
@@ -57,7 +54,7 @@ public class AnimationHandler {
       TowersCollection towers, ProjectilesCollection projectiles, double startingX,
       double startingY, double blockSize, Timeline animation) {
     myAnimation = animation;
-    myAnimation.setCycleCount(Timeline.INDEFINITE);
+    myAnimation.setCycleCount(Timeline.INDEFINITE); //why is this done twice?
 //    KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> animate());
 //    myAnimation.getKeyFrames().add(movement);
 

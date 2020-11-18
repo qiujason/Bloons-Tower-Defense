@@ -23,15 +23,18 @@ public class TowerNode extends GamePieceNode{
   private ResourceBundle typeToName = ResourceBundle.getBundle(PACKAGE + NAMES);
   private ResourceBundle nameToPicture = ResourceBundle.getBundle(PACKAGE + PICTURES);
 
-  public TowerNode(Tower tower, double xPosition, double yPosition, double radius){
+  public TowerNode(TowerType tower, double xPosition, double yPosition, double radius){
     super(xPosition, yPosition, radius);
-    this.tower = tower;
-    this.towerType = tower.getTowerType();
+    this.towerType = tower;
     this.setFill(findImage());
-    rangeDisplay = new WeaponRange(xPosition, yPosition, towerType.getRadius());
+    rangeDisplay = new WeaponRange(xPosition, yPosition, tower.getRadius());
   }
 
-  public void makeTowerMenu(TowerMenuInterface controller){
+  public void setWeaponRange(double blockSize){
+    rangeDisplay.setRadius(tower.getRadius());
+  }
+
+  public void makeTowerMenu(Tower tower, TowerMenuInterface controller){
     towerMenu = new WeaponMenu(tower, controller);
   }
 

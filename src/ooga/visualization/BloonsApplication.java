@@ -1,19 +1,12 @@
 package ooga.visualization;
 
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.animation.Timeline;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -22,30 +15,18 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.layout.Layout;
 import ooga.backend.projectile.ProjectilesCollection;
-import ooga.backend.readers.LayoutReader;
-import ooga.backend.towers.TowerType;
 import ooga.backend.towers.TowersCollection;
-import ooga.backend.towers.factory.SingleTowerFactory;
-import ooga.backend.towers.factory.TowerFactory;
-import ooga.controller.GameMenuController;
 import ooga.controller.GameMenuInterface;
-import ooga.controller.TowerMenuController;
 import ooga.controller.TowerMenuInterface;
 import ooga.visualization.menu.GameMenu;
-import ooga.visualization.menu.WeaponButtonsMenu;
-import ooga.visualization.nodes.TowerNode;
-import ooga.visualization.nodes.TowerNodeFactory;
-import ooga.visualization.nodes.WeaponNodeFactory;
-import ooga.visualization.nodes.WeaponRange;
+import ooga.controller.TowerNodeHandler;
 
 public class BloonsApplication {
 
@@ -68,6 +49,7 @@ public class BloonsApplication {
   private VBox myMenuPane;
   private GameMenuInterface gameMenuController;
   private TowerMenuInterface towerMenuController;
+  private TowerNodeHandler towerNodeHandler;
   private AnimationHandler myAnimationHandler;
   private double myStartingX;
   private double myStartingY;
@@ -120,9 +102,11 @@ public class BloonsApplication {
   private void loadLevel() {
     BorderPane level = new BorderPane();
     visualizeLayout(level);
-    visualizePlayerGUI(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
         myTowers, myProjectiles, myStartingX, myStartingY, myBlockSize, myAnimation);
+    towerNodeHandler = new TowerNodeHandler(GAME_WIDTH, GAME_HEIGHT, myBlockSize,
+        myLevelLayout, myAnimationHandler);
+    visualizePlayerGUI(level);
     level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
     myScene = new Scene(level, WIDTH, HEIGHT);
     myStage.setScene(myScene);
@@ -175,7 +159,7 @@ public class BloonsApplication {
   private void visualizePlayerGUI(BorderPane level) {
     myMenuPane = new VBox();
     myMenuPane.setSpacing(10); //magic num
-    myMenu = new GameMenu(myMenuPane, gameMenuController, towerMenuController);
+    myMenu = new GameMenu(myMenuPane, gameMenuController, towerMenuController, towerNodeHandler);
     level.setRight(myMenuPane);
   }
 

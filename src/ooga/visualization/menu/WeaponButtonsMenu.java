@@ -13,10 +13,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import ooga.backend.towers.TowerType;
 import ooga.controller.TowerMenuInterface;
+import ooga.controller.TowerNodeHandler;
 
 public class WeaponButtonsMenu extends FlowPane {
 
   private TowerMenuInterface controller;
+  private TowerNodeHandler towerNodeHandler;
   private List<TowerType> weaponTypeList = Arrays.asList(TowerType.values());
 
   //later make this read in what package from a overall game properties file
@@ -32,8 +34,9 @@ public class WeaponButtonsMenu extends FlowPane {
   private ResourceBundle nameToPicture = ResourceBundle.getBundle(PACKAGE + PICTURES);
   private ResourceBundle towerCost = ResourceBundle.getBundle(TOWER_COST_DIRECTORY);
 
-  public WeaponButtonsMenu(TowerMenuInterface controller){
+  public WeaponButtonsMenu(TowerMenuInterface controller, TowerNodeHandler towerNodeHandler){
     this.controller = controller;
+    this.towerNodeHandler = towerNodeHandler;
     makeAllWeaponButtons();
     this.setPrefWrapLength(200);
     this.setOrientation(Orientation.HORIZONTAL);
@@ -42,7 +45,7 @@ public class WeaponButtonsMenu extends FlowPane {
   private void makeAllWeaponButtons(){
     for(TowerType type : weaponTypeList){
       this.getChildren().add(makeWeaponButton(type,
-          event -> controller.buyTower(type)));
+          event -> controller.buyTower(type, towerNodeHandler)));
     }
   }
 

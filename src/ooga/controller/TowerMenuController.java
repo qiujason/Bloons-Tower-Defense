@@ -1,19 +1,15 @@
 package ooga.controller;
 
 import ooga.backend.bank.Bank;
-import ooga.backend.bloons.Bloon;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.TowersCollection;
-import ooga.backend.towers.factory.SingleTowerFactory;
-import ooga.backend.towers.factory.TowerFactory;
 
 public class TowerMenuController implements TowerMenuInterface {
 
   private TowersCollection towers;
   private Bank bank;
-  private static final double towerDefaultPosition = -1;
 
   public TowerMenuController(TowersCollection towers, Bank bank){
     this.towers = towers;
@@ -21,34 +17,27 @@ public class TowerMenuController implements TowerMenuInterface {
   }
 
   @Override
-  public void buyTower(TowerType towerType) {
+  public boolean buyTower(TowerType towerType, TowerNodeHandler towerNodeHandler) {
     Boolean bought = bank.buyTower(towerType);
-    if(bought) {
-      if (canMakeTower()) {
-        TowerFactory towerFactory = new SingleTowerFactory();
-        Tower tower = towerFactory
-            .createTower(towerType, towerDefaultPosition, towerDefaultPosition);
-        towers.add(tower);
-      }
+    if (bought && canMakeTower()){
+      towerNodeHandler.makeWeaponNode(towerType);
     }
-    else{
-      System.out.println("make more money cuh");
-    }
+    return (bought && canMakeTower());
   }
 
   @Override
-  public void sellTower(Tower tower) {
+  public void sellTower(Tower tower, TowerNodeHandler towerNodeHandler) {
     bank.sellTower(tower.getTowerType());
     towers.remove(tower);
   }
 
   @Override
-  public void upgradeRange(Tower tower){
+  public void upgradeRange(Tower tower, TowerNodeHandler towerNodeHandler){
     tower.upgradeRadius();
   }
 
   @Override
-  public void upgradeRate(Tower tower) {
+  public void upgradeRate(Tower tower, TowerNodeHandler towerNodeHandler) {
     tower.upgradeShootingRestRate();
   }
 

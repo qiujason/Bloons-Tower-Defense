@@ -1,13 +1,11 @@
 package ooga.backend.towers;
 
-import java.util.List;
 import java.util.ResourceBundle;
 import ooga.backend.API.TowersAPI;
 import ooga.backend.GamePiece;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.collections.GamePieceIterator;
-import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
 import ooga.backend.projectile.ProjectilesCollection;
 import ooga.visualization.AnimationHandler;

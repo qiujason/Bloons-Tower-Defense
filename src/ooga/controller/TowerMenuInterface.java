@@ -6,13 +6,13 @@ import ooga.visualization.nodes.TowerNode;
 
 public interface TowerMenuInterface {
 
-  void buyTower(TowerType towerType);
+  boolean buyTower(TowerType towerType, TowerNodeHandler towerNodeHandler);
 
-  void sellTower(Tower tower);
+  void sellTower(Tower tower, TowerNodeHandler towerNodeHandler);
 
-  void upgradeRange(Tower tower);
+  void upgradeRange(Tower tower, TowerNodeHandler towerNodeHandler);
 
-  void upgradeRate(Tower tower);
+  void upgradeRate(Tower tower, TowerNodeHandler towerNodeHandler);
 
   void setTargetingOption();
 
