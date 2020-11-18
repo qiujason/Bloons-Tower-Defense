@@ -30,8 +30,6 @@ public class AnimationHandler {
   private Timeline myAnimation;
   private Layout myLayout;
   private Group myLevelLayout;
-  private double myStartingX;
-  private double myStartingY;
   private double myBlockSize;
 
   private BloonsCollection myBloons;
@@ -46,8 +44,7 @@ public class AnimationHandler {
   private Map<Tower, Bloon> myShootingTargets;
 
   public AnimationHandler(Layout layout, Group levelLayout, BloonsCollection bloons,
-      TowersCollection towers, ProjectilesCollection projectiles, double startingX,
-      double startingY, double blockSize, Timeline animation) {
+      TowersCollection towers, ProjectilesCollection projectiles, double blockSize, Timeline animation) {
     myAnimation = animation;
     myAnimation.setCycleCount(Timeline.INDEFINITE);
 //    KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> animate());
@@ -64,8 +61,6 @@ public class AnimationHandler {
     myTowersInGame = new HashMap<>();
     myProjectilesInGame = new HashMap<>();
 
-    myStartingX = startingX;
-    myStartingY = startingY;
     myBlockSize = blockSize;
   }
 
@@ -74,7 +69,7 @@ public class AnimationHandler {
     while(iterator.hasNext()) {
       Bloon bloonToSpawn = iterator.next();
       if (!myBloonsInGame.containsKey(bloonToSpawn) && !bloonToSpawn.isDead()) {
-        BloonNode bloonNode = new BloonNode(bloonToSpawn.getBloonsType(), myStartingX, myStartingY, myBlockSize / 2.5);
+        BloonNode bloonNode = new BloonNode(bloonToSpawn.getBloonsType(), bloonToSpawn.getXPosition()*myBlockSize, bloonToSpawn.getYPosition()*myBlockSize, myBlockSize / 2.5);
         myBloonsInGame.put(bloonToSpawn, bloonNode);
         myLevelLayout.getChildren().add(bloonNode);
       }
