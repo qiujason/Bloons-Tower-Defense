@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -90,14 +92,13 @@ public class AnimationHandler {
   public void addProjectilestoGame(){
     GamePieceIterator<Projectile> iterator = myProjectiles.createIterator();
     while(iterator.hasNext()) {
-
       Projectile projectileToSpawn = iterator.next();
-
       if (!myProjectilesInGame.containsKey(projectileToSpawn)) {
         ProjectileNode projectileNode = new ProjectileNode(projectileToSpawn.getType(),
-            projectileToSpawn.getXPosition()*myBlockSize, projectileToSpawn.getYPosition()*myBlockSize, myBlockSize / 8);
+            projectileToSpawn.getXPosition()*myBlockSize,
+            projectileToSpawn.getYPosition()*myBlockSize,
+            projectileToSpawn.getRadius()*myBlockSize/5);
         projectileNode.setRotate(projectileToSpawn.getAngle());
-
         myProjectilesInGame.put(projectileToSpawn, projectileNode);
         myLevelLayout.getChildren().add(projectileNode);
 
@@ -171,29 +172,43 @@ public class AnimationHandler {
         || projectile.getCenterX() >= BloonsApplication.GAME_WIDTH
         || projectile.getCenterY() <= 0
         || projectile.getCenterY() >= BloonsApplication.GAME_HEIGHT;
+    // TODO: cant detect the bottom out of bounds
   }
 
   private void animateShotBloon(){
     BloonsCollection bloonsToRemove = new BloonsCollection();
     ProjectilesCollection projectilesToRemove = new ProjectilesCollection();
     BloonsCollection bloonsToAdd = new BloonsCollection();
-    for(Bloon bloon : myBloonsInGame.keySet()){
-      for(Projectile projectile : myProjectilesInGame.keySet()){
-        if(checkBloonCollision(projectile, bloon)){
-          Bloon[] spawnedBloons = bloon.shootBloon();
-          //double offset = myBlockSize/8;
-          for(int i = 0; i < spawnedBloons.length; i++){
-            bloonsToAdd.add(spawnedBloons[i]);
+    for(Projectile projectile : myProjectilesInGame.keySet()){
+      for(Bloon bloon : myBloonsInGame.keySet()){
+        if(projectile.getType() == ProjectileType.SpreadProjectile &&
+            checkSpreadProjectileCollision(projectile, bloon)){
+          popBloon(bloon, projectile, bloonsToRemove, bloonsToAdd, projectilesToRemove);
+        } else if(checkBloonCollision(projectile, bloon)){
+          if((projectile.getType() == ProjectileType.SingleTargetProjectile && !bloon.isCamo())
+                || projectile.getType() == ProjectileType.CamoTargetProjectile){
+              popBloon(bloon, projectile, bloonsToRemove, bloonsToAdd, projectilesToRemove);
+          } else if(projectile.getType() == ProjectileType.FreezeTargetProjectile){
+
           }
-          bloon.setDead();
-          bloonsToRemove.add(bloon);
-          projectilesToRemove.add(projectile);
         }
       }
     }
     spawnBloons(bloonsToAdd);
     removeShotBloon(bloonsToRemove);
     removeShotProjectiles(projectilesToRemove);
+  }
+
+  private void popBloon(Bloon bloon, Projectile projectile, BloonsCollection bloonsToRemove, BloonsCollection bloonsToAdd,
+      ProjectilesCollection projectilesToRemove){
+    Bloon[] spawnedBloons = bloon.shootBloon();
+    //double offset = myBlockSize/8;
+    for(int i = 0; i < spawnedBloons.length; i++){
+      bloonsToAdd.add(spawnedBloons[i]);
+    }
+    bloon.setDead();
+    bloonsToRemove.add(bloon);
+    projectilesToRemove.add(projectile);
   }
 
   private void spawnBloons(BloonsCollection bloonsToAdd){
@@ -229,6 +244,16 @@ public class AnimationHandler {
     Circle projectileInGame = myProjectilesInGame.get(projectile);
     Circle bloonInGame = myBloonsInGame.get(bloon);
     return projectileInGame.getBoundsInParent().intersects(bloonInGame.getBoundsInParent());
+  }
+
+  private boolean checkSpreadProjectileCollision(Projectile projectile, Bloon bloon){
+    Circle projectileInGame = myProjectilesInGame.get(projectile);
+    Circle bloonInGame = myBloonsInGame.get(bloon);
+    double radius = projectileInGame.getRadius();
+    BoundingBox bounds = new BoundingBox(projectileInGame.getCenterX()-radius,
+        projectileInGame.getCenterY()-radius, projectileInGame.getCenterX()+radius,
+        projectileInGame.getCenterY()+radius);
+    return bounds.intersects(bloonInGame.getBoundsInParent());
   }
 
   public void addTower(Tower tower, TowerNode towerInGame) {

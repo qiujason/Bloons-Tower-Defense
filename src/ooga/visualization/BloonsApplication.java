@@ -82,8 +82,7 @@ public class BloonsApplication {
             getClass().getPackageName() + ".resources.languages." + myCurrentLanguage + ".startMenuButtonNames"
                 + myCurrentLanguage);
     myApplicationErrors = ResourceBundle
-        .getBundle(
-            getClass().getPackageName() + ".resources.languages." + myCurrentLanguage + ".applicationErrors"
+        .getBundle(getClass().getPackageName() + ".resources.languages." + myCurrentLanguage + ".applicationErrors"
                 + myCurrentLanguage);
   }
 
