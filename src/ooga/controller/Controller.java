@@ -204,6 +204,9 @@ public class Controller extends Application {
     //animate animationhandler
     animationHandler.animate();
 
+    bloonsApplication.displayCurrentMoney(bank.getCurrentMoney());
+    bloonsApplication.displayCurrentRound(gameEngine.getRound() + 1);
+
     if(gameEngine.isRoundEnd()){
       System.out.println("frontend detected round end");
       myAnimation.stop();
