@@ -21,7 +21,7 @@ public class Bank implements BankAPI {
 
   public static int STARTING_ROUND_BONUS = 100;
 
-  private int currentMoney = 0;
+  private int currentMoney = 1000;
   private int currentLevel = 0;
   private int numberOfTotalRounds;
   private List<Integer> roundBonus;
@@ -75,16 +75,16 @@ public class Bank implements BankAPI {
     return currentMoney;
   }
 
-  public boolean buyTower(Tower buyTower) {
+  public boolean buyTower(TowerType buyTower) {
     if (canBuyTower(buyTower)) {
-      currentMoney -= towerBuyMap.get(buyTower.getTowerType());
+      currentMoney -= towerBuyMap.get(buyTower);
       return true;
     }
     return false;
   }
 
-  private boolean canBuyTower(Tower buyTower){
-    return currentMoney >= towerBuyMap.get(buyTower.getTowerType());
+  private boolean canBuyTower(TowerType buyTower){
+    return currentMoney >= towerBuyMap.get(buyTower);
   }
 
   public void sellTower(Tower sellTower) {

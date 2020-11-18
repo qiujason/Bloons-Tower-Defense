@@ -31,8 +31,6 @@ public class AnimationHandler {
   private Timeline myAnimation;
   private Layout myLayout;
   private Group myLevelLayout;
-  private double myStartingX;
-  private double myStartingY;
   private double myBlockSize;
 
   private BloonsCollection myBloons;
@@ -47,10 +45,9 @@ public class AnimationHandler {
   private Map<Tower, Bloon> myShootingTargets;
 
   public AnimationHandler(Layout layout, Group levelLayout, BloonsCollection bloons,
-      TowersCollection towers, ProjectilesCollection projectiles, double startingX,
-      double startingY, double blockSize, Timeline animation) {
+      TowersCollection towers, ProjectilesCollection projectiles, double blockSize, Timeline animation) {
     myAnimation = animation;
-    myAnimation.setCycleCount(Timeline.INDEFINITE);
+    myAnimation.setCycleCount(Timeline.INDEFINITE); //why is this done twice?
 //    KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> animate());
 //    myAnimation.getKeyFrames().add(movement);
 
@@ -65,8 +62,6 @@ public class AnimationHandler {
     myTowersInGame = new HashMap<>();
     myProjectilesInGame = new HashMap<>();
 
-    myStartingX = startingX;
-    myStartingY = startingY;
     myBlockSize = blockSize;
   }
 
@@ -75,7 +70,7 @@ public class AnimationHandler {
     while(iterator.hasNext()) {
       Bloon bloonToSpawn = iterator.next();
       if (!myBloonsInGame.containsKey(bloonToSpawn) && !bloonToSpawn.isDead()) {
-        BloonNode bloonNode = new BloonNode(bloonToSpawn.getBloonsType(), myStartingX, myStartingY, myBlockSize / 2.5);
+        BloonNode bloonNode = new BloonNode(bloonToSpawn.getBloonsType(), bloonToSpawn.getXPosition()*myBlockSize, bloonToSpawn.getYPosition()*myBlockSize, myBlockSize / 2.5);
         myBloonsInGame.put(bloonToSpawn, bloonNode);
         myLevelLayout.getChildren().add(bloonNode);
       }
@@ -255,15 +250,23 @@ public class AnimationHandler {
     myTowersInGame.put(tower, towerInGame);
   }
 
-  public void removeTower(TowerNode towerInGame) {
-    for(Entry<Tower, TowerNode> entry: myTowersInGame.entrySet()){
-      if(entry.getValue().equals(towerInGame)){
-        Tower tower = entry.getKey();
-        myTowers.remove(tower);
-        myTowersInGame.remove(tower, towerInGame);
-        break;
+  public TowerNode getNodeFromTower(Tower tower){
+    return myTowersInGame.get(tower);
+  }
+
+  public Tower getTowerFromNode(TowerNode towerInGame){
+    Tower tower = null;
+    for(Entry<Tower, TowerNode> entry: myTowersInGame.entrySet()) {
+      if (entry.getValue().equals(towerInGame)) {
+        tower = entry.getKey();
       }
     }
+    return tower;
+  }
+
+  public void removeTower(Tower tower, TowerNode towerInGame) {
+    myTowers.remove(tower);
+    myTowersInGame.remove(tower, towerInGame);
   }
 
   public void setBloonWave(BloonsCollection bloonWave) {
