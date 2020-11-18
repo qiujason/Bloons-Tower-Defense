@@ -144,8 +144,6 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
           towerNode.setYPosition(e.getY());
           tower.setXPosition(toGridXPosition(e.getX()));
           tower.setYPosition(toGridYPosition(e.getY()));
-          System.out.println(e.getY());
-          System.out.println(toGridYPosition(e.getY()));
         }
       }
     });
