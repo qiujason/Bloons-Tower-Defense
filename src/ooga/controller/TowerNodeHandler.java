@@ -1,7 +1,9 @@
 package ooga.controller;
 
+import java.util.ResourceBundle;
 import javafx.scene.Group;
 import javafx.scene.layout.VBox;
+import ooga.AlertHandler;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.layout.Layout;
 import ooga.backend.roaditems.RoadItem;
@@ -45,6 +47,9 @@ public class TowerNodeHandler {
 
   private static final double towerDefaultPosition = -1;
 
+  private ResourceBundle inGameMessage = ResourceBundle.getBundle("InGameMessages");
+
+
   public TowerNodeHandler(Layout layout, double gameWidth, double gameHeight, double blockSize,
       Group layoutRoot, VBox menuPane, TowersCollection towersCollection,
       TowerMenuInterface menuController, AnimationHandler animationHandler) {
@@ -69,8 +74,8 @@ public class TowerNodeHandler {
 
   public void makeWeapon(TowerType towerType) {
     if (canMakeTower) {
-      canMakeTower = false;
       if (menuController.buyTower(towerType)) {
+        canMakeTower = false;
         Tower tower = towerFactory
             .createTower(towerType, towerDefaultPosition, towerDefaultPosition);
         TowerNode towerNode = towerNodeFactory.createTowerNode(towerType, gameWidth / 2,
@@ -82,7 +87,7 @@ public class TowerNodeHandler {
         layoutRoot.getChildren().add(towerNode);
         placeTower(tower, towerNode);
       }
-      System.out.println("make more money cuh");
+
     }
   }
 

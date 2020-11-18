@@ -205,9 +205,7 @@ public class AnimationHandler {
   private void popBloon(Bloon bloon, Projectile projectile, BloonsCollection bloonsToRemove, BloonsCollection bloonsToAdd,
       ProjectilesCollection projectilesToRemove){
     Bloon[] spawnedBloons = bloon.shootBloon();
-    System.out.println("original bloon: " + bloon.getXPosition() + " " + bloon.getYPosition());
     for(Bloon spawn : spawnedBloons) {
-      System.out.println("spawned bloon: " + spawn.getXPosition() + " " + spawn.getYPosition());
       bloonsToAdd.add(spawn);
     }
     bloon.setDead();
