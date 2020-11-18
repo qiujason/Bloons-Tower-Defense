@@ -30,8 +30,20 @@ public class TowerNode extends GamePieceNode{
     rangeDisplay = new WeaponRange(xPosition, yPosition, towerType.getRadius());
   }
 
-  public void setWeaponRange(double blockSize){
-    rangeDisplay.setRadius(towerType.getRadius() * blockSize);
+  @Override
+  public void setXPosition(double xPos){
+    super.setXPosition(xPos);
+    rangeDisplay.setCenterX(xPos);
+  }
+
+  @Override
+  public void setYPosition(double yPos){
+    super.setYPosition(yPos);
+    rangeDisplay.setCenterY(yPos);
+  }
+
+  public void setWeaponRange(double gridRadius, double blockSize){
+    rangeDisplay.setRadius(gridRadius * blockSize);
   }
 
   public void makeTowerMenu(TowerNodeHandler towerNodeHandler){
