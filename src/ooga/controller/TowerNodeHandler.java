@@ -140,22 +140,22 @@ public class TowerNodeHandler {
           tower.setXPosition(toGridXPosition(e.getX()));
           tower.setYPosition(toGridYPosition(e.getY()));
         }
-        if(checkInvalidPlacement(towerNode)){
-          towerNode.getRangeDisplay().invalidPlacement();
-        }else{
-          towerNode.getRangeDisplay().validPlacement();
-
-        }
+//        if(checkInvalidPlacement(towerNode)){
+//          towerNode.getRangeDisplay().invalidPlacement();
+//        }else{
+//          towerNode.getRangeDisplay().validPlacement();
+//
+//        }
       }
     });
     towerNode.setOnMouseClicked(e -> {
-      if(!checkInvalidPlacement(towerNode)){
+     // if(!checkInvalidPlacement(towerNode)){
         layoutRoot.setOnMouseMoved(null);
         animationHandler.addTower(tower, towerNode);
         towerNode.setOnMouseClicked(null);
         selectWeapon();
         canMakeTower = true;
-      }
+    //  }
     });
   }
 
@@ -172,7 +172,7 @@ public class TowerNodeHandler {
     });
     itemNode.setOnMouseClicked(e -> {
       layoutRoot.setOnMouseMoved(null);
-//      animationHandler.addRoadItem(roadItem, itemNode);
+      animationHandler.addRoadItem(roadItem, itemNode);
       itemNode.setOnMouseClicked(null);
       canMakeRoadItem = true;
     });
