@@ -28,20 +28,25 @@ public class WeaponButtonsMenu extends FlowPane {
   private static final String BUTTON_TAG = "Button";
   private static final String ROAD_ITEMS = "RoadItems";
   private static final String TOWER_COST_DIRECTORY = "towervalues/TowerBuyValues";
+  private static final String ROAD_ITEM_COST_DIRECTORY = "towervalues/roadItemBuyValues";
 
-  private static final Double BUTTON_MAX_WIDTH = 50.0;
+  private static final Double BUTTON_HEIGHT = 25.0;
+  private static final Double BUTTON_WIDTH = 50.0;
+  private static final Double PREF_WRAP_LENGTH = 200.0;
 
   private ResourceBundle typeToName = ResourceBundle.getBundle(PACKAGE + NAMES);
   private ResourceBundle nameToPicture = ResourceBundle.getBundle(PACKAGE + PICTURES);
-  private ResourceBundle towerCost = ResourceBundle.getBundle(TOWER_COST_DIRECTORY);
-
   private ResourceBundle roadItemPic = ResourceBundle.getBundle(PACKAGE + ROAD_ITEMS);
+
+  private ResourceBundle towerCost = ResourceBundle.getBundle(TOWER_COST_DIRECTORY);
+  private ResourceBundle itemCost = ResourceBundle.getBundle(ROAD_ITEM_COST_DIRECTORY);
+
 
   public WeaponButtonsMenu(WeaponNodeHandler weaponNodeHandler){
     this.weaponNodeHandler = weaponNodeHandler;
     makeAllWeaponButtons();
     makeAllRoadItemButtons();
-    this.setPrefWrapLength(200);
+    this.setPrefWrapLength(PREF_WRAP_LENGTH);
     this.setOrientation(Orientation.HORIZONTAL);
   }
 
@@ -62,29 +67,28 @@ public class WeaponButtonsMenu extends FlowPane {
   private Button makeWeaponButton(TowerType type, EventHandler<ActionEvent> handler){
     String towerName = typeToName.getString(type.name());
     String imageDirectory = nameToPicture.getString(towerName + BUTTON_TAG);
-    Image towerImage = makeImage(imageDirectory);
-    ImageView imageView = new ImageView(towerImage);
-    imageView.setFitWidth(25);
-    imageView.setFitHeight(25);
-    Button button = new Button("",imageView);
+    Button button = addImageToButton(imageDirectory);
     button.setOnAction(handler);
     button.setId(towerName);
-    button.setMinHeight(25);
-    button.setMinWidth(50);
     return button;
   }
 
   private Button makeRoadItemButton(RoadItemType type, EventHandler<ActionEvent> handler){
     String imageDirectory = roadItemPic.getString(type.name());
-    Image towerImage = makeImage(imageDirectory);
-    ImageView imageView = new ImageView(towerImage);
-    imageView.setFitWidth(25);
-    imageView.setFitHeight(25);
-    Button button = new Button("", imageView);
+    Button button = addImageToButton(imageDirectory);
     button.setOnAction(handler);
     button.setId(type.name());
-    button.setMinHeight(25);
-    button.setMinWidth(50);
+    return button;
+  }
+
+  private Button addImageToButton(String imageDirectory) {
+    Image weaponImage = makeImage(imageDirectory);
+    ImageView imageView = new ImageView(weaponImage);
+    imageView.setFitWidth(BUTTON_HEIGHT);
+    imageView.setFitHeight(BUTTON_HEIGHT);
+    Button button = new Button("", imageView);
+    button.setMinHeight(BUTTON_HEIGHT);
+    button.setMinWidth(BUTTON_WIDTH);
     return button;
   }
 
