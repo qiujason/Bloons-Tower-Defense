@@ -1,6 +1,13 @@
-.root {
-  -fx-background-color: white;
+.start-menu {
   -fx-background-image: url("cssPhotos/startscreen.png");
+}
+
+.level-background {
+  -fx-background-color: White;
+}
+
+.menu-text {
+  -fx-fill: Black;
 }
 
 .button {
@@ -18,4 +25,14 @@
 
 .list-cell{
   -fx-text-fill: Black;
+}
+
+.path-block{
+  -fx-fill: Tan;
+  -fx-stroke: Tan;
+}
+
+.non-path-block{
+  -fx-fill: #83b576;
+  -fx-stroke: #83b576;
 }
