@@ -12,13 +12,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -65,8 +58,6 @@ public class BloonsApplication {
   private GameMenuInterface gameMenuController;
   private TowerMenuInterface towerMenuController;
   private AnimationHandler myAnimationHandler;
-  private double myStartingX;
-  private double myStartingY;
   private double myBlockSize;
 //  private final ResourceBundle myBlockMappings = ResourceBundle
 //      .getBundle(getClass().getPackageName() + ".resources.blockMappings");
@@ -76,6 +67,8 @@ public class BloonsApplication {
   private String myCurrentLevel;
   private String myCurrentLanguage;
   private String myCurrentStylesheet;
+  private double myStartingX;
+  private double myStartingY;
 
   public BloonsApplication(Button startLevelButton) {
     myLevelStartButton = startLevelButton;
@@ -251,7 +244,7 @@ public class BloonsApplication {
     myMenuPane = new VBox();
     visualizeLayout(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
-        myTowers, myProjectiles, myStartingX, myStartingY, myBlockSize, myAnimation);
+        myTowers, myProjectiles, myBlockSize, myAnimation);
     gameMenuController = new GameMenuController(myAnimation);
     towerMenuController = new TowerMenuController(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize,
         myLevelLayout,
