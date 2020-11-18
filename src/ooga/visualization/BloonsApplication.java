@@ -1,10 +1,13 @@
 package ooga.visualization;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.animation.Timeline;
@@ -78,6 +81,7 @@ public class BloonsApplication {
   private Text myMoneyText;
   private Text myRoundText;
   private Text myHealthText;
+  private Window myWindow;
 
   public BloonsApplication(Button startLevelButton) {
     myLevelStartButton = startLevelButton;
@@ -97,14 +101,30 @@ public class BloonsApplication {
   public void startApplication(Stage mainStage) {
     myStage = mainStage;
     BorderPane menuLayout = new BorderPane();
-    displayStartMenu(menuLayout);
     myScene = new Scene(menuLayout, WIDTH, HEIGHT);
     myScene.getStylesheets()
         .add(getClass().getResource("/" + STYLESHEETS + myCurrentStylesheet).toExternalForm());
     menuLayout.getStyleClass().add("start-menu");
+    myWindow = new StartWindow(myScene, myMenuButtonNames, myApplicationMessages, myCurrentLanguage, myCurrentStylesheet);
+//    Button startButton = new Button();
+//    startButton.setOnAction(event -> switchWindows(new SelectionWindow()));
+//    Button resetButton = new Button();
+//    resetButton.setOnAction(event -> startApplication(myStage));
+//    List<Button> windowChangeButtons = new ArrayList<>();
+//    windowChangeButtons.add(startButton);
+//    windowChangeButtons.add(resetButton);
+//    myWindow.displayWindow(windowChangeButtons);
+    displayStartMenu(menuLayout);
     myStage.setScene(myScene);
     myStage.show();
   }
+
+//  private void switchWindows(Window newWindow) {
+//    myWindow = newWindow;
+//    myWindow.displayWindow();
+//    myStage.setScene(myScene);
+//    myStage.show();
+//  }
 
   // TODO: Refactor, this is getting a bit long
   private void displayStartMenu(BorderPane menu) {
@@ -265,7 +285,7 @@ public class BloonsApplication {
         ImagePattern levelImage = new ImagePattern(
             new Image(String.valueOf(levelImageFile.toURI())));
         double heightToWidthRatio = levelImage.getImage().getHeight() / levelImage.getImage().getWidth();
-        Rectangle imageRectangle = new Rectangle(WIDTH / 2, HEIGHT / 2 * heightToWidthRatio , levelImage);
+        Rectangle imageRectangle = new Rectangle(WIDTH / 2, WIDTH / 2 * heightToWidthRatio , levelImage);
         imageRectangle.setId("ImageRectangle");
         levelImageGroup.getChildren()
             .add(imageRectangle);
