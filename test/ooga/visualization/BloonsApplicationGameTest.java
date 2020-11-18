@@ -21,19 +21,12 @@ public class BloonsApplicationGameTest extends DukeApplicationTest {
   public static final String LAYOUTS_PATH = "layouts/";
 
   private Button myStartButton;
-  private File[] myLevels;
 
   @Override
   public void start(Stage testStage) {
     Controller myController = new Controller();
     myController.start(testStage);
     myStartButton = lookup("#Start").query();
-    try {
-      myLevels = Paths.get(getClass().getClassLoader().getResource(LAYOUTS_PATH).toURI()).toFile()
-          .listFiles();
-    } catch (URISyntaxException e) {
-      e.printStackTrace();
-    }
   }
 
   private void startRandomLevel(){
