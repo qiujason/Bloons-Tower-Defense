@@ -88,11 +88,11 @@ public class Controller extends Application {
     initializeBloonWaves();
     startGameEngine();
 
-    bloonsApplication.initializeGameObjects(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
-        gameEngine.getProjectiles(), myAnimation);
-
     gameController = new GameMenuController(myAnimation);
     towerController = new TowerMenuController(bank);
+
+    bloonsApplication.initializeGameObjects(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
+        gameEngine.getProjectiles(), myAnimation, gameController, towerController);
 
     myAnimation.setCycleCount(Timeline.INDEFINITE);
 

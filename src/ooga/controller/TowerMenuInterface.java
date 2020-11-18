@@ -1,10 +1,11 @@
 package ooga.controller;
 
 import ooga.backend.towers.Tower;
+import ooga.backend.towers.TowerType;
 
 public interface TowerMenuInterface {
 
-  boolean buyTower(Tower tower);
+  boolean buyTower(TowerType tower);
 
   void sellTower(Tower tower);
 }

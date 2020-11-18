@@ -70,10 +70,12 @@ public class TowerNodeHandler {
   }
 
   public void removeWeapon(TowerNode towerNode) {
-    menuController.sellTower(animationHandler.getTowerFromNode(towerNode));
+    Tower tower = animationHandler.getTowerFromNode(towerNode);
+    menuController.sellTower(tower);
     layoutRoot.getChildren().remove(towerNode);
     layoutRoot.getChildren().remove(towerNode.getRangeDisplay());
     menuPane.getChildren().remove(towerNode.getTowerMenu());
+    animationHandler.removeTower(tower, towerNode);
   }
 
   public void upgradeRate(TowerNode towerNode) {

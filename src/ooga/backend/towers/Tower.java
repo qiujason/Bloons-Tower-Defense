@@ -87,15 +87,6 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     return false;
   }
 
-  public boolean checkIfPlaced(){
-    if ((this.getXPosition() == -1) && (this.getYPosition() == -1)){
-      return false;
-    }
-    else {
-      return true;
-    }
-  }
-
   public abstract Bloon shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection);
 
   public double getDistance(GamePiece target){

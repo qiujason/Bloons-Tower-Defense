@@ -2,6 +2,7 @@ package ooga.controller;
 
 import ooga.backend.bank.Bank;
 import ooga.backend.towers.Tower;
+import ooga.backend.towers.TowerType;
 
 public class TowerMenuController implements TowerMenuInterface {
 
@@ -12,7 +13,7 @@ public class TowerMenuController implements TowerMenuInterface {
   }
 
   @Override
-  public boolean buyTower(Tower tower) {
+  public boolean buyTower(TowerType tower) {
     return bank.buyTower(tower);
   }
 
