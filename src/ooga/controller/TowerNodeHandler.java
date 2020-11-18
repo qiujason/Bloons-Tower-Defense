@@ -8,11 +8,13 @@ import ooga.backend.roaditems.RoadItem;
 import ooga.backend.roaditems.RoadItemType;
 import ooga.backend.roaditems.factory.RoadItemFactory;
 import ooga.backend.roaditems.factory.SingleRoadItemFactory;
+import ooga.backend.towers.ShootingChoice;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.TowersCollection;
 import ooga.backend.towers.factory.SingleTowerFactory;
 import ooga.backend.towers.factory.TowerFactory;
+import ooga.backend.towers.singleshottowers.SingleShotTower;
 import ooga.visualization.AnimationHandler;
 import ooga.visualization.menu.WeaponMenu;
 import ooga.visualization.nodes.ItemNodeFactory;
@@ -118,6 +120,12 @@ public class TowerNodeHandler {
     towerNode.setWeaponRange(tower.getRadius(), blockSize);
   }
 
+  public void setTargetingOption(TowerNode towerNode, ShootingChoice shootingChoice){
+    Tower tower = animationHandler.getTowerFromNode(towerNode);
+    SingleShotTower singleShotTower = (SingleShotTower) tower;
+    singleShotTower.updateShootingChoice(shootingChoice);
+  }
+
   private void placeTower(Tower tower, TowerNode towerNode) {
     layoutRoot.setOnMouseMoved(e -> {
       if (e.getX() >= 0 && e.getX() <= gameWidth) {
@@ -192,8 +200,4 @@ public class TowerNodeHandler {
   private double toGridYPosition(double gameYPosition){
     return layout.getHeight() * gameYPosition / gameHeight;
   }
-
-//    @Override
-//    public void setTargetingOption(){
-//    }
 }
