@@ -29,12 +29,15 @@ import ooga.AlertHandler;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.layout.Layout;
 import ooga.backend.projectile.ProjectilesCollection;
+import ooga.backend.roaditems.RoadItemsCollection;
 import ooga.backend.towers.TowersCollection;
 import ooga.controller.Controller;
 import ooga.controller.GameMenuInterface;
 import ooga.controller.TowerMenuInterface;
 import ooga.visualization.menu.GameMenu;
 import ooga.controller.TowerNodeHandler;
+import ooga.visualization.menu.ImageChooser;
+import ooga.visualization.menu.WeaponButtonsMenu;
 
 public class BloonsApplication {
 
@@ -42,13 +45,20 @@ public class BloonsApplication {
       .getBundle(BloonsApplication.class.getPackageName() + ".resources.gameMenuNumbers");
   public static final double WIDTH = Double.parseDouble(MENU_SIZING.getString("Width"));
   public static final double HEIGHT = Double.parseDouble(MENU_SIZING.getString("Height"));
-  public static final double GAME_WIDTH = WIDTH * Double.parseDouble(MENU_SIZING.getString("GameWidthMultiplier"));
-  public static final double GAME_HEIGHT = HEIGHT * Double.parseDouble(MENU_SIZING.getString("GameHeightMultiplier"));
-  public static final double GAME_STATS_HEIGHT_TEXT = Double.parseDouble(MENU_SIZING.getString("GameStatsTextHeight"));
-  public static final double GAME_STATS_HEIGHT_SIZE = Double.parseDouble(MENU_SIZING.getString("GameStatsTextSize"));
-  public static final double HEALTH_TEXT_X_SCALE = Double.parseDouble(MENU_SIZING.getString("HealthTextXScale"));
-  public static final double MONEY_TEXT_X_SCALE = Double.parseDouble(MENU_SIZING.getString("MoneyTextXScale"));
-  public static final double ROUND_TEXT_X_SCALE = Double.parseDouble(MENU_SIZING.getString("RoundTextXScale"));
+  public static final double GAME_WIDTH =
+      WIDTH * Double.parseDouble(MENU_SIZING.getString("GameWidthMultiplier"));
+  public static final double GAME_HEIGHT =
+      HEIGHT * Double.parseDouble(MENU_SIZING.getString("GameHeightMultiplier"));
+  public static final double GAME_STATS_HEIGHT_TEXT = Double
+      .parseDouble(MENU_SIZING.getString("GameStatsTextHeight"));
+  public static final double GAME_STATS_HEIGHT_SIZE = Double
+      .parseDouble(MENU_SIZING.getString("GameStatsTextSize"));
+  public static final double HEALTH_TEXT_X_SCALE = Double
+      .parseDouble(MENU_SIZING.getString("HealthTextXScale"));
+  public static final double MONEY_TEXT_X_SCALE = Double
+      .parseDouble(MENU_SIZING.getString("MoneyTextXScale"));
+  public static final double ROUND_TEXT_X_SCALE = Double
+      .parseDouble(MENU_SIZING.getString("RoundTextXScale"));
 
   public static final String LAYOUTS_PATH = "layouts/";
   public static final ResourceBundle LANGUAGES = ResourceBundle
@@ -64,6 +74,7 @@ public class BloonsApplication {
   private BloonsCollection myBloons;
   private TowersCollection myTowers;
   private ProjectilesCollection myProjectiles;
+  private RoadItemsCollection myRoadItems;
   private Group myLevelLayout;
   private GameMenu myMenu;
   private VBox myMenuPane;
@@ -105,7 +116,8 @@ public class BloonsApplication {
     myScene.getStylesheets()
         .add(getClass().getResource("/" + STYLESHEETS + myCurrentStylesheet).toExternalForm());
     menuLayout.getStyleClass().add("start-menu");
-    myWindow = new StartWindow(myScene, myMenuButtonNames, myApplicationMessages, myCurrentLanguage, myCurrentStylesheet);
+    myWindow = new StartWindow(myScene, myMenuButtonNames, myApplicationMessages, myCurrentLanguage,
+        myCurrentStylesheet);
 //    Button startButton = new Button();
 //    startButton.setOnAction(event -> switchWindows(new SelectionWindow()));
 //    Button resetButton = new Button();
@@ -284,8 +296,10 @@ public class BloonsApplication {
       if (levelImageFile.getName().split("\\.")[0].equals(levelName)) {
         ImagePattern levelImage = new ImagePattern(
             new Image(String.valueOf(levelImageFile.toURI())));
-        double heightToWidthRatio = levelImage.getImage().getHeight() / levelImage.getImage().getWidth();
-        Rectangle imageRectangle = new Rectangle(WIDTH / 2, WIDTH / 2 * heightToWidthRatio , levelImage);
+        double heightToWidthRatio =
+            levelImage.getImage().getHeight() / levelImage.getImage().getWidth();
+        Rectangle imageRectangle = new Rectangle(WIDTH / 2, WIDTH / 2 * heightToWidthRatio,
+            levelImage);
         imageRectangle.setId("ImageRectangle");
         levelImageGroup.getChildren()
             .add(imageRectangle);
@@ -296,12 +310,14 @@ public class BloonsApplication {
 
   public void initializeGameObjects(Layout layout, BloonsCollection bloons,
       TowersCollection towers,
-      ProjectilesCollection projectiles, Timeline animation, GameMenuInterface gameMenuController,
+      ProjectilesCollection projectiles, RoadItemsCollection roadItems, Timeline animation,
+      GameMenuInterface gameMenuController,
       TowerMenuInterface towerMenuController) {
     myLayout = layout;
     myBloons = bloons;
     myTowers = towers;
     myProjectiles = projectiles;
+    myRoadItems = roadItems;
     myAnimation = animation;
     myGameMenuController = gameMenuController;
     myTowerMenuController = towerMenuController;
@@ -311,25 +327,29 @@ public class BloonsApplication {
     if (levelName == null) {
       new AlertHandler(myApplicationMessages.getString("NoLevelSelected"),
           myApplicationMessages.getString("NoLevelSelected"));
-      return;
-    }
-    myCurrentLevel = levelName;
-    myLevelStartButton.fire();
-    myLevel = new Pane();
-    myLevel.getStyleClass().add("level-background");
-    myMenuPane = new VBox();
-    visualizeLayout(myLevel);
-    myAnimationHandler = new AnimationHandler(myLevelLayout, myBloons,
-        myTowers, myProjectiles, myBlockSize, myAnimation);
+      if (levelName.equals("null.csv")) {
+        new AlertHandler(myApplicationMessages.getString("NoLevelSelected"),
+            myApplicationMessages.getString("NoLevelSelected"));
+        return;
+      }
+      myCurrentLevel = levelName;
+      myLevelStartButton.fire();
+      myLevel = new Pane();
+      myLevel.getStyleClass().add("level-background");
+      myMenuPane = new VBox();
+      visualizeLayout(myLevel);
+      myAnimationHandler = new AnimationHandler(myLevelLayout, myBloons,
+          myTowers, myProjectiles, myRoadItems, myBlockSize, myAnimation);
 
-    towerNodeHandler = new TowerNodeHandler(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize,
-        myLevelLayout, myMenuPane, myTowers, myTowerMenuController, myAnimationHandler);
-    visualizePlayerGUI(myLevel);
-    displayCurrentMoney(0);
-    displayCurrentRound(1);
-    displayCurrentHealth(100); // change this to actual health
-    myScene.setRoot(myLevel);
-    myStage.setScene(myScene);
+      towerNodeHandler = new TowerNodeHandler(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize,
+          myLevelLayout, myMenuPane, myTowers, myTowerMenuController, myAnimationHandler);
+      visualizePlayerGUI(myLevel);
+      displayCurrentMoney(0);
+      displayCurrentRound(1);
+      displayCurrentHealth(100); // change this to actual health
+      myScene.setRoot(myLevel);
+      myStage.setScene(myScene);
+    }
   }
 
   // TODO: Refactor
@@ -383,7 +403,10 @@ public class BloonsApplication {
 
   private void visualizePlayerGUI(Pane level) {
     myMenuPane.setSpacing(10); //magic num
-    myMenu = new GameMenu(myMenuPane, myGameMenuController, towerNodeHandler);
+    myMenu = new GameMenu(myMenuPane, myGameMenuController);
+
+    myMenuPane.getChildren().add(new ImageChooser(myAnimationHandler));
+    myMenuPane.getChildren().add(new WeaponButtonsMenu(towerNodeHandler));
     myMenuPane.setLayoutX(GAME_WIDTH);
     level.getChildren().add(myMenuPane);
   }
@@ -393,21 +416,21 @@ public class BloonsApplication {
     myStage.show();
   }
 
-  public void displayCurrentHealth(int currentHealth){
+  public void displayCurrentHealth(int currentHealth) {
     myLevel.getChildren().remove(myHealthText);
     myHealthText = new Text("Health: " + currentHealth);
     myHealthText.setX(WIDTH * HEALTH_TEXT_X_SCALE);
     setupGameStat(myHealthText);
   }
 
-  public void displayCurrentMoney(int currentMoney){
+  public void displayCurrentMoney(int currentMoney) {
     myLevel.getChildren().remove(myMoneyText);
     myMoneyText = new Text("Money: $" + currentMoney);
     myMoneyText.setX(WIDTH * MONEY_TEXT_X_SCALE);
     setupGameStat(myMoneyText);
   }
 
-  public void displayCurrentRound(int currentRound){
+  public void displayCurrentRound(int currentRound) {
     myLevel.getChildren().remove(myRoundText);
     myRoundText = new Text("Round: " + currentRound);
     myRoundText.setX(WIDTH * ROUND_TEXT_X_SCALE);
@@ -416,18 +439,20 @@ public class BloonsApplication {
 
   private void setupGameStat(Text gameStat) {
     gameStat.getStyleClass().add("menu-text");
-    gameStat.setY( HEIGHT * GAME_STATS_HEIGHT_TEXT);
+    gameStat.setY(HEIGHT * GAME_STATS_HEIGHT_TEXT);
     gameStat.setScaleX(GAME_STATS_HEIGHT_SIZE);
     gameStat.setScaleY(GAME_STATS_HEIGHT_SIZE);
     myLevel.getChildren().add(gameStat);
   }
 
-  public void endRound(){
-    new AlertHandler(myApplicationMessages.getString("RoundEndHeader"), myApplicationMessages.getString("RoundEndMessage"));
+  public void endRound() {
+    new AlertHandler(myApplicationMessages.getString("RoundEndHeader"),
+        myApplicationMessages.getString("RoundEndMessage"));
   }
 
   public void endLevel() {
-    new AlertHandler(myApplicationMessages.getString("GameEndHeader"), myApplicationMessages.getString("GameEndMessage"));
+    new AlertHandler(myApplicationMessages.getString("GameEndHeader"),
+        myApplicationMessages.getString("GameEndMessage"));
   }
 
   public String getCurrentLevel() {

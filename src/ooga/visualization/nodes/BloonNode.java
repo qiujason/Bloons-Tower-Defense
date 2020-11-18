@@ -1,5 +1,7 @@
 package ooga.visualization.nodes;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.ResourceBundle;
 import javafx.scene.image.Image;
@@ -9,9 +11,9 @@ import ooga.backend.bloons.types.BloonsType;
 public class BloonNode extends GamePieceNode{
 
   private BloonsType bloonType;
-  public static final String BLOON_IMAGES_PATH = "bloon_resources/BloonImages";
+  public static String BLOON_IMAGES_PATH = "bloon_resources/BloonImages";
 
-  private final ResourceBundle myBloonImages = ResourceBundle
+  private ResourceBundle myBloonImages = ResourceBundle
       .getBundle(BLOON_IMAGES_PATH);
 
   public BloonNode(BloonsType bloonType, double xPosition, double yPosition, double radius){
@@ -32,6 +34,19 @@ public class BloonNode extends GamePieceNode{
     }
     assert towerImage != null;
     return new ImagePattern(towerImage);
+  }
+
+  public void setImage(File file){
+    Image bloonImage = null;
+    try {
+      bloonImage = new Image(file.toURI().toURL().toExternalForm());
+    } catch (
+        MalformedURLException e) {
+      e.printStackTrace();
+    }
+    assert bloonImage != null;
+    ImagePattern imageToSet = new ImagePattern(bloonImage);
+    this.setFill(imageToSet);
   }
 
 }

@@ -1,5 +1,7 @@
 package ooga.controller;
 
+import java.util.ResourceBundle;
+import ooga.AlertHandler;
 import ooga.backend.bank.Bank;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
@@ -8,6 +10,7 @@ import ooga.backend.towers.UpgradeChoice;
 public class TowerMenuController implements TowerMenuInterface {
 
   private Bank bank;
+  private ResourceBundle inGameMessage = ResourceBundle.getBundle("InGameMessages");
 
   public TowerMenuController(Bank bank){
     this.bank = bank;
@@ -15,7 +18,13 @@ public class TowerMenuController implements TowerMenuInterface {
 
   @Override
   public boolean buyTower(TowerType tower) {
-    return bank.buyTower(tower);
+    if(bank.buyTower(tower)) {
+      return true;
+    } else{
+      new AlertHandler(inGameMessage.getString("InsufficientFunds"),
+          inGameMessage.getString("ForTower"));
+      return false;
+    }
   }
 
   @Override
@@ -29,7 +38,8 @@ public class TowerMenuController implements TowerMenuInterface {
       tower.performUpgrade(UpgradeChoice.RadiusUpgrade);
     }
     else {
-      System.out.println("make more money cuh");
+      new AlertHandler(inGameMessage.getString("InsufficientFunds"),
+          inGameMessage.getString("ForUpgradeRange"));
     }
   }
 
@@ -39,8 +49,8 @@ public class TowerMenuController implements TowerMenuInterface {
       tower.performUpgrade(UpgradeChoice.ShootingRestRateUpgrade);
     }
     else {
-      System.out.println("make more money cuh");
-    }
+      new AlertHandler(inGameMessage.getString("InsufficientFunds"),
+          inGameMessage.getString("ForUpgradeRate"));    }
   }
 
 }

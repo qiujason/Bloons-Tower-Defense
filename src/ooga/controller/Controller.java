@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import ooga.AlertHandler;
+import ooga.backend.API.GameEngineAPI;
 import ooga.backend.ConfigurationException;
 import ooga.backend.GameEngine;
 import ooga.backend.bloons.Bloon;
@@ -28,6 +29,7 @@ import ooga.backend.readers.RoadItemValueReader;
 import ooga.backend.readers.RoundBonusReader;
 import ooga.backend.readers.TowerValueReader;
 import ooga.backend.roaditems.RoadItemType;
+import ooga.backend.roaditems.RoadItemsCollection;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.TowersCollection;
@@ -55,13 +57,9 @@ public class Controller extends Application {
   private LayoutReader layoutReader;
   private BloonsTypeChain bloonsTypeChain;
   private BloonReader bloonReader;
-  private GameEngine gameEngine;
+  private GameEngineAPI gameEngine;
   private Layout layout;
   private List<BloonsCollection> allBloonWaves;
-  private TowersCollection towersCollection;
-  private ProjectilesCollection projectilesCollection;
-
-  private Map<Tower, Bloon> shootingTargets;
   private GameMenuInterface gameController;
   private Map<TowerType, Integer> towerBuyMap;
   private Map<TowerType, Integer> towerSellMap;
@@ -76,9 +74,6 @@ public class Controller extends Application {
     myAnimation = new Timeline();
     layoutReader = new LayoutReader();
     bloonReader = new BloonReader();
-    towersCollection = new TowersCollection();
-    projectilesCollection = new ProjectilesCollection();
-    shootingTargets = new HashMap<>();
     setUpBank();
 
     Button startLevelButton = new Button();
@@ -87,7 +82,7 @@ public class Controller extends Application {
     bloonsApplication.startApplication(primaryStage);
   }
 
-  private void startLevel(){
+  private void startLevel() {
     initializeLayout();
     initializeBloonTypes();
     initializeBloonWaves();
@@ -96,8 +91,10 @@ public class Controller extends Application {
     gameController = new GameMenuController(myAnimation);
     towerController = new TowerMenuController(bank);
 
-    bloonsApplication.initializeGameObjects(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
-        gameEngine.getProjectiles(), myAnimation, gameController, towerController);
+    bloonsApplication
+        .initializeGameObjects(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
+            gameEngine.getProjectiles(), gameEngine.getRoadItems(), myAnimation, gameController,
+            towerController);
 
     myAnimation.setCycleCount(Timeline.INDEFINITE);
 
@@ -105,35 +102,32 @@ public class Controller extends Application {
     myAnimation.getKeyFrames().add(movement);
   }
 
-  private void checkTowerPropertyFiles(){
-    PropertyFileValidator towerPicsValidator = new PropertyFileValidator("btd_towers/MonkeyPics.properties",
-        new HashSet<>(Arrays.asList("DartMonkey", "DartMonkeyButton", "TackShooter", "TackShooterButton",
-            "BombShooter", "BombShooterButton", "SniperMonkey", "SniperMonkeyButton", "SuperMonkey",
-            "SuperMonkeyButton", "IceMonkey", "IceMonkeyButton", "NinjaMonkey", "NinjaMonkeyButton")));
-    PropertyFileValidator towerNameValidator = new PropertyFileValidator("btd_towers/TowerMonkey.properties",
+  private void checkTowerPropertyFiles() {
+    PropertyFileValidator towerPicsValidator = new PropertyFileValidator(
+        "btd_towers/MonkeyPics.properties",
+        new HashSet<>(
+            Arrays.asList("DartMonkey", "DartMonkeyButton", "TackShooter", "TackShooterButton",
+                "BombShooter", "BombShooterButton", "SniperMonkey", "SniperMonkeyButton",
+                "SuperMonkey",
+                "SuperMonkeyButton", "IceMonkey", "IceMonkeyButton", "NinjaMonkey",
+                "NinjaMonkeyButton")));
+    PropertyFileValidator towerNameValidator = new PropertyFileValidator(
+        "btd_towers/TowerMonkey.properties",
         new HashSet<>(Arrays.asList("SingleProjectileShooter", "MultiProjectileShooter",
-            "SpreadProjectileShooter", "UnlimitedRangeProjectileShooter", "SuperSpeedProjectileShooter",
+            "SpreadProjectileShooter", "UnlimitedRangeProjectileShooter",
+            "SuperSpeedProjectileShooter",
             "FrozenSpreadShooter", "CamoProjectileShooter")));
-    if(!towerPicsValidator.checkIfValid()){
+    if (!towerPicsValidator.checkIfValid()) {
       AlertHandler alert = new AlertHandler(errorResource.getString("InvalidPropertyFile"),
           errorResource.getString("RequiredKeysMissingPics"));
     }
-    if(!towerNameValidator.checkIfValid()){
+    if (!towerNameValidator.checkIfValid()) {
       AlertHandler alert = new AlertHandler(errorResource.getString("InvalidPropertyFile"),
           errorResource.getString("RequiredKeysMissingTowerNames"));
     }
   }
 
-  private double getMyBlockSize() {
-    int numberOfRows = layout.getHeight();
-    int numberOfColumns = layout.getWidth();
-    double blockWidth = BloonsApplication.GAME_WIDTH / numberOfColumns;
-    double blockHeight = BloonsApplication.GAME_HEIGHT / numberOfRows;
-    double myBlockSize = Math.min(blockWidth, blockHeight);
-    return myBlockSize;
-  }
-
-  public void setUpBank(){
+  public void setUpBank() {
     try {
       towerBuyMap = new TowerValueReader(TOWER_BUY_VALUES_PATH).getMap();
       towerSellMap = new TowerValueReader(TOWER_SELL_VALUES_PATH).getMap();
@@ -147,22 +141,22 @@ public class Controller extends Application {
     try {
       roundBonuses = roundBonusReader.getDataFromFile(ROUND_BONUSES_PATH);
       createBank(roundBonuses);
-    } catch(ConfigurationException e){
+    } catch (ConfigurationException e) {
       AlertHandler alert = new AlertHandler(errorResource.getString("InvalidPropertyFile"),
           errorResource.getString(e.getMessage()));
     }
   }
 
-  private void createBank(List<List<String>> roundBonuses){
+  private void createBank(List<List<String>> roundBonuses) {
     int rounds = Integer.parseInt(roundBonuses.get(0).get(0));
-    if(roundBonuses.size() == 1) {
+    if (roundBonuses.size() == 1) {
       if (roundBonuses.get(0).size() == 1) {
         bank = new Bank(towerBuyMap, towerSellMap, roadItemBuyMap, rounds);
       } else {
         int starting_bonus = Integer.parseInt(roundBonuses.get(0).get(1));
         bank = new Bank(towerBuyMap, towerSellMap, roadItemBuyMap, starting_bonus);
       }
-    } else{
+    } else {
       bank = new Bank(towerBuyMap, towerSellMap, roadItemBuyMap, roundBonuses.get(1));
     }
   }
@@ -176,52 +170,49 @@ public class Controller extends Application {
   }
 
   private void initializeBloonWaves() {
-    allBloonWaves = bloonReader.generateBloonsCollectionMap(bloonsTypeChain, BLOON_WAVES_PATH + bloonsApplication.getCurrentLevel(), layout);
+    allBloonWaves = bloonReader.generateBloonsCollectionMap(bloonsTypeChain,
+        BLOON_WAVES_PATH + bloonsApplication.getCurrentLevel(), layout);
   }
 
   private void startGameEngine() {
-    gameEngine = new GameEngine(layout, allBloonWaves, towersCollection, projectilesCollection, getMyBlockSize());
+    gameEngine = new GameEngine(layout, allBloonWaves);
   }
 
   private void step() {
     animationHandler = bloonsApplication.getMyAnimationHandler();
 
-    //pass shit from front end to backend
     gameEngine.setProjectiles(animationHandler.getProjectiles());
     gameEngine.setTowers(animationHandler.getTowers());
 
-    //update game engine
     gameEngine.update();
 
-    //pass shit from backend to frontend
     animationHandler.setBloonWave(gameEngine.getCurrentBloonWave());
-
 
     animationHandler.setShootingTargets(gameEngine.getShootingTargets());
     animationHandler.setTowers(gameEngine.getTowers());
     animationHandler.setProjectiles(gameEngine.getProjectiles());
 
-    //animate animationhandler
     animationHandler.animate();
 
     bloonsApplication.displayCurrentMoney(bank.getCurrentMoney());
     bloonsApplication.displayCurrentRound(gameEngine.getRound() + 1);
 
-    if(gameEngine.isGameEnd()){
+    if (gameEngine.isGameEnd()) {
       System.out.println("rip");
       bloonsApplication.endLevel();
       myAnimation.stop();
-    }
-    else if(gameEngine.isRoundEnd()){
+    } else if (gameEngine.isRoundEnd()) {
       System.out.println("frontend detected round end");
       bloonsApplication.endRound();
-      myAnimation.stop();
-    }
+      if (gameEngine.isRoundEnd() || gameEngine.isGameEnd()) {
+        bank.advanceOneLevel();
+        myAnimation.stop();
+      }
 
+    }
   }
 
-
-  public BloonsApplication getMyBloonsApplication(){
+  public BloonsApplication getMyBloonsApplication() {
     return bloonsApplication;
   }
 
