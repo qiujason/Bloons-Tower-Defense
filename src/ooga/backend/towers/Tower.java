@@ -11,6 +11,7 @@ import ooga.backend.projectile.ProjectileType;
 import ooga.backend.projectile.ProjectilesCollection;
 import ooga.visualization.AnimationHandler;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 public abstract class Tower extends GamePiece implements TowersAPI {
 
@@ -135,22 +136,26 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   }
 
   private void upgradeWithSelectedChoice(ResourceBundle bundle, String key){
-    if(bundle.containsKey(key) && StringUtils.isNumeric(bundle.getString(key))){
-      int value = Integer.parseInt(bundle.getString(key));
+    if(bundle.containsKey(key) && NumberUtils.isCreatable(bundle.getString(key))){
+      double value = Double.parseDouble(bundle.getString(key));
       upgradeHelper(key, value, value);
     } else{
       upgradeHelper(key, defaultUpgradeMultiplier, defaultUpgradeCost);
     }
   }
 
-  private void upgradeHelper(String key, double currUpgradeMultiplier, int currUpgradeCost) {
+  private void upgradeHelper(String key, double currUpgradeMultiplier, double currUpgradeCost) {
     switch(key){
-      case "RadiusUpgradeMultiplier": radius *= currUpgradeMultiplier;
-      case "ShootingSpeedUpgradeMultiplier": shootingSpeed *= currUpgradeMultiplier;
-      case "ShootingRestRateUpgradeMultiplier": shootingRestRate /= currUpgradeMultiplier;
-      case "RadiusUpgradeCost": totalUpgradeCost += currUpgradeCost;
-      case "ShootingSpeedUpgradeCost": totalUpgradeCost += currUpgradeCost;
-      case "ShootingRestRateUpgradeCost": totalUpgradeCost += currUpgradeCost;
+      case "RadiusUpgradeMultiplier":
+        this.radius *= currUpgradeMultiplier; break;
+      case "ShootingSpeedUpgradeMultiplier":
+        this.shootingSpeed *= currUpgradeMultiplier; break;
+      case "ShootingRestRateUpgradeMultiplier":
+        this.shootingRestRate /= currUpgradeMultiplier; break;
+      case "RadiusUpgradeCost":
+      case "ShootingSpeedUpgradeCost":
+      case "ShootingRestRateUpgradeCost":
+        this.totalUpgradeCost += currUpgradeCost; break;
     }
   }
 

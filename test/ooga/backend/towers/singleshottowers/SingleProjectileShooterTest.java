@@ -13,8 +13,10 @@ import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectilesCollection;
+import ooga.backend.towers.ShootingChoice;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
+import ooga.backend.towers.UpgradeChoice;
 import ooga.backend.towers.factory.SingleTowerFactory;
 import ooga.backend.towers.factory.TowerFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -146,5 +148,49 @@ class SingleProjectileShooterTest {
     assertEquals(0, dart.getYPosition());
     assertEquals(0.18, dart.getXVelocity());
     assertEquals(0.24000000000000005, dart.getYVelocity());
+  }
+
+  @org.junit.jupiter.api.Test
+  void testGetTargetAndUpdatingShootingChoice() {
+    TowerFactory towerFactory = new SingleTowerFactory();
+    SingleShotTower testTower = (SingleShotTower)
+        towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
+    testTower.update();
+    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 0.3,0.4,5,5);
+    List<Bloon> bloonsList = new ArrayList<>();
+    bloonsList.add(target);
+    Bloon target2 = new Bloon(new BloonsType(chain, "BLUE", 2, 1, new HashSet<>()), 1,2,5,5);
+    bloonsList.add(target2);
+    BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
+    assertEquals(target, testTower.getTarget(bloonsCollection));
+    testTower.updateShootingChoice(ShootingChoice.LastBloon);
+    assertEquals(target2, testTower.getTarget(bloonsCollection));
+    testTower.updateShootingChoice(ShootingChoice.ClosestBloon);
+    assertEquals(target, testTower.getTarget(bloonsCollection));
+    testTower.updateShootingChoice(ShootingChoice.StrongestBloon);
+    assertEquals(target2, testTower.getTarget(bloonsCollection));
+  }
+
+  @org.junit.jupiter.api.Test
+  void testGetCostOfUpgrade() {
+    TowerFactory towerFactory = new SingleTowerFactory();
+    SingleShotTower testTower = (SingleShotTower)
+        towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
+    assertEquals(100, testTower.getCostOfUpgrade(UpgradeChoice.RadiusUpgrade));
+    assertEquals(150, testTower.getCostOfUpgrade(UpgradeChoice.ShootingRestRateUpgrade));
+    assertEquals(80, testTower.getCostOfUpgrade(UpgradeChoice.ShootingSpeedUpgrade));
+  }
+
+  @org.junit.jupiter.api.Test
+  void testPerformUpgrade() {
+    TowerFactory towerFactory = new SingleTowerFactory();
+    SingleShotTower testTower = (SingleShotTower)
+        towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
+    testTower.performUpgrade(UpgradeChoice.RadiusUpgrade);
+    assertEquals(3*1.05, testTower.getRadius());
+    testTower.performUpgrade(UpgradeChoice.ShootingSpeedUpgrade);
+    assertEquals(3*1.10, testTower.getShootingSpeed());
+    testTower.performUpgrade(UpgradeChoice.ShootingRestRateUpgrade);
+    assertEquals(60*2/2, testTower.getShootingRestRate());
   }
 }
