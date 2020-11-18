@@ -93,6 +93,7 @@ public class BloonsApplication {
   private Text myRoundText;
   private Text myHealthText;
   private Window myWindow;
+  private Enum<?> myGameMode;
 
   public BloonsApplication(Button startLevelButton) {
     myLevelStartButton = startLevelButton;
@@ -226,6 +227,8 @@ public class BloonsApplication {
     BorderPane.setAlignment(levelSelectText, Pos.CENTER);
     ComboBox<String> levelOptions = initializeLevelButtons(levelSelectScreen);
 
+    ComboBox<Enum<?>> gameModeOptions = initializeGameModeOptions();
+
     Button backButton = new Button(myMenuButtonNames.getString("ReturnToStart"));
     backButton.setOnAction(e -> startApplication(myStage));
     backButton.setId("BackButton");
@@ -237,6 +240,7 @@ public class BloonsApplication {
     HBox levelSelectButtons = new HBox();
     levelSelectButtons.setAlignment(Pos.CENTER);
     levelSelectButtons.getChildren().add(levelOptions);
+    levelSelectButtons.getChildren().add(gameModeOptions);
     levelSelectButtons.getChildren().add(startLevelButton);
     levelSelectButtons.getChildren().add(backButton);
 
@@ -308,6 +312,23 @@ public class BloonsApplication {
     levelSelectScreen.setCenter(levelImageGroup);
   }
 
+  private ComboBox<Enum<?>> initializeGameModeOptions() {
+    ComboBox<Enum<?>> gameModes = new ComboBox<>();
+    gameModes.setPromptText("Game Modes");
+    gameModes.setOnAction(e -> myGameMode = gameModes.getValue());
+    Class<?> gameModesClass = null;
+    try {
+      gameModesClass = Class.forName("something");
+    } catch (ClassNotFoundException e) {
+      new AlertHandler(myApplicationMessages.getString("NoGameModes"), myApplicationMessages.getString("NoGameModes"));
+      return gameModes;
+    }
+    for(Object mode : gameModesClass.getEnumConstants()){
+      gameModes.getItems().add((Enum<?>) mode);
+    }
+    return gameModes;
+  }
+
   public void initializeGameObjects(Layout layout, BloonsCollection bloons,
       TowersCollection towers,
       ProjectilesCollection projectiles, RoadItemsCollection roadItems, Timeline animation,
@@ -327,29 +348,28 @@ public class BloonsApplication {
     if (levelName == null) {
       new AlertHandler(myApplicationMessages.getString("NoLevelSelected"),
           myApplicationMessages.getString("NoLevelSelected"));
-      if (levelName.equals("null.csv")) {
-        new AlertHandler(myApplicationMessages.getString("NoLevelSelected"),
-            myApplicationMessages.getString("NoLevelSelected"));
-        return;
-      }
-      myCurrentLevel = levelName;
-      myLevelStartButton.fire();
-      myLevel = new Pane();
-      myLevel.getStyleClass().add("level-background");
-      myMenuPane = new VBox();
-      visualizeLayout(myLevel);
-      myAnimationHandler = new AnimationHandler(myLevelLayout, myBloons,
-          myTowers, myProjectiles, myRoadItems, myBlockSize, myAnimation);
-
-      towerNodeHandler = new TowerNodeHandler(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize,
-          myLevelLayout, myMenuPane, myTowers, myTowerMenuController, myAnimationHandler);
-      visualizePlayerGUI(myLevel);
-      displayCurrentMoney(0);
-      displayCurrentRound(1);
-      displayCurrentHealth(100); // change this to actual health
-      myScene.setRoot(myLevel);
-      myStage.setScene(myScene);
     }
+    if (levelName.equals("null.csv")) {
+      new AlertHandler(myApplicationMessages.getString("NoLevelSelected"),
+          myApplicationMessages.getString("NoLevelSelected"));
+      return;
+    }
+    myCurrentLevel = levelName;
+    myLevelStartButton.fire();
+    myLevel = new Pane();
+    myLevel.getStyleClass().add("level-background");
+    myMenuPane = new VBox();
+    visualizeLayout(myLevel);
+    myAnimationHandler = new AnimationHandler(myLevelLayout, myBloons,
+        myTowers, myProjectiles, myRoadItems, myBlockSize, myAnimation);
+    towerNodeHandler = new TowerNodeHandler(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize,
+        myLevelLayout, myMenuPane, myTowers, myTowerMenuController, myAnimationHandler);
+    visualizePlayerGUI(myLevel);
+    displayCurrentMoney(0);
+    displayCurrentRound(1);
+    displayCurrentHealth(100); // change this to actual health
+    myScene.setRoot(myLevel);
+    myStage.setScene(myScene);
   }
 
   // TODO: Refactor
@@ -453,6 +473,10 @@ public class BloonsApplication {
   public void endLevel() {
     new AlertHandler(myApplicationMessages.getString("GameEndHeader"),
         myApplicationMessages.getString("GameEndMessage"));
+  }
+
+  public Enum<?> getMyGameMode() {
+    return myGameMode;
   }
 
   public String getCurrentLevel() {
