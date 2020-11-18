@@ -1,16 +1,12 @@
 package ooga.visualization.menu;
 
-import java.io.File;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import ooga.controller.GameMenuInterface;
 import javafx.scene.control.Button;
-import ooga.controller.TowerMenuInterface;
-import ooga.controller.TowerNodeHandler;
 
 public class GameMenu {
 
@@ -41,8 +37,6 @@ public class GameMenu {
     speedUpButton = makeButton(menuProperties.getString(SPEEDUP_TEXT), event -> gameController.speedUp());
     slowDownButton = makeButton(menuProperties.getString(SLOWDOWN_TEXT), event -> gameController.slowDown());
     makeButtonRow(speedUpButton, slowDownButton);
-
-
   }
 
   private void makeButtonRow(Button first, Button second){
