@@ -94,6 +94,16 @@ public class Bloon extends GamePiece implements BloonsAPI {
     return bloonsType == bloonsType.chain().getBloonsTypeRecord("DEAD");
   }
 
+  public void slowDown() {
+    slowDownActive = true;
+    speedEffectFactor = Math.min(speedEffectFactor, Double.parseDouble(GAME_MECHANICS.getString("SlowDownSpeedFactor")));
+  }
+
+  public void freeze() {
+    freezeActive = true;
+    speedEffectFactor = 0;
+  }
+
   @Override
   public String toString(){
     return bloonsType.name();
@@ -107,24 +117,12 @@ public class Bloon extends GamePiece implements BloonsAPI {
     return distanceTraveled;
   }
 
-  public void slowDown() {
-    slowDownActive = true;
-    slowDownTimer = 0;
-    speedEffectFactor = Math.min(speedEffectFactor, Integer.parseInt(GAME_MECHANICS.getString("SlowDownSpeedFactor")));
-  }
-
-  public void freeze() {
-    freezeActive = true;
-    freezeTimer = 0;
-    speedEffectFactor = Math.min(speedEffectFactor, Integer.parseInt(GAME_MECHANICS.getString("SlowDownSpeedFactor")));
-  }
-
   protected void setBloonsType(BloonsType type) {
     bloonsType = type;
   }
 
   private void updateDistanceTraveled() {
-    distanceTraveled += (Math.abs(xVelocity) + Math.abs(yVelocity)) * relativeSpeed;
+    distanceTraveled += (Math.abs(xVelocity) + Math.abs(yVelocity)) * relativeSpeed * speedEffectFactor;
   }
 
   private void updatePosition() {
@@ -135,9 +133,6 @@ public class Bloon extends GamePiece implements BloonsAPI {
 
   private void updateSlowDownEffect() {
     if (slowDownActive) {
-      if (slowDownTimer == 0) {
-        speedEffectFactor = Integer.parseInt(GAME_MECHANICS.getString("SlowDownSpeedFactor"));
-      }
       slowDownTimer++;
       if (slowDownTimer >= slowDownTimePeriod) {
         slowDownActive = false;
@@ -149,9 +144,6 @@ public class Bloon extends GamePiece implements BloonsAPI {
 
   private void updateFreezeEffect() {
     if (freezeActive) {
-      if (freezeTimer == 0) {
-        speedEffectFactor = 0;
-      }
       freezeTimer++;
       if (freezeTimer >= freezeTimePeriod) {
         freezeActive = false;

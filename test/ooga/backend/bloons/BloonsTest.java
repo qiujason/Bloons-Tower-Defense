@@ -2,6 +2,7 @@ package ooga.backend.bloons;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ResourceBundle;
 import ooga.backend.bloons.factory.CamoBloonsFactory;
 import ooga.backend.bloons.factory.RegenBloonsFactory;
 import ooga.backend.bloons.types.BloonsTypeChain;
@@ -12,6 +13,9 @@ import org.junit.jupiter.api.Test;
 
 
 public class BloonsTest {
+
+  public static final String RESOURCE_BUNDLE_PATH = "bloon_resources/GameMechanics";
+  private static final ResourceBundle GAME_MECHANICS = ResourceBundle.getBundle(RESOURCE_BUNDLE_PATH);
 
   private BloonsTypeChain chain;
 
@@ -142,6 +146,107 @@ public class BloonsTest {
     double distanceTraveled = bloon.getDistanceTraveled();
     bloon = new RegenBloonsFactory().createNextBloon(bloon);
     assertEquals(distanceTraveled, bloon.getDistanceTraveled());
+  }
+
+  @Test
+  void testSlowDownBloon() {
+    Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 10);
+    bloon.slowDown();
+    bloon.update();
+    double expectedDistance = (Math.abs(bloon.getXVelocity()) + Math.abs(bloon.getYVelocity())) * chain.getBloonsTypeRecord("RED").relativeSpeed() * Double.parseDouble(GAME_MECHANICS.getString("SlowDownSpeedFactor"));
+    assertEquals(expectedDistance, bloon.getDistanceTraveled());
+  }
+
+  @Test
+  void testFreezeBloon() {
+    Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 10);
+    bloon.freeze();
+    bloon.update();
+    assertEquals(0, bloon.getDistanceTraveled());
+  }
+
+  @Test
+  void testSlowDownThenFreezeBloon() {
+    Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 10);
+    bloon.slowDown();
+    bloon.update();
+    double expectedDistance = (Math.abs(bloon.getXVelocity()) + Math.abs(bloon.getYVelocity())) * chain.getBloonsTypeRecord("RED").relativeSpeed() * Double.parseDouble(GAME_MECHANICS.getString("SlowDownSpeedFactor"));
+    assertEquals(expectedDistance, bloon.getDistanceTraveled());
+    bloon.freeze();
+    bloon.update();
+    assertEquals(expectedDistance, bloon.getDistanceTraveled());
+  }
+
+  @Test
+  void testFreezeThenSlowDownBloon() {
+    Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 10);
+    bloon.freeze();
+    bloon.update();
+    bloon.slowDown();
+    bloon.update();
+    assertEquals(0, bloon.getDistanceTraveled());
+  }
+
+  @Test
+  void testSlowDownBloonTimer() {
+    Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 10);
+    bloon.slowDown();
+    double expectedDistance = 0;
+    for (int i = 0; i < Integer.parseInt(GAME_MECHANICS.getString("SlowDownTimePeriod")); i++) {
+      bloon.update();
+      expectedDistance += (Math.abs(bloon.getXVelocity()) + Math.abs(bloon.getYVelocity())) * chain.getBloonsTypeRecord("RED").relativeSpeed() *
+          Double.parseDouble(GAME_MECHANICS.getString("SlowDownSpeedFactor"));
+      assertEquals(expectedDistance, bloon.getDistanceTraveled());
+    }
+    bloon.update();
+    expectedDistance += (Math.abs(bloon.getXVelocity()) + Math.abs(bloon.getYVelocity())) * chain.getBloonsTypeRecord("RED").relativeSpeed();
+    assertEquals(expectedDistance, bloon.getDistanceTraveled());
+  }
+
+  @Test
+  void testFreezeBloonTimer() {
+    Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 10);
+    bloon.freeze();
+    double expectedDistance = 0;
+    for (int i = 0; i < Integer.parseInt(GAME_MECHANICS.getString("FreezeTimePeriod")); i++) {
+      bloon.update();
+      assertEquals(0, bloon.getDistanceTraveled());
+    }
+    bloon.update();
+    expectedDistance += (Math.abs(bloon.getXVelocity()) + Math.abs(bloon.getYVelocity())) * chain.getBloonsTypeRecord("RED").relativeSpeed();
+    assertEquals(expectedDistance, bloon.getDistanceTraveled());
+  }
+
+  @Test
+  void testSlowDownThenSlowDownBloonTimerNotReset() {
+    Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 10);
+    bloon.slowDown();
+    double expectedDistance = 0;
+    for (int i = 0; i < Integer.parseInt(GAME_MECHANICS.getString("SlowDownTimePeriod")); i++) {
+      bloon.slowDown();
+      bloon.update();
+      expectedDistance += (Math.abs(bloon.getXVelocity()) + Math.abs(bloon.getYVelocity())) * chain.getBloonsTypeRecord("RED").relativeSpeed() *
+          Double.parseDouble(GAME_MECHANICS.getString("SlowDownSpeedFactor"));
+      assertEquals(expectedDistance, bloon.getDistanceTraveled());
+    }
+    bloon.update();
+    expectedDistance += (Math.abs(bloon.getXVelocity()) + Math.abs(bloon.getYVelocity())) * chain.getBloonsTypeRecord("RED").relativeSpeed();
+    assertEquals(expectedDistance, bloon.getDistanceTraveled());
+  }
+
+  @Test
+  void testFreezeThenFreezeBloonTimerNotReset() {
+    Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 10);
+    bloon.freeze();
+    double expectedDistance = 0;
+    for (int i = 0; i < Integer.parseInt(GAME_MECHANICS.getString("FreezeTimePeriod")); i++) {
+      bloon.freeze();
+      bloon.update();
+      assertEquals(0, bloon.getDistanceTraveled());
+    }
+    bloon.update();
+    expectedDistance += (Math.abs(bloon.getXVelocity()) + Math.abs(bloon.getYVelocity())) * chain.getBloonsTypeRecord("RED").relativeSpeed();
+    assertEquals(expectedDistance, bloon.getDistanceTraveled());
   }
 
 }
