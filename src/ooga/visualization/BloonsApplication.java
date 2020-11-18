@@ -289,7 +289,8 @@ public class BloonsApplication {
   }
 
   private void loadLevel(String levelName) {
-    if (levelName == null) {
+    System.out.println(levelName);
+    if (levelName.equals("null.csv")) {
       new AlertHandler(myApplicationErrors.getString("NoLevelSelected"),
           myApplicationErrors.getString("NoLevelSelected"));
       return;
