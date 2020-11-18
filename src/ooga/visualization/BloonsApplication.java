@@ -12,13 +12,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -45,8 +38,6 @@ public class BloonsApplication {
   public static final double GAME_HEIGHT = 0.875 * HEIGHT;
   public static final double GAME_WIDTH = 0.75 * WIDTH;
   public static final String LAYOUTS_PATH = "layouts/";
-//  public static final String BACKGROUND_IMAGE = "/gamePhotos/";
-//  public static final String START_SCREEN_BACKGROUND = "startscreen.png";
   public static final String DEFAULT_LANGUAGE = "English";
   public static final ResourceBundle LANGUAGES = ResourceBundle
       .getBundle(BloonsApplication.class.getPackageName() + ".resources.languageList");
@@ -66,8 +57,6 @@ public class BloonsApplication {
   private GameMenuInterface gameMenuController;
   private TowerMenuInterface towerMenuController;
   private AnimationHandler myAnimationHandler;
-  private double myStartingX;
-  private double myStartingY;
   private double myBlockSize;
   private final ResourceBundle myBlockMappings = ResourceBundle
       .getBundle(getClass().getPackageName() + ".resources.blockMappings");
@@ -265,7 +254,7 @@ public class BloonsApplication {
     myMenuPane = new VBox();
     visualizeLayout(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
-        myTowers, myProjectiles, myStartingX, myStartingY, myBlockSize, myAnimation);
+        myTowers, myProjectiles, myBlockSize, myAnimation);
     gameMenuController = new GameMenuController(myAnimation);
     towerMenuController = new TowerMenuController(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize,
         myLevelLayout,
@@ -319,10 +308,6 @@ public class BloonsApplication {
     String blockColorAsString = myBlockMappings.getString(block);
     Color blockColor = Color.web(blockColorAsString);
     blockRectangle.setFill(blockColor);
-    if (block.charAt(0) == '*') {
-      myStartingX = currentBlockX + blockSize / 2;
-      myStartingY = currentBlockY + blockSize / 2;
-    }
     return blockRectangle;
   }
 
