@@ -61,6 +61,7 @@ public class Controller extends Application {
   private GameMenuInterface gameController;
   private Map<TowerType, Integer> towerBuyMap;
   private Map<TowerType, Integer> towerSellMap;
+  private TowerMenuInterface towerController;
   private Bank bank;
 
   @Override
@@ -87,8 +88,11 @@ public class Controller extends Application {
     initializeBloonWaves();
     startGameEngine();
 
+    gameController = new GameMenuController(myAnimation);
+    towerController = new TowerMenuController(bank);
+
     bloonsApplication.initializeGameObjects(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
-        gameEngine.getProjectiles(), myAnimation);
+        gameEngine.getProjectiles(), myAnimation, gameController, towerController);
 
     myAnimation.setCycleCount(Timeline.INDEFINITE);
 
@@ -123,7 +127,6 @@ public class Controller extends Application {
     double myBlockSize = Math.min(blockWidth, blockHeight);
     return myBlockSize;
   }
-
 
   public void setUpBank(){
     try {

@@ -1,18 +1,15 @@
 package ooga.controller;
 
+import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
-import ooga.visualization.nodes.TowerNode;
 
 public interface TowerMenuInterface {
 
-  void buyTower(TowerType towerType);
+  boolean buyTower(TowerType tower);
 
-  void selectTower(TowerNode tower);
+  void sellTower(Tower tower);
 
-  void closeMenu(TowerNode tower);
+  void upgradeRange(Tower tower);
 
-  void sellTower(TowerNode tower);
-
-  void upgradeTower(TowerNode tower);
-
+  void upgradeRate(Tower tower);
 }
