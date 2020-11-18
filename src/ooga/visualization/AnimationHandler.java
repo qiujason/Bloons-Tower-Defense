@@ -157,16 +157,14 @@ public class AnimationHandler {
     BloonsCollection bloonsToAdd = new BloonsCollection();
     for(Projectile projectile : myProjectilesInGame.keySet()){
       for(Bloon bloon : myBloonsInGame.keySet()){
-        if(projectile.getType() == ProjectileType.SpreadProjectile &&
-            checkSpreadProjectileCollision(projectile, bloon)){
+        if(shouldExplode(projectile, bloon)){
           popBloon(bloon, projectile, bloonsToRemove, bloonsToAdd, projectilesToRemove);
         } else if(checkBloonCollision(projectile, bloon)){
-          if((projectile.getType() == ProjectileType.SingleTargetProjectile &&
-              !bloon.getBloonsType().specials().contains(Specials.Camo))
-                || projectile.getType() == ProjectileType.CamoTargetProjectile){
+          if(shouldPop(projectile, bloon)){
               popBloon(bloon, projectile, bloonsToRemove, bloonsToAdd, projectilesToRemove);
-          } else if(projectile.getType() == ProjectileType.FreezeTargetProjectile){
-
+          } else if(shouldFreeze(projectile, bloon)){
+              bloon.freeze();
+              projectilesToRemove.add(projectile);
           }
         }
       }
@@ -176,11 +174,25 @@ public class AnimationHandler {
     removeShotProjectiles(projectilesToRemove);
   }
 
+  private boolean shouldExplode(Projectile projectile, Bloon bloon){
+    return projectile.getType() == ProjectileType.SpreadProjectile &&
+        checkSpreadProjectileCollision(projectile, bloon);
+  }
+
+  private boolean shouldPop(Projectile projectile, Bloon bloon){
+    return (projectile.getType() == ProjectileType.SingleTargetProjectile &&
+        !bloon.getBloonsType().specials().contains(Specials.Camo))
+        || projectile.getType() == ProjectileType.CamoTargetProjectile;
+  }
+
+  private boolean shouldFreeze(Projectile projectile, Bloon bloon){
+    return projectile.getType() == ProjectileType.FreezeTargetProjectile && !bloon.isFreezeActive();
+  }
+
   private void popBloon(Bloon bloon, Projectile projectile, BloonsCollection bloonsToRemove, BloonsCollection bloonsToAdd,
       ProjectilesCollection projectilesToRemove){
     Bloon[] spawnedBloons = bloon.shootBloon();
     System.out.println("original bloon: " + bloon.getXPosition() + " " + bloon.getYPosition());
-
     for(Bloon spawn : spawnedBloons) {
       System.out.println("spawned bloon: " + spawn.getXPosition() + " " + spawn.getYPosition());
       bloonsToAdd.add(spawn);

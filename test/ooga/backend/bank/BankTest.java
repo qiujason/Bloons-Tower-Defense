@@ -5,8 +5,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import ooga.backend.readers.RoadItemValueReader;
 import ooga.backend.readers.RoundBonusReader;
 import ooga.backend.readers.TowerValueReader;
+import ooga.backend.roaditems.RoadItemType;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.factory.SingleTowerFactory;
 import ooga.backend.towers.factory.TowerFactory;
@@ -20,6 +22,8 @@ class BankTest {
   String TOWER_BUY_VALUES_PATH = "towervalues/TowerBuyValues.properties";
   String TOWER_SELL_VALUES_PATH = "towervalues/TowerSellValues.properties";
   String ROUND_BONUSES_PATH = "roundBonuses/BTD5_default_level1_to_10.csv";
+  String ROAD_ITEM_VALUES_PATH = "towervalues/roadItemBuyValues.properties";
+
 
   @Test
   void advanceToLevel() {
@@ -66,18 +70,19 @@ class BankTest {
   void setUp() throws IOException {
     Map<TowerType, Integer> towerBuyMap = new TowerValueReader(TOWER_BUY_VALUES_PATH).getMap();
     Map<TowerType, Integer> towerSellMap = new TowerValueReader(TOWER_SELL_VALUES_PATH).getMap();
+    Map<RoadItemType, Integer> roadItemMap = new RoadItemValueReader(ROAD_ITEM_VALUES_PATH).getMap();
     RoundBonusReader roundBonusReader = new RoundBonusReader();
     List<List<String>> roundBonuses = roundBonusReader.getDataFromFile(ROUND_BONUSES_PATH);
     int rounds = Integer.valueOf(roundBonuses.get(0).get(0));
     if(roundBonuses.size() == 1) {
       if (roundBonuses.get(0).size() == 1) {
-        bank = new Bank(towerBuyMap, towerSellMap, rounds);
+        bank = new Bank(towerBuyMap, towerSellMap, roadItemMap, rounds);
       } else {
         int starting_bonus = Integer.valueOf(roundBonuses.get(0).get(1));
-        bank = new Bank(towerBuyMap, towerSellMap, starting_bonus);
+        bank = new Bank(towerBuyMap, towerSellMap, roadItemMap, starting_bonus);
       }
     } else{
-      bank = new Bank(towerBuyMap, towerSellMap, roundBonuses.get(1));
+      bank = new Bank(towerBuyMap, towerSellMap, roadItemMap, roundBonuses.get(1));
     }
   }
 }
