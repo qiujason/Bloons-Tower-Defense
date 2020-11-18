@@ -1,10 +1,10 @@
 package ooga.backend.projectile;
 
 public enum ProjectileType {
-  SingleTargetProjectile(0),
-  SpreadProjectile(10),
-  FreezeTargetProjectile(0),
-  CamoTargetProjectile(0);
+  SingleTargetProjectile(1),
+  SpreadProjectile(3),
+  FreezeTargetProjectile(1),
+  CamoTargetProjectile(1);
 
   private final double radius;
 

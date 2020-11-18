@@ -14,12 +14,16 @@ import org.apache.commons.lang3.StringUtils;
 
 public abstract class Tower extends GamePiece implements TowersAPI {
 
+  private static final double defaultUpgradeMultiplier = 1.05;
+  private static final int defaultUpgradeCost = 150;
+
   private double radius;
   private double shootingSpeed;
   private double shootingRestRate;
   private double countRestPeriod;
   private boolean ifRestPeriod;
   private ProjectileType projectileType;
+  private int totalUpgradeCost;
 
   // if canShoot = true, step function can call shoot method, if not, do not call shoot method
 
@@ -31,6 +35,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     shootingRestRate = myShootingRestRate * AnimationHandler.FRAMES_PER_SECOND;
     countRestPeriod = 0;
     ifRestPeriod = false;
+    totalUpgradeCost = 0;
   }
 
   public abstract TowerType getTowerType();
@@ -88,49 +93,53 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     return Math.sqrt(Math.pow(getXPosition()-target.getXPosition(), 2) + Math.pow(getYPosition()-target.getYPosition(), 2));
   }
 
-  public void upgradeRadius(){
-    String key = "radiusUpgradeMultiplier";
+  public int getCostOfUpgrade(UpgradeChoice choice){
+    int returnedCost = defaultUpgradeCost;
+    try {
+      ResourceBundle bundle = ResourceBundle.getBundle("towers/" + getTowerType().name());
+      String key = choice.name() + "Cost";
+      if(bundle.containsKey(key) && StringUtils.isNumeric(bundle.getString(key))){
+        returnedCost = Integer.parseInt(bundle.getString(key));
+      }
+    } catch (Exception e) {
+    }
+    return returnedCost;
+  }
+
+  public void performUpgrade(UpgradeChoice choice){
     try{
       ResourceBundle bundle = ResourceBundle.getBundle("towers/" + getTowerType().name());
-      upgrade(bundle, key);
+      upgradeWithSelectedChoice(bundle, choice.name() + "Multiplier");
+      upgradeWithSelectedChoice(bundle, choice.name() + "Cost");
     } catch(Exception e){
-      radius *= 1.05;
+      if(choice == UpgradeChoice.RadiusUpgrade){
+        radius *= defaultUpgradeMultiplier;
+      } else if(choice == UpgradeChoice.ShootingSpeedUpgrade){
+        shootingSpeed *= defaultUpgradeMultiplier;
+      } else if(choice == UpgradeChoice.ShootingRestRateUpgrade){
+        shootingRestRate /= defaultUpgradeMultiplier;
+      }
+      totalUpgradeCost += defaultUpgradeCost;
     }
   }
 
-  public void upgradeShootingSpeed(){
-    String key = "shootingSpeedUpgradeMultiplier";
-    try{
-      ResourceBundle bundle = ResourceBundle.getBundle("towers/" + getTowerType().name());
-      upgrade(bundle, key);
-    } catch(Exception e){
-      shootingSpeed *= 1.05;
-    }
-  }
-
-  public void upgradeShootingRestRate(){
-    String key = "shootingRestRateUpgradeMultiplier";
-    try{
-      ResourceBundle bundle = ResourceBundle.getBundle("towers/" + getTowerType().name());
-      upgrade(bundle, key);
-    } catch(Exception e){
-      shootingRestRate /= 1.05;
-    }
-  }
-
-  private void upgrade(ResourceBundle bundle, String key){
+  private void upgradeWithSelectedChoice(ResourceBundle bundle, String key){
     if(bundle.containsKey(key) && StringUtils.isNumeric(bundle.getString(key))){
-      switch(key){
-        case "radiusUpgradeMultiplier": radius *= Integer.valueOf(bundle.getString(key));
-        case "shootingSpeedUpgradeMultiplier": shootingSpeed *= Integer.valueOf(bundle.getString(key));
-        case "shootingRestRateUpgradeMultiplier": shootingRestRate /= Integer.valueOf(bundle.getString(key));
-      }
+      int value = Integer.parseInt(bundle.getString(key));
+      upgradeHelper(key, value, value);
     } else{
-      switch(key){
-        case "radiusUpgradeMultiplier": radius *= 1.05;
-        case "shootingSpeedUpgradeMultiplier": shootingSpeed *= 1.05;
-        case "shootingRestRateUpgradeMultiplier": shootingRestRate /= 1.05;
-      }
+      upgradeHelper(key, defaultUpgradeMultiplier, defaultUpgradeCost);
+    }
+  }
+
+  private void upgradeHelper(String key, double currUpgradeMultiplier, int currUpgradeCost) {
+    switch(key){
+      case "RadiusUpgradeMultiplier": radius *= currUpgradeMultiplier;
+      case "ShootingSpeedUpgradeMultiplier": shootingSpeed *= currUpgradeMultiplier;
+      case "ShootingRestRateUpgradeMultiplier": shootingRestRate /= currUpgradeMultiplier;
+      case "RadiusUpgradeCost": totalUpgradeCost += currUpgradeCost;
+      case "ShootingSpeedUpgradeCost": totalUpgradeCost += currUpgradeCost;
+      case "ShootingRestRateUpgradeCost": totalUpgradeCost += currUpgradeCost;
     }
   }
 
@@ -145,5 +154,9 @@ public abstract class Tower extends GamePiece implements TowersAPI {
 
   public ProjectileType getProjectileType(){
     return projectileType;
+  }
+
+  public int getTotalUpgradeCost(){
+    return totalUpgradeCost;
   }
 }

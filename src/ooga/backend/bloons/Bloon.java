@@ -5,6 +5,7 @@ import ooga.backend.API.BloonsAPI;
 import ooga.backend.GamePiece;
 import ooga.backend.bloons.factory.BasicBloonsFactory;
 import ooga.backend.bloons.types.BloonsType;
+import ooga.backend.bloons.types.Specials;
 
 public class Bloon extends GamePiece implements BloonsAPI {
 
@@ -93,6 +94,10 @@ public class Bloon extends GamePiece implements BloonsAPI {
     setXPosition(getXPosition() + xVelocity * relativeSpeed);
     setYPosition(getYPosition() + yVelocity * relativeSpeed);
     updateDistanceTraveled();
+  }
+
+  public boolean isCamo(){
+    return getBloonsType().specials().contains(Specials.CAMO);
   }
 
 }

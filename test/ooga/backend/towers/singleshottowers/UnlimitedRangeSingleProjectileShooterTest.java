@@ -32,7 +32,7 @@ class UnlimitedRangeSingleProjectileShooterTest {
   void testShoot() {
     TowerFactory towerFactory = new SingleTowerFactory();
     Tower testTower = towerFactory.createTower(TowerType.UnlimitedRangeProjectileShooter, 0, 0);
-    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 30,40,5,5);
+    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 3,4,5,5);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
     ProjectilesCollection projectilesCollection = new ProjectilesCollection();
@@ -42,8 +42,8 @@ class UnlimitedRangeSingleProjectileShooterTest {
     Projectile dart = iterator.next();
     assertEquals(0, dart.getXPosition());
     assertEquals(0, dart.getYPosition());
-    assertEquals(-6, dart.getXVelocity());
-    assertEquals(-8, dart.getYVelocity());
+    assertEquals(0.24, dart.getXVelocity());
+    assertEquals(0.32, dart.getYVelocity());
   }
 
   @Test

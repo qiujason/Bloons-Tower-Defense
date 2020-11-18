@@ -33,7 +33,7 @@ class SpreadProjectileShooterTest {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower)
         towerFactory.createTower(TowerType.SpreadProjectileShooter, 0,0);
-    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 3,4,5,5);
+    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 0.3,0.4,5,5);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
@@ -43,8 +43,8 @@ class SpreadProjectileShooterTest {
     Projectile dart = iterator.next();
     assertEquals(0, dart.getXPosition());
     assertEquals(0, dart.getYPosition());
-    assertEquals(-12, dart.getXVelocity());
-    assertEquals(-16, dart.getYVelocity());
+    assertEquals(0.12, dart.getXVelocity());
+    assertEquals(0.16, dart.getYVelocity());
     assertEquals(ProjectileType.SpreadProjectile, dart.getType());
   }
 }
