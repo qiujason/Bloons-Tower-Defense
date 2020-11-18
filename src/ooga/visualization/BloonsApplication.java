@@ -5,7 +5,6 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
-import java.util.concurrent.ConcurrentHashMap;
 import javafx.animation.Timeline;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -17,7 +16,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -26,14 +24,15 @@ import ooga.AlertHandler;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.layout.Layout;
 import ooga.backend.projectile.ProjectilesCollection;
+import ooga.backend.roaditems.RoadItemsCollection;
 import ooga.backend.towers.TowersCollection;
 import ooga.controller.Controller;
-import ooga.controller.GameMenuController;
 import ooga.controller.GameMenuInterface;
-import ooga.controller.TowerMenuController;
 import ooga.controller.TowerMenuInterface;
 import ooga.visualization.menu.GameMenu;
 import ooga.controller.TowerNodeHandler;
+import ooga.visualization.menu.ImageChooser;
+import ooga.visualization.menu.WeaponButtonsMenu;
 
 public class BloonsApplication {
 
@@ -51,11 +50,13 @@ public class BloonsApplication {
 
   private Stage myStage;
   private Scene myScene;
+  private Pane myLevel;
   private Layout myLayout;
   private Timeline myAnimation;
   private BloonsCollection myBloons;
   private TowersCollection myTowers;
   private ProjectilesCollection myProjectiles;
+  private RoadItemsCollection myRoadItems;
   private Group myLevelLayout;
   private GameMenu myMenu;
   private VBox myMenuPane;
@@ -72,6 +73,8 @@ public class BloonsApplication {
   private String myCurrentLevel;
   private String myCurrentLanguage;
   private String myCurrentStylesheet;
+  private Text myMoneyText;
+  private Text myRoundText;
 //  private double myStartingX;
 //  private double myStartingY;
 
@@ -272,36 +275,39 @@ public class BloonsApplication {
 
   public void initializeGameObjects(Layout layout, BloonsCollection bloons,
       TowersCollection towers,
-      ProjectilesCollection projectiles, Timeline animation, GameMenuInterface gameMenuController,
+      ProjectilesCollection projectiles, RoadItemsCollection roadItems, Timeline animation, GameMenuInterface gameMenuController,
       TowerMenuInterface towerMenuController) {
     myLayout = layout;
     myBloons = bloons;
     myTowers = towers;
     myProjectiles = projectiles;
+    myRoadItems = roadItems;
     myAnimation = animation;
     myGameMenuController = gameMenuController;
     myTowerMenuController = towerMenuController;
-
   }
 
   private void loadLevel(String levelName) {
-    if (levelName == null) {
+    if (levelName.equals("null.csv")) {
       new AlertHandler(myApplicationErrors.getString("NoLevelSelected"),
           myApplicationErrors.getString("NoLevelSelected"));
       return;
     }
     myCurrentLevel = levelName;
     myLevelStartButton.fire();
-    Pane level = new Pane();
-    level.getStyleClass().add("level-background");
+    myLevel = new Pane();
+    myLevel.getStyleClass().add("level-background");
     myMenuPane = new VBox();
-    visualizeLayout(level);
+    visualizeLayout(myLevel);
     myAnimationHandler = new AnimationHandler(myLevelLayout, myBloons,
-        myTowers, myProjectiles, myBlockSize, myAnimation);
+        myTowers, myProjectiles, myRoadItems, myBlockSize, myAnimation);
+
     towerNodeHandler = new TowerNodeHandler(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize,
         myLevelLayout, myMenuPane, myTowers, myTowerMenuController, myAnimationHandler);
-    visualizePlayerGUI(level);
-    myScene.setRoot(level);
+    visualizePlayerGUI(myLevel);
+    displayCurrentMoney(0);
+    displayCurrentRound(1);
+    myScene.setRoot(myLevel);
     myStage.setScene(myScene);
   }
 
@@ -360,7 +366,10 @@ public class BloonsApplication {
 
   private void visualizePlayerGUI(Pane level) {
     myMenuPane.setSpacing(10); //magic num
-    myMenu = new GameMenu(myMenuPane, myGameMenuController, myTowerMenuController, towerNodeHandler);
+    myMenu = new GameMenu(myMenuPane, myGameMenuController);
+
+    myMenuPane.getChildren().add(new ImageChooser(myAnimationHandler));
+    myMenuPane.getChildren().add(new WeaponButtonsMenu(towerNodeHandler));
     myMenuPane.setLayoutX(GAME_WIDTH);
     level.getChildren().add(myMenuPane);
   }
@@ -368,6 +377,28 @@ public class BloonsApplication {
   public void fullScreen() {
     myStage.setFullScreen(true);
     myStage.show();
+  }
+
+  public void displayCurrentMoney(int currentMoney){
+    myLevel.getChildren().remove(myMoneyText);
+    myMoneyText = new Text("Money: $" + currentMoney);
+    myMoneyText.getStyleClass().add("menu-text");
+    myMoneyText.setX(WIDTH / 12);
+    myMoneyText.setY(15 * HEIGHT / 16);
+    myMoneyText.setScaleX(2.5);
+    myMoneyText.setScaleY(2.5);
+    myLevel.getChildren().add(myMoneyText);
+  }
+
+  public void displayCurrentRound(int currentRound){
+    myLevel.getChildren().remove(myRoundText);
+    myRoundText = new Text("Round: " + currentRound);
+    myRoundText.getStyleClass().add("menu-text");
+    myRoundText.setX(3 * WIDTH / 8);
+    myRoundText.setY(15 * HEIGHT / 16);
+    myRoundText.setScaleX(2.5);
+    myRoundText.setScaleY(2.5);
+    myLevel.getChildren().add(myRoundText);
   }
 
   public String getCurrentLevel() {

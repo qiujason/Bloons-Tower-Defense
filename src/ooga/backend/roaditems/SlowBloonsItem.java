@@ -1,11 +1,11 @@
 package ooga.backend.roaditems;
 
-public class SlowBloonItem extends RoadItem{
+public class SlowBloonsItem extends RoadItem{
 
-  public static int defaultGlueLeft = 20;
+  public static int defaultGlueLeft = 10;
   private int bloonsGlueLeft;
 
-  public SlowBloonItem(double myXPosition, double myYPosition) {
+  public SlowBloonsItem(double myXPosition, double myYPosition) {
     super(myXPosition, myYPosition);
     bloonsGlueLeft = defaultGlueLeft;
   }

@@ -1,5 +1,7 @@
 package ooga.backend.roaditems;
 
+import ooga.visualization.AnimationHandler;
+
 public class ExplodeBloonsItem extends RoadItem{
 
   public static int defaultSecondsLeft = 3;
@@ -8,7 +10,7 @@ public class ExplodeBloonsItem extends RoadItem{
 
   public ExplodeBloonsItem(double myXPosition, double myYPosition) {
     super(myXPosition, myYPosition);
-    secondsLeft = defaultSecondsLeft;
+    secondsLeft = (int) (defaultSecondsLeft * AnimationHandler.FRAMES_PER_SECOND);
   }
 
   @Override

@@ -1,6 +1,5 @@
 package ooga.visualization.nodes;
 
-import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 
 public class TowerNodeFactory implements WeaponNodeFactory {

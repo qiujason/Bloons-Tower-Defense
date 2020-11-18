@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import ooga.AlertHandler;
+import ooga.backend.API.GameEngineAPI;
 import ooga.backend.ConfigurationException;
 import ooga.backend.GameEngine;
 import ooga.backend.bloons.Bloon;
@@ -24,8 +25,11 @@ import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.readers.BloonReader;
 import ooga.backend.readers.LayoutReader;
 import ooga.backend.readers.PropertyFileValidator;
+import ooga.backend.readers.RoadItemValueReader;
 import ooga.backend.readers.RoundBonusReader;
 import ooga.backend.readers.TowerValueReader;
+import ooga.backend.roaditems.RoadItemType;
+import ooga.backend.roaditems.RoadItemsCollection;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.TowersCollection;
@@ -42,6 +46,8 @@ public class Controller extends Application {
   public static final String BLOONS_TYPE_PATH = "bloon_resources/Bloons";
   public static final String TOWER_BUY_VALUES_PATH = "towervalues/TowerBuyValues.properties";
   public static final String TOWER_SELL_VALUES_PATH = "towervalues/TowerSellValues.properties";
+  public static final String ROAD_ITEM_VALUES_PATH = "towervalues/roadItemBuyValues.properties";
+
   public static String ROUND_BONUSES_PATH = "roundBonuses/BTD5_default_level1_to_10.csv";
 
   private ResourceBundle errorResource;
@@ -51,16 +57,13 @@ public class Controller extends Application {
   private LayoutReader layoutReader;
   private BloonsTypeChain bloonsTypeChain;
   private BloonReader bloonReader;
-  private GameEngine gameEngine;
+  private GameEngineAPI gameEngine;
   private Layout layout;
   private List<BloonsCollection> allBloonWaves;
-  private TowersCollection towersCollection;
-  private ProjectilesCollection projectilesCollection;
-
-  private Map<Tower, Bloon> shootingTargets;
   private GameMenuInterface gameController;
   private Map<TowerType, Integer> towerBuyMap;
   private Map<TowerType, Integer> towerSellMap;
+  private Map<RoadItemType, Integer> roadItemBuyMap;
   private TowerMenuInterface towerController;
   private Bank bank;
 
@@ -71,9 +74,6 @@ public class Controller extends Application {
     myAnimation = new Timeline();
     layoutReader = new LayoutReader();
     bloonReader = new BloonReader();
-    towersCollection = new TowersCollection();
-    projectilesCollection = new ProjectilesCollection();
-    shootingTargets = new HashMap<>();
     setUpBank();
 
     Button startLevelButton = new Button();
@@ -92,7 +92,7 @@ public class Controller extends Application {
     towerController = new TowerMenuController(bank);
 
     bloonsApplication.initializeGameObjects(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
-        gameEngine.getProjectiles(), myAnimation, gameController, towerController);
+        gameEngine.getProjectiles(), gameEngine.getRoadItems(), myAnimation, gameController, towerController);
 
     myAnimation.setCycleCount(Timeline.INDEFINITE);
 
@@ -119,25 +119,17 @@ public class Controller extends Application {
     }
   }
 
-  private double getMyBlockSize() {
-    int numberOfRows = layout.getHeight();
-    int numberOfColumns = layout.getWidth();
-    double blockWidth = BloonsApplication.GAME_WIDTH / numberOfColumns;
-    double blockHeight = BloonsApplication.GAME_HEIGHT / numberOfRows;
-    double myBlockSize = Math.min(blockWidth, blockHeight);
-    return myBlockSize;
-  }
-
   public void setUpBank(){
     try {
       towerBuyMap = new TowerValueReader(TOWER_BUY_VALUES_PATH).getMap();
       towerSellMap = new TowerValueReader(TOWER_SELL_VALUES_PATH).getMap();
+      roadItemBuyMap = new RoadItemValueReader(ROAD_ITEM_VALUES_PATH).getMap();
     } catch (Exception e) {
       AlertHandler alert = new AlertHandler(errorResource.getString("InvalidPropertyFile"),
           errorResource.getString("InvalidPropertyFormat"));
     }
     RoundBonusReader roundBonusReader = new RoundBonusReader();
-    List<List<String>> roundBonuses = null;
+    List<List<String>> roundBonuses;
     try {
       roundBonuses = roundBonusReader.getDataFromFile(ROUND_BONUSES_PATH);
       createBank(roundBonuses);
@@ -151,13 +143,13 @@ public class Controller extends Application {
     int rounds = Integer.parseInt(roundBonuses.get(0).get(0));
     if(roundBonuses.size() == 1) {
       if (roundBonuses.get(0).size() == 1) {
-        bank = new Bank(towerBuyMap, towerSellMap, rounds);
+        bank = new Bank(towerBuyMap, towerSellMap, roadItemBuyMap, rounds);
       } else {
         int starting_bonus = Integer.parseInt(roundBonuses.get(0).get(1));
-        bank = new Bank(towerBuyMap, towerSellMap, starting_bonus);
+        bank = new Bank(towerBuyMap, towerSellMap, roadItemBuyMap, starting_bonus);
       }
     } else{
-      bank = new Bank(towerBuyMap, towerSellMap, roundBonuses.get(1));
+      bank = new Bank(towerBuyMap, towerSellMap, roadItemBuyMap, roundBonuses.get(1));
     }
   }
 
@@ -174,20 +166,17 @@ public class Controller extends Application {
   }
 
   private void startGameEngine() {
-    gameEngine = new GameEngine(layout, allBloonWaves, towersCollection, projectilesCollection, getMyBlockSize());
+    gameEngine = new GameEngine(layout, allBloonWaves);
   }
 
   private void step() {
     animationHandler = bloonsApplication.getMyAnimationHandler();
 
-    //pass shit from front end to backend
     gameEngine.setProjectiles(animationHandler.getProjectiles());
     gameEngine.setTowers(animationHandler.getTowers());
 
-    //update game engine
     gameEngine.update();
 
-    //pass shit from backend to frontend
     animationHandler.setBloonWave(gameEngine.getCurrentBloonWave());
 
 
@@ -195,16 +184,15 @@ public class Controller extends Application {
     animationHandler.setTowers(gameEngine.getTowers());
     animationHandler.setProjectiles(gameEngine.getProjectiles());
 
-    //animate animationhandler
+
+
     animationHandler.animate();
 
-    if(gameEngine.isRoundEnd()){
-      System.out.println("frontend detected round end");
-      myAnimation.stop();
-    }
+    bloonsApplication.displayCurrentMoney(bank.getCurrentMoney());
+    bloonsApplication.displayCurrentRound(gameEngine.getRound() + 1);
 
-    if(gameEngine.isGameEnd()){
-      System.out.println("rip");
+    if(gameEngine.isRoundEnd() || gameEngine.isGameEnd()){
+      bank.advanceOneLevel();
       myAnimation.stop();
     }
 
