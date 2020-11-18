@@ -8,7 +8,9 @@ public class RegenBloonsFactory implements BloonsFactory {
 
   @Override
   public Bloon createBloon(Bloon bloon) {
-    return createBloon(bloon.getBloonsType(), bloon.getXPosition(), bloon.getYPosition(), bloon.getXVelocity(), bloon.getYVelocity());
+    Bloon newRegenBloon = createBloon(bloon.getBloonsType(), bloon.getXPosition(), bloon.getYPosition(), bloon.getXVelocity(), bloon.getYVelocity());
+    newRegenBloon.setDistanceTraveled(bloon.getDistanceTraveled());
+    return newRegenBloon;
   }
 
   @Override
@@ -24,13 +26,18 @@ public class RegenBloonsFactory implements BloonsFactory {
 
   @Override
   public Bloon createNextBloon(Bloon bloon) {
+    Bloon newRegenBloon;
     if (bloon instanceof RegenBloon regenBloon) {
-      return createBloon(regenBloon.getBloonsType().chain().getNextBloonsType(
+      newRegenBloon = createBloon(regenBloon.getBloonsType().chain().getNextBloonsType(
           regenBloon.getBloonsType()), regenBloon.getOriginalType(), regenBloon.getXPosition(),
           regenBloon.getYPosition(), regenBloon.getXVelocity(), regenBloon.getYVelocity());
+    } else {
+      newRegenBloon = createBloon(
+          bloon.getBloonsType().chain().getNextBloonsType(bloon.getBloonsType()),
+          bloon.getXPosition(), bloon.getYPosition(), bloon.getXVelocity(), bloon.getYVelocity());
     }
-    return createBloon(bloon.getBloonsType().chain().getNextBloonsType(bloon.getBloonsType()),
-        bloon.getXPosition(), bloon.getYPosition(), bloon.getXVelocity(), bloon.getYVelocity());
+    newRegenBloon.setDistanceTraveled(bloon.getDistanceTraveled());
+    return newRegenBloon;
   }
 
 }

@@ -7,7 +7,9 @@ public class BasicBloonsFactory implements BloonsFactory {
 
   @Override
   public Bloon createBloon(Bloon bloon) {
-    return createBloon(bloon.getBloonsType(), bloon.getXPosition(), bloon.getYPosition(), bloon.getXVelocity(), bloon.getYVelocity());
+    Bloon newBloon = createBloon(bloon.getBloonsType(), bloon.getXPosition(), bloon.getYPosition(), bloon.getXVelocity(), bloon.getYVelocity());
+    newBloon.setDistanceTraveled(bloon.getDistanceTraveled());
+    return newBloon;
   }
 
   @Override
@@ -17,8 +19,10 @@ public class BasicBloonsFactory implements BloonsFactory {
 
   @Override
   public Bloon createNextBloon(Bloon bloon) {
-    return createBloon(bloon.getBloonsType().chain().getNextBloonsType(bloon.getBloonsType()),
+    Bloon newBloon = createBloon(bloon.getBloonsType().chain().getNextBloonsType(bloon.getBloonsType()),
         bloon.getXPosition(), bloon.getYPosition(), bloon.getXVelocity(), bloon.getYVelocity());
+    newBloon.setDistanceTraveled(bloon.getDistanceTraveled());
+    return newBloon;
   }
 
 }
