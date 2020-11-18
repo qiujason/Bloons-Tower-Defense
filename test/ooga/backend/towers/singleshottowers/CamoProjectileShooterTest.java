@@ -34,7 +34,7 @@ class CamoProjectileShooterTest {
     TowerFactory towerFactory = new SingleTowerFactory();
     CamoProjectileShooter testTower = (CamoProjectileShooter)
         towerFactory.createTower(TowerType.CamoProjectileShooter, 10,20);
-    Bloon target = new CamoBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 14, 23, 0, 0);
+    Bloon target = new CamoBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 11, 20, 0, 0);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
     ProjectilesCollection projectilesCollection = new ProjectilesCollection();
@@ -44,8 +44,8 @@ class CamoProjectileShooterTest {
     Projectile dart = iterator.next();
     assertEquals(10, dart.getXPosition());
     assertEquals(20, dart.getYPosition());
-    assertEquals(-12, dart.getXVelocity());
-    assertEquals(-9, dart.getYVelocity());
+    assertEquals(0.5, dart.getXVelocity());
+    assertEquals(0, dart.getYVelocity());
   }
 
   @Test
@@ -53,7 +53,7 @@ class CamoProjectileShooterTest {
     TowerFactory towerFactory = new SingleTowerFactory();
     CamoProjectileShooter testTower = (CamoProjectileShooter)
         towerFactory.createTower(TowerType.CamoProjectileShooter, 10,20);
-    Bloon target = new CamoBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 14, 23, 0, 0);
+    Bloon target = new CamoBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 11, 21, 0, 0);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);

@@ -76,4 +76,18 @@ public class BloonsTest {
     assertTrue(bloon.getBloonsType().specials().contains(Specials.CAMO));
   }
 
+  @Test
+  void testShootBloon1Spawn() {
+    Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
+    assertEquals(chain.getBloonsTypeRecord("DEAD"),bloon.shootBloon()[0].getBloonsType());
+  }
+
+  @Test
+  void testShootBloonMultipleSpawn() {
+    Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RAINBOW"), 0, 0, 0, 0);
+    assertEquals(2,bloon.shootBloon().length);
+    assertEquals(chain.getBloonsTypeRecord("ZEBRA"),bloon.shootBloon()[0].getBloonsType());
+    assertEquals(chain.getBloonsTypeRecord("ZEBRA"),bloon.shootBloon()[1].getBloonsType());
+  }
+
 }
