@@ -144,7 +144,6 @@ public class TowerNodeHandler {
           towerNode.getRangeDisplay().invalidPlacement();
         }else{
           towerNode.getRangeDisplay().validPlacement();
-
         }
       }
     });
@@ -221,7 +220,7 @@ public class TowerNodeHandler {
 
   private boolean checkOnPath(TowerNode towerNode){
     for(Node layoutBlock : layoutRoot.getChildren()){
-     if(layoutBlock.getId().contains("Path")){
+     if(layoutBlock.getId() != null && layoutBlock.getId().contains("Path")){
         if (towerNode.getBoundsInParent().intersects(layoutBlock.getBoundsInParent())){
           System.out.println(layoutBlock.getId());
           return true;
