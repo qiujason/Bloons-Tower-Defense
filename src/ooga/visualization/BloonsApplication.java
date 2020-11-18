@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -58,14 +59,16 @@ public class BloonsApplication {
   private TowerMenuInterface towerMenuController;
   private AnimationHandler myAnimationHandler;
   private double myBlockSize;
-  private final ResourceBundle myBlockMappings = ResourceBundle
-      .getBundle(getClass().getPackageName() + ".resources.blockMappings");
+//  private final ResourceBundle myBlockMappings = ResourceBundle
+//      .getBundle(getClass().getPackageName() + ".resources.blockMappings");
   private final Button myLevelStartButton;
   private ResourceBundle myMenuButtonNames;
   private ResourceBundle myApplicationErrors;
   private String myCurrentLevel;
   private String myCurrentLanguage;
   private String myCurrentStylesheet;
+  private double myStartingX;
+  private double myStartingY;
 
   public BloonsApplication(Button startLevelButton) {
     myLevelStartButton = startLevelButton;
@@ -89,6 +92,7 @@ public class BloonsApplication {
     myScene = new Scene(menuLayout, WIDTH, HEIGHT);
     myScene.getStylesheets()
         .add(getClass().getResource("/" + STYLESHEETS + myCurrentStylesheet).toExternalForm());
+    menuLayout.getStyleClass().add("start-menu");
     myStage.setScene(myScene);
     myStage.show();
   }
@@ -169,26 +173,11 @@ public class BloonsApplication {
     buttonGroup.getChildren().add(styleOptions);
   }
 
-//  private void setBackgroundImage(BorderPane menu, String imageName) {
-//    Image backgroundImage = null;
-//    try {
-//      backgroundImage = new Image(
-//          String.valueOf(getClass().getResource(BACKGROUND_IMAGE + imageName).toURI()));
-//    } catch (
-//        URISyntaxException e) {
-//      new AlertHandler(myApplicationErrors.getString("NoBackgroundImage"),
-//          myApplicationErrors.getString("NoBackgroundImage"));
-//    }
-//    assert backgroundImage != null;
-//    menu.setBackground(new Background(new BackgroundImage(backgroundImage, BackgroundRepeat.REPEAT,
-//        BackgroundRepeat.REPEAT,
-//        BackgroundPosition.DEFAULT,
-//        BackgroundSize.DEFAULT)));
-//  }
-
   private void displayLevelSelectScreen() {
     BorderPane levelSelectScreen = new BorderPane();
+    levelSelectScreen.getStyleClass().add("level-background");
     Text levelSelectText = new Text("Select Level");
+    levelSelectText.getStyleClass().add("menu-text");
     levelSelectText.setScaleX(3);
     levelSelectText.setScaleY(3);
     levelSelectScreen.setCenter(levelSelectText);
@@ -250,7 +239,8 @@ public class BloonsApplication {
   private void loadLevel(String levelName) {
     myCurrentLevel = levelName;
     myLevelStartButton.fire();
-    Group level = new Group();
+    Pane level = new Pane();
+    level.getStyleClass().add("level-background");
     myMenuPane = new VBox();
     visualizeLayout(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
@@ -265,7 +255,7 @@ public class BloonsApplication {
   }
 
   // TODO: Refactor
-  private void visualizeLayout(Group level) {
+  private void visualizeLayout(Pane level) {
     myLevelLayout = new Group();
     level.getChildren().add(myLevelLayout);
 
@@ -305,13 +295,20 @@ public class BloonsApplication {
   private Rectangle createBlock(String block, double currentBlockX, double currentBlockY,
       double blockSize) {
     Rectangle blockRectangle = new Rectangle(currentBlockX, currentBlockY, blockSize, blockSize);
-    String blockColorAsString = myBlockMappings.getString(block);
-    Color blockColor = Color.web(blockColorAsString);
-    blockRectangle.setFill(blockColor);
+    if(block.equals("0")){
+      blockRectangle.getStyleClass().add("non-path-block");
+    }
+    else{
+      blockRectangle.getStyleClass().add("path-block");
+    }
+    if (block.charAt(0) == '*') {
+      myStartingX = currentBlockX + blockSize / 2;
+      myStartingY = currentBlockY + blockSize / 2;
+    }
     return blockRectangle;
   }
 
-  private void visualizePlayerGUI(Group level) {
+  private void visualizePlayerGUI(Pane level) {
     myMenuPane.setSpacing(10); //magic num
     myMenu = new GameMenu(myMenuPane, gameMenuController, towerMenuController);
     myMenuPane.setLayoutX(GAME_WIDTH);
