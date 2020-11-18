@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 public class BloonsTest {
 
-  public static final String RESOURCE_BUNDLE_PATH = "bloon_resources/GameMechanics";
+  private static final String RESOURCE_BUNDLE_PATH = "bloon_resources/GameMechanics";
   private static final ResourceBundle GAME_MECHANICS = ResourceBundle.getBundle(RESOURCE_BUNDLE_PATH);
 
   private BloonsTypeChain chain;
