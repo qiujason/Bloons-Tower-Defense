@@ -90,4 +90,58 @@ public class BloonsTest {
     assertEquals(chain.getBloonsTypeRecord("ZEBRA"),bloon.shootBloon()[1].getBloonsType());
   }
 
+  @Test
+  void testPassDistanceTravelNewBasicBloon() {
+    Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 10);
+    bloon.update();
+    double distanceTraveled = bloon.getDistanceTraveled();
+    bloon = new BasicBloonsFactory().createBloon(bloon);
+    assertEquals(distanceTraveled, bloon.getDistanceTraveled());
+  }
+
+  @Test
+  void testPassDistanceTravelNewCamoBloon() {
+    Bloon bloon = new CamoBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 10);
+    bloon.update();
+    double distanceTraveled = bloon.getDistanceTraveled();
+    bloon = new CamoBloonsFactory().createBloon(bloon);
+    assertEquals(distanceTraveled, bloon.getDistanceTraveled());
+  }
+
+  @Test
+  void testPassDistanceTravelNewRegenBloon() {
+    Bloon bloon = new RegenBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 10);
+    bloon.update();
+    double distanceTraveled = bloon.getDistanceTraveled();
+    bloon = new RegenBloonsFactory().createBloon(bloon);
+    assertEquals(distanceTraveled, bloon.getDistanceTraveled());
+  }
+
+  @Test
+  void testPassDistanceTravelNextBasicBloon() {
+    Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 10);
+    bloon.update();
+    double distanceTraveled = bloon.getDistanceTraveled();
+    bloon = new BasicBloonsFactory().createNextBloon(bloon);
+    assertEquals(distanceTraveled, bloon.getDistanceTraveled());
+  }
+
+  @Test
+  void testPassDistanceTravelNextCamoBloon() {
+    Bloon bloon = new CamoBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 10);
+    bloon.update();
+    double distanceTraveled = bloon.getDistanceTraveled();
+    bloon = new CamoBloonsFactory().createNextBloon(bloon);
+    assertEquals(distanceTraveled, bloon.getDistanceTraveled());
+  }
+
+  @Test
+  void testPassDistanceTravelNextRegenBloon() {
+    Bloon bloon = new RegenBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 10);
+    bloon.update();
+    double distanceTraveled = bloon.getDistanceTraveled();
+    bloon = new RegenBloonsFactory().createNextBloon(bloon);
+    assertEquals(distanceTraveled, bloon.getDistanceTraveled());
+  }
+
 }

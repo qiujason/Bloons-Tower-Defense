@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.shape.Circle;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.bloons.types.Specials;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
@@ -177,7 +178,8 @@ public class AnimationHandler {
             checkSpreadProjectileCollision(projectile, bloon)){
           popBloon(bloon, projectile, bloonsToRemove, bloonsToAdd, projectilesToRemove);
         } else if(checkBloonCollision(projectile, bloon)){
-          if((projectile.getType() == ProjectileType.SingleTargetProjectile && !bloon.isCamo())
+          if((projectile.getType() == ProjectileType.SingleTargetProjectile &&
+              !bloon.getBloonsType().specials().contains(Specials.Camo))
                 || projectile.getType() == ProjectileType.CamoTargetProjectile){
               popBloon(bloon, projectile, bloonsToRemove, bloonsToAdd, projectilesToRemove);
           } else if(projectile.getType() == ProjectileType.FreezeTargetProjectile){
