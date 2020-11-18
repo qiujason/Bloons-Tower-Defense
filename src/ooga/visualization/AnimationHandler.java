@@ -74,7 +74,7 @@ public class AnimationHandler {
     while(iterator.hasNext()) {
       Bloon bloonToSpawn = iterator.next();
       if (!myBloonsInGame.containsKey(bloonToSpawn) && !bloonToSpawn.isDead()) {
-        BloonNode bloonNode = new BloonNode(bloonToSpawn.getBloonsType(), myStartingX, myStartingY, myBlockSize / 2.5);
+        BloonNode bloonNode = new BloonNode(bloonToSpawn.getBloonsType(), bloonToSpawn.getXPosition()*myBlockSize, bloonToSpawn.getYPosition()*myBlockSize, myBlockSize / 2.5);
         myBloonsInGame.put(bloonToSpawn, bloonNode);
         myLevelLayout.getChildren().add(bloonNode);
       }
