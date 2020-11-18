@@ -34,10 +34,10 @@ public class Bloon extends GamePiece implements BloonsAPI {
     this.distanceTraveled = 0;
     this.relativeSpeed = bloonsType.relativeSpeed();
 
-    this.freezeTimePeriod = Integer.parseInt(GAME_MECHANICS.getString("FreezeTimePeriod"));
+    this.freezeTimePeriod = Integer.parseInt(GAME_MECHANICS.getString("FreezeTimePeriod"))*60;
     this.freezeTimer = 0;
     this.freezeActive = false;
-    this.slowDownTimePeriod = Integer.parseInt(GAME_MECHANICS.getString("SlowDownTimePeriod"));
+    this.slowDownTimePeriod = Integer.parseInt(GAME_MECHANICS.getString("SlowDownTimePeriod"))*60;
     this.slowDownTimer = 0;
     this.slowDownActive = false;
     this.speedEffectFactor = 1;
@@ -101,6 +101,7 @@ public class Bloon extends GamePiece implements BloonsAPI {
 
   public void freeze() {
     freezeActive = true;
+    freezeTimer = 0;
     speedEffectFactor = 0;
   }
 
@@ -142,12 +143,15 @@ public class Bloon extends GamePiece implements BloonsAPI {
     }
   }
 
+  public boolean isFreezeActive(){
+    return freezeActive;
+  }
+
   private void updateFreezeEffect() {
     if (freezeActive) {
       freezeTimer++;
       if (freezeTimer >= freezeTimePeriod) {
         freezeActive = false;
-        freezeTimer = 0;
         speedEffectFactor = 1;
       }
     }
