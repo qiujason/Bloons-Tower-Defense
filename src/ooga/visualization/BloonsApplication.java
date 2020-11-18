@@ -253,7 +253,7 @@ public class BloonsApplication {
     Group level = new Group();
     myMenuPane = new VBox();
     visualizeLayout(level);
-    myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
+    myAnimationHandler = new AnimationHandler(myLevelLayout, myBloons,
         myTowers, myProjectiles, myBlockSize, myAnimation);
     gameMenuController = new GameMenuController(myAnimation);
     towerMenuController = new TowerMenuController(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize,

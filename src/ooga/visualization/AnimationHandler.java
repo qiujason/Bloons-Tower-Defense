@@ -14,7 +14,6 @@ import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
 import ooga.backend.projectile.ProjectilesCollection;
-import ooga.backend.layout.Layout;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowersCollection;
 import ooga.visualization.nodes.BloonNode;
@@ -25,16 +24,12 @@ import ooga.visualization.nodes.TowerNode;
 public class AnimationHandler {
 
   public static final double FRAMES_PER_SECOND = 60;
-  public static final double ANIMATION_DELAY = 1 / FRAMES_PER_SECOND;
 
   private Timeline myAnimation;
-  private Layout myLayout;
   private Group myLevelLayout;
   private double myBlockSize;
 
   private BloonsCollection myBloons;
-
-
   private TowersCollection myTowers;
   private ProjectilesCollection myProjectiles;
 
@@ -43,24 +38,17 @@ public class AnimationHandler {
   private Map<Projectile, ProjectileNode> myProjectilesInGame;
   private Map<Tower, Bloon> myShootingTargets;
 
-  public AnimationHandler(Layout layout, Group levelLayout, BloonsCollection bloons,
+  public AnimationHandler(Group levelLayout, BloonsCollection bloons,
       TowersCollection towers, ProjectilesCollection projectiles, double blockSize, Timeline animation) {
     myAnimation = animation;
     myAnimation.setCycleCount(Timeline.INDEFINITE);
-//    KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> animate());
-//    myAnimation.getKeyFrames().add(movement);
-
-    myLayout = layout;
     myLevelLayout = levelLayout;
-
     myBloons = bloons;
     myTowers = towers;
     myProjectiles = projectiles;
-
     myBloonsInGame = new HashMap<>();
     myTowersInGame = new HashMap<>();
     myProjectilesInGame = new HashMap<>();
-
     myBlockSize = blockSize;
   }
 
@@ -189,8 +177,10 @@ public class AnimationHandler {
   private void popBloon(Bloon bloon, Projectile projectile, BloonsCollection bloonsToRemove, BloonsCollection bloonsToAdd,
       ProjectilesCollection projectilesToRemove){
     Bloon[] spawnedBloons = bloon.shootBloon();
-    //double offset = myBlockSize/8;
+    System.out.println("original bloon: " + bloon.getXPosition() + " " + bloon.getYPosition());
+
     for(Bloon spawn : spawnedBloons) {
+      System.out.println("spawned bloon: " + spawn.getXPosition() + " " + spawn.getYPosition());
       bloonsToAdd.add(spawn);
     }
     bloon.setDead();

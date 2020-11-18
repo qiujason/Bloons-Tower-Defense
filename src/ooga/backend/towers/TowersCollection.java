@@ -56,5 +56,10 @@ public class TowersCollection implements GamePieceCollection<Tower> {
   public boolean contains(Tower tower) {
     return towers.contains(tower);
   }
+  @Override
+  public boolean isEmpty(){
+    return towers.isEmpty();
+  }
+
 
 }
