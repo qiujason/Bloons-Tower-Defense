@@ -1,5 +1,6 @@
 package ooga.visualization;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -99,6 +100,12 @@ public class AnimationHandler {
       }
       bloonNode.setXPosition(bloon.getXPosition() * myBlockSize);
       bloonNode.setYPosition(bloon.getYPosition() * myBlockSize);
+    }
+  }
+
+  public void changeBloonImage(File file){
+    for(BloonNode bloonNode : myBloonsInGame.values()){
+      bloonNode.setImage(file);
     }
   }
 

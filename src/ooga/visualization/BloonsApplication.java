@@ -34,6 +34,8 @@ import ooga.controller.TowerMenuController;
 import ooga.controller.TowerMenuInterface;
 import ooga.visualization.menu.GameMenu;
 import ooga.controller.TowerNodeHandler;
+import ooga.visualization.menu.ImageChooser;
+import ooga.visualization.menu.WeaponButtonsMenu;
 
 public class BloonsApplication {
 
@@ -361,7 +363,10 @@ public class BloonsApplication {
 
   private void visualizePlayerGUI(Pane level) {
     myMenuPane.setSpacing(10); //magic num
-    myMenu = new GameMenu(myMenuPane, myGameMenuController, towerNodeHandler);
+    myMenu = new GameMenu(myMenuPane, myGameMenuController);
+
+    myMenuPane.getChildren().add(new ImageChooser(myAnimationHandler));
+    myMenuPane.getChildren().add(new WeaponButtonsMenu(towerNodeHandler));
     myMenuPane.setLayoutX(GAME_WIDTH);
     level.getChildren().add(myMenuPane);
   }

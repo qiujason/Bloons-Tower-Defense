@@ -1,10 +1,12 @@
 package ooga.visualization.menu;
 
+import java.io.File;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import ooga.controller.GameMenuInterface;
 import javafx.scene.control.Button;
 import ooga.controller.TowerMenuInterface;
@@ -29,7 +31,7 @@ public class GameMenu {
   private Button speedUpButton;
   private Button slowDownButton;
 
-  public GameMenu(VBox MenuPane, GameMenuInterface gameController, TowerNodeHandler towerNodeController) {
+  public GameMenu(VBox MenuPane, GameMenuInterface gameController) {
     myMenuPane = MenuPane;
 
     playButton = makeButton(menuProperties.getString(PLAY_TEXT), event -> gameController.play());
@@ -40,9 +42,6 @@ public class GameMenu {
     slowDownButton = makeButton(menuProperties.getString(SLOWDOWN_TEXT), event -> gameController.slowDown());
     makeButtonRow(speedUpButton, slowDownButton);
 
-    myMenuPane.getChildren().add(makeButton("ChooseImage", event -> {}));
-
-    myMenuPane.getChildren().add(new WeaponButtonsMenu(towerNodeController));
   }
 
   private void makeButtonRow(Button first, Button second){
