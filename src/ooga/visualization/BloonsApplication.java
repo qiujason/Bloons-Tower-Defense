@@ -36,16 +36,29 @@ import ooga.visualization.menu.WeaponButtonsMenu;
 
 public class BloonsApplication {
 
-  public static final double HEIGHT = 500;
-  public static final double WIDTH = 800;
-  public static final double GAME_HEIGHT = 0.875 * HEIGHT;
-  public static final double GAME_WIDTH = 0.75 * WIDTH;
+  public static final ResourceBundle MENU_SIZING = ResourceBundle
+      .getBundle(BloonsApplication.class.getPackageName() + ".resources.gameMenuNumbers");
+  public static final double WIDTH = Double.parseDouble(MENU_SIZING.getString("Width"));
+  public static final double HEIGHT = Double.parseDouble(MENU_SIZING.getString("Height"));
+  public static final double GAME_WIDTH =
+      WIDTH * Double.parseDouble(MENU_SIZING.getString("GameWidthMultiplier"));
+  public static final double GAME_HEIGHT =
+      HEIGHT * Double.parseDouble(MENU_SIZING.getString("GameHeightMultiplier"));
+  public static final double GAME_STATS_HEIGHT_TEXT = Double
+      .parseDouble(MENU_SIZING.getString("GameStatsTextHeight"));
+  public static final double GAME_STATS_HEIGHT_SIZE = Double
+      .parseDouble(MENU_SIZING.getString("GameStatsTextSize"));
+  public static final double HEALTH_TEXT_X_SCALE = Double
+      .parseDouble(MENU_SIZING.getString("HealthTextXScale"));
+  public static final double MONEY_TEXT_X_SCALE = Double
+      .parseDouble(MENU_SIZING.getString("MoneyTextXScale"));
+  public static final double ROUND_TEXT_X_SCALE = Double
+      .parseDouble(MENU_SIZING.getString("RoundTextXScale"));
+
   public static final String LAYOUTS_PATH = "layouts/";
-  public static final String DEFAULT_LANGUAGE = "English";
   public static final ResourceBundle LANGUAGES = ResourceBundle
       .getBundle(BloonsApplication.class.getPackageName() + ".resources.languageList");
   public static final String STYLESHEETS = "stylesheets/";
-  public static final String DEFAULT_STYLESHEET = "Normal.css";
   public static final String LEVEL_IMAGES = "gamePhotos/levelImages";
 
   private Stage myStage;
@@ -65,45 +78,61 @@ public class BloonsApplication {
   private TowerNodeHandler towerNodeHandler;
   private AnimationHandler myAnimationHandler;
   private double myBlockSize;
-  //  private final ResourceBundle myBlockMappings = ResourceBundle
-//      .getBundle(getClass().getPackageName() + ".resources.blockMappings");
   private final Button myLevelStartButton;
   private ResourceBundle myMenuButtonNames;
-  private ResourceBundle myApplicationErrors;
+  private ResourceBundle myApplicationMessages;
   private String myCurrentLevel;
   private String myCurrentLanguage;
   private String myCurrentStylesheet;
   private Text myMoneyText;
   private Text myRoundText;
-//  private double myStartingX;
-//  private double myStartingY;
+  private Text myHealthText;
+  private Window myWindow;
+  private Enum<?> myGameMode;
 
   public BloonsApplication(Button startLevelButton) {
     myLevelStartButton = startLevelButton;
-    myCurrentLanguage = DEFAULT_LANGUAGE;
-    myCurrentStylesheet = DEFAULT_STYLESHEET;
+    myCurrentLanguage = MENU_SIZING.getString("DefaultLanguage");
+    myCurrentStylesheet = MENU_SIZING.getString("DefaultStylesheet");
     myMenuButtonNames = ResourceBundle
         .getBundle(
             getClass().getPackageName() + ".resources.languages." + myCurrentLanguage
                 + ".startMenuButtonNames"
                 + myCurrentLanguage);
-    myApplicationErrors = ResourceBundle
+    myApplicationMessages = ResourceBundle
         .getBundle(getClass().getPackageName() + ".resources.languages." + myCurrentLanguage
-            + ".applicationErrors"
+            + ".applicationMessages"
             + myCurrentLanguage);
   }
 
   public void startApplication(Stage mainStage) {
     myStage = mainStage;
     BorderPane menuLayout = new BorderPane();
-    displayStartMenu(menuLayout);
     myScene = new Scene(menuLayout, WIDTH, HEIGHT);
     myScene.getStylesheets()
         .add(getClass().getResource("/" + STYLESHEETS + myCurrentStylesheet).toExternalForm());
     menuLayout.getStyleClass().add("start-menu");
+    myWindow = new StartWindow(myScene, myMenuButtonNames, myApplicationMessages, myCurrentLanguage,
+        myCurrentStylesheet);
+//    Button startButton = new Button();
+//    startButton.setOnAction(event -> switchWindows(new SelectionWindow()));
+//    Button resetButton = new Button();
+//    resetButton.setOnAction(event -> startApplication(myStage));
+//    List<Button> windowChangeButtons = new ArrayList<>();
+//    windowChangeButtons.add(startButton);
+//    windowChangeButtons.add(resetButton);
+//    myWindow.displayWindow(windowChangeButtons);
+    displayStartMenu(menuLayout);
     myStage.setScene(myScene);
     myStage.show();
   }
+
+//  private void switchWindows(Window newWindow) {
+//    myWindow = newWindow;
+//    myWindow.displayWindow();
+//    myStage.setScene(myScene);
+//    myStage.show();
+//  }
 
   // TODO: Refactor, this is getting a bit long
   private void displayStartMenu(BorderPane menu) {
@@ -149,10 +178,10 @@ public class BloonsApplication {
             getClass().getPackageName() + ".resources.languages." + myCurrentLanguage
                 + ".startMenuButtonNames"
                 + myCurrentLanguage);
-    myApplicationErrors = ResourceBundle
+    myApplicationMessages = ResourceBundle
         .getBundle(
             getClass().getPackageName() + ".resources.languages." + myCurrentLanguage
-                + ".applicationErrors"
+                + ".applicationMessages"
                 + myCurrentLanguage);
     startApplication(myStage);
   }
@@ -165,8 +194,8 @@ public class BloonsApplication {
     try {
       styles = Paths.get(getClass().getClassLoader().getResource(STYLESHEETS).toURI());
     } catch (URISyntaxException e) {
-      new AlertHandler(myApplicationErrors.getString("NoStyles"),
-          myApplicationErrors.getString("NoStyles"));
+      new AlertHandler(myApplicationMessages.getString("NoStyles"),
+          myApplicationMessages.getString("NoStyles"));
     }
     for (File style : styles.toFile().listFiles()) {
       if (style.getName().contains(".")) {
@@ -193,6 +222,8 @@ public class BloonsApplication {
     BorderPane.setAlignment(levelSelectText, Pos.CENTER);
     ComboBox<String> levelOptions = initializeLevelButtons(levelSelectScreen);
 
+    ComboBox<Enum<?>> gameModeOptions = initializeGameModeOptions();
+
     Button backButton = new Button(myMenuButtonNames.getString("ReturnToStart"));
     backButton.setOnAction(e -> startApplication(myStage));
     backButton.setId("BackButton");
@@ -204,6 +235,7 @@ public class BloonsApplication {
     HBox levelSelectButtons = new HBox();
     levelSelectButtons.setAlignment(Pos.CENTER);
     levelSelectButtons.getChildren().add(levelOptions);
+    levelSelectButtons.getChildren().add(gameModeOptions);
     levelSelectButtons.getChildren().add(startLevelButton);
     levelSelectButtons.getChildren().add(backButton);
 
@@ -233,14 +265,14 @@ public class BloonsApplication {
     Path levels = null;
     try {
       if (getClass().getClassLoader().getResource(LAYOUTS_PATH) == null) {
-        new AlertHandler(myApplicationErrors.getString("NoLevels"),
-            myApplicationErrors.getString("NoLevels"));
+        new AlertHandler(myApplicationMessages.getString("NoLevels"),
+            myApplicationMessages.getString("NoLevels"));
         return null;
       }
       levels = Paths.get(getClass().getClassLoader().getResource(LAYOUTS_PATH).toURI());
     } catch (URISyntaxException e) {
-      new AlertHandler(myApplicationErrors.getString("NoLevels"),
-          myApplicationErrors.getString("NoLevels"));
+      new AlertHandler(myApplicationMessages.getString("NoLevels"),
+          myApplicationMessages.getString("NoLevels"));
     }
     return levels;
   }
@@ -249,22 +281,24 @@ public class BloonsApplication {
     Path levelImages = null;
     try {
       if (getClass().getClassLoader().getResource(LEVEL_IMAGES) == null) {
-        new AlertHandler(myApplicationErrors.getString("NoLevelImage"),
-            myApplicationErrors.getString("NoLevelImage"));
+        new AlertHandler(myApplicationMessages.getString("NoLevelImage"),
+            myApplicationMessages.getString("NoLevelImage"));
         return;
       }
       levelImages = Paths.get(getClass().getClassLoader().getResource(LEVEL_IMAGES).toURI());
     } catch (URISyntaxException e) {
-      new AlertHandler(myApplicationErrors.getString("NoLevelImage"),
-          myApplicationErrors.getString("NoLevelImage"));
+      new AlertHandler(myApplicationMessages.getString("NoLevelImage"),
+          myApplicationMessages.getString("NoLevelImage"));
     }
     Group levelImageGroup = new Group();
     for (File levelImageFile : levelImages.toFile().listFiles()) {
       if (levelImageFile.getName().split("\\.")[0].equals(levelName)) {
         ImagePattern levelImage = new ImagePattern(
             new Image(String.valueOf(levelImageFile.toURI())));
-        double heightToWidthRatio = levelImage.getImage().getHeight() / levelImage.getImage().getWidth();
-        Rectangle imageRectangle = new Rectangle(WIDTH / 2, WIDTH / 2 * heightToWidthRatio , levelImage);
+        double heightToWidthRatio =
+            levelImage.getImage().getHeight() / levelImage.getImage().getWidth();
+        Rectangle imageRectangle = new Rectangle(WIDTH / 2, WIDTH / 2 * heightToWidthRatio,
+            levelImage);
         imageRectangle.setId("ImageRectangle");
         levelImageGroup.getChildren()
             .add(imageRectangle);
@@ -273,9 +307,28 @@ public class BloonsApplication {
     levelSelectScreen.setCenter(levelImageGroup);
   }
 
+  private ComboBox<Enum<?>> initializeGameModeOptions() {
+    ComboBox<Enum<?>> gameModes = new ComboBox<>();
+    gameModes.setPromptText("Game Modes");
+    gameModes.setOnAction(e -> myGameMode = gameModes.getValue());
+    Class<?> gameModesClass = null;
+    try {
+      gameModesClass = Class.forName("something");
+    } catch (ClassNotFoundException e) {
+      new AlertHandler(myApplicationMessages.getString("NoGameModes"),
+          myApplicationMessages.getString("NoGameModes"));
+      return gameModes;
+    }
+    for (Object mode : gameModesClass.getEnumConstants()) {
+      gameModes.getItems().add((Enum<?>) mode);
+    }
+    return gameModes;
+  }
+
   public void initializeGameObjects(Layout layout, BloonsCollection bloons,
       TowersCollection towers,
-      ProjectilesCollection projectiles, RoadItemsCollection roadItems, Timeline animation, GameMenuInterface gameMenuController,
+      ProjectilesCollection projectiles, RoadItemsCollection roadItems, Timeline animation,
+      GameMenuInterface gameMenuController,
       TowerMenuInterface towerMenuController) {
     myLayout = layout;
     myBloons = bloons;
@@ -288,9 +341,13 @@ public class BloonsApplication {
   }
 
   private void loadLevel(String levelName) {
+    if (levelName == null) {
+      new AlertHandler(myApplicationMessages.getString("NoLevelSelected"),
+          myApplicationMessages.getString("NoLevelSelected"));
+    }
     if (levelName.equals("null.csv")) {
-      new AlertHandler(myApplicationErrors.getString("NoLevelSelected"),
-          myApplicationErrors.getString("NoLevelSelected"));
+      new AlertHandler(myApplicationMessages.getString("NoLevelSelected"),
+          myApplicationMessages.getString("NoLevelSelected"));
       return;
     }
     myCurrentLevel = levelName;
@@ -301,12 +358,12 @@ public class BloonsApplication {
     visualizeLayout(myLevel);
     myAnimationHandler = new AnimationHandler(myLevelLayout, myBloons,
         myTowers, myProjectiles, myRoadItems, myBlockSize, myAnimation);
-
     towerNodeHandler = new TowerNodeHandler(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize,
         myLevelLayout, myMenuPane, myTowers, myTowerMenuController, myAnimationHandler);
     visualizePlayerGUI(myLevel);
     displayCurrentMoney(0);
     displayCurrentRound(1);
+    displayCurrentHealth(100); // change this to actual health
     myScene.setRoot(myLevel);
     myStage.setScene(myScene);
   }
@@ -357,10 +414,6 @@ public class BloonsApplication {
     } else {
       blockRectangle.getStyleClass().add("path-block");
     }
-//    if (block.charAt(0) == '*') {
-//      myStartingX = currentBlockX + blockSize / 2;
-//      myStartingY = currentBlockY + blockSize / 2;
-//    }
     return blockRectangle;
   }
 
@@ -379,26 +432,47 @@ public class BloonsApplication {
     myStage.show();
   }
 
-  public void displayCurrentMoney(int currentMoney){
-    myLevel.getChildren().remove(myMoneyText);
-    myMoneyText = new Text("Money: $" + currentMoney);
-    myMoneyText.getStyleClass().add("menu-text");
-    myMoneyText.setX(WIDTH / 12);
-    myMoneyText.setY(15 * HEIGHT / 16);
-    myMoneyText.setScaleX(2.5);
-    myMoneyText.setScaleY(2.5);
-    myLevel.getChildren().add(myMoneyText);
+  public void displayCurrentHealth(int currentHealth) {
+    myLevel.getChildren().remove(myHealthText);
+    myHealthText = new Text("Health: " + currentHealth);
+    myHealthText.setX(WIDTH * HEALTH_TEXT_X_SCALE);
+    setupGameStat(myHealthText);
   }
 
-  public void displayCurrentRound(int currentRound){
+  public void displayCurrentMoney(int currentMoney) {
+    myLevel.getChildren().remove(myMoneyText);
+    myMoneyText = new Text("Money: $" + currentMoney);
+    myMoneyText.setX(WIDTH * MONEY_TEXT_X_SCALE);
+    setupGameStat(myMoneyText);
+  }
+
+  public void displayCurrentRound(int currentRound) {
     myLevel.getChildren().remove(myRoundText);
     myRoundText = new Text("Round: " + currentRound);
-    myRoundText.getStyleClass().add("menu-text");
-    myRoundText.setX(3 * WIDTH / 8);
-    myRoundText.setY(15 * HEIGHT / 16);
-    myRoundText.setScaleX(2.5);
-    myRoundText.setScaleY(2.5);
-    myLevel.getChildren().add(myRoundText);
+    myRoundText.setX(WIDTH * ROUND_TEXT_X_SCALE);
+    setupGameStat(myRoundText);
+  }
+
+  private void setupGameStat(Text gameStat) {
+    gameStat.getStyleClass().add("menu-text");
+    gameStat.setY(HEIGHT * GAME_STATS_HEIGHT_TEXT);
+    gameStat.setScaleX(GAME_STATS_HEIGHT_SIZE);
+    gameStat.setScaleY(GAME_STATS_HEIGHT_SIZE);
+    myLevel.getChildren().add(gameStat);
+  }
+
+  public void endRound() {
+    new AlertHandler(myApplicationMessages.getString("RoundEndHeader"),
+        myApplicationMessages.getString("RoundEndMessage"));
+  }
+
+  public void endLevel() {
+    new AlertHandler(myApplicationMessages.getString("GameEndHeader"),
+        myApplicationMessages.getString("GameEndMessage"));
+  }
+
+  public Enum<?> getMyGameMode() {
+    return myGameMode;
   }
 
   public String getCurrentLevel() {
