@@ -19,19 +19,17 @@ import ooga.visualization.AnimationHandler;
 public class GameEngine implements GameEngineAPI {
 
   private static final int STARTING_ROUND = 0;
-  public static final int SPAWN_DELAY = (int) (1 * AnimationHandler.FRAMES_PER_SECOND);
+  private static final int STARTING_LIVES = 100;
+  private static final int SPAWN_DELAY = (int) (1 * AnimationHandler.FRAMES_PER_SECOND);
+  private static final int SPEED_ADJUSTER = 50;
 
 
   private final Layout layout;
   private final List<BloonsCollection> allBloonWaves;
   private BloonsCollection currentBloonWave;
   private BloonsCollection queuedBloons;
-
-
-
   private Map<Tower, Bloon> shootingTargets;
   private int spawnTimer;
-  private double myBlockSize;
   private TowersCollection towers;
 
 
@@ -43,19 +41,17 @@ public class GameEngine implements GameEngineAPI {
   private Map<Bloon, Double> myBloonSidesY;
 
   private int round;
+  private int lives = STARTING_LIVES;
 
 
 
-  public GameEngine(Layout layout, List<BloonsCollection> allBloonWaves, TowersCollection towers,
-      ProjectilesCollection projectiles, RoadItemsCollection roadItems, double blockSize) {
+  public GameEngine(Layout layout, List<BloonsCollection> allBloonWaves) {
     this.layout = layout;
     this.allBloonWaves = allBloonWaves;
     this.queuedBloons = allBloonWaves.get(STARTING_ROUND);
     this.currentBloonWave = new BloonsCollection();
-    this.towers = towers;
-    this.projectiles = projectiles;
-    this.roadItems = roadItems;
-    myBlockSize = blockSize;
+    this.towers = new TowersCollection();
+    this.projectiles = new ProjectilesCollection();
     spawnTimer = SPAWN_DELAY;
     this.shootingTargets = new HashMap<>();
     myBloonSidesX = new HashMap<>();
@@ -93,11 +89,12 @@ public class GameEngine implements GameEngineAPI {
           ,(int) (bloon.getXPosition() + myBloonSidesX.get(bloon)));
 
       if (currentBlock.isEndBlock()){
+        lives -= bloon.getBloonsType().RBE();
         bloon.setDead();
       }
 
-      bloon.setXVelocity((bloon.getBloonsType().relativeSpeed() * currentBlock.getDx())/myBlockSize);
-      bloon.setYVelocity((bloon.getBloonsType().relativeSpeed() * currentBlock.getDy())/myBlockSize);
+      bloon.setXVelocity((bloon.getBloonsType().relativeSpeed() * currentBlock.getDx())/SPEED_ADJUSTER);
+      bloon.setYVelocity((bloon.getBloonsType().relativeSpeed() * currentBlock.getDy())/SPEED_ADJUSTER);
 
       setBloonSides(bloon, currentBlock);
     }

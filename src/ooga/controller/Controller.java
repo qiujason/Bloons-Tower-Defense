@@ -60,11 +60,6 @@ public class Controller extends Application {
   private GameEngineAPI gameEngine;
   private Layout layout;
   private List<BloonsCollection> allBloonWaves;
-  private TowersCollection towersCollection;
-  private ProjectilesCollection projectilesCollection;
-  private RoadItemsCollection roadItemsCollection;
-
-  private Map<Tower, Bloon> shootingTargets;
   private GameMenuInterface gameController;
   private Map<TowerType, Integer> towerBuyMap;
   private Map<TowerType, Integer> towerSellMap;
@@ -79,10 +74,6 @@ public class Controller extends Application {
     myAnimation = new Timeline();
     layoutReader = new LayoutReader();
     bloonReader = new BloonReader();
-    towersCollection = new TowersCollection();
-    projectilesCollection = new ProjectilesCollection();
-    roadItemsCollection = new RoadItemsCollection();
-    shootingTargets = new HashMap<>();
     setUpBank();
 
     Button startLevelButton = new Button();
@@ -126,15 +117,6 @@ public class Controller extends Application {
       AlertHandler alert = new AlertHandler(errorResource.getString("InvalidPropertyFile"),
           errorResource.getString("RequiredKeysMissingTowerNames"));
     }
-  }
-
-  private double getMyBlockSize() {
-    int numberOfRows = layout.getHeight();
-    int numberOfColumns = layout.getWidth();
-    double blockWidth = BloonsApplication.GAME_WIDTH / numberOfColumns;
-    double blockHeight = BloonsApplication.GAME_HEIGHT / numberOfRows;
-    double myBlockSize = Math.min(blockWidth, blockHeight);
-    return myBlockSize;
   }
 
   public void setUpBank(){
@@ -184,20 +166,17 @@ public class Controller extends Application {
   }
 
   private void startGameEngine() {
-    gameEngine = new GameEngine(layout, allBloonWaves, towersCollection, projectilesCollection, roadItemsCollection, getMyBlockSize());
+    gameEngine = new GameEngine(layout, allBloonWaves);
   }
 
   private void step() {
     animationHandler = bloonsApplication.getMyAnimationHandler();
 
-    //pass shit from front end to backend
     gameEngine.setProjectiles(animationHandler.getProjectiles());
     gameEngine.setTowers(animationHandler.getTowers());
 
-    //update game engine
     gameEngine.update();
 
-    //pass shit from backend to frontend
     animationHandler.setBloonWave(gameEngine.getCurrentBloonWave());
 
 
@@ -207,13 +186,13 @@ public class Controller extends Application {
 
 
 
-    //animate animationhandler
     animationHandler.animate();
 
     bloonsApplication.displayCurrentMoney(bank.getCurrentMoney());
     bloonsApplication.displayCurrentRound(gameEngine.getRound() + 1);
 
     if(gameEngine.isRoundEnd() || gameEngine.isGameEnd()){
+      bank.advanceOneLevel();
       myAnimation.stop();
     }
 
