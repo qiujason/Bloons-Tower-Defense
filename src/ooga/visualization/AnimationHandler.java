@@ -366,4 +366,12 @@ public class AnimationHandler {
       Map<Tower, Bloon> shootingTargets) {
     this.myShootingTargets = shootingTargets;
   }
+
+  public RoadItemsCollection getRoadItems(){
+    return myRoadItems;
+  }
+
+  public void setRoadItems(RoadItemsCollection roadItems){
+    myRoadItems = roadItems;
+  }
 }
