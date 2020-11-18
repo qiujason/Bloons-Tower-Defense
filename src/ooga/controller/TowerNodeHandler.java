@@ -3,6 +3,7 @@ package ooga.controller;
 import javafx.scene.Group;
 import javafx.scene.layout.VBox;
 import ooga.backend.collections.GamePieceIterator;
+import ooga.backend.layout.Layout;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.TowersCollection;
@@ -17,6 +18,7 @@ import ooga.visualization.nodes.WeaponRange;
 
 public class TowerNodeHandler {
 
+  private Layout layout;
   private double gameWidth;
   private double gameHeight;
   private double blockSize;
@@ -33,9 +35,10 @@ public class TowerNodeHandler {
 
   private static final double towerDefaultPosition = -1;
 
-  public TowerNodeHandler(double gameWidth, double gameHeight, double blockSize, Group layoutRoot,
-      VBox menuPane, TowersCollection towersCollection, TowerMenuInterface menuController,
-      AnimationHandler animationHandler) {
+  public TowerNodeHandler(Layout layout, double gameWidth, double gameHeight, double blockSize,
+      Group layoutRoot, VBox menuPane, TowersCollection towersCollection,
+      TowerMenuInterface menuController, AnimationHandler animationHandler) {
+    this.layout = layout;
     this.gameWidth = gameWidth;
     this.gameHeight = gameHeight;
     this.blockSize = blockSize;
@@ -60,12 +63,13 @@ public class TowerNodeHandler {
         TowerNode towerNode = nodeFactory.createTowerNode(towerType, gameWidth / 2,
             gameHeight / 2, blockSize / 2);
         towerNode.makeTowerMenu(this);
-        towerNode.setWeaponRange(blockSize);
+        towerNode.setWeaponRange(tower.getRadius(), blockSize);
         WeaponRange towerRange = towerNode.getRangeDisplay();
         layoutRoot.getChildren().add(towerRange);
         layoutRoot.getChildren().add(towerNode);
         placeTower(tower, towerNode);
       }
+      System.out.println("make more money cuh");
     }
   }
 
@@ -79,11 +83,14 @@ public class TowerNodeHandler {
   }
 
   public void upgradeRate(TowerNode towerNode) {
-
+    Tower tower = animationHandler.getTowerFromNode(towerNode);
+    menuController.upgradeRate(tower);
   }
 
   public void upgradeRange(TowerNode towerNode) {
-
+    Tower tower = animationHandler.getTowerFromNode(towerNode);
+    menuController.upgradeRange(tower);
+    towerNode.setWeaponRange(tower.getRadius(), blockSize);
   }
 
   private void placeTower(Tower tower, TowerNode towerNode) {
@@ -92,10 +99,8 @@ public class TowerNodeHandler {
         if (e.getY() >= 0 && e.getY() <= gameHeight) {
           towerNode.setXPosition(e.getX());
           towerNode.setYPosition(e.getY());
-          towerNode.getRangeDisplay().setCenterX(e.getX());
-          towerNode.getRangeDisplay().setCenterY(e.getY());
-          tower.setXPosition(e.getX());
-          tower.setYPosition(e.getY());
+          tower.setXPosition(toGridXPosition(e.getX()));
+          tower.setYPosition(toGridYPosition(e.getY()));
         }
       }
     });
@@ -136,14 +141,14 @@ public class TowerNodeHandler {
     }
   }
 
-//    @Override
-//    public void upgradeRange(Tower tower){
-//    }
-//
-//    @Override
-//    public void upgradeRate(Tower tower) {
-//    }
-//
+  private double toGridXPosition(double gameXPosition){
+    return layout.getWidth() * gameXPosition / gameWidth;
+  }
+
+  private double toGridYPosition(double gameYPosition){
+    return layout.getHeight() * gameYPosition / gameHeight;
+  }
+
 //    @Override
 //    public void setTargetingOption(){
 //    }
