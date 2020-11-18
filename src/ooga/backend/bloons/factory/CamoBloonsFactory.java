@@ -8,7 +8,9 @@ public class CamoBloonsFactory implements BloonsFactory {
 
   @Override
   public Bloon createBloon(Bloon bloon) {
-    return createBloon(bloon.getBloonsType(), bloon.getXPosition(), bloon.getYPosition(), bloon.getXVelocity(), bloon.getYVelocity());
+    Bloon newCamoBloon = createBloon(bloon.getBloonsType(), bloon.getXPosition(), bloon.getYPosition(), bloon.getXVelocity(), bloon.getYVelocity());
+    newCamoBloon.setDistanceTraveled(bloon.getDistanceTraveled());
+    return newCamoBloon;
   }
 
   @Override
@@ -19,8 +21,10 @@ public class CamoBloonsFactory implements BloonsFactory {
 
   @Override
   public Bloon createNextBloon(Bloon bloon) {
-    return createBloon(bloon.getBloonsType().chain().getNextBloonsType(bloon.getBloonsType()), bloon.getXPosition(), bloon.getYPosition(),
+    Bloon newCamoBloon = createBloon(bloon.getBloonsType().chain().getNextBloonsType(bloon.getBloonsType()), bloon.getXPosition(), bloon.getYPosition(),
         bloon.getXVelocity(), bloon.getYVelocity());
+    newCamoBloon.setDistanceTraveled(bloon.getDistanceTraveled());
+    return newCamoBloon;
   }
 
 }
