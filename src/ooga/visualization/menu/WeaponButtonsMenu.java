@@ -13,12 +13,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import ooga.backend.roaditems.RoadItemType;
 import ooga.backend.towers.TowerType;
-import ooga.controller.TowerMenuInterface;
-import ooga.controller.TowerNodeHandler;
+import ooga.controller.WeaponNodeHandler;
 
 public class WeaponButtonsMenu extends FlowPane {
 
-  private TowerNodeHandler towerNodeHandler;
+  private WeaponNodeHandler weaponNodeHandler;
   private List<TowerType> weaponTypeList = Arrays.asList(TowerType.values());
   private List<RoadItemType> roadItemTypeList = Arrays.asList(RoadItemType.values());
 
@@ -38,8 +37,8 @@ public class WeaponButtonsMenu extends FlowPane {
 
   private ResourceBundle roadItemPic = ResourceBundle.getBundle(PACKAGE + ROAD_ITEMS);
 
-  public WeaponButtonsMenu(TowerNodeHandler towerNodeHandler){
-    this.towerNodeHandler = towerNodeHandler;
+  public WeaponButtonsMenu(WeaponNodeHandler weaponNodeHandler){
+    this.weaponNodeHandler = weaponNodeHandler;
     makeAllWeaponButtons();
     makeAllRoadItemButtons();
     this.setPrefWrapLength(200);
@@ -49,14 +48,14 @@ public class WeaponButtonsMenu extends FlowPane {
   private void makeAllWeaponButtons(){
     for(TowerType type : weaponTypeList){
       this.getChildren().add(makeWeaponButton(type,
-          event -> towerNodeHandler.makeWeapon(type)));
+          event -> weaponNodeHandler.makeWeapon(type)));
     }
   }
 
   private void makeAllRoadItemButtons(){
     for(RoadItemType type : roadItemTypeList){
       this.getChildren().add(makeRoadItemButton(type,
-          event -> towerNodeHandler.makeRoadWeapon(type)));
+          event -> weaponNodeHandler.makeRoadWeapon(type)));
     }
   }
 

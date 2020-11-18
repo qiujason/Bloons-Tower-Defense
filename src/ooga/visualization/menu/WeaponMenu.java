@@ -7,7 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.FlowPane;
 import ooga.backend.towers.ShootingChoice;
-import ooga.controller.TowerNodeHandler;
+import ooga.controller.WeaponNodeHandler;
 import ooga.visualization.nodes.TowerNode;
 
 public class WeaponMenu extends FlowPane {
@@ -28,13 +28,16 @@ public class WeaponMenu extends FlowPane {
   private Button closeMenuButton;
   private ComboBox shootingChoiceBox;
 
-  public WeaponMenu(TowerNode tower, TowerNodeHandler towerNodeHandler){
+  public WeaponMenu(TowerNode tower, WeaponNodeHandler weaponNodeHandler){
     this.setPrefWrapLength(200);
-    upgradeRangeButton = makeButton(menuProperties.getString(UPGRADE_RANGE_TEXT), event -> towerNodeHandler.upgradeRange(tower));
-    upgradeRateButton = makeButton(menuProperties.getString(UPGRADE_RATE_TEXT), event -> towerNodeHandler.upgradeRate(tower));
-    sellTowerButton = makeButton(menuProperties.getString(SELL_TOWER_TEXT), event -> towerNodeHandler.removeWeapon(tower));
+    upgradeRangeButton = makeButton(menuProperties.getString(UPGRADE_RANGE_TEXT), event -> weaponNodeHandler
+        .upgradeRange(tower));
+    upgradeRateButton = makeButton(menuProperties.getString(UPGRADE_RATE_TEXT), event -> weaponNodeHandler
+        .upgradeRate(tower));
+    sellTowerButton = makeButton(menuProperties.getString(SELL_TOWER_TEXT), event -> weaponNodeHandler
+        .removeWeapon(tower));
     shootingChoiceBox = new ShootingChoiceBox(BUTTON_WIDTH);
-    setComboBoxHandler(event -> towerNodeHandler.setTargetingOption(tower, (ShootingChoice) shootingChoiceBox.getValue()));
+    setComboBoxHandler(event -> weaponNodeHandler.setTargetingOption(tower, (ShootingChoice) shootingChoiceBox.getValue()));
   }
 
   private Button makeButton(String name, EventHandler<ActionEvent> handler) {

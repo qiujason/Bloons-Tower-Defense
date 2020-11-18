@@ -3,7 +3,7 @@ package ooga.controller;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 
-public interface TowerMenuInterface {
+public interface WeaponBankInterface {
 
   boolean buyTower(TowerType tower);
 

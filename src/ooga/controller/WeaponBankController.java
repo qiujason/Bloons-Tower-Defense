@@ -5,11 +5,11 @@ import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.UpgradeChoice;
 
-public class TowerMenuController implements TowerMenuInterface {
+public class WeaponBankController implements WeaponBankInterface {
 
   private Bank bank;
 
-  public TowerMenuController(Bank bank){
+  public WeaponBankController(Bank bank){
     this.bank = bank;
   }
 

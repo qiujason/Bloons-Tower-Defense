@@ -5,7 +5,6 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
-import java.util.concurrent.ConcurrentHashMap;
 import javafx.animation.Timeline;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -17,7 +16,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -28,12 +26,10 @@ import ooga.backend.layout.Layout;
 import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.towers.TowersCollection;
 import ooga.controller.Controller;
-import ooga.controller.GameMenuController;
 import ooga.controller.GameMenuInterface;
-import ooga.controller.TowerMenuController;
-import ooga.controller.TowerMenuInterface;
+import ooga.controller.WeaponBankInterface;
 import ooga.visualization.menu.GameMenu;
-import ooga.controller.TowerNodeHandler;
+import ooga.controller.WeaponNodeHandler;
 
 public class BloonsApplication {
 
@@ -60,8 +56,8 @@ public class BloonsApplication {
   private GameMenu myMenu;
   private VBox myMenuPane;
   private GameMenuInterface myGameMenuController;
-  private TowerMenuInterface myTowerMenuController;
-  private TowerNodeHandler towerNodeHandler;
+  private WeaponBankInterface myTowerMenuController;
+  private WeaponNodeHandler weaponNodeHandler;
   private AnimationHandler myAnimationHandler;
   private double myBlockSize;
   //  private final ResourceBundle myBlockMappings = ResourceBundle
@@ -273,7 +269,7 @@ public class BloonsApplication {
   public void initializeGameObjects(Layout layout, BloonsCollection bloons,
       TowersCollection towers,
       ProjectilesCollection projectiles, Timeline animation, GameMenuInterface gameMenuController,
-      TowerMenuInterface towerMenuController) {
+      WeaponBankInterface towerMenuController) {
     myLayout = layout;
     myBloons = bloons;
     myTowers = towers;
@@ -299,7 +295,7 @@ public class BloonsApplication {
     myAnimationHandler = new AnimationHandler(myLevelLayout, myBloons,
         myTowers, myProjectiles, myBlockSize, myAnimation);
 
-    towerNodeHandler = new TowerNodeHandler(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize,
+    weaponNodeHandler = new WeaponNodeHandler(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize,
         myLevelLayout, myMenuPane, myTowers, myTowerMenuController, myAnimationHandler);
     visualizePlayerGUI(level);
     myScene.setRoot(level);
@@ -361,7 +357,7 @@ public class BloonsApplication {
 
   private void visualizePlayerGUI(Pane level) {
     myMenuPane.setSpacing(10); //magic num
-    myMenu = new GameMenu(myMenuPane, myGameMenuController, towerNodeHandler);
+    myMenu = new GameMenu(myMenuPane, myGameMenuController, weaponNodeHandler);
     myMenuPane.setLayoutX(GAME_WIDTH);
     level.getChildren().add(myMenuPane);
   }

@@ -25,7 +25,7 @@ import ooga.visualization.nodes.TowerNodeFactory;
 import ooga.visualization.nodes.WeaponNodeFactory;
 import ooga.visualization.nodes.WeaponRange;
 
-public class TowerNodeHandler {
+public class WeaponNodeHandler {
 
   private Layout layout;
   private double gameWidth;
@@ -33,7 +33,7 @@ public class TowerNodeHandler {
   private double blockSize;
   private Group layoutRoot;
   private VBox menuPane;
-  private TowerMenuInterface menuController;
+  private WeaponBankInterface menuController;
   private AnimationHandler animationHandler;
   private TowersCollection towersCollection;
 
@@ -47,9 +47,9 @@ public class TowerNodeHandler {
 
   private static final double towerDefaultPosition = -1;
 
-  public TowerNodeHandler(Layout layout, double gameWidth, double gameHeight, double blockSize,
+  public WeaponNodeHandler(Layout layout, double gameWidth, double gameHeight, double blockSize,
       Group layoutRoot, VBox menuPane, TowersCollection towersCollection,
-      TowerMenuInterface menuController, AnimationHandler animationHandler) {
+      WeaponBankInterface menuController, AnimationHandler animationHandler) {
     this.layout = layout;
     this.gameWidth = gameWidth;
     this.gameHeight = gameHeight;
