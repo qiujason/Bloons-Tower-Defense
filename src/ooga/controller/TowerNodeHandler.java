@@ -47,8 +47,6 @@ public class TowerNodeHandler {
 
   private static final double towerDefaultPosition = -1;
 
-  private ResourceBundle inGameMessage = ResourceBundle.getBundle("InGameMessages");
-
 
   public TowerNodeHandler(Layout layout, double gameWidth, double gameHeight, double blockSize,
       Group layoutRoot, VBox menuPane, TowersCollection towersCollection,
