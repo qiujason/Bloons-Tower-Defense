@@ -1,14 +1,9 @@
 package ooga.visualization;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.animation.Timeline;
 import javafx.geometry.Pos;
