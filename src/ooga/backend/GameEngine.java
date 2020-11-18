@@ -31,9 +31,6 @@ public class GameEngine implements GameEngineAPI {
   private Map<Tower, Bloon> shootingTargets;
   private int spawnTimer;
   private TowersCollection towers;
-
-
-
   private RoadItemsCollection roadItems;
 
   private ProjectilesCollection projectiles;
@@ -51,6 +48,7 @@ public class GameEngine implements GameEngineAPI {
     this.queuedBloons = allBloonWaves.get(STARTING_ROUND);
     this.currentBloonWave = new BloonsCollection();
     this.towers = new TowersCollection();
+    this.roadItems = new RoadItemsCollection();
     this.projectiles = new ProjectilesCollection();
     spawnTimer = SPAWN_DELAY;
     this.shootingTargets = new HashMap<>();
@@ -229,5 +227,8 @@ public class GameEngine implements GameEngineAPI {
     return roadItems;
   }
 
+  public void setRoadItems(RoadItemsCollection update){
+    roadItems = update;
+  }
 
 }
