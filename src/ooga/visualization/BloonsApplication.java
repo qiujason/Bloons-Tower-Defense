@@ -12,11 +12,13 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -45,6 +47,7 @@ public class BloonsApplication {
       .getBundle(BloonsApplication.class.getPackageName() + ".resources.languageList");
   public static final String STYLESHEETS = "stylesheets/";
   public static final String DEFAULT_STYLESHEET = "Normal.css";
+  public static final String LEVEL_IMAGES = "gamePhotos/levelImages";
 
   private Stage myStage;
   private Scene myScene;
@@ -61,7 +64,7 @@ public class BloonsApplication {
   private TowerNodeHandler towerNodeHandler;
   private AnimationHandler myAnimationHandler;
   private double myBlockSize;
-//  private final ResourceBundle myBlockMappings = ResourceBundle
+  //  private final ResourceBundle myBlockMappings = ResourceBundle
 //      .getBundle(getClass().getPackageName() + ".resources.blockMappings");
   private final Button myLevelStartButton;
   private ResourceBundle myMenuButtonNames;
@@ -69,8 +72,8 @@ public class BloonsApplication {
   private String myCurrentLevel;
   private String myCurrentLanguage;
   private String myCurrentStylesheet;
-  private double myStartingX;
-  private double myStartingY;
+//  private double myStartingX;
+//  private double myStartingY;
 
   public BloonsApplication(Button startLevelButton) {
     myLevelStartButton = startLevelButton;
@@ -163,7 +166,7 @@ public class BloonsApplication {
           myApplicationErrors.getString("NoStyles"));
     }
     for (File style : styles.toFile().listFiles()) {
-      if(style.getName().contains(".")){
+      if (style.getName().contains(".")) {
         styleOptions.getItems().add(style.getName().split("\\.")[0]);
       }
     }
@@ -183,33 +186,44 @@ public class BloonsApplication {
     levelSelectText.setScaleX(3);
     levelSelectText.setScaleY(3);
     levelSelectScreen.setCenter(levelSelectText);
+
     BorderPane.setAlignment(levelSelectText, Pos.CENTER);
-    HBox levelButtons = initializeLevelButtons();
-    levelSelectScreen.setBottom(levelButtons);
-    BorderPane.setAlignment(levelButtons, Pos.CENTER_RIGHT);
+    ComboBox<String> levelOptions = initializeLevelButtons(levelSelectScreen);
+
+    Button backButton = new Button(myMenuButtonNames.getString("ReturnToStart"));
+    backButton.setOnAction(e -> startApplication(myStage));
+    backButton.setId("BackButton");
+
+    Button startLevelButton = new Button(myMenuButtonNames.getString("StartGame"));
+    startLevelButton.setOnAction(e -> loadLevel(levelOptions.getValue() + ".csv"));
+    startLevelButton.setId("StartLevelButton");
+
+    HBox levelSelectButtons = new HBox();
+    levelSelectButtons.setAlignment(Pos.CENTER);
+    levelSelectButtons.getChildren().add(levelOptions);
+    levelSelectButtons.getChildren().add(startLevelButton);
+    levelSelectButtons.getChildren().add(backButton);
+
+    levelSelectScreen.setBottom(levelSelectButtons);
 
     myScene.setRoot(levelSelectScreen);
     myStage.setScene(myScene);
   }
 
-  private HBox initializeLevelButtons() {
-    HBox levelButtons = new HBox();
-    levelButtons.setAlignment(Pos.CENTER);
+  private ComboBox<String> initializeLevelButtons(BorderPane levelSelectScreen) {
+    ComboBox<String> levelOptions = new ComboBox<>();
+    levelOptions.setId("LevelOptions");
+    levelOptions.setPromptText(myMenuButtonNames.getString("SelectLevel"));
     Path levels = getLevels();
     if (levels == null || levels.toFile().listFiles() == null) {
-      return levelButtons;
+      return levelOptions;
     }
     for (File level : levels.toFile().listFiles()) {
-      Button levelButton = new Button(level.getName().split("\\.")[0]);
-      levelButton.setOnAction(e -> loadLevel(level.getName()));
-      levelButton.setId(level.getName().split("\\.")[0]);
-      levelButtons.getChildren().add(levelButton);
+      levelOptions.getItems().add(level.getName().split("\\.")[0]);
     }
-    Button backButton = new Button(myMenuButtonNames.getString("ReturnToStart"));
-    backButton.setOnAction(e -> startApplication(myStage));
-    backButton.setId("BackButton");
-    levelButtons.getChildren().add(backButton);
-    return levelButtons;
+    levelOptions.setOnAction(
+        e -> displayLevelPhotoAndDescription(levelOptions.getValue(), levelSelectScreen));
+    return levelOptions;
   }
 
   private Path getLevels() {
@@ -228,6 +242,34 @@ public class BloonsApplication {
     return levels;
   }
 
+  private void displayLevelPhotoAndDescription(String levelName, BorderPane levelSelectScreen) {
+    Path levelImages = null;
+    try {
+      if (getClass().getClassLoader().getResource(LEVEL_IMAGES) == null) {
+        new AlertHandler(myApplicationErrors.getString("NoLevelImage"),
+            myApplicationErrors.getString("NoLevelImage"));
+        return;
+      }
+      levelImages = Paths.get(getClass().getClassLoader().getResource(LEVEL_IMAGES).toURI());
+    } catch (URISyntaxException e) {
+      new AlertHandler(myApplicationErrors.getString("NoLevelImage"),
+          myApplicationErrors.getString("NoLevelImage"));
+    }
+    Group levelImageGroup = new Group();
+    for (File levelImageFile : levelImages.toFile().listFiles()) {
+      if (levelImageFile.getName().split("\\.")[0].equals(levelName)) {
+        ImagePattern levelImage = new ImagePattern(
+            new Image(String.valueOf(levelImageFile.toURI())));
+        double heightToWidthRatio = levelImage.getImage().getHeight() / levelImage.getImage().getWidth();
+        Rectangle imageRectangle = new Rectangle(WIDTH / 2, WIDTH / 2 * heightToWidthRatio , levelImage);
+        imageRectangle.setId("ImageRectangle");
+        levelImageGroup.getChildren()
+            .add(imageRectangle);
+      }
+    }
+    levelSelectScreen.setCenter(levelImageGroup);
+  }
+
   public void initializeGameObjects(Layout layout, BloonsCollection bloons,
       TowersCollection towers,
       ProjectilesCollection projectiles, Timeline animation, GameMenuInterface gameMenuController,
@@ -243,6 +285,11 @@ public class BloonsApplication {
   }
 
   private void loadLevel(String levelName) {
+    if (levelName == null) {
+      new AlertHandler(myApplicationErrors.getString("NoLevelSelected"),
+          myApplicationErrors.getString("NoLevelSelected"));
+      return;
+    }
     myCurrentLevel = levelName;
     myLevelStartButton.fire();
     Pane level = new Pane();
@@ -299,16 +346,15 @@ public class BloonsApplication {
   private Rectangle createBlock(String block, double currentBlockX, double currentBlockY,
       double blockSize) {
     Rectangle blockRectangle = new Rectangle(currentBlockX, currentBlockY, blockSize, blockSize);
-    if(block.equals("0")){
+    if (block.equals("0")) {
       blockRectangle.getStyleClass().add("non-path-block");
-    }
-    else{
+    } else {
       blockRectangle.getStyleClass().add("path-block");
     }
-    if (block.charAt(0) == '*') {
-      myStartingX = currentBlockX + blockSize / 2;
-      myStartingY = currentBlockY + blockSize / 2;
-    }
+//    if (block.charAt(0) == '*') {
+//      myStartingX = currentBlockX + blockSize / 2;
+//      myStartingY = currentBlockY + blockSize / 2;
+//    }
     return blockRectangle;
   }
 
