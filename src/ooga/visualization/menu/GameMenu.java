@@ -7,8 +7,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import ooga.controller.GameMenuInterface;
 import javafx.scene.control.Button;
-import ooga.controller.TowerMenuInterface;
-import ooga.controller.TowerNodeHandler;
 
 public class GameMenu {
 
@@ -29,7 +27,7 @@ public class GameMenu {
   private Button speedUpButton;
   private Button slowDownButton;
 
-  public GameMenu(VBox MenuPane, GameMenuInterface gameController, TowerNodeHandler towerNodeController) {
+  public GameMenu(VBox MenuPane, GameMenuInterface gameController) {
     myMenuPane = MenuPane;
 
     playButton = makeButton(menuProperties.getString(PLAY_TEXT), event -> gameController.play());
@@ -39,8 +37,6 @@ public class GameMenu {
     speedUpButton = makeButton(menuProperties.getString(SPEEDUP_TEXT), event -> gameController.speedUp());
     slowDownButton = makeButton(menuProperties.getString(SLOWDOWN_TEXT), event -> gameController.slowDown());
     makeButtonRow(speedUpButton, slowDownButton);
-
-    myMenuPane.getChildren().add(new WeaponButtonsMenu(towerNodeController));
   }
 
   private void makeButtonRow(Button first, Button second){

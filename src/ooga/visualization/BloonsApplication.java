@@ -26,6 +26,7 @@ import ooga.AlertHandler;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.layout.Layout;
 import ooga.backend.projectile.ProjectilesCollection;
+import ooga.backend.roaditems.RoadItemsCollection;
 import ooga.backend.towers.TowersCollection;
 import ooga.controller.Controller;
 import ooga.controller.GameMenuController;
@@ -34,6 +35,8 @@ import ooga.controller.TowerMenuController;
 import ooga.controller.TowerMenuInterface;
 import ooga.visualization.menu.GameMenu;
 import ooga.controller.TowerNodeHandler;
+import ooga.visualization.menu.ImageChooser;
+import ooga.visualization.menu.WeaponButtonsMenu;
 
 public class BloonsApplication {
 
@@ -57,6 +60,7 @@ public class BloonsApplication {
   private BloonsCollection myBloons;
   private TowersCollection myTowers;
   private ProjectilesCollection myProjectiles;
+  private RoadItemsCollection myRoadItems;
   private Group myLevelLayout;
   private GameMenu myMenu;
   private VBox myMenuPane;
@@ -275,19 +279,21 @@ public class BloonsApplication {
 
   public void initializeGameObjects(Layout layout, BloonsCollection bloons,
       TowersCollection towers,
-      ProjectilesCollection projectiles, Timeline animation, GameMenuInterface gameMenuController,
+      ProjectilesCollection projectiles, RoadItemsCollection roadItems, Timeline animation, GameMenuInterface gameMenuController,
       TowerMenuInterface towerMenuController) {
     myLayout = layout;
     myBloons = bloons;
     myTowers = towers;
     myProjectiles = projectiles;
+    myRoadItems = roadItems;
     myAnimation = animation;
     myGameMenuController = gameMenuController;
     myTowerMenuController = towerMenuController;
   }
 
   private void loadLevel(String levelName) {
-    if (levelName == null) {
+    System.out.println(levelName);
+    if (levelName.equals("null.csv")) {
       new AlertHandler(myApplicationErrors.getString("NoLevelSelected"),
           myApplicationErrors.getString("NoLevelSelected"));
       return;
@@ -365,7 +371,10 @@ public class BloonsApplication {
 
   private void visualizePlayerGUI(Pane level) {
     myMenuPane.setSpacing(10); //magic num
-    myMenu = new GameMenu(myMenuPane, myGameMenuController, towerNodeHandler);
+    myMenu = new GameMenu(myMenuPane, myGameMenuController);
+
+    myMenuPane.getChildren().add(new ImageChooser(myAnimationHandler));
+    myMenuPane.getChildren().add(new WeaponButtonsMenu(towerNodeHandler));
     myMenuPane.setLayoutX(GAME_WIDTH);
     level.getChildren().add(myMenuPane);
   }

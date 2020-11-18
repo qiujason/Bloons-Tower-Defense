@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import ooga.AlertHandler;
+import ooga.backend.API.GameEngineAPI;
 import ooga.backend.ConfigurationException;
 import ooga.backend.GameEngine;
 import ooga.backend.bloons.Bloon;
@@ -28,6 +29,7 @@ import ooga.backend.readers.RoadItemValueReader;
 import ooga.backend.readers.RoundBonusReader;
 import ooga.backend.readers.TowerValueReader;
 import ooga.backend.roaditems.RoadItemType;
+import ooga.backend.roaditems.RoadItemsCollection;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.TowersCollection;
@@ -55,11 +57,12 @@ public class Controller extends Application {
   private LayoutReader layoutReader;
   private BloonsTypeChain bloonsTypeChain;
   private BloonReader bloonReader;
-  private GameEngine gameEngine;
+  private GameEngineAPI gameEngine;
   private Layout layout;
   private List<BloonsCollection> allBloonWaves;
   private TowersCollection towersCollection;
   private ProjectilesCollection projectilesCollection;
+  private RoadItemsCollection roadItemsCollection;
 
   private Map<Tower, Bloon> shootingTargets;
   private GameMenuInterface gameController;
@@ -97,7 +100,7 @@ public class Controller extends Application {
     towerController = new TowerMenuController(bank);
 
     bloonsApplication.initializeGameObjects(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
-        gameEngine.getProjectiles(), myAnimation, gameController, towerController);
+        gameEngine.getProjectiles(), gameEngine.getRoadItems(), myAnimation, gameController, towerController);
 
     myAnimation.setCycleCount(Timeline.INDEFINITE);
 
@@ -180,7 +183,7 @@ public class Controller extends Application {
   }
 
   private void startGameEngine() {
-    gameEngine = new GameEngine(layout, allBloonWaves, towersCollection, projectilesCollection, getMyBlockSize());
+    gameEngine = new GameEngine(layout, allBloonWaves, towersCollection, projectilesCollection, roadItemsCollection, getMyBlockSize());
   }
 
   private void step() {
@@ -201,19 +204,15 @@ public class Controller extends Application {
     animationHandler.setTowers(gameEngine.getTowers());
     animationHandler.setProjectiles(gameEngine.getProjectiles());
 
+
+
     //animate animationhandler
     animationHandler.animate();
 
     bloonsApplication.displayCurrentMoney(bank.getCurrentMoney());
     bloonsApplication.displayCurrentRound(gameEngine.getRound() + 1);
 
-    if(gameEngine.isRoundEnd()){
-      System.out.println("frontend detected round end");
-      myAnimation.stop();
-    }
-
-    if(gameEngine.isGameEnd()){
-      System.out.println("rip");
+    if(gameEngine.isRoundEnd() || gameEngine.isGameEnd()){
       myAnimation.stop();
     }
 
