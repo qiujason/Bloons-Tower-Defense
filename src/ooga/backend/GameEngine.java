@@ -54,6 +54,7 @@ public class GameEngine implements GameEngineAPI {
     this.currentBloonWave = new BloonsCollection();
     this.towers = towers;
     this.projectiles = projectiles;
+    this.roadItems = roadItems;
     myBlockSize = blockSize;
     spawnTimer = SPAWN_DELAY;
     this.shootingTargets = new HashMap<>();

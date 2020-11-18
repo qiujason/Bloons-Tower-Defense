@@ -81,6 +81,7 @@ public class Controller extends Application {
     bloonReader = new BloonReader();
     towersCollection = new TowersCollection();
     projectilesCollection = new ProjectilesCollection();
+    roadItemsCollection = new RoadItemsCollection();
     shootingTargets = new HashMap<>();
     setUpBank();
 
