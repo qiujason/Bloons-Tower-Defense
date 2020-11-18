@@ -4,9 +4,7 @@ import java.net.URISyntaxException;
 import java.util.ResourceBundle;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
-import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
-import ooga.controller.TowerMenuInterface;
 import ooga.controller.TowerNodeHandler;
 import ooga.visualization.menu.WeaponMenu;
 
@@ -42,6 +40,19 @@ public class TowerNode extends GamePieceNode{
     rangeDisplay.setCenterY(yPos);
   }
 
+  @Override
+  public ImagePattern findImage(){
+    Image towerImage = null;
+    try {
+      towerImage = new Image(String.valueOf(getClass().getResource(nameToPicture.getString(typeToName.getString(towerType.name()))).toURI()));
+    } catch (
+        URISyntaxException e) {
+      e.printStackTrace();
+    }
+    assert towerImage != null;
+    return new ImagePattern(towerImage);
+  }
+
   public void setWeaponRange(double gridRadius, double blockSize){
     rangeDisplay.setRadius(gridRadius * blockSize);
   }
@@ -70,17 +81,6 @@ public class TowerNode extends GamePieceNode{
     rangeDisplay.makeVisible();
   }
 
-  @Override
-  public ImagePattern findImage(){
-    Image towerImage = null;
-    try {
-      towerImage = new Image(String.valueOf(getClass().getResource(nameToPicture.getString(typeToName.getString(towerType.name()))).toURI()));
-    } catch (
-        URISyntaxException e) {
-      e.printStackTrace();
-    }
-    assert towerImage != null;
-    return new ImagePattern(towerImage);
-  }
+
 
 }

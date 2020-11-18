@@ -41,7 +41,7 @@ public class GameMenu {
     slowDownButton = makeButton(menuProperties.getString(SLOWDOWN_TEXT), event -> gameController.slowDown());
     makeButtonRow(speedUpButton, slowDownButton);
 
-    myMenuPane.getChildren().add(new WeaponButtonsMenu(towerController, towerNodeController));
+    myMenuPane.getChildren().add(new WeaponButtonsMenu(towerNodeController));
   }
 
   private void makeButtonRow(Button first, Button second){
