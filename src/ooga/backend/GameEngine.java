@@ -41,11 +41,6 @@ public class GameEngine implements GameEngineAPI {
 
 
 
-  private boolean roundEnd;
-  private boolean gameEnd;
-
-
-
   public GameEngine(Layout layout, List<BloonsCollection> allBloonWaves, TowersCollection towers,
       ProjectilesCollection projectiles, double blockSize) {
     this.layout = layout;
@@ -60,8 +55,7 @@ public class GameEngine implements GameEngineAPI {
     myBloonSidesX = new HashMap<>();
     myBloonSidesY = new HashMap<>();
     this.round = STARTING_ROUND;
-    this.roundEnd = false;
-    this.gameEnd = false;
+
   }
 
   public void addQueuedBloon(){
@@ -77,7 +71,6 @@ public class GameEngine implements GameEngineAPI {
     }
   }
 
-  @Override
   public void moveBloons() {
     removeDeadBloons();
     GamePieceIterator<Bloon> waveIterator = currentBloonWave.createIterator();
@@ -120,21 +113,19 @@ public class GameEngine implements GameEngineAPI {
       }
     }
   }
-  @Override
+
   public void nextWave() {
     round++;
     queuedBloons = allBloonWaves.get(round);
   }
 
-  @Override
   public void resetGame() {
     round = STARTING_ROUND;
     queuedBloons = allBloonWaves.get(STARTING_ROUND);
 
   }
 
-  @Override
-  public void shootBloons(){
+  private void shootBloons(){
     GamePieceIterator<Tower> towerIterator = towers.createIterator();
     while(towerIterator.hasNext()){
       Tower currentTower = towerIterator.next();
@@ -165,22 +156,27 @@ public class GameEngine implements GameEngineAPI {
     }
   }
 
+  @Override
   public BloonsCollection getCurrentBloonWave() {
     return currentBloonWave;
   }
 
+  @Override
   public TowersCollection getTowers() {
     return towers;
   }
 
+  @Override
   public ProjectilesCollection getProjectiles() {
     return projectiles;
   }
 
+  @Override
   public void setTowers(TowersCollection towers) {
     this.towers = towers;
   }
 
+  @Override
   public void setProjectiles(ProjectilesCollection projectiles) {
     this.projectiles = projectiles;
   }
@@ -188,16 +184,13 @@ public class GameEngine implements GameEngineAPI {
   @Override
   public void update(){
     //TODO: get projectile AND tower list from front end (maybe bloons? idk)
-    if (roundEnd){
+    if (isRoundEnd()){
       nextWave();
-      roundEnd = false;
     }
     spawnBloons();
     moveBloons();
     moveProjectiles();
     shootBloons();
-    checkRoundEnd();
-    checkGameEnd();
   }
 
   private void spawnBloons() {
@@ -208,39 +201,22 @@ public class GameEngine implements GameEngineAPI {
     spawnTimer++;
   }
 
-  private void checkRoundEnd(){
-    if (isLevelClear()){
-      System.out.println("round end has been detected loooool");
-      roundEnd = true;
-    }
 
-  }
-
-  private boolean isLevelClear(){
+  public boolean isRoundEnd(){
     return queuedBloons.isEmpty() && currentBloonWave.isEmpty() && projectiles.isEmpty();
   }
 
-  private void checkGameEnd(){
-    if(isLevelClear() && round >= allBloonWaves.size() - 1){
-      gameEnd = true;
-      System.out.println("game endedLOLOLOL");
-    }
+  public boolean isGameEnd(){
+    return isRoundEnd() && round >= (allBloonWaves.size() - 1);
   }
 
+  @Override
   public int getRound() {
     return round;
   }
 
   public Map<Tower, Bloon> getShootingTargets() {
     return shootingTargets;
-  }
-
-  public boolean isRoundEnd() {
-    return roundEnd;
-  }
-
-  public boolean isGameEnd() {
-    return gameEnd;
   }
 
 

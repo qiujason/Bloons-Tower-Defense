@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import ooga.AlertHandler;
+import ooga.backend.API.GameEngineAPI;
 import ooga.backend.ConfigurationException;
 import ooga.backend.GameEngine;
 import ooga.backend.bloons.Bloon;
@@ -55,7 +56,7 @@ public class Controller extends Application {
   private LayoutReader layoutReader;
   private BloonsTypeChain bloonsTypeChain;
   private BloonReader bloonReader;
-  private GameEngine gameEngine;
+  private GameEngineAPI gameEngine;
   private Layout layout;
   private List<BloonsCollection> allBloonWaves;
   private TowersCollection towersCollection;
@@ -201,19 +202,15 @@ public class Controller extends Application {
     animationHandler.setTowers(gameEngine.getTowers());
     animationHandler.setProjectiles(gameEngine.getProjectiles());
 
+
+
     //animate animationhandler
     animationHandler.animate();
 
     bloonsApplication.displayCurrentMoney(bank.getCurrentMoney());
     bloonsApplication.displayCurrentRound(gameEngine.getRound() + 1);
 
-    if(gameEngine.isRoundEnd()){
-      System.out.println("frontend detected round end");
-      myAnimation.stop();
-    }
-
-    if(gameEngine.isGameEnd()){
-      System.out.println("rip");
+    if(gameEngine.isRoundEnd() || gameEngine.isGameEnd()){
       myAnimation.stop();
     }
 
