@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import ooga.backend.API.BankAPI;
+import ooga.backend.roaditems.RoadItem;
+import ooga.backend.roaditems.RoadItemType;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.UpgradeChoice;
@@ -27,12 +29,14 @@ public class Bank implements BankAPI {
   private List<Integer> roundBonus;
   private Map<TowerType, Integer> towerBuyMap;
   private Map<TowerType, Integer> towerSellMap;
+  private Map<RoadItemType,Integer> roadItemBuyMap;
 
   // Provided list of round bonuses read from csv
   public Bank(Map<TowerType, Integer> towerBuyMap, Map<TowerType, Integer> towerSellMap,
-      List<String> roundBonus) {
+      Map<RoadItemType,Integer> roadItemBuyMap,List<String> roundBonus) {
     this.towerBuyMap = towerBuyMap;
     this.towerSellMap = towerSellMap;
+    this.roadItemBuyMap = roadItemBuyMap;
     numberOfTotalRounds = roundBonus.size();
     List<Integer> integerBonus = new ArrayList<>();
     for(String bonus : roundBonus){
@@ -43,15 +47,16 @@ public class Bank implements BankAPI {
 
   // provide number of rounds and uses default starting round bonus of 100
   public Bank(Map<TowerType, Integer> towerBuyMap, Map<TowerType, Integer> towerSellMap,
-      int numberOfRounds) {
-    this(towerBuyMap, towerSellMap, numberOfRounds, STARTING_ROUND_BONUS);
+      Map<RoadItemType,Integer> roadItemBuyMap, int numberOfRounds) {
+    this(towerBuyMap, towerSellMap, roadItemBuyMap, numberOfRounds, STARTING_ROUND_BONUS);
   }
 
   // provide number of rounds and allows user to put in starting bonus
   public Bank(Map<TowerType, Integer> towerBuyMap, Map<TowerType, Integer> towerSellMap,
-      int numberOfRounds, int starting_bonus) {
+      Map<RoadItemType,Integer> roadItemBuyMap, int numberOfRounds, int starting_bonus) {
     this.towerBuyMap = towerBuyMap;
     this.towerSellMap = towerSellMap;
+    this.roadItemBuyMap = roadItemBuyMap;
     numberOfTotalRounds = numberOfRounds;
     roundBonus = new ArrayList<>();
     for (int i = 0; i < numberOfRounds; i++) {
@@ -102,6 +107,18 @@ public class Bank implements BankAPI {
       return true;
     }
     return false;
+  }
+
+  public boolean buyRoadItem(RoadItemType buyRoadItem){
+    if (canBuyRoadItem(buyRoadItem)) {
+      currentMoney -= roadItemBuyMap.get(buyRoadItem);
+      return true;
+    }
+    return false;
+  }
+
+  private boolean canBuyRoadItem(RoadItemType buyRoadItem){
+    return currentMoney >= roadItemBuyMap.get(buyRoadItem);
   }
 
 }

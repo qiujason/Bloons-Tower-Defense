@@ -47,6 +47,7 @@ public class BloonsApplication {
 
   private Stage myStage;
   private Scene myScene;
+  private Pane myLevel;
   private Layout myLayout;
   private Timeline myAnimation;
   private BloonsCollection myBloons;
@@ -68,6 +69,8 @@ public class BloonsApplication {
   private String myCurrentLevel;
   private String myCurrentLanguage;
   private String myCurrentStylesheet;
+  private Text myMoneyText;
+  private Text myRoundText;
 //  private double myStartingX;
 //  private double myStartingY;
 
@@ -277,7 +280,6 @@ public class BloonsApplication {
     myAnimation = animation;
     myGameMenuController = gameMenuController;
     myTowerMenuController = towerMenuController;
-
   }
 
   private void loadLevel(String levelName) {
@@ -288,17 +290,19 @@ public class BloonsApplication {
     }
     myCurrentLevel = levelName;
     myLevelStartButton.fire();
-    Pane level = new Pane();
-    level.getStyleClass().add("level-background");
+    myLevel = new Pane();
+    myLevel.getStyleClass().add("level-background");
     myMenuPane = new VBox();
-    visualizeLayout(level);
+    visualizeLayout(myLevel);
     myAnimationHandler = new AnimationHandler(myLevelLayout, myBloons,
         myTowers, myProjectiles, myBlockSize, myAnimation);
 
     weaponNodeHandler = new WeaponNodeHandler(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize,
         myLevelLayout, myMenuPane, myTowers, myTowerMenuController, myAnimationHandler);
-    visualizePlayerGUI(level);
-    myScene.setRoot(level);
+    visualizePlayerGUI(myLevel);
+    displayCurrentMoney(0);
+    displayCurrentRound(1);
+    myScene.setRoot(myLevel);
     myStage.setScene(myScene);
   }
 
@@ -365,6 +369,28 @@ public class BloonsApplication {
   public void fullScreen() {
     myStage.setFullScreen(true);
     myStage.show();
+  }
+
+  public void displayCurrentMoney(int currentMoney){
+    myLevel.getChildren().remove(myMoneyText);
+    myMoneyText = new Text("Money: $" + currentMoney);
+    myMoneyText.getStyleClass().add("menu-text");
+    myMoneyText.setX(WIDTH / 12);
+    myMoneyText.setY(15 * HEIGHT / 16);
+    myMoneyText.setScaleX(2.5);
+    myMoneyText.setScaleY(2.5);
+    myLevel.getChildren().add(myMoneyText);
+  }
+
+  public void displayCurrentRound(int currentRound){
+    myLevel.getChildren().remove(myRoundText);
+    myRoundText = new Text("Round: " + currentRound);
+    myRoundText.getStyleClass().add("menu-text");
+    myRoundText.setX(3 * WIDTH / 8);
+    myRoundText.setY(15 * HEIGHT / 16);
+    myRoundText.setScaleX(2.5);
+    myRoundText.setScaleY(2.5);
+    myLevel.getChildren().add(myRoundText);
   }
 
   public String getCurrentLevel() {

@@ -227,6 +227,10 @@ public class GameEngine implements GameEngineAPI {
     }
   }
 
+  public int getRound() {
+    return round;
+  }
+
   public Map<Tower, Bloon> getShootingTargets() {
     return shootingTargets;
   }

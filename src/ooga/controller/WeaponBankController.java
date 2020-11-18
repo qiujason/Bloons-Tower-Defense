@@ -21,7 +21,7 @@ public class WeaponBankController implements WeaponBankInterface {
 
   @Override
   public boolean buyRoadItem(RoadItemType itemType) {
-    return true;
+    return bank.buyRoadItem(itemType);
   }
 
 
