@@ -115,11 +115,11 @@ public class BloonsApplicationMenusTest extends DukeApplicationTest {
   }
 
   @Test
-  public void testLevelDescription() {
+  public void testModeDescription() {
     clickOn(myStartButton);
     ComboBox<String> levelOptions = lookup("#LevelOptions").query();
     select(levelOptions, levelOptions.getItems().get(0));
-    Text levelDescription = lookup("#LevelDescription").query();
+    Text levelDescription = lookup("#ModeDescription").query();
     assertNotNull(levelDescription);
   }
 

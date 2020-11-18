@@ -9,6 +9,7 @@ import javafx.animation.Timeline;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.chart.ScatterChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
@@ -19,7 +20,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import ooga.AlertHandler;
 import ooga.backend.bloons.BloonsCollection;
@@ -221,9 +221,10 @@ public class BloonsApplication {
     levelSelectScreen.setCenter(levelSelectText);
 
     BorderPane.setAlignment(levelSelectText, Pos.CENTER);
-    ComboBox<String> levelOptions = initializeLevelButtons(levelSelectScreen);
 
     ComboBox<Enum<?>> gameModeOptions = initializeGameModeOptions();
+
+    ComboBox<String> levelOptions = initializeLevelButtons(levelSelectScreen);
 
     Button backButton = new Button(myMenuButtonNames.getString("ReturnToStart"));
     backButton.setOnAction(e -> startApplication(myStage));
@@ -306,17 +307,24 @@ public class BloonsApplication {
             .add(imageRectangle);
       }
     }
-    getLevelDescription(levelImageGroup, levelName);
+    getModeDescription(levelImageGroup);
     levelSelectScreen.setCenter(levelImageGroup);
   }
 
-  private void getLevelDescription(VBox levelImageGroup, String levelName) {
-    Text levelDescription = new Text(myApplicationMessages.getString(levelName));
-    levelDescription.setId("LevelDescription");
-    levelDescription.getStyleClass().add("menu-text");
-    levelDescription.setScaleX(Double.parseDouble(MENU_RESOURCES.getString("LevelDescriptionSize")));
-    levelDescription.setScaleY(Double.parseDouble(MENU_RESOURCES.getString("LevelDescriptionSize")));
-    levelImageGroup.getChildren().add(levelDescription);
+  private void getModeDescription(VBox levelImageGroup) {
+    Text modeDescription = new Text();
+    try{
+      modeDescription.setText(myApplicationMessages.getString(myGameMode.toString()));
+    }
+    catch (NullPointerException e)
+    {
+      new AlertHandler(myApplicationMessages.getString("NoGameMode"), myApplicationMessages.getString("NoGameMode"));
+    }
+    modeDescription.setId("ModeDescription");
+    modeDescription.getStyleClass().add("menu-text");
+    modeDescription.setScaleX(Double.parseDouble(MENU_RESOURCES.getString("ModeDescriptionSize")));
+    modeDescription.setScaleY(Double.parseDouble(MENU_RESOURCES.getString("ModeDescriptionSize")));
+    levelImageGroup.getChildren().add(modeDescription);
   }
 
   private ComboBox<Enum<?>> initializeGameModeOptions() {
