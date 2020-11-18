@@ -1,0 +1,21 @@
+.root {
+  -fx-background-color: black;
+  -fx-background-image: url("cssPhotos/startscreen.png");
+}
+
+.button {
+  -fx-font-size: 14 pt;
+  -fx-font-family: "Arial";
+  -fx-background-color: #3b3232;
+  -fx-text-fill: White;
+}
+
+.combo-box {
+  -fx-font-size: 14 pt;
+  -fx-font-family: "Arial";
+  -fx-background-color: #3b3232;
+}
+
+.list-cell{
+  -fx-text-fill: White;
+}
