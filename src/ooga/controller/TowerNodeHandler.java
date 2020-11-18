@@ -171,7 +171,7 @@ public class TowerNodeHandler {
     });
     itemNode.setOnMouseClicked(e -> {
       layoutRoot.setOnMouseMoved(null);
-//      animationHandler.addRoadItem(roadItem, itemNode);
+      animationHandler.addRoadItem(roadItem, itemNode);
       itemNode.setOnMouseClicked(null);
       canMakeRoadItem = true;
     });

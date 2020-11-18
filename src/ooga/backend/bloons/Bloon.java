@@ -147,6 +147,10 @@ public class Bloon extends GamePiece implements BloonsAPI {
     return freezeActive;
   }
 
+  public boolean isSlowDownActive(){
+    return slowDownActive;
+  }
+
   private void updateFreezeEffect() {
     if (freezeActive) {
       freezeTimer++;

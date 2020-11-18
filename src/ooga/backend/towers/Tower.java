@@ -16,6 +16,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
 
   private static final double defaultUpgradeMultiplier = 1.05;
   private static final int defaultUpgradeCost = 150;
+  private static final int numberOfAllowedUpgrades = 6;
 
   private double radius;
   private double shootingSpeed;
@@ -24,6 +25,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   private boolean ifRestPeriod;
   private ProjectileType projectileType;
   private int totalUpgradeCost;
+  private int numberOfUpgrades;
 
   // if canShoot = true, step function can call shoot method, if not, do not call shoot method
 
@@ -36,6 +38,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     countRestPeriod = 0;
     ifRestPeriod = false;
     totalUpgradeCost = 0;
+    numberOfUpgrades = 0;
   }
 
   public abstract TowerType getTowerType();
@@ -106,7 +109,15 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     return returnedCost;
   }
 
+  public boolean canPerformUpgrade(){
+    return numberOfUpgrades < numberOfAllowedUpgrades;
+  }
+
   public void performUpgrade(UpgradeChoice choice){
+    if(!canPerformUpgrade()){
+      return;
+    }
+    numberOfUpgrades++;
     try{
       ResourceBundle bundle = ResourceBundle.getBundle("towers/" + getTowerType().name());
       upgradeWithSelectedChoice(bundle, choice.name() + "Multiplier");
