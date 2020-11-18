@@ -1,27 +1,19 @@
 package ooga.visualization;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.BoundingBox;
-import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.shape.Circle;
-import javafx.util.Duration;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
 import ooga.backend.projectile.ProjectilesCollection;
-import ooga.backend.projectile.factory.ProjectileFactory;
-import ooga.backend.projectile.factory.SingleProjectileFactory;
 import ooga.backend.layout.Layout;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowersCollection;
@@ -203,8 +195,8 @@ public class AnimationHandler {
       ProjectilesCollection projectilesToRemove){
     Bloon[] spawnedBloons = bloon.shootBloon();
     //double offset = myBlockSize/8;
-    for(int i = 0; i < spawnedBloons.length; i++){
-      bloonsToAdd.add(spawnedBloons[i]);
+    for(Bloon spawn : spawnedBloons) {
+      bloonsToAdd.add(spawn);
     }
     bloon.setDead();
     bloonsToRemove.add(bloon);

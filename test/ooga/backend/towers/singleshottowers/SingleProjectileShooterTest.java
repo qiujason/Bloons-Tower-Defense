@@ -96,9 +96,9 @@ class SingleProjectileShooterTest {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
     List<Bloon> bloonsList = new ArrayList<>();
-    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 11,22,5,5));
-    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 13,24,5,5));
-    Bloon expected = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 14,23,5,5);
+    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 10,20,5,5));
+    bloonsList.add(new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 10,21,5,5));
+    Bloon expected = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 11,20,5,5);
     bloonsList.add(expected);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
     assertEquals(expected, testTower.findLastBloon(bloonsCollection));
@@ -118,7 +118,7 @@ class SingleProjectileShooterTest {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
     Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 3,4,5,5);
-    assertEquals(-9, testTower.findShootXVelocity(target));
+    assertEquals(0.18, testTower.findShootXVelocity(target));
   }
 
   @org.junit.jupiter.api.Test
@@ -126,7 +126,7 @@ class SingleProjectileShooterTest {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
     Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 3,4,5,5);
-    assertEquals(-12, testTower.findShootYVelocity(target));
+    assertEquals(0.24000000000000005, testTower.findShootYVelocity(target));
   }
 
   @org.junit.jupiter.api.Test
@@ -134,7 +134,7 @@ class SingleProjectileShooterTest {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower)
         towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
-    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 3,4,5,5);
+    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 0.3,0.4,5,5);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
@@ -144,7 +144,7 @@ class SingleProjectileShooterTest {
     Projectile dart = iterator.next();
     assertEquals(0, dart.getXPosition());
     assertEquals(0, dart.getYPosition());
-    assertEquals(-9, dart.getXVelocity());
-    assertEquals(-12, dart.getYVelocity());
+    assertEquals(0.18, dart.getXVelocity());
+    assertEquals(0.24000000000000005, dart.getYVelocity());
   }
 }

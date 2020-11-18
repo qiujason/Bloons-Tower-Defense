@@ -3,6 +3,7 @@ package ooga.backend.towers.singleshottowers;
 import static org.junit.jupiter.api.Assertions.*;
 
 import ooga.backend.towers.TowerType;
+import ooga.backend.towers.UpgradeChoice;
 import ooga.backend.towers.factory.SingleTowerFactory;
 import ooga.backend.towers.factory.TowerFactory;
 import org.junit.jupiter.api.Test;
@@ -20,12 +21,12 @@ class SuperSpeedProjectileShooterTest {
 
   @Test
   void testGetRadius(){
-    assertEquals(600, testTower.getRadius());
+    assertEquals(4, testTower.getRadius());
   }
 
   @Test
   void testGetShootingSpeed(){
-    assertEquals(30, testTower.getShootingSpeed());
+    assertEquals(15, testTower.getShootingSpeed());
   }
 
   @Test
@@ -35,19 +36,19 @@ class SuperSpeedProjectileShooterTest {
 
   @Test
   void testUpgradeRadius(){
-    testTower.upgradeRadius();
-    assertEquals(1200, testTower.getRadius());
+    testTower.performUpgrade(UpgradeChoice.RadiusUpgrade);
+    assertEquals(4.2, testTower.getRadius());
   }
 
   @Test
   void testUpgradeShootingSpeed(){
-    testTower.upgradeShootingSpeed();
-    assertEquals(31.5, testTower.getShootingSpeed());
+    testTower.performUpgrade(UpgradeChoice.ShootingSpeedUpgrade);
+    assertEquals(15.75, testTower.getShootingSpeed());
   }
 
   @Test
   void testUpgradeRestRate(){
-    testTower.upgradeShootingRestRate();
+    testTower.performUpgrade(UpgradeChoice.ShootingRestRateUpgrade);
     assertEquals(60/1.05, testTower.getShootingRestRate());
   }
 }
