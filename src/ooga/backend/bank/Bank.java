@@ -16,7 +16,6 @@ import ooga.backend.towers.UpgradeChoice;
  * default starting round bonus 3. Providing a total number of rounds and the default starting round
  * bonus
  * <p>
- * A property file will be used to choose one of the 3 ways.
  */
 
 public class Bank implements BankAPI {
