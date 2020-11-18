@@ -190,18 +190,26 @@ public class Controller extends Application {
     //pass shit from backend to frontend
     animationHandler.setBloonWave(gameEngine.getCurrentBloonWave());
 
+
     animationHandler.setShootingTargets(gameEngine.getShootingTargets());
     animationHandler.setTowers(gameEngine.getTowers());
     animationHandler.setProjectiles(gameEngine.getProjectiles());
 
     //animate animationhandler
     animationHandler.animate();
+
+    if(gameEngine.isRoundEnd()){
+      System.out.println("frontend detected round end");
+      myAnimation.stop();
+    }
+
+    if(gameEngine.isGameEnd()){
+      System.out.println("rip");
+      myAnimation.stop();
+    }
+
   }
 
-  public void setShootingTargets(
-      Map<Tower, Bloon> shootingTargets) {
-    this.shootingTargets = shootingTargets;
-  }
 
   public BloonsApplication getMyBloonsApplication(){
     return bloonsApplication;
