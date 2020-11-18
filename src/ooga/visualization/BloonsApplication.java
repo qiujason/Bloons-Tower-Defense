@@ -297,8 +297,8 @@ public class BloonsApplication {
     myAnimationHandler = new AnimationHandler(myLevelLayout, myBloons,
         myTowers, myProjectiles, myBlockSize, myAnimation);
 
-    weaponNodeHandler = new WeaponNodeHandler(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize,
-        myLevelLayout, myMenuPane, myTowers, myTowerMenuController, myAnimationHandler);
+    weaponNodeHandler = new WeaponNodeHandler(myLayout, myBlockSize, myLevelLayout, myMenuPane,
+        myTowers, myTowerMenuController, myAnimationHandler);
     visualizePlayerGUI(myLevel);
     displayCurrentMoney(0);
     displayCurrentRound(1);

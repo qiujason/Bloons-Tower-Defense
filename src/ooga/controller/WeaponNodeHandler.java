@@ -49,12 +49,12 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
 
   private static final double towerDefaultPosition = -1;
 
-  public WeaponNodeHandler(Layout layout, double gameWidth, double gameHeight, double blockSize,
+  public WeaponNodeHandler(Layout layout, double blockSize,
       Group layoutRoot, VBox menuPane, TowersCollection towersCollection,
       WeaponBankInterface menuController, AnimationHandler animationHandler) {
     this.layout = layout;
-    this.gameWidth = gameWidth;
-    this.gameHeight = gameHeight;
+    gameHeight = layout.getHeight() * blockSize;
+    gameWidth = layout.getWidth() * blockSize;
     this.blockSize = blockSize;
     this.layoutRoot = layoutRoot;
     this.menuPane = menuPane;
@@ -144,6 +144,8 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
           towerNode.setYPosition(e.getY());
           tower.setXPosition(toGridXPosition(e.getX()));
           tower.setYPosition(toGridYPosition(e.getY()));
+          System.out.println(e.getY());
+          System.out.println(toGridYPosition(e.getY()));
         }
       }
     });
