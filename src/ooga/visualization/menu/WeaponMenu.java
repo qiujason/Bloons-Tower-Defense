@@ -33,7 +33,6 @@ public class WeaponMenu extends FlowPane {
     upgradeRangeButton = makeButton(menuProperties.getString(UPGRADE_RANGE_TEXT), event -> towerNodeHandler.upgradeRange(tower));
     upgradeRateButton = makeButton(menuProperties.getString(UPGRADE_RATE_TEXT), event -> towerNodeHandler.upgradeRate(tower));
     sellTowerButton = makeButton(menuProperties.getString(SELL_TOWER_TEXT), event -> towerNodeHandler.removeWeapon(tower));
-    //targetingOption ...
     shootingChoiceBox = new ShootingChoiceBox(BUTTON_WIDTH);
     setComboBoxHandler(event -> towerNodeHandler.setTargetingOption(tower, (ShootingChoice) shootingChoiceBox.getValue()));
   }
