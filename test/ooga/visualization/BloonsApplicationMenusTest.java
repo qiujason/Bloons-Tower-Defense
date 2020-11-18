@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import ooga.controller.Controller;
@@ -26,6 +27,7 @@ public class BloonsApplicationMenusTest extends DukeApplicationTest {
   private Button myStartButton;
   private Button myNewWindowButton;
   private ComboBox<String> myLanguages;
+  private ComboBox<String> myStyles;
   private File[] myLevels;
   private ResourceBundle myMenuButtonNames;
 
@@ -38,6 +40,7 @@ public class BloonsApplicationMenusTest extends DukeApplicationTest {
     myStartButton = lookup("#Start").query();
     myLanguages = lookup("#LanguageOptions").query();
     myNewWindowButton = lookup("#NewGameWindowButton").query();
+    myStyles = lookup("#StyleOptions").query();
     try {
       myLevels = Paths.get(getClass().getClassLoader().getResource(LAYOUTS_PATH).toURI()).toFile()
           .listFiles();
@@ -83,6 +86,13 @@ public class BloonsApplicationMenusTest extends DukeApplicationTest {
     assertEquals(myMenuButtonNames.getString("Start"), myStartButton.getText());
     assertEquals(myMenuButtonNames.getString("SetLanguage"), myLanguages.getPromptText());
     assertEquals(myMenuButtonNames.getString("NewGameWindow"), myNewWindowButton.getText());
+  }
+
+  @Test
+  public void testStyleSelect(){
+    select(myStyles, "Dark");
+    myStartButton = lookup("#Start").query();
+    assertEquals(Color.WHITE, myStartButton.getTextFill());
   }
 
   @Test
