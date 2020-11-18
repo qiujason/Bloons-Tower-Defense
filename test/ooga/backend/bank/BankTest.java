@@ -2,6 +2,7 @@ package ooga.backend.bank;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import ooga.backend.readers.RoundBonusReader;
@@ -40,7 +41,7 @@ class BankTest {
     assertEquals(303, bank.getCurrentMoney());
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
-    bank.buyTower(testTower.getTowerType());
+    bank.buyTower(testTower);
     assertEquals(53, bank.getCurrentMoney());
   }
 
@@ -50,7 +51,7 @@ class BankTest {
     assertEquals(303, bank.getCurrentMoney());
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
-    bank.sellTower(testTower.getTowerType());
+    bank.sellTower(testTower);
     assertEquals(503, bank.getCurrentMoney());
   }
 
@@ -62,7 +63,7 @@ class BankTest {
   }
 
   @BeforeEach
-  void setUp() {
+  void setUp() throws IOException {
     Map<TowerType, Integer> towerBuyMap = new TowerValueReader(TOWER_BUY_VALUES_PATH).getMap();
     Map<TowerType, Integer> towerSellMap = new TowerValueReader(TOWER_SELL_VALUES_PATH).getMap();
     RoundBonusReader roundBonusReader = new RoundBonusReader();

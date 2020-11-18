@@ -39,7 +39,7 @@ class FrozenSpreadShooterTest {
 
   @Test
   void shoot() {
-    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 3,4,5,5);
+    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 0.4,0.4,5,5);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);

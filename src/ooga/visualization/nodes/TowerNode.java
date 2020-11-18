@@ -27,7 +27,7 @@ public class TowerNode extends GamePieceNode{
     super(xPosition, yPosition, radius);
     this.towerType = towerType;
     this.setFill(findImage());
-    rangeDisplay = new WeaponRange(xPosition, yPosition, 0);
+    rangeDisplay = new WeaponRange(xPosition, yPosition, towerType.getRadius());
   }
 
   public void setWeaponRange(double blockSize){

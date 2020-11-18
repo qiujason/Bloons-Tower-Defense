@@ -1,28 +1,32 @@
 package ooga.visualization;
 
+import java.io.File;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentHashMap;
 import javafx.animation.Timeline;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import ooga.AlertHandler;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.layout.Layout;
 import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.towers.TowersCollection;
+import ooga.controller.Controller;
+import ooga.controller.GameMenuController;
 import ooga.controller.GameMenuInterface;
 import ooga.controller.TowerMenuInterface;
 import ooga.visualization.menu.GameMenu;
@@ -35,7 +39,11 @@ public class BloonsApplication {
   public static final double GAME_HEIGHT = 0.875 * HEIGHT;
   public static final double GAME_WIDTH = 0.75 * WIDTH;
   public static final String LAYOUTS_PATH = "layouts/";
-  public static final String BACKGROUND_IMAGE = "/gamePhotos/startscreen.png";
+  public static final String DEFAULT_LANGUAGE = "English";
+  public static final ResourceBundle LANGUAGES = ResourceBundle
+      .getBundle(BloonsApplication.class.getPackageName() + ".resources.languageList");
+  public static final String STYLESHEETS = "stylesheets/";
+  public static final String DEFAULT_STYLESHEET = "Normal.css";
 
   private Stage myStage;
   private Scene myScene;
@@ -51,72 +59,204 @@ public class BloonsApplication {
   private TowerMenuInterface towerMenuController;
   private TowerNodeHandler towerNodeHandler;
   private AnimationHandler myAnimationHandler;
+  private double myBlockSize;
+//  private final ResourceBundle myBlockMappings = ResourceBundle
+//      .getBundle(getClass().getPackageName() + ".resources.blockMappings");
+  private final Button myLevelStartButton;
+  private ResourceBundle myMenuButtonNames;
+  private ResourceBundle myApplicationErrors;
+  private String myCurrentLevel;
+  private String myCurrentLanguage;
+  private String myCurrentStylesheet;
   private double myStartingX;
   private double myStartingY;
-  private double myBlockSize;
-  private final ResourceBundle myBlockMappings = ResourceBundle
-      .getBundle(getClass().getPackageName() + ".resources.blockMappings");
 
-  public BloonsApplication(Layout layout, BloonsCollection bloons, TowersCollection towers,
-      ProjectilesCollection projectiles, Timeline animation, GameMenuInterface gameController,
-      TowerMenuInterface towerController) {
+  public BloonsApplication(Button startLevelButton) {
+    myLevelStartButton = startLevelButton;
+    myCurrentLanguage = DEFAULT_LANGUAGE;
+    myCurrentStylesheet = DEFAULT_STYLESHEET;
+    myMenuButtonNames = ResourceBundle
+        .getBundle(
+            getClass().getPackageName() + ".resources.languages." + myCurrentLanguage
+                + ".startMenuButtonNames"
+                + myCurrentLanguage);
+    myApplicationErrors = ResourceBundle
+        .getBundle(getClass().getPackageName() + ".resources.languages." + myCurrentLanguage
+            + ".applicationErrors"
+            + myCurrentLanguage);
+  }
+
+  public void startApplication(Stage mainStage) {
+    myStage = mainStage;
+    BorderPane menuLayout = new BorderPane();
+    displayStartMenu(menuLayout);
+    myScene = new Scene(menuLayout, WIDTH, HEIGHT);
+    myScene.getStylesheets()
+        .add(getClass().getResource("/" + STYLESHEETS + myCurrentStylesheet).toExternalForm());
+    menuLayout.getStyleClass().add("start-menu");
+    myStage.setScene(myScene);
+    myStage.show();
+  }
+
+  // TODO: Refactor, this is getting a bit long
+  private void displayStartMenu(BorderPane menu) {
+    HBox buttonGroup = new HBox();
+    buttonGroup.setAlignment(Pos.CENTER);
+
+    Button startButton = new Button(myMenuButtonNames.getString("Start"));
+    startButton.setOnAction(e -> displayLevelSelectScreen());
+    startButton.setId("Start");
+    buttonGroup.getChildren().add(startButton);
+
+    setupLanguageOptions(buttonGroup);
+
+    Button newGameWindowButton = new Button(myMenuButtonNames.getString("NewGameWindow"));
+    newGameWindowButton.setId("NewGameWindowButton");
+    newGameWindowButton.setOnAction(e -> {
+      Controller newWindow = new Controller();
+      newWindow.start(new Stage());
+    });
+    buttonGroup.getChildren().add(newGameWindowButton);
+
+    setupStyleOptions(buttonGroup);
+
+    BorderPane.setAlignment(buttonGroup, Pos.CENTER);
+    menu.setBottom(buttonGroup);
+  }
+
+  private void setupLanguageOptions(HBox buttonGroup) {
+    ComboBox<String> languageOptions = new ComboBox<>();
+    languageOptions.setPromptText(myMenuButtonNames.getString("SetLanguage"));
+    for (String language : LANGUAGES.keySet()) {
+      languageOptions.getItems().add(language);
+    }
+    languageOptions.setId("LanguageOptions");
+    languageOptions.setOnAction(e -> changeLanguage(languageOptions.getValue()));
+    buttonGroup.getChildren().add(languageOptions);
+  }
+
+  private void changeLanguage(String language) {
+    myCurrentLanguage = language;
+    myMenuButtonNames = ResourceBundle
+        .getBundle(
+            getClass().getPackageName() + ".resources.languages." + myCurrentLanguage
+                + ".startMenuButtonNames"
+                + myCurrentLanguage);
+    myApplicationErrors = ResourceBundle
+        .getBundle(
+            getClass().getPackageName() + ".resources.languages." + myCurrentLanguage
+                + ".applicationErrors"
+                + myCurrentLanguage);
+    startApplication(myStage);
+  }
+
+  private void setupStyleOptions(HBox buttonGroup) {
+    ComboBox<String> styleOptions = new ComboBox<>();
+    styleOptions.setId("StyleOptions");
+    styleOptions.setPromptText(myMenuButtonNames.getString("SetStyle"));
+    Path styles = null;
+    try {
+      styles = Paths.get(getClass().getClassLoader().getResource(STYLESHEETS).toURI());
+    } catch (URISyntaxException e) {
+      new AlertHandler(myApplicationErrors.getString("NoStyles"),
+          myApplicationErrors.getString("NoStyles"));
+    }
+    for (File style : styles.toFile().listFiles()) {
+      if(style.getName().contains(".")){
+        styleOptions.getItems().add(style.getName().split("\\.")[0]);
+      }
+    }
+    styleOptions.setOnAction(e -> {
+          myCurrentStylesheet = styleOptions.getValue() + ".css";
+          startApplication(myStage);
+        }
+    );
+    buttonGroup.getChildren().add(styleOptions);
+  }
+
+  private void displayLevelSelectScreen() {
+    BorderPane levelSelectScreen = new BorderPane();
+    levelSelectScreen.getStyleClass().add("level-background");
+    Text levelSelectText = new Text("Select Level");
+    levelSelectText.getStyleClass().add("menu-text");
+    levelSelectText.setScaleX(3);
+    levelSelectText.setScaleY(3);
+    levelSelectScreen.setCenter(levelSelectText);
+    BorderPane.setAlignment(levelSelectText, Pos.CENTER);
+    HBox levelButtons = initializeLevelButtons();
+    levelSelectScreen.setBottom(levelButtons);
+    BorderPane.setAlignment(levelButtons, Pos.CENTER_RIGHT);
+
+    myScene.setRoot(levelSelectScreen);
+    myStage.setScene(myScene);
+  }
+
+  private HBox initializeLevelButtons() {
+    HBox levelButtons = new HBox();
+    levelButtons.setAlignment(Pos.CENTER);
+    Path levels = getLevels();
+    if (levels == null || levels.toFile().listFiles() == null) {
+      return levelButtons;
+    }
+    for (File level : levels.toFile().listFiles()) {
+      Button levelButton = new Button(level.getName().split("\\.")[0]);
+      levelButton.setOnAction(e -> loadLevel(level.getName()));
+      levelButton.setId(level.getName().split("\\.")[0]);
+      levelButtons.getChildren().add(levelButton);
+    }
+    Button backButton = new Button(myMenuButtonNames.getString("ReturnToStart"));
+    backButton.setOnAction(e -> startApplication(myStage));
+    backButton.setId("BackButton");
+    levelButtons.getChildren().add(backButton);
+    return levelButtons;
+  }
+
+  private Path getLevels() {
+    Path levels = null;
+    try {
+      if (getClass().getClassLoader().getResource(LAYOUTS_PATH) == null) {
+        new AlertHandler(myApplicationErrors.getString("NoLevels"),
+            myApplicationErrors.getString("NoLevels"));
+        return null;
+      }
+      levels = Paths.get(getClass().getClassLoader().getResource(LAYOUTS_PATH).toURI());
+    } catch (URISyntaxException e) {
+      new AlertHandler(myApplicationErrors.getString("NoLevels"),
+          myApplicationErrors.getString("NoLevels"));
+    }
+    return levels;
+  }
+
+  public void initializeGameObjects(Layout layout, BloonsCollection bloons,
+      TowersCollection towers,
+      ProjectilesCollection projectiles, Timeline animation) {
     myLayout = layout;
     myBloons = bloons;
     myTowers = towers;
     myProjectiles = projectiles;
     myAnimation = animation;
-    gameMenuController = gameController;
-    towerMenuController = towerController;
   }
 
-  public void fireInTheHole(Stage mainStage) {
-    myStage = mainStage;
-    BorderPane menuLayout = new BorderPane();
-    setupMenuLayout(menuLayout);
-    myScene = new Scene(menuLayout, WIDTH, HEIGHT);
-    myStage.setScene(myScene);
-    myStage.show();
-  }
-
-  private void setupMenuLayout(BorderPane menu) {
-    Image backgroundImage = null;
-    try {
-      backgroundImage = new Image(String.valueOf(getClass().getResource(BACKGROUND_IMAGE).toURI()));
-    } catch (
-        URISyntaxException e) {
-      e.printStackTrace();
-    }
-    assert backgroundImage != null;
-    menu.setBackground(new Background(new BackgroundImage(backgroundImage, BackgroundRepeat.REPEAT,
-        BackgroundRepeat.REPEAT,
-        BackgroundPosition.DEFAULT,
-        BackgroundSize.DEFAULT)));
-    Button startButton = new Button();
-    startButton.setOnAction(e -> loadLevel());
-    startButton.setText("Start");
-    startButton.setId("Start");
-    BorderPane.setAlignment(startButton, Pos.CENTER);
-    menu.setBottom(startButton);
-  }
-
-  private void loadLevel() {
-    BorderPane level = new BorderPane();
-    visualizeLayout(level);
+  private void loadLevel(String levelName) {
+    myCurrentLevel = levelName;
+    myLevelStartButton.fire();
+    Pane level = new Pane();
+    level.getStyleClass().add("level-background");
     myMenuPane = new VBox();
+    visualizeLayout(level);
     myAnimationHandler = new AnimationHandler(myLayout, myLevelLayout, myBloons,
-        myTowers, myProjectiles, myStartingX, myStartingY, myBlockSize, myAnimation);
+        myTowers, myProjectiles, myBlockSize, myAnimation);
     towerNodeHandler = new TowerNodeHandler(GAME_WIDTH, GAME_HEIGHT, myBlockSize,
         myLevelLayout, myMenuPane, myTowers, towerMenuController, myAnimationHandler);
     visualizePlayerGUI(level);
-    level.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
-    myScene = new Scene(level, WIDTH, HEIGHT);
+    myScene.setRoot(level);
     myStage.setScene(myScene);
   }
 
   // TODO: Refactor
-  private void visualizeLayout(BorderPane level) {
+  private void visualizeLayout(Pane level) {
     myLevelLayout = new Group();
-    level.setLeft(myLevelLayout);
+    level.getChildren().add(myLevelLayout);
 
     int numberOfRows = myLayout.getHeight();
     int numberOfColumns = myLayout.getWidth();
@@ -129,9 +269,16 @@ public class BloonsApplication {
     int blockNumberX = 0;
     int blockNumberY = 0;
 
+    createBlocks(numberOfRows, numberOfColumns, currentBlockX, currentBlockY, blockNumberX,
+        blockNumberY);
+  }
+
+  private void createBlocks(int numberOfRows, int numberOfColumns, double currentBlockX,
+      double currentBlockY, int blockNumberX, int blockNumberY) {
     for (int i = 0; i < numberOfRows; i++) {
       for (int j = 0; j < numberOfColumns; j++) {
-        Rectangle newBlock = createBlock(myLayout.getBlock(i,j).getBlockType(), currentBlockX, currentBlockY, myBlockSize);
+        Rectangle newBlock = createBlock(myLayout.getBlock(i, j).getBlockType(), currentBlockX,
+            currentBlockY, myBlockSize);
         newBlock.setId("LayoutBlock" + blockNumberX + blockNumberY);
         myLevelLayout.getChildren().add(newBlock);
         currentBlockX += myBlockSize;
@@ -147,25 +294,37 @@ public class BloonsApplication {
   private Rectangle createBlock(String block, double currentBlockX, double currentBlockY,
       double blockSize) {
     Rectangle blockRectangle = new Rectangle(currentBlockX, currentBlockY, blockSize, blockSize);
-    String blockColorAsString = myBlockMappings.getString(block);
-    Color blockColor = Color.web(blockColorAsString);
-    blockRectangle.setFill(blockColor);
-    if(block.charAt(0) == '*') {
+    if(block.equals("0")){
+      blockRectangle.getStyleClass().add("non-path-block");
+    }
+    else{
+      blockRectangle.getStyleClass().add("path-block");
+    }
+    if (block.charAt(0) == '*') {
       myStartingX = currentBlockX + blockSize / 2;
       myStartingY = currentBlockY + blockSize / 2;
     }
     return blockRectangle;
   }
 
-  private void visualizePlayerGUI(BorderPane level) {
+  private void visualizePlayerGUI(Pane level) {
     myMenuPane.setSpacing(10); //magic num
     myMenu = new GameMenu(myMenuPane, gameMenuController, towerMenuController, towerNodeHandler);
-    level.setRight(myMenuPane);
+    myMenuPane.setLayoutX(GAME_WIDTH);
+    level.getChildren().add(myMenuPane);
   }
 
-  public void fullScreen(){
+  public void fullScreen() {
     myStage.setFullScreen(true);
     myStage.show();
+  }
+
+  public String getCurrentLevel() {
+    return myCurrentLevel;
+  }
+
+  public ResourceBundle getMenuButtonNames() {
+    return myMenuButtonNames;
   }
 
   public AnimationHandler getMyAnimationHandler() {

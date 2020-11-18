@@ -1,0 +1,38 @@
+.start-menu {
+  -fx-background-image: url("cssPhotos/startscreen.png");
+}
+
+.level-background {
+  -fx-background-color: White;
+}
+
+.menu-text {
+  -fx-fill: Black;
+}
+
+.button {
+  -fx-font-size: 14 pt;
+  -fx-font-family: "Arial";
+  -fx-background-color: LightGrey;
+  -fx-text-fill: Black;
+}
+
+.combo-box {
+  -fx-font-size: 14 pt;
+  -fx-font-family: "Arial";
+  -fx-background-color: LightGrey;
+}
+
+.list-cell{
+  -fx-text-fill: Black;
+}
+
+.path-block{
+  -fx-fill: Tan;
+  -fx-stroke: Tan;
+}
+
+.non-path-block{
+  -fx-fill: #83b576;
+  -fx-stroke: #83b576;
+}

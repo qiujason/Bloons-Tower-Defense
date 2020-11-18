@@ -6,6 +6,7 @@ import java.util.Map;
 import ooga.backend.API.BankAPI;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
+import ooga.backend.towers.UpgradeChoice;
 
 /**
  * Bank allocates the round bonuses received after each round and can be determined in 3 ways: 1.
@@ -20,7 +21,7 @@ public class Bank implements BankAPI {
 
   public static int STARTING_ROUND_BONUS = 100;
 
-  private int currentMoney = 500;
+  private int currentMoney = 0;
   private int currentLevel = 0;
   private int numberOfTotalRounds;
   private List<Integer> roundBonus;
@@ -34,8 +35,8 @@ public class Bank implements BankAPI {
     this.towerSellMap = towerSellMap;
     numberOfTotalRounds = roundBonus.size();
     List<Integer> integerBonus = new ArrayList<>();
-    for(int i = 0; i < roundBonus.size(); i++){
-      integerBonus.add(Integer.valueOf(roundBonus.get(i)));
+    for(String bonus : roundBonus){
+      integerBonus.add(Integer.valueOf(bonus));
     }
     this.roundBonus = integerBonus;
   }
@@ -74,20 +75,33 @@ public class Bank implements BankAPI {
     return currentMoney;
   }
 
-  public boolean buyTower(TowerType buyTower) {
-    if (currentMoney >= towerBuyMap.get(buyTower)){
-      currentMoney -= towerBuyMap.get(buyTower);
+  public boolean buyTower(Tower buyTower) {
+    if (canBuyTower(buyTower)) {
+      currentMoney -= towerBuyMap.get(buyTower.getTowerType());
       return true;
     }
     return false;
   }
 
-  public void sellTower(TowerType sellTower) {
-    currentMoney += towerSellMap.get(sellTower);
+  private boolean canBuyTower(Tower buyTower){
+    return currentMoney >= towerBuyMap.get(buyTower.getTowerType());
+  }
+
+  public void sellTower(Tower sellTower) {
+    currentMoney += towerSellMap.get(sellTower.getTowerType()) + sellTower.getTotalUpgradeCost();
   }
 
   public void addPoppedBloonValue(){
     currentMoney += 1;
+  }
+
+  public boolean buyUpgrade(UpgradeChoice choice, Tower buyTower){
+    int cost = buyTower.getCostOfUpgrade(choice);
+    if (currentMoney >= cost){
+      currentMoney -= cost;
+      return true;
+    }
+    return false;
   }
 
 }

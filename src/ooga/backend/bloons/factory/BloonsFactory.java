@@ -9,4 +9,6 @@ public interface BloonsFactory {
 
   Bloon createBloon(BloonsType bloonsType, double xPosition, double yPosition, double xVelocity, double yVelocity);
 
+  Bloon createNextBloon(Bloon bloon);
+
 }

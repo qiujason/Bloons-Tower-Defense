@@ -14,7 +14,7 @@ public class GameMenu {
 
   private static final String LANGUAGE = "English";
   private final ResourceBundle menuProperties =
-      ResourceBundle.getBundle("ooga.visualization.resources.menu" + LANGUAGE);
+      ResourceBundle.getBundle("ooga.visualization.resources.languages." + LANGUAGE + ".menu" + LANGUAGE);
 
   private static final String PLAY_TEXT = "PlayButton";
   private static final String PAUSE_TEXT = "PauseButton";
