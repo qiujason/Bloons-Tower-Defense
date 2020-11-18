@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 import javafx.animation.Timeline;
 import javafx.geometry.BoundingBox;
 import javafx.scene.Group;
@@ -40,6 +41,9 @@ public class AnimationHandler {
   private Map<Projectile, ProjectileNode> myProjectilesInGame;
   private Map<Tower, Bloon> myShootingTargets;
 
+  public final String BLOON_IMAGES_PATH = "bloon_resources/BloonImages";
+  public final Properties bloonImagesProperties = new Properties();
+
   public AnimationHandler(Group levelLayout, BloonsCollection bloons,
       TowersCollection towers, ProjectilesCollection projectiles, double blockSize, Timeline animation) {
     myAnimation = animation;
@@ -52,6 +56,8 @@ public class AnimationHandler {
     myTowersInGame = new HashMap<>();
     myProjectilesInGame = new HashMap<>();
     myBlockSize = blockSize;
+//    bloonImagesProperties.load(AnimationHandler.class.getClassLoader()
+//        .getResourceAsStream(BLOON_IMAGES_PATH));
   }
 
   public void addBloonstoGame(){
