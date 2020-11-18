@@ -30,6 +30,7 @@ import ooga.controller.GameMenuInterface;
 import ooga.controller.WeaponBankInterface;
 import ooga.visualization.menu.GameMenu;
 import ooga.controller.WeaponNodeHandler;
+import ooga.visualization.menu.WeaponButtonsMenu;
 
 public class BloonsApplication {
 
@@ -361,7 +362,8 @@ public class BloonsApplication {
 
   private void visualizePlayerGUI(Pane level) {
     myMenuPane.setSpacing(10); //magic num
-    myMenu = new GameMenu(myMenuPane, myGameMenuController, weaponNodeHandler);
+    myMenu = new GameMenu(myMenuPane, myGameMenuController, weaponNodeHandler, myCurrentLanguage);
+    myMenuPane.getChildren().add(new WeaponButtonsMenu(weaponNodeHandler, myCurrentLanguage));
     myMenuPane.setLayoutX(GAME_WIDTH);
     level.getChildren().add(myMenuPane);
   }
