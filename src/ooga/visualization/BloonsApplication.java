@@ -46,8 +46,6 @@ public class BloonsApplication {
   public static final double GAME_HEIGHT = 0.875 * HEIGHT;
   public static final double GAME_WIDTH = 0.75 * WIDTH;
   public static final String LAYOUTS_PATH = "layouts/";
-//  public static final String BACKGROUND_IMAGE = "/gamePhotos/";
-//  public static final String START_SCREEN_BACKGROUND = "startscreen.png";
   public static final String DEFAULT_LANGUAGE = "English";
   public static final ResourceBundle LANGUAGES = ResourceBundle
       .getBundle(BloonsApplication.class.getPackageName() + ".resources.languageList");
@@ -70,8 +68,8 @@ public class BloonsApplication {
   private double myStartingX;
   private double myStartingY;
   private double myBlockSize;
-  private final ResourceBundle myBlockMappings = ResourceBundle
-      .getBundle(getClass().getPackageName() + ".resources.blockMappings");
+//  private final ResourceBundle myBlockMappings = ResourceBundle
+//      .getBundle(getClass().getPackageName() + ".resources.blockMappings");
   private final Button myLevelStartButton;
   private ResourceBundle myMenuButtonNames;
   private ResourceBundle myApplicationErrors;
@@ -181,23 +179,6 @@ public class BloonsApplication {
     );
     buttonGroup.getChildren().add(styleOptions);
   }
-
-//  private void setBackgroundImage(BorderPane menu, String imageName) {
-//    Image backgroundImage = null;
-//    try {
-//      backgroundImage = new Image(
-//          String.valueOf(getClass().getResource(BACKGROUND_IMAGE + imageName).toURI()));
-//    } catch (
-//        URISyntaxException e) {
-//      new AlertHandler(myApplicationErrors.getString("NoBackgroundImage"),
-//          myApplicationErrors.getString("NoBackgroundImage"));
-//    }
-//    assert backgroundImage != null;
-//    menu.setBackground(new Background(new BackgroundImage(backgroundImage, BackgroundRepeat.REPEAT,
-//        BackgroundRepeat.REPEAT,
-//        BackgroundPosition.DEFAULT,
-//        BackgroundSize.DEFAULT)));
-//  }
 
   private void displayLevelSelectScreen() {
     BorderPane levelSelectScreen = new BorderPane();
