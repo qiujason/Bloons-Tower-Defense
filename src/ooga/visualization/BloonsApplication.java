@@ -298,6 +298,7 @@ public class BloonsApplication {
     visualizeLayout(level);
     myAnimationHandler = new AnimationHandler(myLevelLayout, myBloons,
         myTowers, myProjectiles, myBlockSize, myAnimation);
+
     towerNodeHandler = new TowerNodeHandler(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize,
         myLevelLayout, myMenuPane, myTowers, myTowerMenuController, myAnimationHandler);
     visualizePlayerGUI(level);
@@ -360,7 +361,7 @@ public class BloonsApplication {
 
   private void visualizePlayerGUI(Pane level) {
     myMenuPane.setSpacing(10); //magic num
-    myMenu = new GameMenu(myMenuPane, myGameMenuController, myTowerMenuController, towerNodeHandler);
+    myMenu = new GameMenu(myMenuPane, myGameMenuController, towerNodeHandler);
     myMenuPane.setLayoutX(GAME_WIDTH);
     level.getChildren().add(myMenuPane);
   }
