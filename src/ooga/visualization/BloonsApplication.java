@@ -26,6 +26,7 @@ import ooga.AlertHandler;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.layout.Layout;
 import ooga.backend.projectile.ProjectilesCollection;
+import ooga.backend.roaditems.RoadItemsCollection;
 import ooga.backend.towers.TowersCollection;
 import ooga.controller.Controller;
 import ooga.controller.GameMenuController;
@@ -59,6 +60,7 @@ public class BloonsApplication {
   private BloonsCollection myBloons;
   private TowersCollection myTowers;
   private ProjectilesCollection myProjectiles;
+  private RoadItemsCollection myRoadItems;
   private Group myLevelLayout;
   private GameMenu myMenu;
   private VBox myMenuPane;
@@ -277,12 +279,13 @@ public class BloonsApplication {
 
   public void initializeGameObjects(Layout layout, BloonsCollection bloons,
       TowersCollection towers,
-      ProjectilesCollection projectiles, Timeline animation, GameMenuInterface gameMenuController,
+      ProjectilesCollection projectiles, RoadItemsCollection roadItems, Timeline animation, GameMenuInterface gameMenuController,
       TowerMenuInterface towerMenuController) {
     myLayout = layout;
     myBloons = bloons;
     myTowers = towers;
     myProjectiles = projectiles;
+    myRoadItems = roadItems;
     myAnimation = animation;
     myGameMenuController = gameMenuController;
     myTowerMenuController = towerMenuController;

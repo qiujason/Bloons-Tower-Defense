@@ -29,6 +29,7 @@ import ooga.backend.readers.RoadItemValueReader;
 import ooga.backend.readers.RoundBonusReader;
 import ooga.backend.readers.TowerValueReader;
 import ooga.backend.roaditems.RoadItemType;
+import ooga.backend.roaditems.RoadItemsCollection;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.TowersCollection;
@@ -61,6 +62,7 @@ public class Controller extends Application {
   private List<BloonsCollection> allBloonWaves;
   private TowersCollection towersCollection;
   private ProjectilesCollection projectilesCollection;
+  private RoadItemsCollection roadItemsCollection;
 
   private Map<Tower, Bloon> shootingTargets;
   private GameMenuInterface gameController;
@@ -98,7 +100,7 @@ public class Controller extends Application {
     towerController = new TowerMenuController(bank);
 
     bloonsApplication.initializeGameObjects(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
-        gameEngine.getProjectiles(), myAnimation, gameController, towerController);
+        gameEngine.getProjectiles(), gameEngine.getRoadItems(), myAnimation, gameController, towerController);
 
     myAnimation.setCycleCount(Timeline.INDEFINITE);
 
@@ -181,7 +183,7 @@ public class Controller extends Application {
   }
 
   private void startGameEngine() {
-    gameEngine = new GameEngine(layout, allBloonWaves, towersCollection, projectilesCollection, getMyBlockSize());
+    gameEngine = new GameEngine(layout, allBloonWaves, towersCollection, projectilesCollection, roadItemsCollection, getMyBlockSize());
   }
 
   private void step() {

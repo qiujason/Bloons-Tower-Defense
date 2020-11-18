@@ -11,6 +11,7 @@ import ooga.backend.layout.Layout;
 import ooga.backend.layout.LayoutBlock;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectilesCollection;
+import ooga.backend.roaditems.RoadItemsCollection;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowersCollection;
 import ooga.visualization.AnimationHandler;
@@ -33,6 +34,10 @@ public class GameEngine implements GameEngineAPI {
   private double myBlockSize;
   private TowersCollection towers;
 
+
+
+  private RoadItemsCollection roadItems;
+
   private ProjectilesCollection projectiles;
   private Map<Bloon, Double > myBloonSidesX;
   private Map<Bloon, Double> myBloonSidesY;
@@ -42,7 +47,7 @@ public class GameEngine implements GameEngineAPI {
 
 
   public GameEngine(Layout layout, List<BloonsCollection> allBloonWaves, TowersCollection towers,
-      ProjectilesCollection projectiles, double blockSize) {
+      ProjectilesCollection projectiles, RoadItemsCollection roadItems, double blockSize) {
     this.layout = layout;
     this.allBloonWaves = allBloonWaves;
     this.queuedBloons = allBloonWaves.get(STARTING_ROUND);
@@ -185,6 +190,7 @@ public class GameEngine implements GameEngineAPI {
   public void update(){
     //TODO: get projectile AND tower list from front end (maybe bloons? idk)
     if (isRoundEnd()){
+
       nextWave();
     }
     spawnBloons();
@@ -215,10 +221,15 @@ public class GameEngine implements GameEngineAPI {
     return round;
   }
 
+  @Override
   public Map<Tower, Bloon> getShootingTargets() {
     return shootingTargets;
   }
 
+  @Override
+  public RoadItemsCollection getRoadItems() {
+    return roadItems;
+  }
 
 
 }

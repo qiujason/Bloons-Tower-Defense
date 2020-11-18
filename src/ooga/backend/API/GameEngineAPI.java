@@ -4,6 +4,7 @@ import java.util.Map;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.projectile.ProjectilesCollection;
+import ooga.backend.roaditems.RoadItemsCollection;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowersCollection;
 
@@ -16,6 +17,8 @@ public interface GameEngineAPI {
   ProjectilesCollection getProjectiles();
 
   TowersCollection getTowers();
+
+  RoadItemsCollection getRoadItems();
 
   boolean isRoundEnd();
 
