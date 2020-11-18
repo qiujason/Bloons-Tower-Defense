@@ -207,13 +207,14 @@ public class Controller extends Application {
     bloonsApplication.displayCurrentMoney(bank.getCurrentMoney());
     bloonsApplication.displayCurrentRound(gameEngine.getRound() + 1);
 
-    if(gameEngine.isRoundEnd()){
-      System.out.println("frontend detected round end");
-      myAnimation.stop();
-    }
-
     if(gameEngine.isGameEnd()){
       System.out.println("rip");
+      bloonsApplication.endLevel();
+      myAnimation.stop();
+    }
+    else if(gameEngine.isRoundEnd()){
+      System.out.println("frontend detected round end");
+      bloonsApplication.endRound();
       myAnimation.stop();
     }
 

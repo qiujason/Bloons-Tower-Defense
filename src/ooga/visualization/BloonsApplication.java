@@ -4,8 +4,9 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.concurrent.ConcurrentHashMap;
 import javafx.animation.Timeline;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -17,7 +18,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -28,25 +28,29 @@ import ooga.backend.layout.Layout;
 import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.towers.TowersCollection;
 import ooga.controller.Controller;
-import ooga.controller.GameMenuController;
 import ooga.controller.GameMenuInterface;
-import ooga.controller.TowerMenuController;
 import ooga.controller.TowerMenuInterface;
 import ooga.visualization.menu.GameMenu;
 import ooga.controller.TowerNodeHandler;
 
 public class BloonsApplication {
 
-  public static final double HEIGHT = 500;
-  public static final double WIDTH = 800;
-  public static final double GAME_HEIGHT = 0.875 * HEIGHT;
-  public static final double GAME_WIDTH = 0.75 * WIDTH;
+  public static final ResourceBundle MENU_SIZING = ResourceBundle
+      .getBundle(BloonsApplication.class.getPackageName() + ".resources.gameMenuNumbers");
+  public static final double WIDTH = Double.parseDouble(MENU_SIZING.getString("Width"));
+  public static final double HEIGHT = Double.parseDouble(MENU_SIZING.getString("Height"));
+  public static final double GAME_WIDTH = WIDTH * Double.parseDouble(MENU_SIZING.getString("GameWidthMultiplier"));
+  public static final double GAME_HEIGHT = HEIGHT * Double.parseDouble(MENU_SIZING.getString("GameHeightMultiplier"));
+  public static final double GAME_STATS_HEIGHT_TEXT = Double.parseDouble(MENU_SIZING.getString("GameStatsTextHeight"));
+  public static final double GAME_STATS_HEIGHT_SIZE = Double.parseDouble(MENU_SIZING.getString("GameStatsTextSize"));
+  public static final double HEALTH_TEXT_X_SCALE = Double.parseDouble(MENU_SIZING.getString("HealthTextXScale"));
+  public static final double MONEY_TEXT_X_SCALE = Double.parseDouble(MENU_SIZING.getString("MoneyTextXScale"));
+  public static final double ROUND_TEXT_X_SCALE = Double.parseDouble(MENU_SIZING.getString("RoundTextXScale"));
+
   public static final String LAYOUTS_PATH = "layouts/";
-  public static final String DEFAULT_LANGUAGE = "English";
   public static final ResourceBundle LANGUAGES = ResourceBundle
       .getBundle(BloonsApplication.class.getPackageName() + ".resources.languageList");
   public static final String STYLESHEETS = "stylesheets/";
-  public static final String DEFAULT_STYLESHEET = "Normal.css";
   public static final String LEVEL_IMAGES = "gamePhotos/levelImages";
 
   private Stage myStage;
@@ -65,31 +69,28 @@ public class BloonsApplication {
   private TowerNodeHandler towerNodeHandler;
   private AnimationHandler myAnimationHandler;
   private double myBlockSize;
-  //  private final ResourceBundle myBlockMappings = ResourceBundle
-//      .getBundle(getClass().getPackageName() + ".resources.blockMappings");
   private final Button myLevelStartButton;
   private ResourceBundle myMenuButtonNames;
-  private ResourceBundle myApplicationErrors;
+  private ResourceBundle myApplicationMessages;
   private String myCurrentLevel;
   private String myCurrentLanguage;
   private String myCurrentStylesheet;
   private Text myMoneyText;
   private Text myRoundText;
-//  private double myStartingX;
-//  private double myStartingY;
+  private Text myHealthText;
 
   public BloonsApplication(Button startLevelButton) {
     myLevelStartButton = startLevelButton;
-    myCurrentLanguage = DEFAULT_LANGUAGE;
-    myCurrentStylesheet = DEFAULT_STYLESHEET;
+    myCurrentLanguage = MENU_SIZING.getString("DefaultLanguage");
+    myCurrentStylesheet = MENU_SIZING.getString("DefaultStylesheet");
     myMenuButtonNames = ResourceBundle
         .getBundle(
             getClass().getPackageName() + ".resources.languages." + myCurrentLanguage
                 + ".startMenuButtonNames"
                 + myCurrentLanguage);
-    myApplicationErrors = ResourceBundle
+    myApplicationMessages = ResourceBundle
         .getBundle(getClass().getPackageName() + ".resources.languages." + myCurrentLanguage
-            + ".applicationErrors"
+            + ".applicationMessages"
             + myCurrentLanguage);
   }
 
@@ -149,10 +150,10 @@ public class BloonsApplication {
             getClass().getPackageName() + ".resources.languages." + myCurrentLanguage
                 + ".startMenuButtonNames"
                 + myCurrentLanguage);
-    myApplicationErrors = ResourceBundle
+    myApplicationMessages = ResourceBundle
         .getBundle(
             getClass().getPackageName() + ".resources.languages." + myCurrentLanguage
-                + ".applicationErrors"
+                + ".applicationMessages"
                 + myCurrentLanguage);
     startApplication(myStage);
   }
@@ -165,8 +166,8 @@ public class BloonsApplication {
     try {
       styles = Paths.get(getClass().getClassLoader().getResource(STYLESHEETS).toURI());
     } catch (URISyntaxException e) {
-      new AlertHandler(myApplicationErrors.getString("NoStyles"),
-          myApplicationErrors.getString("NoStyles"));
+      new AlertHandler(myApplicationMessages.getString("NoStyles"),
+          myApplicationMessages.getString("NoStyles"));
     }
     for (File style : styles.toFile().listFiles()) {
       if (style.getName().contains(".")) {
@@ -233,14 +234,14 @@ public class BloonsApplication {
     Path levels = null;
     try {
       if (getClass().getClassLoader().getResource(LAYOUTS_PATH) == null) {
-        new AlertHandler(myApplicationErrors.getString("NoLevels"),
-            myApplicationErrors.getString("NoLevels"));
+        new AlertHandler(myApplicationMessages.getString("NoLevels"),
+            myApplicationMessages.getString("NoLevels"));
         return null;
       }
       levels = Paths.get(getClass().getClassLoader().getResource(LAYOUTS_PATH).toURI());
     } catch (URISyntaxException e) {
-      new AlertHandler(myApplicationErrors.getString("NoLevels"),
-          myApplicationErrors.getString("NoLevels"));
+      new AlertHandler(myApplicationMessages.getString("NoLevels"),
+          myApplicationMessages.getString("NoLevels"));
     }
     return levels;
   }
@@ -249,14 +250,14 @@ public class BloonsApplication {
     Path levelImages = null;
     try {
       if (getClass().getClassLoader().getResource(LEVEL_IMAGES) == null) {
-        new AlertHandler(myApplicationErrors.getString("NoLevelImage"),
-            myApplicationErrors.getString("NoLevelImage"));
+        new AlertHandler(myApplicationMessages.getString("NoLevelImage"),
+            myApplicationMessages.getString("NoLevelImage"));
         return;
       }
       levelImages = Paths.get(getClass().getClassLoader().getResource(LEVEL_IMAGES).toURI());
     } catch (URISyntaxException e) {
-      new AlertHandler(myApplicationErrors.getString("NoLevelImage"),
-          myApplicationErrors.getString("NoLevelImage"));
+      new AlertHandler(myApplicationMessages.getString("NoLevelImage"),
+          myApplicationMessages.getString("NoLevelImage"));
     }
     Group levelImageGroup = new Group();
     for (File levelImageFile : levelImages.toFile().listFiles()) {
@@ -264,7 +265,7 @@ public class BloonsApplication {
         ImagePattern levelImage = new ImagePattern(
             new Image(String.valueOf(levelImageFile.toURI())));
         double heightToWidthRatio = levelImage.getImage().getHeight() / levelImage.getImage().getWidth();
-        Rectangle imageRectangle = new Rectangle(WIDTH / 2, WIDTH / 2 * heightToWidthRatio , levelImage);
+        Rectangle imageRectangle = new Rectangle(WIDTH / 2, HEIGHT / 2 * heightToWidthRatio , levelImage);
         imageRectangle.setId("ImageRectangle");
         levelImageGroup.getChildren()
             .add(imageRectangle);
@@ -288,8 +289,8 @@ public class BloonsApplication {
 
   private void loadLevel(String levelName) {
     if (levelName == null) {
-      new AlertHandler(myApplicationErrors.getString("NoLevelSelected"),
-          myApplicationErrors.getString("NoLevelSelected"));
+      new AlertHandler(myApplicationMessages.getString("NoLevelSelected"),
+          myApplicationMessages.getString("NoLevelSelected"));
       return;
     }
     myCurrentLevel = levelName;
@@ -306,6 +307,7 @@ public class BloonsApplication {
     visualizePlayerGUI(myLevel);
     displayCurrentMoney(0);
     displayCurrentRound(1);
+    displayCurrentHealth(100); // change this to actual health
     myScene.setRoot(myLevel);
     myStage.setScene(myScene);
   }
@@ -356,10 +358,6 @@ public class BloonsApplication {
     } else {
       blockRectangle.getStyleClass().add("path-block");
     }
-//    if (block.charAt(0) == '*') {
-//      myStartingX = currentBlockX + blockSize / 2;
-//      myStartingY = currentBlockY + blockSize / 2;
-//    }
     return blockRectangle;
   }
 
@@ -375,26 +373,41 @@ public class BloonsApplication {
     myStage.show();
   }
 
+  public void displayCurrentHealth(int currentHealth){
+    myLevel.getChildren().remove(myHealthText);
+    myHealthText = new Text("Health: " + currentHealth);
+    myHealthText.setX(WIDTH * HEALTH_TEXT_X_SCALE);
+    setupGameStat(myHealthText);
+  }
+
   public void displayCurrentMoney(int currentMoney){
     myLevel.getChildren().remove(myMoneyText);
     myMoneyText = new Text("Money: $" + currentMoney);
-    myMoneyText.getStyleClass().add("menu-text");
-    myMoneyText.setX(WIDTH / 12);
-    myMoneyText.setY(15 * HEIGHT / 16);
-    myMoneyText.setScaleX(2.5);
-    myMoneyText.setScaleY(2.5);
-    myLevel.getChildren().add(myMoneyText);
+    myMoneyText.setX(WIDTH * MONEY_TEXT_X_SCALE);
+    setupGameStat(myMoneyText);
   }
 
   public void displayCurrentRound(int currentRound){
     myLevel.getChildren().remove(myRoundText);
     myRoundText = new Text("Round: " + currentRound);
-    myRoundText.getStyleClass().add("menu-text");
-    myRoundText.setX(3 * WIDTH / 8);
-    myRoundText.setY(15 * HEIGHT / 16);
-    myRoundText.setScaleX(2.5);
-    myRoundText.setScaleY(2.5);
-    myLevel.getChildren().add(myRoundText);
+    myRoundText.setX(WIDTH * ROUND_TEXT_X_SCALE);
+    setupGameStat(myRoundText);
+  }
+
+  private void setupGameStat(Text gameStat) {
+    gameStat.getStyleClass().add("menu-text");
+    gameStat.setY( HEIGHT * GAME_STATS_HEIGHT_TEXT);
+    gameStat.setScaleX(GAME_STATS_HEIGHT_SIZE);
+    gameStat.setScaleY(GAME_STATS_HEIGHT_SIZE);
+    myLevel.getChildren().add(gameStat);
+  }
+
+  public void endRound(){
+    new AlertHandler(myApplicationMessages.getString("RoundEndHeader"), myApplicationMessages.getString("RoundEndMessage"));
+  }
+
+  public void endLevel() {
+    new AlertHandler(myApplicationMessages.getString("GameEndHeader"), myApplicationMessages.getString("GameEndMessage"));
   }
 
   public String getCurrentLevel() {
