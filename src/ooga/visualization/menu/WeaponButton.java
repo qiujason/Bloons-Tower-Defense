@@ -21,7 +21,6 @@ public class WeaponButton extends Button implements Describable {
     this.weaponNodeHandler = weaponNodeHandler;
     currentLanguage = language;
     setWeaponDescription(weaponType);
-    setButtonHandler(weaponType);
     this.setMinHeight(BUTTON_HEIGHT);
     this.setMinWidth(BUTTON_WIDTH);
   }
@@ -34,25 +33,6 @@ public class WeaponButton extends Button implements Describable {
   @Override
   public WeaponDescription getWeaponDescription(){
     return weaponDescription;
-  }
-
-  private void setButtonHandler(String weaponType){
-    if(isTowerType(weaponType)){
-      System.out.println(TowerType.fromString(weaponType).name());
-      this.setOnAction(event -> weaponNodeHandler.makeWeapon(TowerType.fromString(weaponType)));
-    }
-    else if(isRoadItemType(weaponType)){
-      System.out.println(RoadItemType.fromString(weaponType));
-      this.setOnAction(event -> weaponNodeHandler.makeRoadWeapon(RoadItemType.fromString(weaponType)));
-    }
-  }
-
-  private boolean isTowerType(String weaponType){
-    return TowerType.isEnumName(weaponType);
-  }
-
-  private boolean isRoadItemType(String weaponType){
-    return RoadItemType.isEnumName(weaponType);
   }
 
 }

@@ -69,6 +69,7 @@ public class WeaponButtonsMenu extends FlowPane {
     String weaponName = typeToName.getString(weaponType);
     String imageDirectory = nameToPicture.getString(weaponName + BUTTON_TAG);
     WeaponButton button = addImageToButton(imageDirectory, weaponType);
+    setButtonHandler(button, weaponType);
     button.setId(weaponName);
     return button;
   }
@@ -99,6 +100,25 @@ public class WeaponButtonsMenu extends FlowPane {
       button.setOnMouseExited(
           event -> this.getChildren().remove(button.getWeaponDescription()));
     });
+  }
+
+
+
+  private void setButtonHandler(WeaponButton button, String weaponType){
+    if(isTowerType(weaponType)){
+      button.setOnAction(event -> weaponNodeHandler.makeWeapon(TowerType.fromString(weaponType)));
+    }
+    else if(isRoadItemType(weaponType)){
+      button.setOnAction(event -> weaponNodeHandler.makeRoadWeapon(RoadItemType.fromString(weaponType)));
+    }
+  }
+
+  private boolean isTowerType(String weaponType){
+    return TowerType.isEnumName(weaponType);
+  }
+
+  private boolean isRoadItemType(String weaponType){
+    return RoadItemType.isEnumName(weaponType);
   }
 
   private void combineTypeLists(){
