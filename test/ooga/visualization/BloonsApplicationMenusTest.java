@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ooga.controller.Controller;
 import org.junit.jupiter.api.Test;
@@ -104,6 +105,22 @@ public class BloonsApplicationMenusTest extends DukeApplicationTest {
     select(levelOptions, levelOptions.getItems().get(0));
     Rectangle imageRectangle = lookup("#ImageRectangle").query();
     assertNotNull(imageRectangle.getFill());
+  }
+
+  @Test
+  public void testGameModes(){
+    clickOn(myStartButton);
+    ComboBox<String> levelOptions = lookup("#GameModes").query();
+    assertNotNull(levelOptions);
+  }
+
+  @Test
+  public void testLevelDescription() {
+    clickOn(myStartButton);
+    ComboBox<String> levelOptions = lookup("#LevelOptions").query();
+    select(levelOptions, levelOptions.getItems().get(0));
+    Text levelDescription = lookup("#LevelDescription").query();
+    assertNotNull(levelDescription);
   }
 
   @Test
