@@ -235,7 +235,7 @@ public class AnimationHandler {
 
   private boolean shouldPop(Projectile projectile, Bloon bloon){
     return (projectile.getType() == ProjectileType.SingleTargetProjectile &&
-        !bloon.getBloonsType().specials().contains(Specials.Camo))
+        bloon.getBloonsType().specials() != (Specials.Camo))
         || projectile.getType() == ProjectileType.CamoTargetProjectile;
   }
 

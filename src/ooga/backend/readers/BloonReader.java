@@ -13,6 +13,7 @@ import ooga.backend.bloons.factory.BasicBloonsFactory;
 import ooga.backend.bloons.factory.BloonsFactory;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.BloonsTypeChain;
+import ooga.backend.bloons.types.Specials;
 import ooga.backend.layout.Layout;
 
 public class BloonReader extends Reader{
@@ -45,6 +46,7 @@ public class BloonReader extends Reader{
       }
       else{
         for (String bloonInfo : row){
+          System.out.println(bloonInfo);
           Bloon bloon = null;
           if (bloonInfo.length() > 1) {
             for (String specialKey: specialKeys) {
@@ -54,6 +56,7 @@ public class BloonReader extends Reader{
             }
           } else {
             bloon = createBloon(chain, bloonInfo, layout);
+            System.out.println(bloon.getBloonsType().specials() == Specials.Camo);
           }
           currentCollection.add(bloon);
         }

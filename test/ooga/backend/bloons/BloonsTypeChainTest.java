@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import java.util.HashSet;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.BloonsTypeChain;
+import ooga.backend.bloons.types.Specials;
 import org.junit.jupiter.api.Test;
 
 public class BloonsTypeChainTest {
@@ -13,13 +14,13 @@ public class BloonsTypeChainTest {
   @Test
   void testGetBloonsTypeRecordByName() {
     BloonsTypeChain chain = new BloonsTypeChain("tests/test_bloonstype_reader/ValidBloons");
-    assertEquals(new BloonsType(chain, "RED",1, 1, new HashSet<>()), chain.getBloonsTypeRecord("RED"));
+    assertEquals(new BloonsType(chain, "RED",1, 1, Specials.None), chain.getBloonsTypeRecord("RED"));
   }
 
   @Test
   void testGetNextBloonsTypeRecord() {
     BloonsTypeChain chain = new BloonsTypeChain("tests/test_bloonstype_reader/ValidBloons");
-    assertEquals(new BloonsType(chain, "DEAD",0, 0, new HashSet<>()), chain.getNextBloonsType(chain.getBloonsTypeRecord("RED")));
+    assertEquals(new BloonsType(chain, "DEAD",0, 0, Specials.None), chain.getNextBloonsType(chain.getBloonsTypeRecord("RED")));
   }
 
   @Test
@@ -31,7 +32,7 @@ public class BloonsTypeChainTest {
   @Test
   void testGetPrevBloonsTypeRecord() {
     BloonsTypeChain chain = new BloonsTypeChain("tests/test_bloonstype_reader/ValidBloons");
-    assertEquals(new BloonsType(chain, "RAINBOW",47, 2.2, new HashSet<>()), chain.getPrevBloonsType(chain.getBloonsTypeRecord("ZEBRA")));
+    assertEquals(new BloonsType(chain, "RAINBOW",47, 2.2, Specials.None), chain.getPrevBloonsType(chain.getBloonsTypeRecord("ZEBRA")));
   }
 
   @Test
@@ -43,8 +44,8 @@ public class BloonsTypeChainTest {
   @Test
   void testGetBloonsTypeRecordByIndex() {
     BloonsTypeChain chain = new BloonsTypeChain("tests/test_bloonstype_reader/ValidBloons");
-    assertEquals(new BloonsType(chain, "DEAD",0, 0, new HashSet<>()), chain.getBloonsTypeRecord(0));
-    assertEquals(new BloonsType(chain, "RED",1, 1, new HashSet<>()), chain.getBloonsTypeRecord(1));
+    assertEquals(new BloonsType(chain, "DEAD",0, 0, Specials.None), chain.getBloonsTypeRecord(0));
+    assertEquals(new BloonsType(chain, "RED",1, 1, Specials.None), chain.getBloonsTypeRecord(1));
   }
 
   @Test
@@ -56,7 +57,7 @@ public class BloonsTypeChainTest {
   @Test
   void testGetBloonsTypeRecordByNegativeIndex() {
     BloonsTypeChain chain = new BloonsTypeChain("tests/test_bloonstype_reader/ValidBloons");
-    assertEquals(new BloonsType(chain, "DEAD",0, 0, new HashSet<>()), chain.getBloonsTypeRecord(-1));
+    assertEquals(new BloonsType(chain, "DEAD",0, 0, Specials.None), chain.getBloonsTypeRecord(-1));
   }
 
   @Test
