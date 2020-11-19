@@ -22,9 +22,10 @@ public abstract class SpecialBloon extends Bloon {
     for (int i = 0; i < numBloonsToProduce; i++) {
       try {
         String specialName = getBloonsType().specials().toString();
-        Class<?> specialBloonClass = Class.forName(FACTORY_FILE_PATH + specialName + "BloonsFactory");
+        Class<?> specialBloonClass = Class
+            .forName(FACTORY_FILE_PATH + specialName + "BloonsFactory");
         Constructor<?> specialBloonConstructor = specialBloonClass.getConstructor();
-        BloonsFactory specialFactory = (BloonsFactory)specialBloonConstructor.newInstance();
+        BloonsFactory specialFactory = (BloonsFactory) specialBloonConstructor.newInstance();
         bloons[i] = specialFactory.createNextBloon(this);
       } catch (ClassNotFoundException e) {
         throw new ConfigurationException("SpecialNotFound");

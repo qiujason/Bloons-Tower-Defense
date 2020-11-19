@@ -9,7 +9,7 @@ public class ProjectilesCollection implements GamePieceCollection<Projectile> {
 
   private List<Projectile> projectiles;
 
-  public ProjectilesCollection(){
+  public ProjectilesCollection() {
     projectiles = new ArrayList<>();
   }
 
@@ -48,7 +48,7 @@ public class ProjectilesCollection implements GamePieceCollection<Projectile> {
   }
 
   @Override
-  public int size(){
+  public int size() {
     return projectiles.size();
   }
 
@@ -58,7 +58,7 @@ public class ProjectilesCollection implements GamePieceCollection<Projectile> {
   }
 
   @Override
-  public boolean isEmpty(){
+  public boolean isEmpty() {
     return projectiles.isEmpty();
   }
 }

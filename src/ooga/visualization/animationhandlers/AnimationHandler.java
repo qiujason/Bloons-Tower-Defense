@@ -37,21 +37,21 @@ public class AnimationHandler {
   public static final double FRAMES_PER_SECOND = 60;
   private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResource");
 
-  private Timeline myAnimation;
-  private Group myLevelLayout;
-  private double myBlockSize;
-  private GameMode myGameMode;
+  private final Timeline myAnimation;
+  private final Group myLevelLayout;
+  private final double myBlockSize;
+  private final GameMode myGameMode;
 
   private BloonsCollection myBloons;
   private TowersCollection myTowers;
   private ProjectilesCollection myProjectiles;
   private RoadItemsCollection myRoadItems;
-  private Bank bank;
+  private final Bank bank;
 
-  private Map<Bloon, BloonNode> myBloonsInGame;
-  private Map<Tower, TowerNode> myTowersInGame;
-  private Map<Projectile, ProjectileNode> myProjectilesInGame;
-  private Map<RoadItem, RoadItemNode> myRoadItemsInGame;
+  private final Map<Bloon, BloonNode> myBloonsInGame;
+  private final Map<Tower, TowerNode> myTowersInGame;
+  private final Map<Projectile, ProjectileNode> myProjectilesInGame;
+  private final Map<RoadItem, RoadItemNode> myRoadItemsInGame;
   private Map<Tower, Bloon> myShootingTargets;
 
   public AnimationHandler(Group levelLayout, BloonsCollection bloons,
@@ -73,27 +73,29 @@ public class AnimationHandler {
     this.bank = bank;
   }
 
-  public void addBloonstoGame(){
+  public void addBloonstoGame() {
     GamePieceIterator<Bloon> iterator = myBloons.createIterator();
-    while(iterator.hasNext()) {
+    while (iterator.hasNext()) {
       Bloon bloonToSpawn = iterator.next();
       if (!myBloonsInGame.containsKey(bloonToSpawn) && !bloonToSpawn.isDead()) {
-        BloonNode bloonNode = new BloonNode(bloonToSpawn.getBloonsType(), bloonToSpawn.getXPosition()*myBlockSize, bloonToSpawn.getYPosition()*myBlockSize, myBlockSize / 2.5);
+        BloonNode bloonNode = new BloonNode(bloonToSpawn.getBloonsType(),
+            bloonToSpawn.getXPosition() * myBlockSize, bloonToSpawn.getYPosition() * myBlockSize,
+            myBlockSize / 2.5);
         myBloonsInGame.put(bloonToSpawn, bloonNode);
         myLevelLayout.getChildren().add(bloonNode);
       }
     }
   }
 
-  public void addProjectilestoGame(){
+  public void addProjectilestoGame() {
     GamePieceIterator<Projectile> iterator = myProjectiles.createIterator();
-    while(iterator.hasNext()) {
+    while (iterator.hasNext()) {
       Projectile projectileToSpawn = iterator.next();
       if (!myProjectilesInGame.containsKey(projectileToSpawn)) {
         ProjectileNode projectileNode = new ProjectileNode(projectileToSpawn.getType(),
-            projectileToSpawn.getXPosition()*myBlockSize,
-            projectileToSpawn.getYPosition()*myBlockSize,
-            projectileToSpawn.getRadius()*myBlockSize/5);
+            projectileToSpawn.getXPosition() * myBlockSize,
+            projectileToSpawn.getYPosition() * myBlockSize,
+            projectileToSpawn.getRadius() * myBlockSize / 5);
         projectileNode.setRotate(projectileToSpawn.getAngle());
         myProjectilesInGame.put(projectileToSpawn, projectileNode);
         myLevelLayout.getChildren().add(projectileNode);
@@ -112,9 +114,9 @@ public class AnimationHandler {
 
   private void animateBloons() {
     addBloonstoGame();
-    for(Bloon bloon : myBloonsInGame.keySet()){
+    for (Bloon bloon : myBloonsInGame.keySet()) {
       BloonNode bloonNode = myBloonsInGame.get(bloon);
-      if (bloon.isDead()){
+      if (bloon.isDead()) {
         myLevelLayout.getChildren().remove(bloonNode);
       }
       bloonNode.setXPosition(bloon.getXPosition() * myBlockSize);
@@ -127,7 +129,7 @@ public class AnimationHandler {
     GamePieceIterator<Tower> towersIterator = myTowers.createIterator();
     while (towersIterator.hasNext()) {
       Tower currentTower = towersIterator.next();
-      if (myShootingTargets.get(currentTower) != null){
+      if (myShootingTargets.get(currentTower) != null) {
         rotateTower(currentTower, myShootingTargets.get(currentTower));
       }
     }
@@ -148,11 +150,11 @@ public class AnimationHandler {
   private void animateProjectiles() {
     addProjectilestoGame();
     ProjectilesCollection projectileToRemove = new ProjectilesCollection();
-    for(Projectile projectile : myProjectilesInGame.keySet()){
+    for (Projectile projectile : myProjectilesInGame.keySet()) {
       ProjectileNode projectileNode = myProjectilesInGame.get(projectile);
-      projectileNode.setXPosition(projectile.getXPosition()*myBlockSize);
-      projectileNode.setYPosition(projectile.getYPosition()*myBlockSize);
-      if(checkOutOfBoundsProjectile(projectileNode)){
+      projectileNode.setXPosition(projectile.getXPosition() * myBlockSize);
+      projectileNode.setYPosition(projectile.getYPosition() * myBlockSize);
+      if (checkOutOfBoundsProjectile(projectileNode)) {
         myProjectiles.remove(projectile);
         projectileToRemove.add(projectile);
         myLevelLayout.getChildren().remove(projectileNode);
@@ -166,34 +168,35 @@ public class AnimationHandler {
     return projectile.getCenterX() <= 0
         || projectile.getCenterX() >= BloonsApplication.GAME_WIDTH
         || projectile.getCenterY() <= 0
-        || projectile.getCenterY() >= BloonsApplication.GAME_HEIGHT-70;
+        || projectile.getCenterY() >= BloonsApplication.GAME_HEIGHT - 70;
   }
 
-  private void animateShotBloon(){
+  private void animateShotBloon() {
     BloonsCollection bloonsToRemove = new BloonsCollection();
     ProjectilesCollection projectilesToRemove = new ProjectilesCollection();
     BloonsCollection bloonsToAdd = new BloonsCollection();
-    for(Projectile projectile : myProjectilesInGame.keySet()){
-      for(Bloon bloon : myBloonsInGame.keySet()){
+    for (Projectile projectile : myProjectilesInGame.keySet()) {
+      for (Bloon bloon : myBloonsInGame.keySet()) {
         collisionHandler(projectile, bloon, bloonsToRemove, bloonsToAdd, projectilesToRemove);
-        }
       }
+    }
     spawnBloons(bloonsToAdd);
     addMoneyPerPop(bloonsToRemove);
     removeShotBloon(bloonsToRemove);
     removeShotProjectiles(projectilesToRemove);
   }
 
-  private void addMoneyPerPop(BloonsCollection bloonsToRemove){
+  private void addMoneyPerPop(BloonsCollection bloonsToRemove) {
     GamePieceIterator<Bloon> iterator = bloonsToRemove.createIterator();
-    while(iterator.hasNext() && myGameMode != GameMode.Sandbox){
+    while (iterator.hasNext() && myGameMode != GameMode.Sandbox) {
       iterator.next();
       bank.addPoppedBloonValue();
     }
   }
 
 
-  private void collisionHandler(Projectile projectile, Bloon bloon, BloonsCollection bloonsToRemove, BloonsCollection bloonsToAdd, ProjectilesCollection projectilesToRemove) {
+  private void collisionHandler(Projectile projectile, Bloon bloon, BloonsCollection bloonsToRemove,
+      BloonsCollection bloonsToAdd, ProjectilesCollection projectilesToRemove) {
     if (shouldExplode(projectile, bloon)) {
       popBloon(bloon, projectile, bloonsToRemove, bloonsToAdd, projectilesToRemove, false);
     } else if (checkBloonCollision(bloon, myProjectilesInGame.get(projectile))) {
@@ -206,16 +209,16 @@ public class AnimationHandler {
     }
   }
 
-  private void animateRoadItemCollisions(){
+  private void animateRoadItemCollisions() {
     BloonsCollection bloonsToRemove = new BloonsCollection();
     BloonsCollection bloonsToAdd = new BloonsCollection();
     RoadItemsCollection itemsToRemove = new RoadItemsCollection();
-    for(RoadItem roadItem : myRoadItemsInGame.keySet()){
-      for(Bloon bloon : myBloonsInGame.keySet()){
-        if(roadItem.shouldRemove()){
+    for (RoadItem roadItem : myRoadItemsInGame.keySet()) {
+      for (Bloon bloon : myBloonsInGame.keySet()) {
+        if (roadItem.shouldRemove()) {
           itemsToRemove.add(roadItem);
-          if(roadItem.getType() == RoadItemType.ExplodeBloonsItem &&
-              checkSpreadProjectileCollision(bloon, myRoadItemsInGame.get(roadItem), 20)){
+          if (roadItem.getType() == RoadItemType.ExplodeBloonsItem &&
+              checkSpreadProjectileCollision(bloon, myRoadItemsInGame.get(roadItem), 20)) {
             popBloon(bloon, null, bloonsToRemove, bloonsToAdd, null, true);
           }
           continue;
@@ -228,65 +231,68 @@ public class AnimationHandler {
     removeExpiredRoadItems(itemsToRemove);
   }
 
-  private void updateRoadItems(RoadItem roadItem, Bloon bloon, BloonsCollection bloonsToRemove, BloonsCollection bloonsToAdd){
-    if(roadItem.getType() == RoadItemType.ExplodeBloonsItem){
+  private void updateRoadItems(RoadItem roadItem, Bloon bloon, BloonsCollection bloonsToRemove,
+      BloonsCollection bloonsToAdd) {
+    if (roadItem.getType() == RoadItemType.ExplodeBloonsItem) {
       roadItem.update();
-    } else if(checkBloonCollision(bloon, myRoadItemsInGame.get(roadItem))){
-      if(roadItem.getType() == RoadItemType.PopBloonsItem){
+    } else if (checkBloonCollision(bloon, myRoadItemsInGame.get(roadItem))) {
+      if (roadItem.getType() == RoadItemType.PopBloonsItem) {
         popBloon(bloon, null, bloonsToRemove, bloonsToAdd, null, true);
         roadItem.update();
-      } else if(roadItem.getType() == RoadItemType.SlowBloonsItem && !bloon.isSlowDownActive()){
+      } else if (roadItem.getType() == RoadItemType.SlowBloonsItem && !bloon.isSlowDownActive()) {
         bloon.slowDown();
         roadItem.update();
       }
     }
   }
 
-  private boolean shouldExplode(Projectile projectile, Bloon bloon){
+  private boolean shouldExplode(Projectile projectile, Bloon bloon) {
     return projectile.getType() == ProjectileType.SpreadProjectile &&
         checkSpreadProjectileCollision(bloon, myProjectilesInGame.get(projectile),
             projectile.getRadius());
   }
 
-  private boolean shouldPop(Projectile projectile, Bloon bloon){
+  private boolean shouldPop(Projectile projectile, Bloon bloon) {
     return (projectile.getType() == ProjectileType.SingleTargetProjectile &&
         bloon.getBloonsType().specials() != (Specials.Camo))
         || projectile.getType() == ProjectileType.CamoTargetProjectile;
   }
 
-  private boolean shouldFreeze(Projectile projectile, Bloon bloon){
+  private boolean shouldFreeze(Projectile projectile, Bloon bloon) {
     return projectile.getType() == ProjectileType.FreezeTargetProjectile && !bloon.isFreezeActive();
   }
 
-  private void popBloon(Bloon bloon, Projectile projectile, BloonsCollection bloonsToRemove, BloonsCollection bloonsToAdd,
-      ProjectilesCollection projectilesToRemove, boolean roadItemCheck){
+  private void popBloon(Bloon bloon, Projectile projectile, BloonsCollection bloonsToRemove,
+      BloonsCollection bloonsToAdd,
+      ProjectilesCollection projectilesToRemove, boolean roadItemCheck) {
     try {
       Bloon[] spawnedBloons = bloon.shootBloon();
-      for(Bloon spawn : spawnedBloons) {
+      for (Bloon spawn : spawnedBloons) {
         bloonsToAdd.add(spawn);
       }
       bloon.setDead();
       bloonsToRemove.add(bloon);
-      if(!roadItemCheck){
+      if (!roadItemCheck) {
         projectilesToRemove.add(projectile);
       }
     } catch (ConfigurationException e) {
-      new AlertHandler(ERROR_RESOURCES.getString("SpecialBloonError"),ERROR_RESOURCES.getString(e.getMessage()));
+      new AlertHandler(ERROR_RESOURCES.getString("SpecialBloonError"),
+          ERROR_RESOURCES.getString(e.getMessage()));
     }
   }
 
-  private void spawnBloons(BloonsCollection bloonsToAdd){
+  private void spawnBloons(BloonsCollection bloonsToAdd) {
     GamePieceIterator<Bloon> iterator = bloonsToAdd.createIterator();
-    while(iterator.hasNext()){
+    while (iterator.hasNext()) {
       Bloon toAdd = iterator.next();
       myBloons.add(toAdd);
     }
     addBloonstoGame();
   }
 
-  private void removeShotBloon(BloonsCollection bloonsToRemove){
+  private void removeShotBloon(BloonsCollection bloonsToRemove) {
     GamePieceIterator<Bloon> iterator = bloonsToRemove.createIterator();
-    while(iterator.hasNext()){
+    while (iterator.hasNext()) {
       Bloon toRemove = iterator.next();
       myLevelLayout.getChildren().remove(myBloonsInGame.get(toRemove));
       myBloonsInGame.remove(toRemove);
@@ -294,9 +300,9 @@ public class AnimationHandler {
     }
   }
 
-  private void removeExpiredRoadItems(RoadItemsCollection toRemove){
+  private void removeExpiredRoadItems(RoadItemsCollection toRemove) {
     GamePieceIterator<RoadItem> iterator = toRemove.createIterator();
-    while(iterator.hasNext()){
+    while (iterator.hasNext()) {
       RoadItem removed = iterator.next();
       myLevelLayout.getChildren().remove(myRoadItemsInGame.get(removed));
       myRoadItemsInGame.remove(removed);
@@ -304,9 +310,9 @@ public class AnimationHandler {
     }
   }
 
-  private void removeShotProjectiles(ProjectilesCollection projectilesToRemove){
+  private void removeShotProjectiles(ProjectilesCollection projectilesToRemove) {
     GamePieceIterator<Projectile> projectileIterator = projectilesToRemove.createIterator();
-    while(projectileIterator.hasNext()){
+    while (projectileIterator.hasNext()) {
       Projectile toRemove = projectileIterator.next();
       myLevelLayout.getChildren().remove(myProjectilesInGame.get(toRemove));
       myProjectilesInGame.remove(toRemove);
@@ -314,15 +320,15 @@ public class AnimationHandler {
     }
   }
 
-  private boolean checkBloonCollision(Bloon bloon, GamePieceNode weapon){
+  private boolean checkBloonCollision(Bloon bloon, GamePieceNode weapon) {
     GamePieceNode bloonInGame = myBloonsInGame.get(bloon);
     return weapon.getBoundsInParent().intersects(bloonInGame.getBoundsInParent());
   }
 
-  private boolean checkSpreadProjectileCollision(Bloon bloon, GamePieceNode weapon, double radius){
+  private boolean checkSpreadProjectileCollision(Bloon bloon, GamePieceNode weapon, double radius) {
     GamePieceNode bloonInGame = myBloonsInGame.get(bloon);
-    BoundingBox bounds = new BoundingBox(weapon.getBoundsInParent().getMinX()-radius,
-        weapon.getBoundsInParent().getMinY()-radius,
+    BoundingBox bounds = new BoundingBox(weapon.getBoundsInParent().getMinX() - radius,
+        weapon.getBoundsInParent().getMinY() - radius,
         weapon.getBoundsInParent().getWidth() + 2 * radius,
         weapon.getBoundsInParent().getHeight() + 2 * radius);
     return bounds.intersects(bloonInGame.getBoundsInParent());
@@ -338,13 +344,13 @@ public class AnimationHandler {
     myRoadItemsInGame.put(item, roadInGame);
   }
 
-  public TowerNode getNodeFromTower(Tower tower){
+  public TowerNode getNodeFromTower(Tower tower) {
     return myTowersInGame.get(tower);
   }
 
-  public Tower getTowerFromNode(TowerNode towerInGame){
+  public Tower getTowerFromNode(TowerNode towerInGame) {
     Tower tower = null;
-    for(Entry<Tower, TowerNode> entry: myTowersInGame.entrySet()) {
+    for (Entry<Tower, TowerNode> entry : myTowersInGame.entrySet()) {
       if (entry.getValue().equals(towerInGame)) {
         tower = entry.getKey();
       }
@@ -357,19 +363,19 @@ public class AnimationHandler {
     myTowersInGame.remove(tower, towerInGame);
   }
 
-  public Map<Bloon, BloonNode> getMyBloonsInGame(){
+  public Map<Bloon, BloonNode> getMyBloonsInGame() {
     return myBloonsInGame;
   }
 
-  public Map<Projectile, ProjectileNode> getMyProjectilesInGame(){
+  public Map<Projectile, ProjectileNode> getMyProjectilesInGame() {
     return myProjectilesInGame;
   }
 
-  public Map<Tower, TowerNode> getMyTowersInGame(){
+  public Map<Tower, TowerNode> getMyTowersInGame() {
     return myTowersInGame;
   }
 
-  public Map<RoadItem, RoadItemNode> getMyRoadItemsInGame(){
+  public Map<RoadItem, RoadItemNode> getMyRoadItemsInGame() {
     return myRoadItemsInGame;
   }
 
@@ -402,11 +408,11 @@ public class AnimationHandler {
     this.myShootingTargets = shootingTargets;
   }
 
-  public RoadItemsCollection getRoadItems(){
+  public RoadItemsCollection getRoadItems() {
     return myRoadItems;
   }
 
-  public void setRoadItems(RoadItemsCollection roadItems){
+  public void setRoadItems(RoadItemsCollection roadItems) {
     myRoadItems = roadItems;
   }
 }

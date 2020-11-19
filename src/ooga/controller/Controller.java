@@ -15,10 +15,10 @@ import javafx.util.Duration;
 import ooga.AlertHandler;
 import ooga.backend.API.GameEngineAPI;
 import ooga.backend.ConfigurationException;
-import ooga.backend.gameengine.GameEngine;
-import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bank.Bank;
+import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.types.BloonsTypeChain;
+import ooga.backend.gameengine.GameEngine;
 import ooga.backend.layout.Layout;
 import ooga.backend.readers.BloonReader;
 import ooga.backend.readers.LayoutReader;
@@ -28,8 +28,8 @@ import ooga.backend.readers.RoundBonusReader;
 import ooga.backend.readers.TowerValueReader;
 import ooga.backend.roaditems.RoadItemType;
 import ooga.backend.towers.TowerType;
-import ooga.visualization.animationhandlers.AnimationHandler;
 import ooga.visualization.BloonsApplication;
+import ooga.visualization.animationhandlers.AnimationHandler;
 
 public class Controller extends Application {
 
@@ -92,7 +92,7 @@ public class Controller extends Application {
             gameEngine.getProjectiles(), gameEngine.getRoadItems(), bank, myAnimation,
             gameMenuController,
             weaponBankController);
-    
+
     myAnimation.setCycleCount(Timeline.INDEFINITE);
 
     myAnimation.getKeyFrames().remove(oldKeyFrame);
@@ -118,11 +118,11 @@ public class Controller extends Application {
             "MultiFrozenShooter", "CamoProjectileShooter", "PopBloonsItem", "SlowBloonsItem",
             "ExplodeBloonsItem")));
     if (!towerPicsValidator.containsNeededKeys()) {
-       new AlertHandler(errorResource.getString("InvalidPropertyFile"),
+      new AlertHandler(errorResource.getString("InvalidPropertyFile"),
           errorResource.getString("RequiredKeysMissingPics"));
     }
     if (!towerNameValidator.containsNeededKeys()) {
-       new AlertHandler(errorResource.getString("InvalidPropertyFile"),
+      new AlertHandler(errorResource.getString("InvalidPropertyFile"),
           errorResource.getString("RequiredKeysMissingTowerNames"));
     }
   }
@@ -135,8 +135,9 @@ public class Controller extends Application {
     } catch (IOException e) {
       new AlertHandler(errorResource.getString("InvalidPropertyFile"),
           errorResource.getString("InvalidPropertyFormat"));
-    } catch(ConfigurationException e) {
-      new AlertHandler(errorResource.getString("TowerError"), errorResource.getString(e.getMessage()));
+    } catch (ConfigurationException e) {
+      new AlertHandler(errorResource.getString("TowerError"),
+          errorResource.getString(e.getMessage()));
     }
     RoundBonusReader roundBonusReader = new RoundBonusReader();
     List<List<String>> roundBonuses;
@@ -153,13 +154,16 @@ public class Controller extends Application {
     int rounds = Integer.parseInt(roundBonuses.get(0).get(0));
     if (roundBonuses.size() == 1) {
       if (roundBonuses.get(0).size() == 1) {
-        bank = new Bank(towerBuyMap, towerSellMap, roadItemBuyMap, rounds, bloonsApplication.getMyGameMode());
+        bank = new Bank(towerBuyMap, towerSellMap, roadItemBuyMap, rounds,
+            bloonsApplication.getMyGameMode());
       } else {
         int starting_bonus = Integer.parseInt(roundBonuses.get(0).get(1));
-        bank = new Bank(towerBuyMap, towerSellMap, roadItemBuyMap, rounds, starting_bonus, bloonsApplication.getMyGameMode());
+        bank = new Bank(towerBuyMap, towerSellMap, roadItemBuyMap, rounds, starting_bonus,
+            bloonsApplication.getMyGameMode());
       }
     } else {
-      bank = new Bank(towerBuyMap, towerSellMap, roadItemBuyMap, roundBonuses.get(1), bloonsApplication.getMyGameMode());
+      bank = new Bank(towerBuyMap, towerSellMap, roadItemBuyMap, roundBonuses.get(1),
+          bloonsApplication.getMyGameMode());
     }
   }
 
@@ -171,7 +175,8 @@ public class Controller extends Application {
     try {
       bloonsTypeChain = new BloonsTypeChain(BLOONS_TYPE_PATH);
     } catch (ConfigurationException e) {
-      new AlertHandler(errorResource.getString("BloonsTypeError"), errorResource.getString(e.getMessage()));
+      new AlertHandler(errorResource.getString("BloonsTypeError"),
+          errorResource.getString(e.getMessage()));
     }
   }
 
@@ -180,7 +185,8 @@ public class Controller extends Application {
       allBloonWaves = bloonReader.generateBloonsCollectionMap(bloonsTypeChain,
           BLOON_WAVES_PATH + bloonsApplication.getCurrentLevel(), layout);
     } catch (ConfigurationException e) {
-      new AlertHandler(errorResource.getString("SpecialBloonError"), errorResource.getString(e.getMessage()));
+      new AlertHandler(errorResource.getString("SpecialBloonError"),
+          errorResource.getString(e.getMessage()));
     }
   }
 
@@ -188,17 +194,19 @@ public class Controller extends Application {
     try {
       gameEngine = new GameEngine(bloonsApplication.getMyGameMode(), layout, allBloonWaves);
     } catch (ConfigurationException e) {
-      new AlertHandler(errorResource.getString("SpecialBloonError"), errorResource.getString(e.getMessage()));
+      new AlertHandler(errorResource.getString("SpecialBloonError"),
+          errorResource.getString(e.getMessage()));
     }
   }
 
   private void step() {
     animationHandler = bloonsApplication.getMyAnimationHandler();
     updateGameEngineInfo();
-    try{
+    try {
       gameEngine.update();
-    } catch(ConfigurationException e){
-      new AlertHandler((ERROR_RESOURCES.getString("DartError")), ERROR_RESOURCES.getString(e.getMessage()));
+    } catch (ConfigurationException e) {
+      new AlertHandler((ERROR_RESOURCES.getString("DartError")),
+          ERROR_RESOURCES.getString(e.getMessage()));
     }
     updateAnimationHandlerInfo();
     animationHandler.animate();
@@ -229,18 +237,17 @@ public class Controller extends Application {
 
   private void checkGameStatus() {
     if (gameEngine.isGameEnd()) {
-      if(gameEngine.getLives() <= 0){
+      if (gameEngine.getLives() <= 0) {
         bloonsApplication.loseGame();
-      }
-      else{
+      } else {
         bloonsApplication.winGame();
       }
       myAnimation.stop();
     } else if (gameEngine.isRoundEnd()) {
-        bloonsApplication.endRound();
-        bank.advanceOneLevel();
-        myAnimation.stop();
-      }
+      bloonsApplication.endRound();
+      bank.advanceOneLevel();
+      myAnimation.stop();
+    }
   }
 
   public BloonsApplication getMyBloonsApplication() {

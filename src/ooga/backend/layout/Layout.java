@@ -7,12 +7,12 @@ import ooga.visualization.BloonsApplication;
 
 public class Layout implements LayoutAPI {
 
-  private int width;
-  private int height;
-  private List<List<LayoutBlock>> layoutConfig;
-  private double blockSize;
+  private final int width;
+  private final int height;
+  private final List<List<LayoutBlock>> layoutConfig;
+  private final double blockSize;
 
-  public Layout(List<List<String>> layoutConfig){
+  public Layout(List<List<String>> layoutConfig) {
     this.width = layoutConfig.get(0).size();
     this.height = layoutConfig.size();
     this.layoutConfig = createLayoutConfig(layoutConfig);
@@ -38,7 +38,7 @@ public class Layout implements LayoutAPI {
   }
 
   @Override
-  public LayoutBlock getBlock(int row, int col){
+  public LayoutBlock getBlock(int row, int col) {
     return layoutConfig.get(row).get(col);
   }
 
@@ -54,13 +54,14 @@ public class Layout implements LayoutAPI {
 
   /**
    * Gets grid coordinates of start block
+   *
    * @return in row, col format, or y,x format
    */
-  public int[] getStartCoordinates(){
-    for (int i = 0; i < height; i++){
-      for (int j = 0; j < width; j++){
-        if (layoutConfig.get(i).get(j).getBlockType().equals("*")){
-          return new int[]{i,j};
+  public int[] getStartCoordinates() {
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        if (layoutConfig.get(i).get(j).getBlockType().equals("*")) {
+          return new int[]{i, j};
         }
       }
     }
@@ -75,7 +76,7 @@ public class Layout implements LayoutAPI {
     return height;
   }
 
-  public boolean isEndOfPath(int row, int col){
+  public boolean isEndOfPath(int row, int col) {
     return getBlock(row, col).isEndBlock();
   }
 
@@ -83,10 +84,10 @@ public class Layout implements LayoutAPI {
     return blockSize;
   }
 
-  public LayoutBlock getStartBlock(){
-    for (int i = 0; i < height; i++){
-      for (int j = 0; j < width; j++){
-        if (layoutConfig.get(i).get(j).getBlockType().equals("*")){
+  public LayoutBlock getStartBlock() {
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        if (layoutConfig.get(i).get(j).getBlockType().equals("*")) {
           return layoutConfig.get(i).get(j);
         }
       }

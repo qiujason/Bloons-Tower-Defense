@@ -12,12 +12,12 @@ public class SingleRoadItemFactory implements RoadItemFactory {
   @Override
   public RoadItem createRoadItem(RoadItemType type, double xPosition, double yPosition)
       throws ConfigurationException {
-    try{
+    try {
       Class<?> towerClass = Class.forName(ROADITEM_PATH + type.toString());
       Constructor<?> towerConstructor = towerClass
           .getDeclaredConstructor(double.class, double.class);
       return (RoadItem) towerConstructor.newInstance(xPosition, yPosition);
-    } catch(Exception e){
+    } catch (Exception e) {
       throw new ConfigurationException("NoRoadItemClass");
     }
   }

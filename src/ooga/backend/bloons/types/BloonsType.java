@@ -1,8 +1,8 @@
 package ooga.backend.bloons.types;
 
 
-
-public record BloonsType(BloonsTypeChain chain, String name, int RBE, double relativeSpeed, Specials specials) {
+public record BloonsType(BloonsTypeChain chain, String name, int RBE, double relativeSpeed,
+                         Specials specials) {
 
   @Override
   public boolean equals(Object other) {

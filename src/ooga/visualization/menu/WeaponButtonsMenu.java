@@ -40,7 +40,7 @@ public class WeaponButtonsMenu extends FlowPane {
   private List<String> allTypeList;
 
 
-  public WeaponButtonsMenu(WeaponNodeInterface weaponNodeHandler, String language){
+  public WeaponButtonsMenu(WeaponNodeInterface weaponNodeHandler, String language) {
     this.weaponNodeHandler = weaponNodeHandler;
     currentLanguage = language;
     combineTypeLists();
@@ -50,15 +50,15 @@ public class WeaponButtonsMenu extends FlowPane {
     this.setOrientation(Orientation.HORIZONTAL);
   }
 
-  private void makeAllWeaponButtons(){
-    for(String type : allTypeList){
+  private void makeAllWeaponButtons() {
+    for (String type : allTypeList) {
       WeaponButton weaponButton = makeWeaponButton(type);
       showButtonDescription(weaponButton);
       this.getChildren().add(weaponButton);
     }
   }
 
-  private WeaponButton makeWeaponButton(String weaponType){
+  private WeaponButton makeWeaponButton(String weaponType) {
     String weaponName = typeToName.getString(weaponType);
     String imageDirectory = nameToPicture.getString(weaponName + BUTTON_TAG);
     WeaponButton button = addImageToButton(imageDirectory, weaponType);
@@ -75,18 +75,19 @@ public class WeaponButtonsMenu extends FlowPane {
     return new WeaponButton("", imageView, weaponType, weaponNodeHandler, currentLanguage);
   }
 
-  private Image makeImage(String directory){
+  private Image makeImage(String directory) {
     Image towerImage = null;
     try {
       towerImage = new Image(String.valueOf(getClass().getResource(directory).toURI()));
     } catch (URISyntaxException e) {
-      new AlertHandler(alertMessages.getString(NO_IMAGE_HEADER), alertMessages.getString(NO_BUTTON_IMAGE));
+      new AlertHandler(alertMessages.getString(NO_IMAGE_HEADER),
+          alertMessages.getString(NO_BUTTON_IMAGE));
     }
     assert towerImage != null;
     return towerImage;
   }
 
-  private void showButtonDescription(WeaponButton button){
+  private void showButtonDescription(WeaponButton button) {
     button.setOnMouseEntered(e -> {
       this.getChildren().add(button.getWeaponDescription());
       button.setOnMouseExited(
@@ -95,35 +96,34 @@ public class WeaponButtonsMenu extends FlowPane {
   }
 
 
-
-  private void setButtonHandler(WeaponButton button, String weaponType){
-    if(isTowerType(weaponType)){
+  private void setButtonHandler(WeaponButton button, String weaponType) {
+    if (isTowerType(weaponType)) {
       button.setOnAction(event -> weaponNodeHandler.makeWeapon(TowerType.fromString(weaponType)));
-    }
-    else if(isRoadItemType(weaponType)){
-      button.setOnAction(event -> weaponNodeHandler.makeRoadWeapon(RoadItemType.fromString(weaponType)));
+    } else if (isRoadItemType(weaponType)) {
+      button.setOnAction(
+          event -> weaponNodeHandler.makeRoadWeapon(RoadItemType.fromString(weaponType)));
     }
   }
 
-  private boolean isTowerType(String weaponType){
+  private boolean isTowerType(String weaponType) {
     return TowerType.isEnumName(weaponType);
   }
 
-  private boolean isRoadItemType(String weaponType){
+  private boolean isRoadItemType(String weaponType) {
     return RoadItemType.isEnumName(weaponType);
   }
 
-  private void combineTypeLists(){
+  private void combineTypeLists() {
     allTypeList = new ArrayList<>();
-    for(TowerType towerType : weaponTypeList){
+    for (TowerType towerType : weaponTypeList) {
       allTypeList.add(towerType.name());
     }
-    for(RoadItemType itemType : roadItemTypeList){
+    for (RoadItemType itemType : roadItemTypeList) {
       allTypeList.add(itemType.name());
     }
   }
 
-  private void initializeAlertProperties(String language){
+  private void initializeAlertProperties(String language) {
     alertMessages = ResourceBundle.getBundle(ALERT_PACKAGE + language + APP_MESSAGE + language);
   }
 }

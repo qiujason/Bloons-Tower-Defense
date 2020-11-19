@@ -3,7 +3,7 @@ package ooga.backend.towers.singleshottowers;
 import ooga.backend.projectile.ProjectileType;
 import ooga.backend.towers.TowerType;
 
-public class CamoProjectileShooter extends SingleShotTower{
+public class CamoProjectileShooter extends SingleShotTower {
 
   // ninja monkeys
 

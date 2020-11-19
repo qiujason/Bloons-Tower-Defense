@@ -22,20 +22,21 @@ public abstract class SpreadShotTower extends Tower {
     return numberOfShots;
   }
 
-  public int getDegreeIncrementPerShot(){
+  public int getDegreeIncrementPerShot() {
     return degreeIncrementPerShot;
   }
 
   @Override
   public Bloon shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection)
       throws ConfigurationException {
-    if(checkBalloonInRange(bloonsCollection)){
-      for(int i = 0; i < getNumberOfShots(); i++){
+    if (checkBalloonInRange(bloonsCollection)) {
+      for (int i = 0; i < getNumberOfShots(); i++) {
         ProjectileFactory projectileFactory = new SingleProjectileFactory();
-        double projectileXVelocity = Math.cos(i*getDegreeIncrementPerShot());
-        double projectileYVelocity = Math.sin(i*getDegreeIncrementPerShot());
+        double projectileXVelocity = Math.cos(i * getDegreeIncrementPerShot());
+        double projectileYVelocity = Math.sin(i * getDegreeIncrementPerShot());
         projectilesCollection.add(projectileFactory
-            .createDart(getProjectileType(), getXPosition(), getYPosition(), projectileXVelocity, projectileYVelocity, 0));
+            .createDart(getProjectileType(), getXPosition(), getYPosition(), projectileXVelocity,
+                projectileYVelocity, 0));
         updateIfRestPeriod(true);
       }
     }

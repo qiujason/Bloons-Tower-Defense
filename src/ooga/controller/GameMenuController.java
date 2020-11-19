@@ -24,7 +24,8 @@ public class GameMenuController implements GameMenuInterface {
 
   private double currentRate;
 
-  public GameMenuController(Timeline timeline, GameEngineAPI gameEngine, BloonsApplication bloonsApp){
+  public GameMenuController(Timeline timeline, GameEngineAPI gameEngine,
+      BloonsApplication bloonsApp) {
     myTimeline = timeline;
     myGameEngine = gameEngine;
     currentRate = DEFAULT_RATE;
@@ -57,7 +58,7 @@ public class GameMenuController implements GameMenuInterface {
 
   @Override
   public void speedUp() {
-    if(currentRate < MAX_RATE){
+    if (currentRate < MAX_RATE) {
       currentRate += DELTA_RATE;
     }
     myTimeline.setRate(currentRate);
@@ -65,7 +66,7 @@ public class GameMenuController implements GameMenuInterface {
 
   @Override
   public void slowDown() {
-    if(currentRate > MIN_RATE){
+    if (currentRate > MIN_RATE) {
       currentRate -= DELTA_RATE;
     }
     myTimeline.setRate(currentRate);

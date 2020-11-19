@@ -18,15 +18,15 @@ public class WeaponBankController implements WeaponBankInterface {
   private static final String RATE_UPGRADE = "ForUpgradeRate";
   private static final ResourceBundle inGameMessage = ResourceBundle.getBundle("InGameMessages");
 
-  public WeaponBankController(Bank bank){
+  public WeaponBankController(Bank bank) {
     this.bank = bank;
   }
 
   @Override
   public boolean buyTower(TowerType tower) {
-    if(bank.buyTower(tower)) {
+    if (bank.buyTower(tower)) {
       return true;
-    } else{
+    } else {
       new AlertHandler(inGameMessage.getString(NO_MONEY),
           inGameMessage.getString(TOWER));
       return false;
@@ -35,9 +35,9 @@ public class WeaponBankController implements WeaponBankInterface {
 
   @Override
   public boolean buyRoadItem(RoadItemType itemType) {
-    if(bank.buyRoadItem(itemType)){
+    if (bank.buyRoadItem(itemType)) {
       return bank.buyRoadItem(itemType);
-    }else{
+    } else {
       new AlertHandler(inGameMessage.getString(NO_MONEY),
           inGameMessage.getString(ROAD_ITEM));
       return false;
@@ -51,30 +51,29 @@ public class WeaponBankController implements WeaponBankInterface {
   }
 
   @Override
-  public void upgradeRange(Tower tower){
-    if(!tower.canPerformUpgrade()){
+  public void upgradeRange(Tower tower) {
+    if (!tower.canPerformUpgrade()) {
       return;
     }
     if (bank.buyUpgrade(UpgradeChoice.RadiusUpgrade, tower)) {
       tower.performUpgrade(UpgradeChoice.RadiusUpgrade);
-    }
-    else {
+    } else {
       new AlertHandler(inGameMessage.getString(NO_MONEY),
           inGameMessage.getString(RANGE_UPGRADE));
     }
   }
 
   @Override
-  public void upgradeRate(Tower tower){
-    if(!tower.canPerformUpgrade()){
+  public void upgradeRate(Tower tower) {
+    if (!tower.canPerformUpgrade()) {
       return;
     }
     if (bank.buyUpgrade(UpgradeChoice.ShootingRestRateUpgrade, tower)) {
       tower.performUpgrade(UpgradeChoice.ShootingRestRateUpgrade);
-    }
-    else {
+    } else {
       new AlertHandler(inGameMessage.getString(NO_MONEY),
-          inGameMessage.getString(RATE_UPGRADE));    }
+          inGameMessage.getString(RATE_UPGRADE));
+    }
   }
 
 }

@@ -5,12 +5,16 @@ import ooga.backend.bloons.Bloon;
 
 public interface BloonsAPI {
 
-  /** Update the x velocity
+  /**
+   * Update the x velocity
+   *
    * @param newXVelocity to update the x velocity
    */
   void setXVelocity(double newXVelocity);
 
-  /** Update the y velocity
+  /**
+   * Update the y velocity
+   *
    * @param newYVelocity to update the y velocity
    */
   void setYVelocity(double newYVelocity);

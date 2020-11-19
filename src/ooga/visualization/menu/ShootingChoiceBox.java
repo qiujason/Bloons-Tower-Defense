@@ -7,7 +7,8 @@ import javafx.scene.control.ComboBox;
 import ooga.backend.towers.ShootingChoice;
 
 public class ShootingChoiceBox extends ComboBox {
-  public ShootingChoiceBox(String name, double buttonWidth){
+
+  public ShootingChoiceBox(String name, double buttonWidth) {
     List<ShootingChoice> shootingChoices = Arrays.asList(ShootingChoice.values());
     this.setPromptText(name);
     this.setItems(FXCollections.observableList(shootingChoices));

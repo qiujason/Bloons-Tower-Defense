@@ -27,16 +27,16 @@ public abstract class SingleShotTower extends Tower {
     setProjectileType(ProjectileType.SingleTargetProjectile);
   }
 
-  public ShootingChoice getShootingChoice(){
+  public ShootingChoice getShootingChoice() {
     return shootingChoice;
   }
 
-  public void updateShootingChoice(ShootingChoice newChoice){
+  public void updateShootingChoice(ShootingChoice newChoice) {
     shootingChoice = newChoice;
   }
 
   // should only be called IF known that there is a bloon in range OR ELSE will return null
-  public Bloon getTarget(BloonsCollection bloonsCollection){
+  public Bloon getTarget(BloonsCollection bloonsCollection) {
     return switch (getShootingChoice()) {
       case StrongestBloon -> findStrongestBloon(bloonsCollection);
       case ClosestBloon -> findClosestBloon(bloonsCollection);
@@ -46,17 +46,17 @@ public abstract class SingleShotTower extends Tower {
   }
 
   // should only be called IF known that there is a bloon in range OR ELSE will return null
-  public Bloon findClosestBloon(BloonsCollection bloonsCollection){
+  public Bloon findClosestBloon(BloonsCollection bloonsCollection) {
     GamePieceIterator<Bloon> iterator = bloonsCollection.createIterator();
     Bloon closestBloon = null;
     double minDistance = Integer.MAX_VALUE;
-    while(iterator.hasNext()){
+    while (iterator.hasNext()) {
       Bloon bloon = iterator.next();
       double distance = getDistance(bloon);
-      if(ifCamoBloon(bloon) || distance > getRadius()){
+      if (ifCamoBloon(bloon) || distance > getRadius()) {
         continue;
       }
-      if(minDistance > distance){
+      if (minDistance > distance) {
         minDistance = distance;
         closestBloon = bloon;
       }
@@ -66,17 +66,17 @@ public abstract class SingleShotTower extends Tower {
   }
 
   // should only be called IF known that there is a bloon in range OR ELSE will return null
-  public Bloon findStrongestBloon(BloonsCollection bloonsCollection){
+  public Bloon findStrongestBloon(BloonsCollection bloonsCollection) {
     GamePieceIterator<Bloon> iterator = bloonsCollection.createIterator();
     Bloon strongestBloon = null;
     double maxStrength = Integer.MIN_VALUE;
-    while(iterator.hasNext()){
+    while (iterator.hasNext()) {
       Bloon bloon = iterator.next();
-      if(ifCamoBloon(bloon) || getDistance(bloon) > getRadius()){
+      if (ifCamoBloon(bloon) || getDistance(bloon) > getRadius()) {
         continue;
       }
       double strength = bloon.getBloonsType().RBE();
-      if(maxStrength < strength){
+      if (maxStrength < strength) {
         maxStrength = strength;
         strongestBloon = bloon;
       }
@@ -85,15 +85,15 @@ public abstract class SingleShotTower extends Tower {
   }
 
   // should only be called IF known that there is a bloon in range OR ELSE will return null
-  public Bloon findFirstBloon(BloonsCollection bloonsCollection){
+  public Bloon findFirstBloon(BloonsCollection bloonsCollection) {
     GamePieceIterator<Bloon> iterator = bloonsCollection.createIterator();
     Bloon firstBloon = null;
-    while(iterator.hasNext()){
+    while (iterator.hasNext()) {
       Bloon bloon = iterator.next();
-      if(ifCamoBloon(bloon)){
+      if (ifCamoBloon(bloon)) {
         continue;
       }
-      if(!bloon.isDead() && getDistance(bloon) <= getRadius()){
+      if (!bloon.isDead() && getDistance(bloon) <= getRadius()) {
         firstBloon = bloon;
         break;
       }
@@ -102,40 +102,42 @@ public abstract class SingleShotTower extends Tower {
   }
 
   // should only be called IF known that there is a bloon in range OR ELSE will return null
-  public Bloon findLastBloon(BloonsCollection bloonsCollection){
+  public Bloon findLastBloon(BloonsCollection bloonsCollection) {
     GamePieceIterator<Bloon> iterator = bloonsCollection.createIterator();
     Bloon lastBloon = null;
-    while(iterator.hasNext()){
+    while (iterator.hasNext()) {
       Bloon bloon = iterator.next();
-      if(ifCamoBloon(bloon)){
+      if (ifCamoBloon(bloon)) {
         continue;
       }
-      if(getDistance(bloon) <= getRadius()){
+      if (getDistance(bloon) <= getRadius()) {
         lastBloon = bloon;
       }
     }
     return lastBloon;
   }
 
-  public double findShootXVelocity(Bloon target){
+  public double findShootXVelocity(Bloon target) {
     double distance = getDistance(target);
-    return (target.getXPosition()-this.getXPosition())/distance*getShootingSpeed()/velocityAdjustment;
+    return (target.getXPosition() - this.getXPosition()) / distance * getShootingSpeed()
+        / velocityAdjustment;
   }
 
-  public double findShootYVelocity(Bloon target){
+  public double findShootYVelocity(Bloon target) {
     double distance = getDistance(target);
-    return (target.getYPosition()-this.getYPosition())/distance*getShootingSpeed()/velocityAdjustment;
+    return (target.getYPosition() - this.getYPosition()) / distance * getShootingSpeed()
+        / velocityAdjustment;
   }
 
   @Override
   public Bloon shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection)
       throws ConfigurationException {
-    if(checkBalloonInRange(bloonsCollection)){
+    if (checkBalloonInRange(bloonsCollection)) {
       Bloon target = getTarget(bloonsCollection);
       ProjectileFactory projectileFactory = new SingleProjectileFactory();
       double projectileXVelocity = findShootXVelocity(target);
       double projectileYVelocity = findShootYVelocity(target);
-      Projectile p =projectileFactory.createDart(getProjectileType(), this.getXPosition(),
+      Projectile p = projectileFactory.createDart(getProjectileType(), this.getXPosition(),
           this.getYPosition(), projectileXVelocity, projectileYVelocity, findAngle(this, target));
       projectilesCollection.add(p);
       updateIfRestPeriod(true);
@@ -145,7 +147,7 @@ public abstract class SingleShotTower extends Tower {
     return null;
   }
 
-  public double findAngle(Tower tower, Bloon bloon){
+  public double findAngle(Tower tower, Bloon bloon) {
     double angle = Math.toDegrees(
         Math.asin((bloon.getXPosition() - tower.getXPosition()) / tower.getDistance(bloon)));
     if (bloon.getYPosition() < tower.getYPosition()) {

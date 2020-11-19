@@ -12,7 +12,8 @@ import ooga.visualization.animationhandlers.AnimationHandler;
 public class Bloon extends GamePiece implements BloonsAPI {
 
   public static final String RESOURCE_BUNDLE_PATH = "bloon_resources/GameMechanics";
-  private static final ResourceBundle GAME_MECHANICS = ResourceBundle.getBundle(RESOURCE_BUNDLE_PATH);
+  private static final ResourceBundle GAME_MECHANICS = ResourceBundle
+      .getBundle(RESOURCE_BUNDLE_PATH);
 
   private BloonsType bloonsType;
   private double xVelocity;
@@ -28,7 +29,8 @@ public class Bloon extends GamePiece implements BloonsAPI {
   private boolean slowDownActive;
   private double speedEffectFactor;
 
-  public Bloon(BloonsType bloonsType, double xPosition, double yPosition, double xVelocity, double yVelocity) {
+  public Bloon(BloonsType bloonsType, double xPosition, double yPosition, double xVelocity,
+      double yVelocity) {
     super(xPosition, yPosition);
     this.bloonsType = bloonsType;
     this.xVelocity = xVelocity;
@@ -36,10 +38,12 @@ public class Bloon extends GamePiece implements BloonsAPI {
     this.distanceTraveled = 0;
     this.relativeSpeed = bloonsType.relativeSpeed();
 
-    this.freezeTimePeriod = Integer.parseInt(GAME_MECHANICS.getString("FreezeTimePeriod")) * (int) AnimationHandler.FRAMES_PER_SECOND;
+    this.freezeTimePeriod = Integer.parseInt(GAME_MECHANICS.getString("FreezeTimePeriod"))
+        * (int) AnimationHandler.FRAMES_PER_SECOND;
     this.freezeTimer = 0;
     this.freezeActive = false;
-    this.slowDownTimePeriod = Integer.parseInt(GAME_MECHANICS.getString("SlowDownTimePeriod")) * (int)AnimationHandler.FRAMES_PER_SECOND;
+    this.slowDownTimePeriod = Integer.parseInt(GAME_MECHANICS.getString("SlowDownTimePeriod"))
+        * (int) AnimationHandler.FRAMES_PER_SECOND;
     this.slowDownTimer = 0;
     this.slowDownActive = false;
     this.speedEffectFactor = 1;
@@ -93,7 +97,8 @@ public class Bloon extends GamePiece implements BloonsAPI {
 
   public void slowDown() {
     slowDownActive = true;
-    speedEffectFactor = Math.min(speedEffectFactor, Double.parseDouble(GAME_MECHANICS.getString("SlowDownSpeedFactor")));
+    speedEffectFactor = Math.min(speedEffectFactor,
+        Double.parseDouble(GAME_MECHANICS.getString("SlowDownSpeedFactor")));
   }
 
   public void freeze() {
@@ -103,7 +108,7 @@ public class Bloon extends GamePiece implements BloonsAPI {
   }
 
   @Override
-  public String toString(){
+  public String toString() {
     return bloonsType.name();
   }
 
@@ -115,15 +120,15 @@ public class Bloon extends GamePiece implements BloonsAPI {
     this.distanceTraveled = distanceTraveled;
   }
 
-  public BloonsType getBloonsType(){
+  public BloonsType getBloonsType() {
     return bloonsType;
   }
 
-  public boolean isFreezeActive(){
+  public boolean isFreezeActive() {
     return freezeActive;
   }
 
-  public boolean isSlowDownActive(){
+  public boolean isSlowDownActive() {
     return slowDownActive;
   }
 
@@ -132,7 +137,8 @@ public class Bloon extends GamePiece implements BloonsAPI {
   }
 
   private void updateDistanceTraveled() {
-    distanceTraveled += (Math.abs(xVelocity) + Math.abs(yVelocity)) * relativeSpeed * speedEffectFactor;
+    distanceTraveled +=
+        (Math.abs(xVelocity) + Math.abs(yVelocity)) * relativeSpeed * speedEffectFactor;
   }
 
   private void updatePosition() {
@@ -166,7 +172,6 @@ public class Bloon extends GamePiece implements BloonsAPI {
       }
     }
   }
-
 
 
 }
