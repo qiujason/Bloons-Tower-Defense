@@ -76,5 +76,19 @@ public class BloonsCollection implements GamePieceCollection<Bloon> {
     return bloons.isEmpty();
   }
 
+  public BloonsCollection copyOf(BloonsCollection collection){
+    BloonsCollection copy = new BloonsCollection();
+    GamePieceIterator<Bloon> iterator = collection.createIterator();
+    while(iterator.hasNext()){
+      Bloon copyBloon = createCopy(iterator.next());
+      copy.add(copyBloon);
+    }
+    return copy;
+  }
+
+  private Bloon createCopy(Bloon bloon){
+    return new Bloon(bloon.getBloonsType(), bloon.getXPosition(), bloon.getYPosition(), bloon.getXVelocity(), bloon.getYVelocity());
+  }
+
 
 }

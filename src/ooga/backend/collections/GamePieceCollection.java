@@ -21,4 +21,5 @@ public interface GamePieceCollection<T extends GamePiece> {
   boolean isEmpty();
 
 
+
 }

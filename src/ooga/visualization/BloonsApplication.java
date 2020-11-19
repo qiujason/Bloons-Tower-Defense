@@ -22,6 +22,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ooga.AlertHandler;
 import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.gameengine.GameMode;
 import ooga.backend.layout.Layout;
 import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.roaditems.RoadItemsCollection;
@@ -311,9 +312,9 @@ public class BloonsApplication {
     ComboBox<Enum<?>> gameModes = new ComboBox<>();
     gameModes.setPromptText("Game Modes");
     gameModes.setOnAction(e -> myGameMode = gameModes.getValue());
-    Class<?> gameModesClass = null;
+    Class<?> gameModesClass;
     try {
-      gameModesClass = Class.forName("something");
+      gameModesClass = Class.forName("ooga.backend.gameengine.GameMode");
     } catch (ClassNotFoundException e) {
       new AlertHandler(myApplicationMessages.getString("NoGameModes"),
           myApplicationMessages.getString("NoGameModes"));
