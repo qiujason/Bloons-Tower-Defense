@@ -1,5 +1,6 @@
 package ooga.backend.towers.spreadshottowers;
 
+import ooga.backend.ConfigurationException;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.projectile.ProjectilesCollection;
@@ -26,7 +27,8 @@ public abstract class SpreadShotTower extends Tower {
   }
 
   @Override
-  public Bloon shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection) {
+  public Bloon shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection)
+      throws ConfigurationException {
     if(checkBalloonInRange(bloonsCollection)){
       for(int i = 0; i < getNumberOfShots(); i++){
         ProjectileFactory projectileFactory = new SingleProjectileFactory();

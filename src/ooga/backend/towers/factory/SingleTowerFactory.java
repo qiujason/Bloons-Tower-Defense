@@ -8,10 +8,12 @@ import ooga.backend.towers.TowerType;
 
 public class SingleTowerFactory implements TowerFactory {
 
-  private static String TOWER_PATH = "ooga.backend.towers.";
+  private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResource");
+  private final static String TOWER_PATH = "ooga.backend.towers.";
 
   @Override
-  public Tower createTower(TowerType type, double xPosition, double yPosition) {
+  public Tower createTower(TowerType type, double xPosition, double yPosition)
+      throws ConfigurationException {
     double radius = type.getRadius();
     double shootingSpeed = type.getShootingSpeed();
     double shootingRestRate = type.getShootingRestRate();
@@ -26,8 +28,7 @@ public class SingleTowerFactory implements TowerFactory {
       if(bundle.containsKey("ShootingRestRate")){
         shootingRestRate = Integer.parseInt(bundle.getString("ShootingRestRate"));
       }
-    } catch(Exception e){
-    }
+    } catch(Exception ignored){}
     try {
       Class<?> towerClass = Class.forName(TOWER_PATH + type.toString());
       Constructor<?> towerConstructor = towerClass
@@ -36,7 +37,7 @@ public class SingleTowerFactory implements TowerFactory {
       return (Tower) towerConstructor.newInstance(xPosition, yPosition, radius, shootingSpeed,
           shootingRestRate);
     } catch (Exception e) {
-      throw new ConfigurationException("No tower class found for selected type of tower.");
+      throw new ConfigurationException("NoTowerClass");
     }
   }
 }

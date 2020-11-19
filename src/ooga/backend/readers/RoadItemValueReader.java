@@ -10,9 +10,9 @@ import ooga.backend.roaditems.RoadItemType;
 
 public class RoadItemValueReader {
 
-  private Map<RoadItemType, Integer> valueMap;
+  private final Map<RoadItemType, Integer> valueMap;
 
-  public RoadItemValueReader(String propertiesFilename) throws IOException {
+  public RoadItemValueReader(String propertiesFilename) throws IOException, ConfigurationException {
     Properties properties = new Properties();
     InputStream input = getClass().getClassLoader().getResourceAsStream(propertiesFilename);
     properties.load(input);
@@ -29,9 +29,9 @@ public class RoadItemValueReader {
     return valueMap;
   }
 
-  public RoadItemType getRoadItemType(String key){
+  public RoadItemType getRoadItemType(String key) throws ConfigurationException {
     if(!RoadItemType.isEnumName(key)){
-      throw new ConfigurationException("Properties file includes invalid road item type name");
+      throw new ConfigurationException("InvalidDartName");
     }
     return RoadItemType.fromString(key);
   }

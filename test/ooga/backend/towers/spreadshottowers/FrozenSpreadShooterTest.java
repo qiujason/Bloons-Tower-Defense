@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import ooga.backend.ConfigurationException;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.types.BloonsType;
@@ -26,6 +27,9 @@ class FrozenSpreadShooterTest {
   FrozenSpreadShooter testTower = (FrozenSpreadShooter) towerFactory.createTower(TowerType.FrozenSpreadShooter, 0, 0);
 
   private BloonsTypeChain chain;
+
+  FrozenSpreadShooterTest() throws ConfigurationException {
+  }
 
   @BeforeEach
   void initializeBloonsTypes() {
@@ -49,7 +53,7 @@ class FrozenSpreadShooterTest {
   }
 
   @Test
-  void shoot() {
+  void shoot() throws ConfigurationException {
     Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 0.4,0.4,5,5);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
