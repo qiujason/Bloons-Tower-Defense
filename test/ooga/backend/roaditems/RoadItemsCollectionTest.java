@@ -2,6 +2,7 @@ package ooga.backend.roaditems;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import ooga.backend.ConfigurationException;
 import ooga.backend.roaditems.factory.SingleRoadItemFactory;
 import org.junit.jupiter.api.Test;
 
@@ -9,14 +10,14 @@ class RoadItemsCollectionTest {
   RoadItemsCollection collection = new RoadItemsCollection();
 
   @Test
-  void testAdd() {
+  void testAdd() throws ConfigurationException {
     RoadItem testRoadItem = new SingleRoadItemFactory().createRoadItem(RoadItemType.PopBloonsItem, 0,0);
     collection.add(testRoadItem);
     assertEquals(1, collection.size());
   }
 
   @Test
-  void testRemove() {
+  void testRemove() throws ConfigurationException {
     RoadItem testRoadItem = new SingleRoadItemFactory().createRoadItem(RoadItemType.PopBloonsItem, 0,0);
     collection.add(testRoadItem);
     collection.updateAll();
@@ -26,7 +27,7 @@ class RoadItemsCollectionTest {
   }
 
   @Test
-  void testClear() {
+  void testClear() throws ConfigurationException {
     RoadItem testRoadItem = new SingleRoadItemFactory().createRoadItem(RoadItemType.PopBloonsItem, 0,0);
     collection.add(testRoadItem);
     collection.add(testRoadItem);
@@ -35,14 +36,14 @@ class RoadItemsCollectionTest {
   }
 
   @Test
-  void testCreateIterator() {
+  void testCreateIterator() throws ConfigurationException {
     RoadItem testRoadItem = new SingleRoadItemFactory().createRoadItem(RoadItemType.PopBloonsItem, 0,0);
     collection.add(testRoadItem);
     assertTrue(collection.createIterator().hasNext());
   }
 
   @Test
-  void testSize() {
+  void testSize() throws ConfigurationException {
     RoadItem testRoadItem = new SingleRoadItemFactory().createRoadItem(RoadItemType.PopBloonsItem, 0,0);
     collection.add(testRoadItem);
     collection.add(testRoadItem);
@@ -50,14 +51,14 @@ class RoadItemsCollectionTest {
   }
 
   @Test
-  void testContains() {
+  void testContains() throws ConfigurationException {
     RoadItem testRoadItem = new SingleRoadItemFactory().createRoadItem(RoadItemType.PopBloonsItem, 0,0);
     collection.add(testRoadItem);
     assertTrue(collection.contains(testRoadItem));
   }
 
   @Test
-  void testIsEmpty() {
+  void testIsEmpty() throws ConfigurationException {
     assertTrue(collection.isEmpty());
     RoadItem testRoadItem = new SingleRoadItemFactory().createRoadItem(RoadItemType.PopBloonsItem, 0,0);
     collection.add(testRoadItem);
