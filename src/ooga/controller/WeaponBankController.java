@@ -30,7 +30,13 @@ public class WeaponBankController implements WeaponBankInterface {
 
   @Override
   public boolean buyRoadItem(RoadItemType itemType) {
-    return bank.buyRoadItem(itemType);
+    if(bank.buyRoadItem(itemType)){
+      return bank.buyRoadItem(itemType);
+    }else{
+      new AlertHandler(inGameMessage.getString("InsufficientFunds"),
+          inGameMessage.getString("ForRoadItem"));
+      return false;
+    }
   }
 
 

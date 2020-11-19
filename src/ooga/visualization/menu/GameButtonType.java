@@ -5,6 +5,6 @@ public enum GameButtonType {
   PlayButton,
   PauseButton,
   SpeedUpButton,
-  SlowDownButton;
+  SlowDownButton
 
 }

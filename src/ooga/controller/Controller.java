@@ -104,13 +104,15 @@ public class Controller extends Application {
                 "BombShooter", "BombShooterButton", "SniperMonkey", "SniperMonkeyButton",
                 "SuperMonkey",
                 "SuperMonkeyButton", "IceMonkey", "IceMonkeyButton", "NinjaMonkey",
-                "NinjaMonkeyButton")));
+                "NinjaMonkeyButton", "RoadSpikes", "RoadSpikesButton", "MonkeyGlue",
+                "MonkeyGlueButton", "ExplodingPineapple", "ExplodingPineappleButton")));
     PropertyFileValidator towerNameValidator = new PropertyFileValidator(
         "btd_towers/TowerMonkey.properties",
         new HashSet<>(Arrays.asList("SingleProjectileShooter", "MultiProjectileShooter",
             "SpreadProjectileShooter", "UnlimitedRangeProjectileShooter",
             "SuperSpeedProjectileShooter",
-            "FrozenSpreadShooter", "CamoProjectileShooter")));
+            "FrozenSpreadShooter", "CamoProjectileShooter", "PopBloonsItem", "SlowBloonsItem",
+            "ExplodeBloonsItem")));
     if (!towerPicsValidator.checkIfValid()) {
        new AlertHandler(errorResource.getString("InvalidPropertyFile"),
           errorResource.getString("RequiredKeysMissingPics"));

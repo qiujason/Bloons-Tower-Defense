@@ -11,9 +11,11 @@ public class RoadItemNode extends GamePieceNode {
   private RoadItemType roadItemType;
 
   private static final String PACKAGE = "btd_towers/";
-  private static final String ROAD_ITEMS = "RoadItems";
+  private static final String NAMES = "TowerMonkey";
+  private static final String PICTURES = "MonkeyPics";
 
-  private ResourceBundle roadItemPic = ResourceBundle.getBundle(PACKAGE + ROAD_ITEMS);
+  private ResourceBundle typeToName = ResourceBundle.getBundle(PACKAGE + NAMES);
+  private ResourceBundle nameToPicture = ResourceBundle.getBundle(PACKAGE + PICTURES);
 
   public RoadItemNode(RoadItemType roadItemType, double xPosition, double yPosition, double radius) {
     super(xPosition, yPosition, radius);
@@ -26,7 +28,7 @@ public class RoadItemNode extends GamePieceNode {
   public ImagePattern findImage(){
     Image towerImage = null;
     try {
-      towerImage = new Image(String.valueOf(getClass().getResource(roadItemPic.getString(roadItemType.name())).toURI()));
+      towerImage = new Image(String.valueOf(getClass().getResource(nameToPicture.getString(typeToName.getString(roadItemType.name()))).toURI()));
     } catch (
         URISyntaxException e) {
       e.printStackTrace();
