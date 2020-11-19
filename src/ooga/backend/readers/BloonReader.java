@@ -46,7 +46,6 @@ public class BloonReader extends Reader{
       }
       else{
         for (String bloonInfo : row){
-          System.out.println(bloonInfo);
           Bloon bloon = null;
           if (bloonInfo.length() > 1) {
             for (String specialKey: specialKeys) {
@@ -56,7 +55,6 @@ public class BloonReader extends Reader{
             }
           } else {
             bloon = createBloon(chain, bloonInfo, layout);
-            System.out.println(bloon.getBloonsType().specials() == Specials.Camo);
           }
           currentCollection.add(bloon);
         }
