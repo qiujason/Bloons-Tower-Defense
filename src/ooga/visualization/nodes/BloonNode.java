@@ -28,11 +28,16 @@ public class BloonNode extends GamePieceNode{
     Image towerImage = null;
     try {
       StringBuilder imageName = new StringBuilder(bloonType.name());
-      if (bloonType.specials() != Specials.None) {
+//      if (!bloonType.name().equals("DEAD")) {
+        if (bloonType.specials() != Specials.None && !bloonType.name().equals("DEAD")) {
           imageName.append("_").append(bloonType.specials().name().toUpperCase());
-      }
-      towerImage = new Image(String.valueOf(getClass().getResource(myBloonImages.getString(
-          imageName.toString())).toURI()));
+        }
+        System.out.println("REACHED");
+        towerImage = new Image(String.valueOf(getClass().getResource(myBloonImages.getString(
+            imageName.toString())).toURI()));
+//      } else {
+//        return new ImagePattern();
+//      }
     } catch (
         URISyntaxException e) {
       e.printStackTrace();

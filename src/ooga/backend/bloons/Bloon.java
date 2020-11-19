@@ -3,6 +3,7 @@ package ooga.backend.bloons;
 
 import java.util.ResourceBundle;
 import ooga.backend.API.BloonsAPI;
+import ooga.backend.ConfigurationException;
 import ooga.backend.GamePiece;
 import ooga.backend.bloons.factory.BasicBloonsFactory;
 import ooga.backend.bloons.types.BloonsType;
@@ -70,7 +71,7 @@ public class Bloon extends GamePiece implements BloonsAPI {
   }
 
   @Override
-  public Bloon[] shootBloon() {
+  public Bloon[] shootBloon() throws ConfigurationException {
     int numBloonsToProduce = getBloonsType().chain().getNumNextBloons(bloonsType);
 
     Bloon[] bloons = new Bloon[numBloonsToProduce];
@@ -82,12 +83,12 @@ public class Bloon extends GamePiece implements BloonsAPI {
   }
 
   @Override
-  public void setDead(){
+  public void setDead() {
     setBloonsType(bloonsType.chain().getBloonsTypeRecord("DEAD"));
   }
 
   @Override
-  public boolean isDead(){
+  public boolean isDead() {
     return bloonsType == bloonsType.chain().getBloonsTypeRecord("DEAD");
   }
 

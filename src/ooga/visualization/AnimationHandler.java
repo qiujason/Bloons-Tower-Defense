@@ -5,11 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import javafx.animation.Timeline;
 import javafx.geometry.BoundingBox;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.shape.Circle;
+import ooga.AlertHandler;
+import ooga.backend.ConfigurationException;
 import ooga.backend.bank.Bank;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
@@ -32,6 +35,7 @@ import ooga.visualization.nodes.TowerNode;
 public class AnimationHandler {
 
   public static final double FRAMES_PER_SECOND = 60;
+  private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResource");
 
   private Timeline myAnimation;
   private Group myLevelLayout;
@@ -256,14 +260,18 @@ public class AnimationHandler {
 
   private void popBloon(Bloon bloon, Projectile projectile, BloonsCollection bloonsToRemove, BloonsCollection bloonsToAdd,
       ProjectilesCollection projectilesToRemove, boolean roadItemCheck){
-    Bloon[] spawnedBloons = bloon.shootBloon();
-    for(Bloon spawn : spawnedBloons) {
-      bloonsToAdd.add(spawn);
-    }
-    bloon.setDead();
-    bloonsToRemove.add(bloon);
-    if(!roadItemCheck){
-      projectilesToRemove.add(projectile);
+    try {
+      Bloon[] spawnedBloons = bloon.shootBloon();
+      for(Bloon spawn : spawnedBloons) {
+        bloonsToAdd.add(spawn);
+      }
+      bloon.setDead();
+      bloonsToRemove.add(bloon);
+      if(!roadItemCheck){
+        projectilesToRemove.add(projectile);
+      }
+    } catch (ConfigurationException e) {
+      new AlertHandler(ERROR_RESOURCES.getString("SpecialBloonError"),ERROR_RESOURCES.getString(e.getMessage()));
     }
   }
 

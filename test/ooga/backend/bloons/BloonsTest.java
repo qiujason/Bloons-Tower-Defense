@@ -3,6 +3,7 @@ package ooga.backend.bloons;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ResourceBundle;
+import ooga.backend.ConfigurationException;
 import ooga.backend.bloons.factory.CamoBloonsFactory;
 import ooga.backend.bloons.factory.RegenBloonsFactory;
 import ooga.backend.bloons.types.BloonsTypeChain;
@@ -20,7 +21,7 @@ public class BloonsTest {
   private BloonsTypeChain chain;
 
   @BeforeEach
-  void initializeBloonsTypes() {
+  void initializeBloonsTypes() throws ConfigurationException {
     chain = new BloonsTypeChain("tests/test_bloonstype_reader/ValidBloons");
   }
 
@@ -73,13 +74,13 @@ public class BloonsTest {
   }
 
   @Test
-  void testShootBloon1Spawn() {
+  void testShootBloon1Spawn() throws ConfigurationException {
     Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
     assertEquals(chain.getBloonsTypeRecord("DEAD"),bloon.shootBloon()[0].getBloonsType());
   }
 
   @Test
-  void testShootBloonMultipleSpawn() {
+  void testShootBloonMultipleSpawn() throws ConfigurationException {
     Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RAINBOW"), 0, 0, 0, 0);
     assertEquals(2,bloon.shootBloon().length);
     assertEquals(chain.getBloonsTypeRecord("ZEBRA"),bloon.shootBloon()[0].getBloonsType());

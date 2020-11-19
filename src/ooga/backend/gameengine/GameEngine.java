@@ -47,7 +47,7 @@ public class GameEngine implements GameEngineAPI {
   private String gameMode;
 
 
-  public GameEngine(String gameMode, Layout layout, List<BloonsCollection> allBloonWaves) {
+  public GameEngine(String gameMode, Layout layout, List<BloonsCollection> allBloonWaves) throws ConfigurationException {
     this.layout = layout;
     this.allBloonWaves = allBloonWaves;
     this.queuedBloons = allBloonWaves.get(STARTING_ROUND).copyOf(allBloonWaves.get(STARTING_ROUND));
@@ -116,17 +116,19 @@ public class GameEngine implements GameEngineAPI {
     while (bloonsIterator.hasNext()) {
       Bloon bloon = bloonsIterator.next();
       if(bloon.isDead()){
+        System.out.println("DEAD");
         currentBloonWave.remove(bloon);
+        System.out.println(currentBloonWave.size());
       }
     }
   }
 
-  public void nextWaveNormal() {
+  public void nextWaveNormal() throws ConfigurationException {
     round++;
     queuedBloons = allBloonWaves.get(round).copyOf(allBloonWaves.get(round));
   }
 
-  public void nextWaveInfinite() {
+  public void nextWaveInfinite() throws ConfigurationException {
     System.out.println("here");
     round++;
     Random rand = new Random();
@@ -135,7 +137,7 @@ public class GameEngine implements GameEngineAPI {
     queuedBloons = allBloonWaves.get(randomRound).copyOf(allBloonWaves.get(randomRound));
   }
 
-  public void nextWaveSandbox() {
+  public void nextWaveSandbox() throws ConfigurationException {
     nextWaveNormal();
   }
 

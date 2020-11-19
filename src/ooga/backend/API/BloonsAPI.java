@@ -1,5 +1,6 @@
 package ooga.backend.API;
 
+import ooga.backend.ConfigurationException;
 import ooga.backend.bloons.Bloon;
 
 public interface BloonsAPI {
@@ -14,7 +15,7 @@ public interface BloonsAPI {
    */
   void setYVelocity(double newYVelocity);
 
-  Bloon[] shootBloon();
+  Bloon[] shootBloon() throws ConfigurationException;
 
   void setDead();
 

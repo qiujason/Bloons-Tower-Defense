@@ -1,6 +1,7 @@
 package ooga.backend.bloons.special;
 
 import java.lang.reflect.Constructor;
+import ooga.backend.ConfigurationException;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.factory.BloonsFactory;
 import ooga.backend.bloons.types.BloonsType;
@@ -15,8 +16,9 @@ public abstract class SpecialBloon extends Bloon {
   }
 
   @Override
-  public Bloon[] shootBloon() {
+  public Bloon[] shootBloon() throws ConfigurationException {
     int numBloonsToProduce = getBloonsType().chain().getNumNextBloons(super.getBloonsType());
+    System.out.println(numBloonsToProduce);
     Bloon[] bloons = new Bloon[numBloonsToProduce];
     for (int i = 0; i < numBloonsToProduce; i++) {
       try {
@@ -26,11 +28,9 @@ public abstract class SpecialBloon extends Bloon {
         BloonsFactory specialFactory = (BloonsFactory)specialBloonConstructor.newInstance();
         bloons[i] = specialFactory.createNextBloon(this);
       } catch (ClassNotFoundException e) {
-        e.printStackTrace();
-        //TODO: handle
+        throw new ConfigurationException("SpecialNotFound");
       } catch (Exception e) {
-        e.printStackTrace();
-        //TODO: handle
+        throw new ConfigurationException("OtherSpecialBloonErrors");
       }
     }
     return bloons;

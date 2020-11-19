@@ -87,6 +87,8 @@ public class Controller extends Application {
     gameController = new GameMenuController(myAnimation, gameEngine, e -> bloonsApplication.switchToSelectionWindow());
     towerController = new WeaponBankController(bank);
 
+    System.out.println("HELLO");
+
     bloonsApplication
         .initializeGameObjects(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
             gameEngine.getProjectiles(), gameEngine.getRoadItems(), bank, myAnimation, gameController,
@@ -164,7 +166,11 @@ public class Controller extends Application {
   }
 
   private void initializeBloonTypes() {
-    bloonsTypeChain = new BloonsTypeChain(BLOONS_TYPE_PATH);
+    try {
+      bloonsTypeChain = new BloonsTypeChain(BLOONS_TYPE_PATH);
+    } catch (ConfigurationException e) {
+      new AlertHandler(errorResource.getString("BloonsTypeError"), errorResource.getString(e.getMessage()));
+    }
   }
 
   private void initializeBloonWaves() {
@@ -177,7 +183,11 @@ public class Controller extends Application {
   }
 
   private void startGameEngine() {
-    gameEngine = new GameEngine(bloonsApplication.getMyGameMode().name(), layout, allBloonWaves);
+    try {
+      gameEngine = new GameEngine(bloonsApplication.getMyGameMode().name(), layout, allBloonWaves);
+    } catch (ConfigurationException e) {
+      new AlertHandler(errorResource.getString("SpecialBloonError"), errorResource.getString(e.getMessage()));
+    }
   }
 
   private void step() {
