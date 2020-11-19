@@ -1,4 +1,4 @@
-package ooga.visualization;
+package ooga.visualization.windows;
 
 import java.util.List;
 import java.util.ResourceBundle;

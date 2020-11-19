@@ -1,8 +1,6 @@
-package ooga.visualization;
+package ooga.visualization.windows;
 
 import java.util.List;
-import java.util.ResourceBundle;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 
 public class GameWindow implements Window {
