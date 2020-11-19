@@ -29,6 +29,11 @@ public class SingleTowerFactory implements TowerFactory {
       }
     } catch (Exception ignored) {
     }
+    return constructTower(type, xPosition, yPosition, radius, shootingSpeed, shootingRestRate);
+  }
+
+  private Tower constructTower(TowerType type, double xPosition, double yPosition, double radius, double shootingSpeed, double shootingRestRate)
+      throws ConfigurationException {
     try {
       Class<?> towerClass = Class.forName(TOWER_PATH + type.toString());
       Constructor<?> towerConstructor = towerClass
