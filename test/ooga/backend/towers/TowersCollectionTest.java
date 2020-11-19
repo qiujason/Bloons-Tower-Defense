@@ -53,6 +53,7 @@ class TowersCollectionTest {
   void testContains() {
     Tower testTower = new SingleProjectileShooter(0,0,5,10,5);
     collection.add(testTower);
+    collection.updateAll();
     assertTrue(collection.contains(testTower));
   }
 

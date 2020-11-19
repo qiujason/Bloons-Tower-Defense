@@ -60,7 +60,7 @@ class RoadItemsCollectionTest {
   @Test
   void testIsEmpty() throws ConfigurationException {
     assertTrue(collection.isEmpty());
-    RoadItem testRoadItem = new SingleRoadItemFactory().createTower(RoadItemType.PopBloonsItem, 0,0);
+    RoadItem testRoadItem = new SingleRoadItemFactory().createRoadItem(RoadItemType.PopBloonsItem, 0,0);
     collection.add(testRoadItem);
     assertFalse(collection.isEmpty());
   }
