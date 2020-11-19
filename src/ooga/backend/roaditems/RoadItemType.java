@@ -1,6 +1,7 @@
 package ooga.backend.roaditems;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public enum RoadItemType {
@@ -22,6 +23,10 @@ public enum RoadItemType {
       }
     }
     return false;
+  }
+
+  public static Set<String> getEnumStrings(){
+    return stringToEnum.keySet();
   }
 
   public static RoadItemType fromString(String name){

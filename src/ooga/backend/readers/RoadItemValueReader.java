@@ -20,7 +20,9 @@ public class RoadItemValueReader {
     for(Object key : properties.keySet()){
       valueMap.put(getRoadItemType((String) key), Integer.valueOf((String)properties.get(key)));
     }
-    // add error checking for keys
+    if(!RoadItemType.getEnumStrings().equals(properties.keySet())){
+      throw new ConfigurationException("Missing road item value from properties file");
+    }
   }
 
   public Map<RoadItemType, Integer> getMap(){
