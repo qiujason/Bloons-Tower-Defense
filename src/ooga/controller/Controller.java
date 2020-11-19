@@ -19,7 +19,6 @@ import ooga.backend.gameengine.GameEngine;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bank.Bank;
 import ooga.backend.bloons.types.BloonsTypeChain;
-import ooga.backend.gameengine.GameMode;
 import ooga.backend.layout.Layout;
 import ooga.backend.readers.BloonReader;
 import ooga.backend.readers.LayoutReader;
@@ -56,11 +55,9 @@ public class Controller extends Application {
   private GameEngineAPI gameEngine;
   private Layout layout;
   private List<BloonsCollection> allBloonWaves;
-  private GameMenuInterface gameController;
   private Map<TowerType, Integer> towerBuyMap;
   private Map<TowerType, Integer> towerSellMap;
   private Map<RoadItemType, Integer> roadItemBuyMap;
-  private WeaponBankInterface towerController;
   private Bank bank;
 
   @Override
@@ -85,14 +82,15 @@ public class Controller extends Application {
     initializeBloonTypes();
     initializeBloonWaves();
     startGameEngine();
+    GameMenuInterface gameMenuController = new GameMenuController(myAnimation, gameEngine,
+        bloonsApplication);
+    WeaponBankInterface weaponBankController = new WeaponBankController(bank);
 
-
-    gameController = new GameMenuController(myAnimation, gameEngine, e -> bloonsApplication.switchToSelectionWindow());
-    towerController = new WeaponBankController(bank);
     bloonsApplication
         .initializeGameObjects(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
-            gameEngine.getProjectiles(), gameEngine.getRoadItems(), bank, myAnimation, gameController,
-            towerController);
+            gameEngine.getProjectiles(), gameEngine.getRoadItems(), bank, myAnimation,
+            gameMenuController,
+            weaponBankController);
   }
 
   private void checkTowerPropertyFiles() {

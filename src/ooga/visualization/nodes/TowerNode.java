@@ -5,7 +5,6 @@ import java.util.ResourceBundle;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import ooga.AlertHandler;
-import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.controller.WeaponNodeHandler;
 import ooga.visualization.menu.WeaponMenu;
@@ -84,7 +83,5 @@ public class TowerNode extends GamePieceNode{
   public void showRangeDisplay(){
     rangeDisplay.makeVisible();
   }
-
-
 
 }
