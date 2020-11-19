@@ -29,10 +29,11 @@ import ooga.backend.roaditems.RoadItemsCollection;
 import ooga.backend.towers.TowersCollection;
 import ooga.controller.Controller;
 import ooga.controller.GameMenuInterface;
-import ooga.controller.TowerMenuInterface;
+import ooga.controller.WeaponBankInterface;
+import ooga.controller.WeaponNodeInterface;
 import ooga.visualization.menu.GameMenu;
-import ooga.controller.TowerNodeHandler;
-import ooga.visualization.menu.ImageChooser;
+import ooga.controller.WeaponNodeHandler;
+import ooga.visualization.menu.MenuPane;
 import ooga.visualization.menu.WeaponButtonsMenu;
 
 public class BloonsApplication {
@@ -72,11 +73,10 @@ public class BloonsApplication {
   private ProjectilesCollection myProjectiles;
   private RoadItemsCollection myRoadItems;
   private Group myLevelLayout;
-  private GameMenu myMenu;
-  private VBox myMenuPane;
+  private MenuPane myMenuPane;
   private GameMenuInterface myGameMenuController;
-  private TowerMenuInterface myTowerMenuController;
-  private TowerNodeHandler towerNodeHandler;
+  private WeaponBankInterface myWeaponBankController;
+  private WeaponNodeInterface weaponNodeHandler;
   private AnimationHandler myAnimationHandler;
   private double myBlockSize;
   private final Button myLevelStartButton;
@@ -339,10 +339,9 @@ public class BloonsApplication {
   }
 
   public void initializeGameObjects(Layout layout, BloonsCollection bloons,
-      TowersCollection towers,
-      ProjectilesCollection projectiles, RoadItemsCollection roadItems, Timeline animation,
-      GameMenuInterface gameMenuController,
-      TowerMenuInterface towerMenuController) {
+      TowersCollection towers, ProjectilesCollection projectiles, RoadItemsCollection roadItems,
+      Timeline animation, GameMenuInterface gameMenuController,
+      WeaponBankInterface weaponBankController) {
     myLayout = layout;
     myBloons = bloons;
     myTowers = towers;
@@ -350,7 +349,7 @@ public class BloonsApplication {
     myRoadItems = roadItems;
     myAnimation = animation;
     myGameMenuController = gameMenuController;
-    myTowerMenuController = towerMenuController;
+    myWeaponBankController = weaponBankController;
   }
 
   private void loadLevel(String levelName) {
@@ -367,12 +366,12 @@ public class BloonsApplication {
     myLevelStartButton.fire();
     myLevel = new Pane();
     myLevel.getStyleClass().add("level-background");
-    myMenuPane = new VBox();
+    myMenuPane = new MenuPane();
     visualizeLayout(myLevel);
     myAnimationHandler = new AnimationHandler(myLevelLayout, myBloons,
         myTowers, myProjectiles, myRoadItems, myBlockSize, myAnimation);
-    towerNodeHandler = new TowerNodeHandler(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize,
-        myLevelLayout, myMenuPane, myTowers, myTowerMenuController, myAnimationHandler);
+    weaponNodeHandler = new WeaponNodeHandler(myLayout, myBlockSize, myLevelLayout, myMenuPane,
+        myTowers, myWeaponBankController, myAnimationHandler);
     visualizePlayerGUI(myLevel);
     displayCurrentMoney(0);
     displayCurrentRound(1);
@@ -433,11 +432,8 @@ public class BloonsApplication {
   }
 
   private void visualizePlayerGUI(Pane level) {
-    myMenuPane.setSpacing(10); //magic num
-    myMenu = new GameMenu(myMenuPane, myGameMenuController);
-
-    myMenuPane.getChildren().add(new ImageChooser(myAnimationHandler));
-    myMenuPane.getChildren().add(new WeaponButtonsMenu(towerNodeHandler));
+    myMenuPane.getChildren().add(new GameMenu(myGameMenuController, myCurrentLanguage));
+    myMenuPane.getChildren().add(new WeaponButtonsMenu(weaponNodeHandler, myCurrentLanguage));
     myMenuPane.setLayoutX(GAME_WIDTH);
     level.getChildren().add(myMenuPane);
   }

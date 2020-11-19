@@ -64,7 +64,7 @@ public class Controller extends Application {
   private Map<TowerType, Integer> towerBuyMap;
   private Map<TowerType, Integer> towerSellMap;
   private Map<RoadItemType, Integer> roadItemBuyMap;
-  private TowerMenuInterface towerController;
+  private WeaponBankInterface towerController;
   private Bank bank;
 
   @Override
@@ -89,7 +89,7 @@ public class Controller extends Application {
     startGameEngine();
 
     gameController = new GameMenuController(myAnimation);
-    towerController = new TowerMenuController(bank);
+    towerController = new WeaponBankController(bank);
 
     bloonsApplication
         .initializeGameObjects(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),

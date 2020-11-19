@@ -1,6 +1,5 @@
 package ooga.controller;
 
-import java.util.ResourceBundle;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
@@ -21,6 +20,7 @@ import ooga.backend.towers.factory.TowerFactory;
 import ooga.backend.towers.singleshottowers.SingleShotTower;
 import ooga.visualization.AnimationHandler;
 import ooga.visualization.menu.WeaponMenu;
+import ooga.visualization.nodes.GamePieceNode;
 import ooga.visualization.nodes.ItemNodeFactory;
 import ooga.visualization.nodes.RoadItemNode;
 import ooga.visualization.nodes.RoadItemNodeFactory;
@@ -29,7 +29,7 @@ import ooga.visualization.nodes.TowerNodeFactory;
 import ooga.visualization.nodes.WeaponNodeFactory;
 import ooga.visualization.nodes.WeaponRange;
 
-public class TowerNodeHandler {
+public class WeaponNodeHandler implements WeaponNodeInterface {
 
   private Layout layout;
   private double gameWidth;
@@ -37,7 +37,7 @@ public class TowerNodeHandler {
   private double blockSize;
   private Group layoutRoot;
   private VBox menuPane;
-  private TowerMenuInterface menuController;
+  private WeaponBankInterface menuController;
   private AnimationHandler animationHandler;
   private TowersCollection towersCollection;
 
@@ -51,13 +51,12 @@ public class TowerNodeHandler {
 
   private static final double towerDefaultPosition = -1;
 
-
-  public TowerNodeHandler(Layout layout, double gameWidth, double gameHeight, double blockSize,
+  public WeaponNodeHandler(Layout layout, double blockSize,
       Group layoutRoot, VBox menuPane, TowersCollection towersCollection,
-      TowerMenuInterface menuController, AnimationHandler animationHandler) {
+      WeaponBankInterface menuController, AnimationHandler animationHandler) {
     this.layout = layout;
-    this.gameWidth = gameWidth;
-    this.gameHeight = gameHeight;
+    gameHeight = layout.getHeight() * blockSize;
+    gameWidth = layout.getWidth() * blockSize;
     this.blockSize = blockSize;
     this.layoutRoot = layoutRoot;
     this.menuPane = menuPane;
@@ -74,6 +73,7 @@ public class TowerNodeHandler {
     itemNodeFactory = new RoadItemNodeFactory();
   }
 
+  @Override
   public void makeWeapon(TowerType towerType) {
     if (canMakeTower) {
       if (menuController.buyTower(towerType)) {
@@ -93,18 +93,22 @@ public class TowerNodeHandler {
     }
   }
 
+  @Override
   public void makeRoadWeapon(RoadItemType roadItemType){
-    if (canMakeRoadItem){
-      canMakeRoadItem = false;
-      RoadItem roadItem = roadItemFactory
-          .createTower(roadItemType, towerDefaultPosition, towerDefaultPosition);
-      RoadItemNode itemNode = itemNodeFactory.createItemNode(roadItemType, gameWidth / 2,
-          gameHeight / 2, blockSize /2);
-      layoutRoot.getChildren().add(itemNode);
-      placeRoadItem(roadItem, itemNode);
+    if (canMakeRoadItem) {
+      if (menuController.buyRoadItem(roadItemType)) {
+        canMakeRoadItem = false;
+        RoadItem roadItem = roadItemFactory
+            .createTower(roadItemType, towerDefaultPosition, towerDefaultPosition);
+        RoadItemNode itemNode = itemNodeFactory.createItemNode(roadItemType, gameWidth / 2,
+            gameHeight / 2, blockSize / 2);
+        layoutRoot.getChildren().add(itemNode);
+        placeRoadItem(roadItem, itemNode);
+      }
     }
   }
 
+  @Override
   public void removeWeapon(TowerNode towerNode) {
     Tower tower = animationHandler.getTowerFromNode(towerNode);
     menuController.sellTower(tower);
@@ -114,17 +118,20 @@ public class TowerNodeHandler {
     animationHandler.removeTower(tower, towerNode);
   }
 
+  @Override
   public void upgradeRate(TowerNode towerNode) {
     Tower tower = animationHandler.getTowerFromNode(towerNode);
     menuController.upgradeRate(tower);
   }
 
+  @Override
   public void upgradeRange(TowerNode towerNode) {
     Tower tower = animationHandler.getTowerFromNode(towerNode);
     menuController.upgradeRange(tower);
     towerNode.setWeaponRange(tower.getRadius(), blockSize);
   }
 
+  @Override
   public void setTargetingOption(TowerNode towerNode, ShootingChoice shootingChoice){
     Tower tower = animationHandler.getTowerFromNode(towerNode);
     SingleShotTower singleShotTower = (SingleShotTower) tower;

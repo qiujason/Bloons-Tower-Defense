@@ -5,7 +5,7 @@ import java.util.ResourceBundle;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import ooga.backend.towers.TowerType;
-import ooga.controller.TowerNodeHandler;
+import ooga.controller.WeaponNodeHandler;
 import ooga.visualization.menu.WeaponMenu;
 
 public class TowerNode extends GamePieceNode{
@@ -57,8 +57,8 @@ public class TowerNode extends GamePieceNode{
     rangeDisplay.setRadius(gridRadius * blockSize);
   }
 
-  public void makeTowerMenu(TowerNodeHandler towerNodeHandler){
-    towerMenu = new WeaponMenu(this, towerNodeHandler);
+  public void makeTowerMenu(WeaponNodeHandler weaponNodeHandler){
+    towerMenu = new WeaponMenu(this, weaponNodeHandler);
   }
 
   public WeaponMenu getTowerMenu(){
