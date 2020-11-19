@@ -155,7 +155,7 @@ public class Controller extends Application {
         bank = new Bank(towerBuyMap, towerSellMap, roadItemBuyMap, rounds);
       } else {
         int starting_bonus = Integer.parseInt(roundBonuses.get(0).get(1));
-        bank = new Bank(towerBuyMap, towerSellMap, roadItemBuyMap, starting_bonus);
+        bank = new Bank(towerBuyMap, towerSellMap, roadItemBuyMap, rounds, starting_bonus);
       }
     } else {
       bank = new Bank(towerBuyMap, towerSellMap, roadItemBuyMap, roundBonuses.get(1));

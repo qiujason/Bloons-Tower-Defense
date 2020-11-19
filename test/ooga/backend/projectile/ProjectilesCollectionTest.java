@@ -52,6 +52,7 @@ class ProjectilesCollectionTest {
   @Test
   void testContains() {
     Projectile dart = new SingleTargetProjectile(ProjectileType.SingleTargetProjectile, 10,15,-5,5,0);
+    collection.updateAll();
     collection.add(dart);
     assertTrue(collection.contains(dart));
   }

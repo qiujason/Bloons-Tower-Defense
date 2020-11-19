@@ -76,13 +76,13 @@ public class BloonReaderTest {
     GamePieceIterator<Bloon> iterate = list.get(0).createIterator();
     for (int i = 0; i < expectedWaves.length; i++) {
       Bloon bloon = iterate.next();
-      assertTrue(bloon.getBloonsType().specials().contains(Specials.Camo));
+      assertTrue(bloon.getBloonsType().specials() == (Specials.Camo));
     }
     iterate = list.get(1).createIterator();
     for (int i = 0; i < expectedWaves.length; i++) {
       Bloon bloon = iterate.next();
       assertTrue(bloon instanceof RegenBloon);
-      assertTrue(bloon.getBloonsType().specials().contains(Specials.Regen));
+      assertTrue(bloon.getBloonsType().specials() == (Specials.Regen));
     }
   }
 
