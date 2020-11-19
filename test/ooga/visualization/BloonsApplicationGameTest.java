@@ -3,14 +3,12 @@ package ooga.visualization;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import javafx.animation.Animation;
 import javafx.animation.Timeline;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import ooga.controller.Controller;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
 
@@ -95,16 +93,6 @@ public class BloonsApplicationGameTest extends DukeApplicationTest {
     clickOn(myQuitButton);
     Button startLevelButton = lookup("#StartLevelButton").query();
     assertNotNull(startLevelButton);
-  }
-
-  @Test
-  public void testTowerPlacement() {
-    startRandomLevel();
-    clickOn(myPlayButton);
-    Button towerButton = lookup("#DartMonkeyButton").query();
-    clickOn(towerButton);
-    clickOn(myLevel, 100, 100);
-    assertTrue(myController.getGameEngine().getTowers().size() > 0);
   }
 
 }
