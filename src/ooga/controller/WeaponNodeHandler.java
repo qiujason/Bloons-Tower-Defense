@@ -3,8 +3,6 @@ package ooga.controller;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
-import ooga.AlertHandler;
 import ooga.backend.GamePiece;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.layout.Layout;
@@ -32,15 +30,20 @@ import ooga.visualization.nodes.WeaponRange;
 
 public class WeaponNodeHandler implements WeaponNodeInterface {
 
-  private Layout layout;
-  private double gameWidth;
-  private double gameHeight;
-  private double blockSize;
-  private Group layoutRoot;
-  private VBox menuPane;
-  private WeaponBankInterface menuController;
-  private AnimationHandler animationHandler;
-  private TowersCollection towersCollection;
+  private final Layout layout;
+  private final double gameWidth;
+  private final double gameHeight;
+  private final double blockSize;
+  private final Group layoutRoot;
+  private final VBox menuPane;
+  private final WeaponBankInterface menuController;
+  private final AnimationHandler animationHandler;
+  private final TowersCollection towersCollection;
+
+  private static final String PATH_ID = "Path";
+  private static final double towerDefaultPosition = -1;
+  private static final double defaultPositionDivisor = 2;
+  private static final double nodeSizeDivisor = 2.5;
 
   private boolean canMakeTower;
   private boolean canMakeRoadItem;
@@ -49,11 +52,6 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
   private WeaponNodeFactory towerNodeFactory;
   private RoadItemFactory roadItemFactory;
   private ItemNodeFactory itemNodeFactory;
-
-  private static final String PATH_ID = "Path";
-  private static final double towerDefaultPosition = -1;
-  private static final double defaultPositionDivisor = 2;
-  private static final double nodeSizeDivisor = 2.5;
 
   public WeaponNodeHandler(Layout layout, double blockSize,
       Group layoutRoot, VBox menuPane, TowersCollection towersCollection,
@@ -67,14 +65,9 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
     this.towersCollection = towersCollection;
     this.menuController = menuController;
     this.animationHandler = animationHandler;
-
     canMakeTower = true;
     canMakeRoadItem = true;
-
-    towerFactory = new SingleTowerFactory();
-    towerNodeFactory = new TowerNodeFactory();
-    roadItemFactory = new SingleRoadItemFactory();
-    itemNodeFactory = new RoadItemNodeFactory();
+    initializeFactories();
   }
 
   @Override
@@ -158,9 +151,7 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
         }
       }
     });
-    towerNode.setOnMouseClicked(e -> {
-      setDownTower(tower, towerNode);
-    });
+    towerNode.setOnMouseClicked(e -> setDownTower(tower, towerNode));
   }
 
   private void placeRoadItem(GamePiece roadItem, GamePieceNode roadItemNode){
@@ -171,9 +162,7 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
         }
       }
     });
-    roadItemNode.setOnMouseClicked(e -> {
-      setDownRoadItem(roadItem, roadItemNode);
-    });
+    roadItemNode.setOnMouseClicked(e -> setDownRoadItem(roadItem, roadItemNode));
   }
 
   private void setNode(GamePiece gamePiece, GamePieceNode pieceNode, double xPos, double yPos){
@@ -199,9 +188,6 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
       animationHandler.addRoadItem((RoadItem) roadItem, (RoadItemNode) roadItemNode);
       roadItemNode.setOnMouseClicked(null);
       canMakeRoadItem = true;
-    }
-    else{
-      new AlertHandler("RoadItem", "Place Road Item on Path!");
     }
   }
 
@@ -265,5 +251,12 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
       }
     }
     return false;
+  }
+
+  private void initializeFactories(){
+    towerFactory = new SingleTowerFactory();
+    towerNodeFactory = new TowerNodeFactory();
+    roadItemFactory = new SingleRoadItemFactory();
+    itemNodeFactory = new RoadItemNodeFactory();
   }
 }

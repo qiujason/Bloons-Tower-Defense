@@ -21,6 +21,7 @@ public class RoadItemNode extends GamePieceNode {
     this.setFill(findImage());
   }
 
+
   @Override
   public ImagePattern findImage(){
     Image towerImage = null;

@@ -10,8 +10,8 @@ import ooga.backend.towers.UpgradeChoice;
 
 public class WeaponBankController implements WeaponBankInterface {
 
-  private Bank bank;
-  private ResourceBundle inGameMessage = ResourceBundle.getBundle("InGameMessages");
+  private final Bank bank;
+  private final ResourceBundle inGameMessage = ResourceBundle.getBundle("InGameMessages");
 
   public WeaponBankController(Bank bank){
     this.bank = bank;

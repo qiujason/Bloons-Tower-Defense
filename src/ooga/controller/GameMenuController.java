@@ -12,9 +12,9 @@ import ooga.visualization.menu.GameButtonType;
 
 public class GameMenuController implements GameMenuInterface {
 
-  private Timeline myTimeline;
-  private GameEngineAPI myGameEngine;
-  private Map<GameButtonType, EventHandler<ActionEvent>> buttonHandleMap;
+  private final Timeline myTimeline;
+  private final GameEngineAPI myGameEngine;
+  private final Map<GameButtonType, EventHandler<ActionEvent>> buttonHandleMap;
 
   private static final double MAX_RATE = 2.5;
   private static final double MIN_RATE = 0.5;
