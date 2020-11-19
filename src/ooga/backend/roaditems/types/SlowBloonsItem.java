@@ -5,7 +5,7 @@ import ooga.backend.roaditems.RoadItemType;
 
 public class SlowBloonsItem extends RoadItem {
 
-  public static int defaultGlueLeft = 10;
+  public static final int defaultGlueLeft = 10;
   private int bloonsGlueLeft;
 
   public SlowBloonsItem(double myXPosition, double myYPosition) {

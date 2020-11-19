@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import ooga.backend.API.BankAPI;
-import ooga.backend.roaditems.RoadItem;
+import ooga.backend.gameengine.GameMode;
 import ooga.backend.roaditems.RoadItemType;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
@@ -20,12 +20,13 @@ import ooga.backend.towers.UpgradeChoice;
 
 public class Bank implements BankAPI {
 
-  public static int STARTING_ROUND_BONUS = 100;
-  public static int STARTING_MONEY = 1000;
+  public static final int STARTING_ROUND_BONUS = 100;
+  public static final int STARTING_MONEY = 1000;
 
-  private int currentMoney = 1000;
+  private int currentMoney = STARTING_MONEY;
   private int currentLevel = 0;
-  private int numberOfTotalRounds;
+  public static int STARTING_SANDBOX_MONEY = 10000;
+  private GameMode gameMode;
   private List<Integer> roundBonus;
   private Map<TowerType, Integer> towerBuyMap;
   private Map<TowerType, Integer> towerSellMap;
@@ -33,11 +34,13 @@ public class Bank implements BankAPI {
 
   // Provided list of round bonuses read from csv
   public Bank(Map<TowerType, Integer> towerBuyMap, Map<TowerType, Integer> towerSellMap,
-      Map<RoadItemType,Integer> roadItemBuyMap,List<String> roundBonus) {
+      Map<RoadItemType,Integer> roadItemBuyMap,List<String> roundBonus, GameMode gameMode) {
+    this.gameMode = gameMode;
+    this.currentMoney = determineStartingMoney();
+    this.currentLevel = 0;
     this.towerBuyMap = towerBuyMap;
     this.towerSellMap = towerSellMap;
     this.roadItemBuyMap = roadItemBuyMap;
-    numberOfTotalRounds = roundBonus.size();
     List<Integer> integerBonus = new ArrayList<>();
     for(String bonus : roundBonus){
       integerBonus.add(Integer.valueOf(bonus));
@@ -47,21 +50,31 @@ public class Bank implements BankAPI {
 
   // provide number of rounds and uses default starting round bonus of 100
   public Bank(Map<TowerType, Integer> towerBuyMap, Map<TowerType, Integer> towerSellMap,
-      Map<RoadItemType,Integer> roadItemBuyMap, int numberOfRounds) {
-    this(towerBuyMap, towerSellMap, roadItemBuyMap, numberOfRounds, STARTING_ROUND_BONUS);
+      Map<RoadItemType,Integer> roadItemBuyMap, int numberOfRounds, GameMode gameMode) {
+    this(towerBuyMap, towerSellMap, roadItemBuyMap, numberOfRounds, STARTING_ROUND_BONUS, gameMode);
   }
+
 
   // provide number of rounds and allows user to put in starting bonus
   public Bank(Map<TowerType, Integer> towerBuyMap, Map<TowerType, Integer> towerSellMap,
-      Map<RoadItemType,Integer> roadItemBuyMap, int numberOfRounds, int starting_bonus) {
+      Map<RoadItemType,Integer> roadItemBuyMap, int numberOfRounds, int starting_bonus, GameMode gameMode) {
+    this.gameMode = gameMode;
+    this.currentMoney = determineStartingMoney();
+    this.currentLevel = 0;
     this.towerBuyMap = towerBuyMap;
     this.towerSellMap = towerSellMap;
     this.roadItemBuyMap = roadItemBuyMap;
-    numberOfTotalRounds = numberOfRounds;
     roundBonus = new ArrayList<>();
     for (int i = 0; i < numberOfRounds; i++) {
       roundBonus.add(i + starting_bonus);
     }
+  }
+
+  public int determineStartingMoney(){
+    if(gameMode == GameMode.Sandbox){
+      return STARTING_SANDBOX_MONEY;
+    }
+    return STARTING_MONEY;
   }
 
   public void advanceToLevel(int level) {
@@ -83,22 +96,32 @@ public class Bank implements BankAPI {
 
   public boolean buyTower(TowerType buyTower) {
     if (canBuyTower(buyTower)) {
-      currentMoney -= towerBuyMap.get(buyTower);
+      if(gameMode != GameMode.Sandbox){
+        currentMoney -= towerBuyMap.get(buyTower);
+      }
       return true;
     }
     return false;
   }
+
+
 
   private boolean canBuyTower(TowerType buyTower){
     return currentMoney >= towerBuyMap.get(buyTower);
   }
 
   public void sellTower(Tower sellTower) {
-    currentMoney += towerSellMap.get(sellTower.getTowerType()) + sellTower.getTotalUpgradeCost();
+    if(gameMode != GameMode.Sandbox){
+      currentMoney += towerSellMap.get(sellTower.getTowerType()) + sellTower.getTotalUpgradeCost();
+    }
   }
 
   public void addPoppedBloonValue(){
     currentMoney += 1;
+  }
+
+  public void setSandboxValue() {
+    currentMoney = STARTING_SANDBOX_MONEY;
   }
 
   public boolean buyUpgrade(UpgradeChoice choice, Tower buyTower){

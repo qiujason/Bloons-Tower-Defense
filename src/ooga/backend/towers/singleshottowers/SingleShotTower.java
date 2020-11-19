@@ -15,6 +15,8 @@ import ooga.backend.towers.Tower;
 public abstract class SingleShotTower extends Tower {
 
   private static final ShootingChoice defaultShootingChoice = ShootingChoice.FirstBloon;
+  private static final int velocityAdjustment = 10;
+  private static final int hundred_eight_degrees = 180;
 
   private ShootingChoice shootingChoice;
 
@@ -117,12 +119,12 @@ public abstract class SingleShotTower extends Tower {
 
   public double findShootXVelocity(Bloon target){
     double distance = getDistance(target);
-    return (target.getXPosition()-this.getXPosition())/distance*getShootingSpeed()/10;
+    return (target.getXPosition()-this.getXPosition())/distance*getShootingSpeed()/velocityAdjustment;
   }
 
   public double findShootYVelocity(Bloon target){
     double distance = getDistance(target);
-    return (target.getYPosition()-this.getYPosition())/distance*getShootingSpeed()/10;
+    return (target.getYPosition()-this.getYPosition())/distance*getShootingSpeed()/velocityAdjustment;
   }
 
   @Override
@@ -149,7 +151,7 @@ public abstract class SingleShotTower extends Tower {
     if (bloon.getYPosition() < tower.getYPosition()) {
       return angle;
     } else {
-      return 180 - angle;
+      return hundred_eight_degrees - angle;
     }
   }
 

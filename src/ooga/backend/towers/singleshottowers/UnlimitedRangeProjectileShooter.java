@@ -1,7 +1,6 @@
 package ooga.backend.towers.singleshottowers;
 
 import ooga.backend.towers.TowerType;
-import ooga.backend.towers.singleshottowers.SingleShotTower;
 
 public class UnlimitedRangeProjectileShooter extends SingleShotTower {
 
