@@ -35,14 +35,16 @@ class GameEngineTest {
     } catch (ConfigurationException e) {
       new AlertHandler("","");
     }
-     gameEngine = new GameEngine("Normal", layout, allBloonWaves);
+     gameEngine = new GameEngine(GameMode.Normal, layout, allBloonWaves);
 
   }
 
  @Test
   void updateTest() throws ConfigurationException {
     gameEngine.update();
-
+    assertEquals(gameEngine.getCurrentBloonWave().size(), 1);
+    assertEquals(gameEngine.getCurrentBloonWave().createIterator().next().getXPosition(), 0.5648);
+    assertEquals(gameEngine.getCurrentBloonWave().createIterator().next().getYPosition(), 1.5);
 
  }
 
