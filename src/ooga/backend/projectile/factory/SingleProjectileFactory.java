@@ -7,7 +7,7 @@ import ooga.backend.projectile.ProjectileType;
 
 public class SingleProjectileFactory implements ProjectileFactory {
 
-  public static final String DART_PATH = "ooga.backend.projectile.";
+  public static final String DART_PATH = "ooga.backend.projectile.types.";
 
   @Override
   public Projectile createDart(ProjectileType type, double xPosition, double yPosition,
