@@ -101,9 +101,9 @@ public class BloonsApplicationGameTest extends DukeApplicationTest {
   public void testTowerPlacement() {
     startRandomLevel();
     clickOn(myPlayButton);
-    Button towerButton = lookup("#singleshottowers.SingleProjectileShooterButton").query();
+    Button towerButton = lookup("#DartMonkeyButton").query();
     clickOn(towerButton);
-    clickOn(myLevel, 50, 50);
+    clickOn(myLevel, 100, 100);
     assertTrue(myController.getGameEngine().getTowers().size() > 0);
   }
 
