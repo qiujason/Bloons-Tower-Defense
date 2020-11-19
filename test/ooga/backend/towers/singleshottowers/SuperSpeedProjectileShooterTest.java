@@ -2,17 +2,24 @@ package ooga.backend.towers.singleshottowers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import ooga.backend.ConfigurationException;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.UpgradeChoice;
 import ooga.backend.towers.factory.SingleTowerFactory;
 import ooga.backend.towers.factory.TowerFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class SuperSpeedProjectileShooterTest {
 
-  TowerFactory towerFactory = new SingleTowerFactory();
-  SuperSpeedProjectileShooter testTower = (SuperSpeedProjectileShooter)
-      towerFactory.createTower(TowerType.SuperSpeedProjectileShooter, 0,0);
+  TowerFactory towerFactory;
+  SuperSpeedProjectileShooter testTower;
+
+  SuperSpeedProjectileShooterTest() throws ConfigurationException {
+    towerFactory = new SingleTowerFactory();
+    testTower = (SuperSpeedProjectileShooter)
+        towerFactory.createTower(TowerType.SuperSpeedProjectileShooter, 0,0);
+  }
 
   @Test
   void testGetTowerType() {

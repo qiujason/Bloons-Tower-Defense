@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import ooga.backend.ConfigurationException;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.types.BloonsType;
@@ -29,7 +30,7 @@ class SpreadProjectileShooterTest {
   }
 
   @Test
-  void testShootSpreadProjectile() {
+  void testShootSpreadProjectile() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower)
         towerFactory.createTower(TowerType.SpreadProjectileShooter, 0,0);
