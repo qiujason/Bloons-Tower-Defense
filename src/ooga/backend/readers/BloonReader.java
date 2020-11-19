@@ -12,9 +12,7 @@ import ooga.backend.bloons.factory.BasicBloonsFactory;
 import ooga.backend.bloons.factory.BloonsFactory;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.BloonsTypeChain;
-import ooga.backend.bloons.types.Specials;
 import ooga.backend.layout.Layout;
-import ooga.visualization.AnimationHandler;
 
 public class BloonReader extends Reader{
 

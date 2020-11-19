@@ -1,10 +1,8 @@
-package ooga.visualization;
+package ooga.visualization.animationhandlers;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 import javafx.animation.Timeline;
 import javafx.geometry.BoundingBox;
 import javafx.scene.Group;
@@ -23,11 +21,11 @@ import ooga.backend.roaditems.RoadItemType;
 import ooga.backend.roaditems.RoadItemsCollection;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowersCollection;
+import ooga.visualization.BloonsApplication;
 import ooga.visualization.nodes.BloonNode;
 import ooga.visualization.nodes.ProjectileNode;
 import ooga.visualization.nodes.RoadItemNode;
 import ooga.visualization.nodes.TowerNode;
-
 
 public class AnimationHandler {
 
@@ -49,11 +47,9 @@ public class AnimationHandler {
   private Map<RoadItem, RoadItemNode> myRoadItemsInGame;
   private Map<Tower, Bloon> myShootingTargets;
 
-  public final String BLOON_IMAGES_PATH = "bloon_resources/BloonImages";
-  public final Properties bloonImagesProperties = new Properties();
-
   public AnimationHandler(Group levelLayout, BloonsCollection bloons,
-      TowersCollection towers, ProjectilesCollection projectiles, RoadItemsCollection roadItems, Bank bank, double blockSize, Timeline animation) {
+      TowersCollection towers, ProjectilesCollection projectiles, RoadItemsCollection roadItems,
+      Bank bank, double blockSize, Timeline animation) {
     myAnimation = animation;
     myAnimation.setCycleCount(Timeline.INDEFINITE);
     myLevelLayout = levelLayout;
@@ -356,10 +352,6 @@ public class AnimationHandler {
 
   public void setProjectiles(ProjectilesCollection projectiles) {
     this.myProjectiles = projectiles;
-  }
-
-  public Timeline getAnimation() {
-    return myAnimation;
   }
 
   public TowersCollection getTowers() {

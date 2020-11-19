@@ -1,6 +1,6 @@
 package ooga.backend.roaditems;
 
-import ooga.visualization.AnimationHandler;
+import ooga.visualization.animationhandlers.AnimationHandler;
 
 public class ExplodeBloonsItem extends RoadItem{
 
