@@ -227,7 +227,6 @@ public class BloonsTest {
   void testFreezeThenFreezeBloonTimerNotReset() {
     Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 10);
     bloon.freeze();
-    double expectedDistance = 20;
     for (int i = 0; i < Integer.parseInt(GAME_MECHANICS.getString("FreezeTimePeriod")); i++) {
       bloon.freeze();
       bloon.update();
