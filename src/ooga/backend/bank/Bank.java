@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import ooga.backend.API.BankAPI;
-import ooga.backend.roaditems.RoadItem;
 import ooga.backend.roaditems.RoadItemType;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
@@ -20,12 +19,11 @@ import ooga.backend.towers.UpgradeChoice;
 
 public class Bank implements BankAPI {
 
-  public static int STARTING_ROUND_BONUS = 100;
-  public static int STARTING_MONEY = 1000;
+  public static final int STARTING_ROUND_BONUS = 100;
+  public static final int STARTING_MONEY = 1000;
 
-  private int currentMoney = 1000;
+  private int currentMoney = STARTING_MONEY;
   private int currentLevel = 0;
-  private int numberOfTotalRounds;
   private List<Integer> roundBonus;
   private Map<TowerType, Integer> towerBuyMap;
   private Map<TowerType, Integer> towerSellMap;
@@ -37,7 +35,6 @@ public class Bank implements BankAPI {
     this.towerBuyMap = towerBuyMap;
     this.towerSellMap = towerSellMap;
     this.roadItemBuyMap = roadItemBuyMap;
-    numberOfTotalRounds = roundBonus.size();
     List<Integer> integerBonus = new ArrayList<>();
     for(String bonus : roundBonus){
       integerBonus.add(Integer.valueOf(bonus));
@@ -57,7 +54,6 @@ public class Bank implements BankAPI {
     this.towerBuyMap = towerBuyMap;
     this.towerSellMap = towerSellMap;
     this.roadItemBuyMap = roadItemBuyMap;
-    numberOfTotalRounds = numberOfRounds;
     roundBonus = new ArrayList<>();
     for (int i = 0; i < numberOfRounds; i++) {
       roundBonus.add(i + starting_bonus);

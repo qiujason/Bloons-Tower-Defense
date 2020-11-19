@@ -6,7 +6,7 @@ import ooga.visualization.AnimationHandler;
 
 public class ExplodeBloonsItem extends RoadItem {
 
-  public static int defaultSecondsLeft = 3;
+  public static final int defaultSecondsLeft = 3;
 
   private int secondsLeft;
 
