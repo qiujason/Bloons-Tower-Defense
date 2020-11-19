@@ -115,7 +115,8 @@ public class BloonsApplication {
     myScene.getStylesheets()
         .add(getClass().getResource("/" + STYLESHEETS + myCurrentStylesheet).toExternalForm());
     myScene.getRoot().getStylesheets().add("start-menu");
-    myStartWindow = new StartWindow(myScene, myMenuButtonNames, myApplicationMessages, myCurrentLanguage,
+    myStartWindow = new StartWindow(myScene, myMenuButtonNames, myApplicationMessages,
+        myCurrentLanguage,
         myCurrentStylesheet);
     switchToStartWindow();
   }
