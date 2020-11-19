@@ -22,6 +22,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import ooga.AlertHandler;
+import ooga.backend.bank.Bank;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.gameengine.GameMode;
 import ooga.backend.layout.Layout;
@@ -340,7 +341,7 @@ public class BloonsApplication {
   }
 
   public void initializeGameObjects(Layout layout, BloonsCollection bloons,
-      TowersCollection towers, ProjectilesCollection projectiles, RoadItemsCollection roadItems,
+      TowersCollection towers, ProjectilesCollection projectiles, RoadItemsCollection roadItems, Bank bank,
       Timeline animation, GameMenuInterface gameMenuController,
       WeaponBankInterface weaponBankController) {
     myLayout = layout;
@@ -351,6 +352,7 @@ public class BloonsApplication {
     myAnimation = animation;
     myGameMenuController = gameMenuController;
     myWeaponBankController = weaponBankController;
+    myBank = bank;
   }
 
   private void loadLevel(String levelName) {
@@ -370,7 +372,7 @@ public class BloonsApplication {
     myMenuPane = new MenuPane();
     visualizeLayout(myLevel);
     myAnimationHandler = new AnimationHandler(myLevelLayout, myBloons,
-        myTowers, myProjectiles, myRoadItems, myBlockSize, myAnimation);
+        myTowers, myProjectiles, myRoadItems, , myBlockSize, myAnimation);
     weaponNodeHandler = new WeaponNodeHandler(myLayout, myBlockSize, myLevelLayout, myMenuPane,
         myTowers, myWeaponBankController, myAnimationHandler);
     visualizePlayerGUI(myLevel);
