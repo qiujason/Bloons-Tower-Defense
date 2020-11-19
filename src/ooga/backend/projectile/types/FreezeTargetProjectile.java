@@ -1,6 +1,9 @@
-package ooga.backend.projectile;
+package ooga.backend.projectile.types;
 
-public class FreezeTargetProjectile extends Projectile{
+import ooga.backend.projectile.Projectile;
+import ooga.backend.projectile.ProjectileType;
+
+public class FreezeTargetProjectile extends Projectile {
 
   public FreezeTargetProjectile(ProjectileType type, double xPosition, double yPosition,
       double xVelocity, double yVelocity, double angle) {

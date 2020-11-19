@@ -1,6 +1,9 @@
-package ooga.backend.projectile;
+package ooga.backend.projectile.types;
 
-public class SpreadProjectile extends Projectile{
+import ooga.backend.projectile.Projectile;
+import ooga.backend.projectile.ProjectileType;
+
+public class SpreadProjectile extends Projectile {
 
   public SpreadProjectile(ProjectileType type, double xPosition, double yPosition, double xVelocity,
       double yVelocity, double angle) {
