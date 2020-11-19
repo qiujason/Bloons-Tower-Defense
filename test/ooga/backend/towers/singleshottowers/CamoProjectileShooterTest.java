@@ -3,12 +3,10 @@ package ooga.backend.towers.singleshottowers;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.factory.CamoBloonsFactory;
-import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;

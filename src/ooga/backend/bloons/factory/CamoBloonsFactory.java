@@ -26,5 +26,4 @@ public class CamoBloonsFactory implements BloonsFactory {
     newCamoBloon.setDistanceTraveled(bloon.getDistanceTraveled());
     return newCamoBloon;
   }
-
 }

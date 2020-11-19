@@ -8,7 +8,7 @@ import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.BloonsTypeChain;
 import org.junit.jupiter.api.Test;
 
-public class BloonsTypeReaderTest {
+public class BloonsTypeChainTest {
 
   @Test
   void testGetBloonsTypeRecordByName() {
