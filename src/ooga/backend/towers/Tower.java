@@ -162,8 +162,8 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   }
 
   public boolean ifCamoBloon(Bloon bloon){
-    return getTowerType() != TowerType.CamoProjectileShooter && bloon.getBloonsType().specials().contains(
-        Specials.Camo);
+    return getTowerType() != TowerType.CamoProjectileShooter && bloon.getBloonsType().specials() ==
+        Specials.Camo;
   }
 
   public void setProjectileType(ProjectileType update){
