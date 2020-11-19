@@ -144,7 +144,7 @@ public class BloonsApplication {
     return windowChangeButtons;
   }
 
-  private void switchToSelectionWindow() {
+  public void switchToSelectionWindow() {
     Button toStartWindow = new Button();
     Button toGameWindow = new Button();
     toStartWindow.setOnAction(event -> switchToStartWindow());
@@ -181,19 +181,7 @@ public class BloonsApplication {
   }
 
   private void loadLevel(String levelName) {
-    if (levelName == null) {
-      new AlertHandler(myApplicationMessages.getString("NoLevelSelected"),
-          myApplicationMessages.getString("NoLevelSelected"));
-    }
-    if (myGameMode == null) {
-      new AlertHandler(myApplicationMessages.getString("NoGameMode"),
-          myApplicationMessages.getString("NoGameMode"));
-      return;
-    }
-    assert levelName != null;
-    if (levelName.equals("null.csv")) {
-      new AlertHandler(myApplicationMessages.getString("NoLevelSelected"),
-          myApplicationMessages.getString("NoLevelSelected"));
+    if (checkNullModeOrLevel(levelName)) {
       return;
     }
     myCurrentLevel = levelName;
@@ -212,6 +200,20 @@ public class BloonsApplication {
     displayCurrentHealth(GameEngine.STARTING_LIVES);
     myScene.setRoot(myLevel);
     myStage.setScene(myScene);
+  }
+
+  private boolean checkNullModeOrLevel(String levelName) {
+    if (myGameMode == null) {
+      new AlertHandler(myApplicationMessages.getString("NoGameMode"),
+          myApplicationMessages.getString("NoGameMode"));
+      return true;
+    }
+    if (levelName.equals("null.csv")) {
+      new AlertHandler(myApplicationMessages.getString("NoLevelSelected"),
+          myApplicationMessages.getString("NoLevelSelected"));
+      return true;
+    }
+    return false;
   }
 
   private void visualizeLayout(Pane level) {

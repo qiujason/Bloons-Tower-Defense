@@ -53,8 +53,14 @@ public class GameMenu extends FlowPane {
     button.setText(menuProperties.getString(buttonType.name()));
     button.setOnAction(buttonHandleMap.get(buttonType));
     button.setId(buttonType.name());
-    button.setMinWidth(BUTTON_WIDTH);
-    button.setMaxWidth(BUTTON_WIDTH);
+    if(buttonType.toString().equals("QuitButton")){
+      button.setMinWidth(2 * BUTTON_WIDTH);
+      button.setMaxWidth(2 * BUTTON_WIDTH);
+    }
+    else{
+      button.setMinWidth(BUTTON_WIDTH);
+      button.setMaxWidth(BUTTON_WIDTH);
+    }
     return button;
   }
 }
