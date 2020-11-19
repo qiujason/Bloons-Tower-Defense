@@ -17,7 +17,7 @@ import ooga.backend.layout.Layout;
 
 public class BloonReader extends Reader{
 
-  private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResources");
+  private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResource");
   private static final String FACTORY_FILE_PATH = "ooga.backend.bloons.factory.";
   private static final String RESOURCE_BUNDLE_PATH = "bloon_resources/BloonReaderKey";
   private static final ResourceBundle BLOON_READER_KEY = ResourceBundle.getBundle(RESOURCE_BUNDLE_PATH);

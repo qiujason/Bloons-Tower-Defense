@@ -8,7 +8,7 @@ import ooga.backend.towers.TowerType;
 
 public class SingleTowerFactory implements TowerFactory {
 
-  private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResources");
+  private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResource");
   private final static String TOWER_PATH = "ooga.backend.towers.";
 
   @Override

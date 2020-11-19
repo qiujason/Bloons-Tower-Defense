@@ -31,7 +31,7 @@ import ooga.visualization.nodes.WeaponRange;
 
 public class WeaponNodeHandler implements WeaponNodeInterface {
 
-  private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResources");
+  private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResource");
 
   private Layout layout;
   private double gameWidth;

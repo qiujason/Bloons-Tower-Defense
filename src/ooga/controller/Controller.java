@@ -33,7 +33,7 @@ import ooga.visualization.BloonsApplication;
 
 public class Controller extends Application {
 
-  private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResources");
+  private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResource");
   public static final double FRAMES_PER_SECOND = 60;
   public static final double ANIMATION_DELAY = 1 / FRAMES_PER_SECOND;
 
