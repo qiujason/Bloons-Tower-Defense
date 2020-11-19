@@ -107,6 +107,7 @@ public class Bank implements BankAPI {
 
 
   private boolean canBuyTower(TowerType buyTower){
+
     return currentMoney >= towerBuyMap.get(buyTower);
   }
 

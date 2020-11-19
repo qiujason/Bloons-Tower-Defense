@@ -19,7 +19,6 @@ import ooga.backend.gameengine.GameEngine;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bank.Bank;
 import ooga.backend.bloons.types.BloonsTypeChain;
-import ooga.backend.gameengine.GameMode;
 import ooga.backend.layout.Layout;
 import ooga.backend.readers.BloonReader;
 import ooga.backend.readers.LayoutReader;
@@ -56,11 +55,9 @@ public class Controller extends Application {
   private GameEngineAPI gameEngine;
   private Layout layout;
   private List<BloonsCollection> allBloonWaves;
-  private GameMenuInterface gameController;
   private Map<TowerType, Integer> towerBuyMap;
   private Map<TowerType, Integer> towerSellMap;
   private Map<RoadItemType, Integer> roadItemBuyMap;
-  private WeaponBankInterface towerController;
   private Bank bank;
   private KeyFrame oldKeyFrame;
 
@@ -88,11 +85,16 @@ public class Controller extends Application {
     startGameEngine();
     gameController = new GameMenuController(myAnimation, gameEngine, e -> {bloonsApplication.switchToSelectionWindow(); myAnimation.stop();});
     towerController = new WeaponBankController(bank);
+    GameMenuInterface gameMenuController = new GameMenuController(myAnimation, gameEngine,
+        bloonsApplication);
+    WeaponBankInterface weaponBankController = new WeaponBankController(bank);
+
     bloonsApplication
         .initializeGameObjects(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
-            gameEngine.getProjectiles(), gameEngine.getRoadItems(), bank, myAnimation, gameController,
-            towerController);
-
+            gameEngine.getProjectiles(), gameEngine.getRoadItems(), bank, myAnimation,
+            gameMenuController,
+            weaponBankController);
+    
     myAnimation.setCycleCount(Timeline.INDEFINITE);
 
     myAnimation.getKeyFrames().remove(oldKeyFrame);
@@ -108,13 +110,15 @@ public class Controller extends Application {
                 "BombShooter", "BombShooterButton", "SniperMonkey", "SniperMonkeyButton",
                 "SuperMonkey",
                 "SuperMonkeyButton", "IceMonkey", "IceMonkeyButton", "NinjaMonkey",
-                "NinjaMonkeyButton")));
+                "NinjaMonkeyButton", "RoadSpikes", "RoadSpikesButton", "MonkeyGlue",
+                "MonkeyGlueButton", "ExplodingPineapple", "ExplodingPineappleButton")));
     PropertyFileValidator towerNameValidator = new PropertyFileValidator(
         "btd_towers/TowerMonkey.properties",
         new HashSet<>(Arrays.asList("SingleProjectileShooter", "MultiProjectileShooter",
             "SpreadProjectileShooter", "UnlimitedRangeProjectileShooter",
             "SuperSpeedProjectileShooter",
-            "MultiFrozenShooter", "CamoProjectileShooter")));
+            "MultiFrozenShooter", "CamoProjectileShooter", "PopBloonsItem", "SlowBloonsItem",
+            "ExplodeBloonsItem")));
     if (!towerPicsValidator.containsNeededKeys()) {
        new AlertHandler(errorResource.getString("InvalidPropertyFile"),
           errorResource.getString("RequiredKeysMissingPics"));
