@@ -1,8 +1,11 @@
-package ooga.backend;
+package ooga.backend.gameengine;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import ooga.backend.API.GameEngineAPI;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
@@ -39,15 +42,14 @@ public class GameEngine implements GameEngineAPI {
 
   private int round;
 
-
   private int lives = STARTING_LIVES;
+  private String gameMode;
 
 
-
-  public GameEngine(Layout layout, List<BloonsCollection> allBloonWaves) {
+  public GameEngine(String gameMode, Layout layout, List<BloonsCollection> allBloonWaves) {
     this.layout = layout;
     this.allBloonWaves = allBloonWaves;
-    this.queuedBloons = allBloonWaves.get(STARTING_ROUND);
+    this.queuedBloons = allBloonWaves.get(STARTING_ROUND).copyOf(allBloonWaves.get(STARTING_ROUND));
     this.currentBloonWave = new BloonsCollection();
     this.towers = new TowersCollection();
     this.roadItems = new RoadItemsCollection();
@@ -57,6 +59,7 @@ public class GameEngine implements GameEngineAPI {
     myBloonSidesX = new HashMap<>();
     myBloonSidesY = new HashMap<>();
     this.round = STARTING_ROUND;
+    this.gameMode = gameMode;
 
   }
 
@@ -117,9 +120,22 @@ public class GameEngine implements GameEngineAPI {
     }
   }
 
-  public void nextWave() {
+  public void nextWaveNormal() {
     round++;
-    queuedBloons = allBloonWaves.get(round);
+    queuedBloons = allBloonWaves.get(round).copyOf(allBloonWaves.get(round));
+  }
+
+  public void nextWaveInfinite() {
+    System.out.println("here");
+    round++;
+    Random rand = new Random();
+    int randomRound = rand.nextInt(allBloonWaves.size());
+    System.out.println(randomRound);
+    queuedBloons = allBloonWaves.get(randomRound).copyOf(allBloonWaves.get(randomRound));
+  }
+
+  public void nextWaveSandbox() {
+    nextWaveNormal();
   }
 
   public void resetGame() {
@@ -159,6 +175,16 @@ public class GameEngine implements GameEngineAPI {
     }
   }
 
+  private void nextWave() {
+    try {
+      Method method = this.getClass()
+          .getDeclaredMethod("nextWave" + this.gameMode);
+      method.invoke(this);
+    } catch (SecurityException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+      e.printStackTrace();
+    }
+  }
+
   @Override
   public BloonsCollection getCurrentBloonWave() {
     return currentBloonWave;
@@ -186,15 +212,17 @@ public class GameEngine implements GameEngineAPI {
 
   @Override
   public void update(){
-    //TODO: get projectile AND tower list from front end (maybe bloons? idk)
-    if (isRoundEnd()){
-
-      nextWave();
-    }
+    checkRoundStatus();
     spawnBloons();
     moveBloons();
     moveProjectiles();
     shootBloons();
+  }
+
+  private void checkRoundStatus() {
+    if (isRoundEnd()){
+      nextWave();
+    }
   }
 
   private void spawnBloons() {
@@ -211,7 +239,10 @@ public class GameEngine implements GameEngineAPI {
   }
 
   public boolean isGameEnd(){
-    return lives <= 0 || (isRoundEnd() && round >= (allBloonWaves.size() - 1));
+    if(gameMode != GameMode.Infinite.name()) {
+      return lives <= 0 || (isRoundEnd() && round >= (allBloonWaves.size() - 1));
+    }
+    return false;
   }
 
   @Override

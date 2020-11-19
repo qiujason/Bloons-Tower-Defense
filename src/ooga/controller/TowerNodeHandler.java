@@ -214,7 +214,6 @@ public class TowerNodeHandler {
   }
 
   private boolean checkInvalidPlacement(TowerNode towerNode){
-    System.out.println(checkOnPath(towerNode));
     return checkOnPath(towerNode);
   }
 
@@ -222,7 +221,6 @@ public class TowerNodeHandler {
     for(Node layoutBlock : layoutRoot.getChildren()){
      if(layoutBlock.getId() != null && layoutBlock.getId().contains("Path")){
         if (towerNode.getBoundsInParent().intersects(layoutBlock.getBoundsInParent())){
-          System.out.println(layoutBlock.getId());
           return true;
         }
       }

@@ -27,6 +27,7 @@ public class SelectionWindow implements Window {
   private BorderPane myLevelSelectScreen;
   private Button myBackButton;
   private Button myLoadLevelButton;
+  private String myLevelName;
   private Enum<?> myGameMode;
   private ComboBox<String> myLevelOptions;
 
@@ -90,8 +91,11 @@ public class SelectionWindow implements Window {
     for (File level : levels.toFile().listFiles()) {
       levelOptions.getItems().add(level.getName().split("\\.")[0]);
     }
-    levelOptions.setOnAction(
-        e -> displayLevelPhotoAndDescription(levelOptions.getValue(), levelSelectScreen));
+    levelOptions.setOnAction(e ->
+    {
+      myLevelName = levelOptions.getValue();
+      displayLevelPhotoAndDescription(myLevelName, levelSelectScreen);
+    });
     return levelOptions;
   }
 
@@ -163,10 +167,13 @@ public class SelectionWindow implements Window {
     ComboBox<Enum<?>> gameModes = new ComboBox<>();
     gameModes.setId("GameModes");
     gameModes.setPromptText(myMenuButtonNames.getString("GameModes"));
-    gameModes.setOnAction(e -> myGameMode = gameModes.getValue());
+    gameModes.setOnAction(e -> {
+      myGameMode = gameModes.getValue();
+      displayLevelPhotoAndDescription(myLevelName, myLevelSelectScreen);
+    });
     Class<?> gameModesClass = null;
     try {
-      gameModesClass = Class.forName("something");
+      gameModesClass = Class.forName("ooga.backend.gameengine.GameMode");
     } catch (ClassNotFoundException e) {
       new AlertHandler(myApplicationMessages.getString("NoGameModes"),
           myApplicationMessages.getString("NoGameModes"));
