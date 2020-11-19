@@ -20,7 +20,7 @@ import ooga.backend.towers.TowersCollection;
 import ooga.backend.towers.factory.SingleTowerFactory;
 import ooga.backend.towers.factory.TowerFactory;
 import ooga.backend.towers.singleshottowers.SingleShotTower;
-import ooga.visualization.AnimationHandler;
+import ooga.visualization.animationhandlers.AnimationHandler;
 import ooga.visualization.menu.WeaponMenu;
 import ooga.visualization.nodes.GamePieceNode;
 import ooga.visualization.nodes.ItemNodeFactory;

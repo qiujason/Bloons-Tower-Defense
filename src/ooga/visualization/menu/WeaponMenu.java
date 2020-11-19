@@ -4,7 +4,6 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.layout.FlowPane;
 import ooga.backend.towers.ShootingChoice;
 import ooga.controller.WeaponNodeHandler;
@@ -14,7 +13,7 @@ public class WeaponMenu extends FlowPane {
 
   private static final String RESOURCE_DIRECTORY = "ooga.visualization.resources.languages.";
   private static final String MENU = ".menu";
-
+  private static final String MULTI_TAG = "Multi";
   private static final String UPGRADE_RANGE = "RangeUpgradeButton";
   private static final String UPGRADE_RATE = "RateUpgradeButton";
   private static final String SELL_TOWER = "SellTowerButton";
@@ -22,7 +21,7 @@ public class WeaponMenu extends FlowPane {
   private static final Double BUTTON_WIDTH = 100.0;
 
   private ResourceBundle menuProperties;
-  private final ComboBox shootingChoiceBox;
+  private ShootingChoiceBox shootingChoiceBox = null;
 
   public WeaponMenu(TowerNode tower, WeaponNodeHandler weaponNodeHandler, String language){
     initializeResourceBundle(language);
@@ -33,8 +32,12 @@ public class WeaponMenu extends FlowPane {
         .upgradeRate(tower));
     makeButton(menuProperties.getString(SELL_TOWER), event -> weaponNodeHandler
         .removeWeapon(tower));
-    shootingChoiceBox = new ShootingChoiceBox(menuProperties.getString(SHOOTING_CHOICE), BUTTON_WIDTH);
-    setComboBoxHandler(event -> weaponNodeHandler.setTargetingOption(tower, (ShootingChoice) shootingChoiceBox.getValue()));
+    if(!isSpreadTower(tower)) {
+      shootingChoiceBox = new ShootingChoiceBox(menuProperties.getString(SHOOTING_CHOICE),
+          BUTTON_WIDTH);
+      setComboBoxHandler(event -> weaponNodeHandler
+          .setTargetingOption(tower, (ShootingChoice) shootingChoiceBox.getValue()));
+    }
   }
 
   private void makeButton(String name, EventHandler<ActionEvent> handler) {
@@ -56,4 +59,7 @@ public class WeaponMenu extends FlowPane {
     menuProperties = ResourceBundle.getBundle(RESOURCE_DIRECTORY + language + MENU + language);
   }
 
+  private boolean isSpreadTower(TowerNode towerNode){
+    return (towerNode.getTowerType().name().contains(MULTI_TAG));
+  }
 }

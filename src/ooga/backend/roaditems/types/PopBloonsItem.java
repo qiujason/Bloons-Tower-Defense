@@ -5,7 +5,7 @@ import ooga.backend.roaditems.RoadItemType;
 
 public class PopBloonsItem extends RoadItem {
 
-  public static int defaultSpikes = 10;
+  public static final int defaultSpikes = 10;
   private int spikesLeft;
 
   public PopBloonsItem(double myXPosition, double myYPosition) {
