@@ -82,7 +82,7 @@ public class Controller extends Application {
     initializeBloonWaves();
     startGameEngine();
 
-    gameController = new GameMenuController(myAnimation);
+    gameController = new GameMenuController(myAnimation, gameEngine);
     towerController = new WeaponBankController(bank);
 
     bloonsApplication
