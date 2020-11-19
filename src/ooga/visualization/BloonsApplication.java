@@ -13,10 +13,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ooga.AlertHandler;
-
 import ooga.backend.gameengine.GameEngine;
 import ooga.backend.bank.Bank;
 import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.gameengine.GameMode;
 import ooga.backend.layout.Layout;
 import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.roaditems.RoadItemsCollection;
@@ -24,6 +24,7 @@ import ooga.backend.towers.TowersCollection;
 import ooga.controller.GameMenuInterface;
 import ooga.controller.WeaponBankInterface;
 import ooga.controller.WeaponNodeInterface;
+import ooga.visualization.animationhandlers.AnimationHandler;
 import ooga.visualization.menu.GameMenu;
 import ooga.controller.WeaponNodeHandler;
 import ooga.visualization.menu.MenuPane;
@@ -83,7 +84,7 @@ public class BloonsApplication {
   private Text myHealthText;
   private StartWindow myStartWindow;
   private SelectionWindow mySelectionWindow;
-  private Enum<?> myGameMode;
+  private GameMode myGameMode;
   private Bank myBank;
 
   public BloonsApplication(Button startLevelButton) {
@@ -191,11 +192,12 @@ public class BloonsApplication {
     myMenuPane = new MenuPane();
     visualizeLayout(myLevel);
     myAnimationHandler = new AnimationHandler(myLevelLayout, myBloons,
-        myTowers, myProjectiles, myRoadItems, myBank, myBlockSize, myAnimation);
+        myTowers, myProjectiles, myRoadItems, myBank, myGameMode, myBlockSize, myAnimation);
     weaponNodeHandler = new WeaponNodeHandler(myLayout, myBlockSize, myLevelLayout, myMenuPane,
-        myTowers, myWeaponBankController, myAnimationHandler);
+        myTowers, myWeaponBankController, myAnimationHandler, myCurrentLanguage);
     visualizePlayerGUI(myLevel);
-    displayCurrentMoney(Bank.STARTING_MONEY);
+    displayCurrentMoney(myBank.getCurrentMoney());
+
     displayCurrentRound(1);
     displayCurrentHealth(GameEngine.STARTING_LIVES);
     myScene.setRoot(myLevel);
@@ -322,7 +324,7 @@ public class BloonsApplication {
         myApplicationMessages.getString("GameLossMessage"));
   }
 
-  public Enum<?> getMyGameMode() {
+  public GameMode getMyGameMode() {
     return myGameMode;
   }
 
@@ -332,6 +334,10 @@ public class BloonsApplication {
 
   public ResourceBundle getMenuButtonNames() {
     return myMenuButtonNames;
+  }
+
+  public Pane getLevel() {
+    return myLevel;
   }
 
   public AnimationHandler getMyAnimationHandler() {

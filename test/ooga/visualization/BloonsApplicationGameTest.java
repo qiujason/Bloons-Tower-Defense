@@ -1,129 +1,110 @@
 package ooga.visualization;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import javafx.animation.Animation;
+import javafx.animation.Timeline;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import ooga.controller.Controller;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
 
 public class BloonsApplicationGameTest extends DukeApplicationTest {
 
-  public static final String LAYOUTS_PATH = "layouts/";
-
+  private Controller myController;
   private Button myStartButton;
+  private Button myPlayButton;
+  private Button myPauseButton;
+  private Button mySpeedUpButton;
+  private Button mySlowDownButton;
+  private Button myQuitButton;
+  private Pane myLevel;
+  private Timeline myAnimation;
 
   @Override
   public void start(Stage testStage) {
-    Controller myController = new Controller();
+    myController = new Controller();
     myController.start(testStage);
+    myController.getMyBloonsApplication().getMenuButtonNames();
     myStartButton = lookup("#Start").query();
   }
 
-  private void startRandomLevel(){
+  private void startRandomLevel() {
     clickOn(myStartButton);
     ComboBox<String> levelOptions = lookup("#LevelOptions").query();
     select(levelOptions, levelOptions.getItems().get(0));
+    ComboBox<Enum<?>> modeOptions = lookup("#GameModes").query();
+    selectEnum(modeOptions, modeOptions.getItems().get(0));
     Button startLevelButton = lookup("#StartLevelButton").query();
     clickOn(startLevelButton);
+    myPlayButton = lookup("#PlayButton").query();
+    myPauseButton = lookup("#PauseButton").query();
+    mySpeedUpButton = lookup("#SpeedUpButton").query();
+    mySlowDownButton = lookup("#SlowDownButton").query();
+    myQuitButton = lookup("#QuitButton").query();
+    myLevel = myController.getMyBloonsApplication().getLevel();
+    myAnimation = myController.getMyBloonsApplication().getMyAnimationHandler().getAnimation();
   }
 
-//  FIXME: Don't try and use any of the following. It only worked for much older versions
-//
-//  @Test // Not general
-//  public void testPutTower() {
-//    clickOn(myStartButton);
-//    Rectangle myBlock = lookup("#LayoutBlock00").query();
-//    clickOn(myBlock);
-//    Circle myTower = lookup("#LayoutBlock00Tower").query();
-//    assertNotEquals(Color.GREEN, myTower.getFill());
-//    clickOn(myTower);
-//    assertEquals(Color.GREEN, myBlock.getFill());
-//  }
-//
-//  @Test
-//  public void testPutTowerFail() {
-//    clickOn(myStartButton);
-//    Rectangle myRectangle = lookup("#LayoutBlock01").query();
-//    clickOn(myRectangle);
-//    assertEquals(Color.TAN, myRectangle.getFill());
-//  }
-//
-//  @Test
-//  public void testPlayButton(){
-//    clickOn(myStartButton);
-//    Circle myTestCircle = lookup("#TestCircle").query();
-//    Button myPlayButton = lookup("#Play").query();
-//    Button myPauseButton = lookup("#Pause").query();
-//    assertEquals(21, (int) myTestCircle.getCenterX());
-//    assertEquals(64, (int) myTestCircle.getCenterY());
-//    clickOn(myPlayButton);
-//    assertEquals(30, (int) myTestCircle.getCenterX());
-//    assertEquals(64, (int) myTestCircle.getCenterY());
-//  }
-//
-//  @Test
-//  public void testPauseButton(){
-//    clickOn(myStartButton);
-//    Circle myTestCircle = lookup("#TestCircle").query();
-//    Button myPauseButton = lookup("#Pause").query();
-//    assertEquals(21, (int) myTestCircle.getCenterX());
-//    assertEquals(64, (int) myTestCircle.getCenterY());
-//    clickOn(myPauseButton);
-//    assertEquals(21, (int) myTestCircle.getCenterX());
-//    assertEquals(64, (int) myTestCircle.getCenterY());
-//  }
-//
-//  @Test
-//  public void testSpeedUpButton(){
-//    clickOn(myStartButton);
-//    Circle myTestCircle = lookup("#TestCircle").query();
-//    Button mySpeedUpButton = lookup("#SpeedUp").query();
-//    Button myPlayButton = lookup("#Play").query();
-//    clickOn(mySpeedUpButton);
-//    assertEquals(21, (int) myTestCircle.getCenterX());
-//    assertEquals(64, (int) myTestCircle.getCenterY());
-//    clickOn(myPlayButton);
-//    assertNotEquals(31, (int) myTestCircle.getCenterX());
-//    assertEquals(64, (int) myTestCircle.getCenterY());
-//  }
-//
-//  @Test
-//  public void testSlowDownButton(){
-//    clickOn(myStartButton);
-//    Circle myTestCircle = lookup("#TestCircle").query();
-//    Button mySpeedUpButton = lookup("#SpeedUp").query();
-//    Button myPlayButton = lookup("#Play").query();
-//    Button mySlowDownButton = lookup("#SlowDown").query();
-//    clickOn(mySlowDownButton);
-//    assertEquals(21, (int) myTestCircle.getCenterX());
-//    assertEquals(64, (int) myTestCircle.getCenterY());
-//    clickOn(myPlayButton);
-//    assertNotEquals(30, (int) myTestCircle.getCenterX());
-//    assertEquals(64, (int) myTestCircle.getCenterY());
-//  }
-//
-//  @Test
-//  public void testBloonTurn(){
-//    clickOn(myStartButton);
-//    Button myPlayButton = lookup("#Play").query();
-//    clickOn(myPlayButton);
-//    Circle myTestCircle = lookup("#TestCircle").query();
-//    while((int) myTestCircle.getCenterY() == 64){
-//      assertEquals(64, (int) myTestCircle.getCenterY());
-//    }
-//    assertNotEquals(64, (int) myTestCircle.getCenterY());
-//  }
-//
-//  @Test
-//  public void testTowerTurn(){
-//    clickOn(myStartButton);
-//    Rectangle myBlock = lookup("#LayoutBlock00").query();
-//    clickOn(myBlock);
-//    Circle myTower = lookup("#LayoutBlock00Tower").query();
-//    assertEquals(0, myTower.getRotate());
-//    Button myPlayButton = lookup("#Play").query();
-//    clickOn(myPlayButton);
-//    assertNotEquals(0, myTower.getRotate());
-//  }
+  @Test
+  public void testPlayButton() {
+    startRandomLevel();
+    assertTrue(myController.getGameEngine().getCurrentBloonWave().size() == 0);
+    clickOn(myPlayButton);
+    assertTrue(myController.getGameEngine().getCurrentBloonWave().size() > 0);
+  }
+
+  @Test
+  public void testPauseButton() {
+    startRandomLevel();
+    clickOn(myPlayButton);
+    assertTrue(myController.getGameEngine().getCurrentBloonWave().size() == 1);
+    clickOn(myPauseButton);
+    double bloonPosition = myController.getGameEngine().getCurrentBloonWave().get(0).getXPosition();
+    clickOn(myPlayButton);
+    assertTrue(
+        myController.getGameEngine().getCurrentBloonWave().get(0).getXPosition() > bloonPosition);
+  }
+
+  @Test
+  public void testSpeedUpButton() {
+    startRandomLevel();
+    clickOn(myPlayButton);
+    double oldRate = myAnimation.getRate();
+    clickOn(mySpeedUpButton);
+    assertTrue(myAnimation.getRate() > oldRate);
+  }
+
+  @Test
+  public void testSlowDownButton() {
+    startRandomLevel();
+    clickOn(myPlayButton);
+    double oldRate = myAnimation.getRate();
+    clickOn(mySlowDownButton);
+    assertTrue(myAnimation.getRate() < oldRate);
+  }
+
+  @Test
+  public void testQuitButton() {
+    startRandomLevel();
+    clickOn(myQuitButton);
+    Button startLevelButton = lookup("#StartLevelButton").query();
+    assertNotNull(startLevelButton);
+  }
+
+  @Test
+  public void testTowerPlacement() {
+    startRandomLevel();
+    clickOn(myPlayButton);
+    Button towerButton = lookup("#singleshottowers.SingleProjectileShooterButton").query();
+    clickOn(towerButton);
+    clickOn(myLevel, 50, 50);
+    assertTrue(myController.getGameEngine().getTowers().size() > 0);
+  }
+
 }

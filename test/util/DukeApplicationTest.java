@@ -140,6 +140,11 @@ public class DukeApplicationTest extends ApplicationTest {
     simulateAction(cb, () -> cb.getSelectionModel().select(value));
   }
 
+  protected void selectEnum(ComboBox<Enum<?>> cb, Enum<?> value) {
+    // FIXME: duplicated code - but no common ancestor defines getSelectionModel()
+    simulateAction(cb, () -> cb.getSelectionModel().select(value));
+  }
+
   protected void select(ChoiceBox<String> cb, String value) {
     // FIXME: duplicated code - but no common ancestor defines getSelectionModel()
     simulateAction(cb, () -> cb.getSelectionModel().select(value));

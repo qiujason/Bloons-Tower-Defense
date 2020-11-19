@@ -10,7 +10,7 @@ import ooga.backend.bloons.types.Specials;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.ProjectileType;
 import ooga.backend.projectile.ProjectilesCollection;
-import ooga.visualization.AnimationHandler;
+import ooga.visualization.animationhandlers.AnimationHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -149,15 +149,19 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   private void upgradeHelper(String key, double currUpgradeMultiplier, double currUpgradeCost) {
     switch(key){
       case "RadiusUpgradeMultiplier":
-        this.radius *= currUpgradeMultiplier; break;
+        this.radius *= currUpgradeMultiplier;
+        break;
       case "ShootingSpeedUpgradeMultiplier":
-        this.shootingSpeed *= currUpgradeMultiplier; break;
+        this.shootingSpeed *= currUpgradeMultiplier;
+        break;
       case "ShootingRestRateUpgradeMultiplier":
-        this.shootingRestRate /= currUpgradeMultiplier; break;
+        this.shootingRestRate /= currUpgradeMultiplier;
+        break;
       case "RadiusUpgradeCost":
       case "ShootingSpeedUpgradeCost":
       case "ShootingRestRateUpgradeCost":
-        this.totalUpgradeCost += currUpgradeCost; break;
+        this.totalUpgradeCost += currUpgradeCost;
+        break;
     }
   }
 

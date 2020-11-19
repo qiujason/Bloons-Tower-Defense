@@ -3,8 +3,8 @@ package ooga.visualization.nodes;
 import java.net.URISyntaxException;
 import java.util.ResourceBundle;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import ooga.AlertHandler;
 import ooga.backend.projectile.ProjectileType;
 
 public class ProjectileNode extends GamePieceNode {
@@ -30,7 +30,7 @@ public class ProjectileNode extends GamePieceNode {
           projectileType.name())).toURI()));
     } catch (
         URISyntaxException e) {
-      e.printStackTrace();
+      new AlertHandler("Image Not Found", projectileType.name() + " image not found.");
     }
     assert projectileImage != null;
     return new ImagePattern(projectileImage);  }

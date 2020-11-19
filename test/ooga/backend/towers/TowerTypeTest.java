@@ -13,7 +13,7 @@ class TowerTypeTest {
     assertEquals("SuperSpeedProjectileShooter", TowerType.SuperSpeedProjectileShooter.name());
     assertEquals("UnlimitedRangeProjectileShooter", TowerType.UnlimitedRangeProjectileShooter.name());
     assertEquals("MultiProjectileShooter", TowerType.MultiProjectileShooter.name());
-    assertEquals("FrozenSpreadShooter", TowerType.FrozenSpreadShooter.name());
+    assertEquals("MultiFrozenShooter", TowerType.MultiFrozenShooter.name());
   }
 
   @Test

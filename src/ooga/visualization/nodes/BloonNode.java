@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.util.ResourceBundle;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
+import ooga.AlertHandler;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.Specials;
 
@@ -28,35 +29,17 @@ public class BloonNode extends GamePieceNode{
     Image towerImage = null;
     try {
       StringBuilder imageName = new StringBuilder(bloonType.name());
-//      if (!bloonType.name().equals("DEAD")) {
-        if (bloonType.specials() != Specials.None && !bloonType.name().equals("DEAD")) {
-          imageName.append("_").append(bloonType.specials().name().toUpperCase());
-        }
-        System.out.println("REACHED");
-        towerImage = new Image(String.valueOf(getClass().getResource(myBloonImages.getString(
-            imageName.toString())).toURI()));
-//      } else {
-//        return new ImagePattern();
-//      }
+      if (bloonType.specials() != Specials.None && !bloonType.name().equals("DEAD")) {
+        imageName.append("_").append(bloonType.specials().name().toUpperCase());
+      }
+      towerImage = new Image(String.valueOf(getClass().getResource(myBloonImages.getString(
+          imageName.toString())).toURI()));
     } catch (
         URISyntaxException e) {
-      e.printStackTrace();
+      new AlertHandler("Image Not Found", bloonType.name() + " image not found.");
     }
     assert towerImage != null;
     return new ImagePattern(towerImage);
-  }
-
-  public void setImage(File file){
-    Image bloonImage = null;
-    try {
-      bloonImage = new Image(file.toURI().toURL().toExternalForm());
-    } catch (
-        MalformedURLException e) {
-      e.printStackTrace();
-    }
-    assert bloonImage != null;
-    ImagePattern imageToSet = new ImagePattern(bloonImage);
-    this.setFill(imageToSet);
   }
 
 }

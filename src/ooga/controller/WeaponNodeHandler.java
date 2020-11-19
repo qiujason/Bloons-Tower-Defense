@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 import ooga.AlertHandler;
 import ooga.backend.ConfigurationException;
+import ooga.backend.GamePiece;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.layout.Layout;
 import ooga.backend.roaditems.RoadItem;
@@ -19,8 +20,9 @@ import ooga.backend.towers.TowersCollection;
 import ooga.backend.towers.factory.SingleTowerFactory;
 import ooga.backend.towers.factory.TowerFactory;
 import ooga.backend.towers.singleshottowers.SingleShotTower;
-import ooga.visualization.AnimationHandler;
+import ooga.visualization.animationhandlers.AnimationHandler;
 import ooga.visualization.menu.WeaponMenu;
+import ooga.visualization.nodes.GamePieceNode;
 import ooga.visualization.nodes.ItemNodeFactory;
 import ooga.visualization.nodes.RoadItemNode;
 import ooga.visualization.nodes.RoadItemNodeFactory;
@@ -31,31 +33,35 @@ import ooga.visualization.nodes.WeaponRange;
 
 public class WeaponNodeHandler implements WeaponNodeInterface {
 
-  private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResource");
+  private final Layout layout;
+  private final double gameWidth;
+  private final double gameHeight;
+  private final double blockSize;
+  private final Group layoutRoot;
+  private final VBox menuPane;
+  private final WeaponBankInterface menuController;
+  private final AnimationHandler animationHandler;
+  private final TowersCollection towersCollection;
+  private final String currentLanguage;
 
-  private Layout layout;
-  private double gameWidth;
-  private double gameHeight;
-  private double blockSize;
-  private Group layoutRoot;
-  private VBox menuPane;
-  private WeaponBankInterface menuController;
-  private AnimationHandler animationHandler;
-  private TowersCollection towersCollection;
+  private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResource");
+  private static final String PATH_ID = "Path";
+  private static final String TOWER_ERROR = "TowerError";
+  private static final String ITEM_ERROR = "RoadItemError";
+  private static final double towerDefaultPosition = -1;
+  private static final double defaultPositionDivisor = 2;
+  private static final double nodeSizeDivisor = 2.5;
 
   private boolean canMakeTower;
   private boolean canMakeRoadItem;
-
   private TowerFactory towerFactory;
   private WeaponNodeFactory towerNodeFactory;
   private RoadItemFactory roadItemFactory;
   private ItemNodeFactory itemNodeFactory;
 
-  private static final double towerDefaultPosition = -1;
-
   public WeaponNodeHandler(Layout layout, double blockSize,
       Group layoutRoot, VBox menuPane, TowersCollection towersCollection,
-      WeaponBankInterface menuController, AnimationHandler animationHandler) {
+      WeaponBankInterface menuController, AnimationHandler animationHandler, String language) {
     this.layout = layout;
     gameHeight = layout.getHeight() * blockSize;
     gameWidth = layout.getWidth() * blockSize;
@@ -65,14 +71,10 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
     this.towersCollection = towersCollection;
     this.menuController = menuController;
     this.animationHandler = animationHandler;
-
     canMakeTower = true;
     canMakeRoadItem = true;
-
-    towerFactory = new SingleTowerFactory();
-    towerNodeFactory = new TowerNodeFactory();
-    roadItemFactory = new SingleRoadItemFactory();
-    itemNodeFactory = new RoadItemNodeFactory();
+    currentLanguage = language;
+    initializeFactories();
   }
 
   @Override
@@ -83,20 +85,19 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
         try {
           Tower tower = towerFactory
               .createTower(towerType, towerDefaultPosition, towerDefaultPosition);
-          TowerNode towerNode = towerNodeFactory.createTowerNode(towerType, gameWidth / 2,
-              gameHeight / 2, blockSize / 2.5);
-          towerNode.makeTowerMenu(this);
+          TowerNode towerNode = towerNodeFactory.createTowerNode(towerType,
+              gameWidth / defaultPositionDivisor, gameHeight / defaultPositionDivisor,
+              blockSize / nodeSizeDivisor);
+          towerNode.makeTowerMenu(this, currentLanguage);
           towerNode.setWeaponRange(tower.getRadius(), blockSize);
           WeaponRange towerRange = towerNode.getRangeDisplay();
           layoutRoot.getChildren().add(towerRange);
           layoutRoot.getChildren().add(towerNode);
           placeTower(tower, towerNode);
         } catch (ConfigurationException e) {
-          new AlertHandler(ERROR_RESOURCES.getString("TowerError"), ERROR_RESOURCES.getString(e.getMessage()));
+          new AlertHandler(ERROR_RESOURCES.getString(TOWER_ERROR), ERROR_RESOURCES.getString(e.getMessage()));
         }
-
       }
-
     }
   }
 
@@ -108,12 +109,13 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
         try {
           RoadItem roadItem = roadItemFactory
               .createRoadItem(roadItemType, towerDefaultPosition, towerDefaultPosition);
-          RoadItemNode itemNode = itemNodeFactory.createItemNode(roadItemType, gameWidth / 2,
-              gameHeight / 2, blockSize / 2);
+          RoadItemNode itemNode = itemNodeFactory.createItemNode(roadItemType,
+              gameWidth / defaultPositionDivisor,
+              gameHeight / defaultPositionDivisor, blockSize / nodeSizeDivisor);
           layoutRoot.getChildren().add(itemNode);
           placeRoadItem(roadItem, itemNode);
         } catch (ConfigurationException e) {
-          new AlertHandler(ERROR_RESOURCES.getString("RoadItemError"),ERROR_RESOURCES.getString(e.getMessage()));
+          new AlertHandler(ERROR_RESOURCES.getString(ITEM_ERROR),ERROR_RESOURCES.getString(e.getMessage()));
         }
       }
     }
@@ -149,14 +151,13 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
     singleShotTower.updateShootingChoice(shootingChoice);
   }
 
-  private void placeTower(Tower tower, TowerNode towerNode) {
+  private void placeTower(GamePiece gamePiece, GamePieceNode pieceNode) {
+    Tower tower = (Tower) gamePiece;
+    TowerNode towerNode = (TowerNode) pieceNode;
     layoutRoot.setOnMouseMoved(e -> {
       if (e.getX() >= 0 && e.getX() <= gameWidth) {
         if (e.getY() >= 0 && e.getY() <= gameHeight) {
-          towerNode.setXPosition(e.getX());
-          towerNode.setYPosition(e.getY());
-          tower.setXPosition(toGridXPosition(e.getX()));
-          tower.setYPosition(toGridYPosition(e.getY()));
+          setNode(tower, towerNode, e.getX(), e.getY());
         }
         if(checkInvalidPlacement(towerNode)){
           towerNode.getRangeDisplay().invalidPlacement();
@@ -165,34 +166,44 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
         }
       }
     });
-    towerNode.setOnMouseClicked(e -> {
-      if(!checkInvalidPlacement(towerNode)){
-        layoutRoot.setOnMouseMoved(null);
-        animationHandler.addTower(tower, towerNode);
-        towerNode.setOnMouseClicked(null);
-        selectWeapon();
-        canMakeTower = true;
-      }
-    });
+    towerNode.setOnMouseClicked(e -> setDownTower(tower, towerNode));
   }
 
-  private void placeRoadItem(RoadItem roadItem, RoadItemNode itemNode){
+  private void placeRoadItem(GamePiece roadItem, GamePieceNode roadItemNode){
     layoutRoot.setOnMouseMoved(e -> {
       if (e.getX() >= 0 && e.getX() <= gameWidth) {
         if (e.getY() >= 0 && e.getY() <= gameHeight) {
-          itemNode.setXPosition(e.getX());
-          itemNode.setYPosition(e.getY());
-          roadItem.setXPosition(toGridXPosition(e.getX()));
-          roadItem.setYPosition(toGridYPosition(e.getY()));
+          setNode(roadItem, roadItemNode, e.getX(), e.getY());
         }
       }
     });
-    itemNode.setOnMouseClicked(e -> {
+    roadItemNode.setOnMouseClicked(e -> setDownRoadItem(roadItem, roadItemNode));
+  }
+
+  private void setNode(GamePiece gamePiece, GamePieceNode pieceNode, double xPos, double yPos){
+    pieceNode.setXPosition(xPos);
+    pieceNode.setYPosition(yPos);
+    gamePiece.setXPosition(toGridXPosition(xPos));
+    gamePiece.setYPosition(toGridYPosition(yPos));
+  }
+
+  private void setDownTower(Tower tower, TowerNode towerNode) {
+    if (!checkInvalidPlacement(towerNode)) {
       layoutRoot.setOnMouseMoved(null);
-      animationHandler.addRoadItem(roadItem, itemNode);
-      itemNode.setOnMouseClicked(null);
+      animationHandler.addTower(tower, towerNode);
+      towerNode.setOnMouseClicked(null);
+      selectWeapon();
+      canMakeTower = true;
+    }
+  }
+
+  private void setDownRoadItem(GamePiece roadItem, GamePieceNode roadItemNode){
+    if (checkOnPath(roadItemNode)) {
+      layoutRoot.setOnMouseMoved(null);
+      animationHandler.addRoadItem((RoadItem) roadItem, (RoadItemNode) roadItemNode);
+      roadItemNode.setOnMouseClicked(null);
       canMakeRoadItem = true;
-    });
+    }
   }
 
   private void selectWeapon() {
@@ -232,13 +243,13 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
   }
 
   private boolean checkInvalidPlacement(TowerNode towerNode){
-    return checkOnPath(towerNode);
+    return checkOnPath(towerNode) || checkOverlapTower(towerNode);
   }
 
-  private boolean checkOnPath(TowerNode towerNode){
+  private boolean checkOnPath(GamePieceNode gameNode){
     for(Node layoutBlock : layoutRoot.getChildren()){
-     if(layoutBlock.getId() != null && layoutBlock.getId().contains("Path")){
-        if (towerNode.getBoundsInParent().intersects(layoutBlock.getBoundsInParent())){
+     if(layoutBlock.getId() != null && layoutBlock.getId().contains(PATH_ID)){
+        if (gameNode.getBoundsInParent().intersects(layoutBlock.getBoundsInParent())){
           return true;
         }
       }
@@ -255,5 +266,12 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
       }
     }
     return false;
+  }
+
+  private void initializeFactories(){
+    towerFactory = new SingleTowerFactory();
+    towerNodeFactory = new TowerNodeFactory();
+    roadItemFactory = new SingleRoadItemFactory();
+    itemNodeFactory = new RoadItemNodeFactory();
   }
 }

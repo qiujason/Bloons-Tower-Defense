@@ -15,7 +15,6 @@ import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
 import ooga.backend.projectile.ProjectilesCollection;
-import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.factory.SingleTowerFactory;
 import ooga.backend.towers.factory.TowerFactory;
@@ -25,7 +24,7 @@ import org.junit.jupiter.api.Test;
 class FrozenSpreadShooterTest {
 
   TowerFactory towerFactory = new SingleTowerFactory();
-  FrozenSpreadShooter testTower = (FrozenSpreadShooter) towerFactory.createTower(TowerType.FrozenSpreadShooter, 0, 0);
+  MultiFrozenShooter testTower = (MultiFrozenShooter) towerFactory.createTower(TowerType.MultiFrozenShooter, 0, 0);
 
   private BloonsTypeChain chain;
 
@@ -39,7 +38,7 @@ class FrozenSpreadShooterTest {
 
   @Test
   void testGetTowerType() {
-    assertEquals(TowerType.FrozenSpreadShooter, testTower.getTowerType());
+    assertEquals(TowerType.MultiFrozenShooter, testTower.getTowerType());
   }
 
   @Test

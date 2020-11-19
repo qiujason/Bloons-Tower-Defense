@@ -4,28 +4,31 @@ import java.net.URISyntaxException;
 import java.util.ResourceBundle;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
+import ooga.AlertHandler;
 import ooga.backend.towers.TowerType;
 import ooga.controller.WeaponNodeHandler;
 import ooga.visualization.menu.WeaponMenu;
 
 public class TowerNode extends GamePieceNode{
 
-  private TowerType towerType;
-  private WeaponRange rangeDisplay;
+  private final TowerType towerType;
+  private final WeaponRange rangeDisplay;
+  private final ResourceBundle typeToName = ResourceBundle.getBundle(PACKAGE + NAMES);
+  private final ResourceBundle nameToPicture = ResourceBundle.getBundle(PACKAGE + PICTURES);
+
   private WeaponMenu towerMenu;
 
   private static final String PACKAGE = "btd_towers/";
   private static final String NAMES = "TowerMonkey";
   private static final String PICTURES = "MonkeyPics";
 
-  private ResourceBundle typeToName = ResourceBundle.getBundle(PACKAGE + NAMES);
-  private ResourceBundle nameToPicture = ResourceBundle.getBundle(PACKAGE + PICTURES);
-
   public TowerNode(TowerType towerType, double xPosition, double yPosition, double radius){
     super(xPosition, yPosition, radius);
     this.towerType = towerType;
     this.setFill(findImage());
+    this.setId(towerType.name());
     rangeDisplay = new WeaponRange(xPosition, yPosition, towerType.getRadius());
+
   }
 
   @Override
@@ -47,7 +50,7 @@ public class TowerNode extends GamePieceNode{
       towerImage = new Image(String.valueOf(getClass().getResource(nameToPicture.getString(typeToName.getString(towerType.name()))).toURI()));
     } catch (
         URISyntaxException e) {
-      e.printStackTrace();
+      new AlertHandler("Image Not Found", towerType.name() + " image not found.");
     }
     assert towerImage != null;
     return new ImagePattern(towerImage);
@@ -57,8 +60,8 @@ public class TowerNode extends GamePieceNode{
     rangeDisplay.setRadius(gridRadius * blockSize);
   }
 
-  public void makeTowerMenu(WeaponNodeHandler weaponNodeHandler){
-    towerMenu = new WeaponMenu(this, weaponNodeHandler);
+  public void makeTowerMenu(WeaponNodeHandler weaponNodeHandler, String language){
+    towerMenu = new WeaponMenu(this, weaponNodeHandler, language);
   }
 
   public WeaponMenu getTowerMenu(){
@@ -80,7 +83,5 @@ public class TowerNode extends GamePieceNode{
   public void showRangeDisplay(){
     rangeDisplay.makeVisible();
   }
-
-
 
 }

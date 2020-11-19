@@ -6,13 +6,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public enum TowerType {
 
-
   SingleProjectileShooter(3, 2, 3, true),
   MultiProjectileShooter(1.5, 3.5, 3, false),
   SpreadProjectileShooter(4, 3.5, 2, true),
   UnlimitedRangeProjectileShooter(20, 3, 4, true),
   SuperSpeedProjectileShooter(4, 1, 15, true),
-  FrozenSpreadShooter(1.5, 3.5, 3, false),
+  MultiFrozenShooter(1.5, 3.5, 3, false),
   CamoProjectileShooter(3, 2, 5, true);
 
   private double radius;

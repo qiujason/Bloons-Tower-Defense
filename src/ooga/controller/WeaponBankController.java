@@ -10,8 +10,13 @@ import ooga.backend.towers.UpgradeChoice;
 
 public class WeaponBankController implements WeaponBankInterface {
 
-  private Bank bank;
-  private ResourceBundle inGameMessage = ResourceBundle.getBundle("InGameMessages");
+  private final Bank bank;
+  private static final String NO_MONEY = "InsufficientFunds";
+  private static final String TOWER = "ForTower";
+  private static final String ROAD_ITEM = "ForRoadItem";
+  private static final String RANGE_UPGRADE = "ForUpgradeRange";
+  private static final String RATE_UPGRADE = "ForUpgradeRate";
+  private static final ResourceBundle inGameMessage = ResourceBundle.getBundle("InGameMessages");
 
   public WeaponBankController(Bank bank){
     this.bank = bank;
@@ -22,15 +27,21 @@ public class WeaponBankController implements WeaponBankInterface {
     if(bank.buyTower(tower)) {
       return true;
     } else{
-      new AlertHandler(inGameMessage.getString("InsufficientFunds"),
-          inGameMessage.getString("ForTower"));
+      new AlertHandler(inGameMessage.getString(NO_MONEY),
+          inGameMessage.getString(TOWER));
       return false;
     }
   }
 
   @Override
   public boolean buyRoadItem(RoadItemType itemType) {
-    return bank.buyRoadItem(itemType);
+    if(bank.buyRoadItem(itemType)){
+      return bank.buyRoadItem(itemType);
+    }else{
+      new AlertHandler(inGameMessage.getString(NO_MONEY),
+          inGameMessage.getString(ROAD_ITEM));
+      return false;
+    }
   }
 
 
@@ -48,8 +59,8 @@ public class WeaponBankController implements WeaponBankInterface {
       tower.performUpgrade(UpgradeChoice.RadiusUpgrade);
     }
     else {
-      new AlertHandler(inGameMessage.getString("InsufficientFunds"),
-          inGameMessage.getString("ForUpgradeRange"));
+      new AlertHandler(inGameMessage.getString(NO_MONEY),
+          inGameMessage.getString(RANGE_UPGRADE));
     }
   }
 
@@ -62,8 +73,8 @@ public class WeaponBankController implements WeaponBankInterface {
       tower.performUpgrade(UpgradeChoice.ShootingRestRateUpgrade);
     }
     else {
-      new AlertHandler(inGameMessage.getString("InsufficientFunds"),
-          inGameMessage.getString("ForUpgradeRate"));    }
+      new AlertHandler(inGameMessage.getString(NO_MONEY),
+          inGameMessage.getString(RATE_UPGRADE));    }
   }
 
 }

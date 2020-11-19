@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import ooga.AlertHandler;
 import ooga.backend.API.GameEngineAPI;
 import ooga.backend.ConfigurationException;
 import ooga.backend.bloons.Bloon;
@@ -18,7 +19,7 @@ import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.roaditems.RoadItemsCollection;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowersCollection;
-import ooga.visualization.AnimationHandler;
+import ooga.visualization.animationhandlers.AnimationHandler;
 
 public class GameEngine implements GameEngineAPI {
 
@@ -44,10 +45,10 @@ public class GameEngine implements GameEngineAPI {
   private int round;
 
   private int lives = STARTING_LIVES;
-  private String gameMode;
+  private GameMode gameMode;
 
 
-  public GameEngine(String gameMode, Layout layout, List<BloonsCollection> allBloonWaves) throws ConfigurationException {
+  public GameEngine(GameMode gameMode, Layout layout, List<BloonsCollection> allBloonWaves) throws ConfigurationException {
     this.layout = layout;
     this.allBloonWaves = allBloonWaves;
     this.queuedBloons = allBloonWaves.get(STARTING_ROUND).copyOf(allBloonWaves.get(STARTING_ROUND));
@@ -140,7 +141,6 @@ public class GameEngine implements GameEngineAPI {
   public void resetGame() {
     round = STARTING_ROUND;
     queuedBloons = allBloonWaves.get(STARTING_ROUND);
-
   }
 
   private void shootBloons() throws ConfigurationException {
@@ -180,7 +180,7 @@ public class GameEngine implements GameEngineAPI {
           .getDeclaredMethod("nextWave" + this.gameMode);
       method.invoke(this);
     } catch (SecurityException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-      e.printStackTrace();
+      new AlertHandler("Missing Functionality", "No nextWave method for this game type found");
     }
   }
 
@@ -238,10 +238,7 @@ public class GameEngine implements GameEngineAPI {
   }
 
   public boolean isGameEnd(){
-    if(gameMode != GameMode.Infinite.name()) {
-      return lives <= 0 || (isRoundEnd() && round >= (allBloonWaves.size() - 1));
-    }
-    return false;
+    return lives <= 0 || (gameMode != GameMode.Infinite && (isRoundEnd() && round >= (allBloonWaves.size() - 1)));
   }
 
   @Override

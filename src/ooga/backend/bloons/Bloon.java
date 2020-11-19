@@ -7,8 +7,7 @@ import ooga.backend.ConfigurationException;
 import ooga.backend.GamePiece;
 import ooga.backend.bloons.factory.BasicBloonsFactory;
 import ooga.backend.bloons.types.BloonsType;
-import ooga.backend.bloons.types.Specials;
-import ooga.visualization.AnimationHandler;
+import ooga.visualization.animationhandlers.AnimationHandler;
 
 public class Bloon extends GamePiece implements BloonsAPI {
 
@@ -37,7 +36,7 @@ public class Bloon extends GamePiece implements BloonsAPI {
     this.distanceTraveled = 0;
     this.relativeSpeed = bloonsType.relativeSpeed();
 
-    this.freezeTimePeriod = Integer.parseInt(GAME_MECHANICS.getString("FreezeTimePeriod")) * (int)AnimationHandler.FRAMES_PER_SECOND;
+    this.freezeTimePeriod = Integer.parseInt(GAME_MECHANICS.getString("FreezeTimePeriod")) * (int) AnimationHandler.FRAMES_PER_SECOND;
     this.freezeTimer = 0;
     this.freezeActive = false;
     this.slowDownTimePeriod = Integer.parseInt(GAME_MECHANICS.getString("SlowDownTimePeriod")) * (int)AnimationHandler.FRAMES_PER_SECOND;

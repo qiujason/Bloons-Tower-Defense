@@ -2,7 +2,9 @@ package ooga.backend.readers;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -21,8 +23,13 @@ public class TowerValueReader {
     for(Object key : properties.keySet()){
       towerValueMap.put(getTowerType((String) key), Integer.valueOf((String)properties.get(key)));
     }
-    ResourceBundle towerMonkeys = ResourceBundle.getBundle("btd_towers/TowerMonkey");
-    if(!properties.keySet().equals(towerMonkeys.keySet())){
+    PropertyFileValidator towerNameValidator = new PropertyFileValidator(
+        propertiesFilename,
+        new HashSet<>(Arrays.asList("SingleProjectileShooter", "MultiProjectileShooter",
+            "SpreadProjectileShooter", "UnlimitedRangeProjectileShooter",
+            "SuperSpeedProjectileShooter",
+            "MultiFrozenShooter", "CamoProjectileShooter")));
+    if(!towerNameValidator.containsNeededKeys()){
       throw new ConfigurationException("MissingTowerValue");
     }
   }
