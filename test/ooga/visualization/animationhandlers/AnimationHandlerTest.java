@@ -3,6 +3,7 @@ package ooga.visualization.animationhandlers;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.animation.Timeline;
@@ -20,12 +21,14 @@ import ooga.backend.layout.Layout;
 import ooga.backend.projectile.ProjectileType;
 import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.projectile.types.SingleTargetProjectile;
+import ooga.backend.projectile.types.SpreadProjectile;
 import ooga.backend.readers.RoadItemValueReader;
 import ooga.backend.readers.RoundBonusReader;
 import ooga.backend.readers.TowerValueReader;
 import ooga.backend.roaditems.RoadItem;
 import ooga.backend.roaditems.RoadItemType;
 import ooga.backend.roaditems.RoadItemsCollection;
+import ooga.backend.roaditems.types.ExplodeBloonsItem;
 import ooga.backend.roaditems.types.PopBloonsItem;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
@@ -33,6 +36,7 @@ import ooga.backend.towers.TowersCollection;
 import ooga.backend.towers.singleshottowers.SingleProjectileShooter;
 import ooga.visualization.nodes.RoadItemNode;
 import ooga.visualization.nodes.TowerNode;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
 
@@ -54,13 +58,18 @@ class AnimationHandlerTest extends DukeApplicationTest {
   private Timeline myAnimation = new Timeline();
 
   private BloonsTypeChain chain;
-  private AnimationHandler animationHandler = new AnimationHandler(myLevelLayout, myBloons,
-      myTowers, myProjectiles, myRoadItems, bank, myGameMode, myBlockSize, myAnimation);
+  private AnimationHandler animationHandler;
+
+  @BeforeEach
+  void initializeBloonsTypes() throws IOException, ConfigurationException {
+    chain = new BloonsTypeChain("tests/test_bloonstype_reader/ValidBloons");
+    setUpBank();
+    animationHandler = new AnimationHandler(myLevelLayout, myBloons,
+        myTowers, myProjectiles, myRoadItems, bank, myGameMode, myBlockSize, myAnimation);
+  }
 
   @Test
   void addBloonstoGame() throws IOException, ConfigurationException {
-    chain = new BloonsTypeChain("tests/test_bloonstype_reader/ValidBloons");
-    setUpBank();
     assertEquals(0, animationHandler.getMyBloonsInGame().size());
     animationHandler.setBloonWave(myBloons);
     myBloons.add(new Bloon(new BloonsType(chain, "RED", 1, 1, Specials.None), 10,10,5,5));
@@ -70,7 +79,9 @@ class AnimationHandlerTest extends DukeApplicationTest {
 
   @Test
   void addProjectilestoGame() throws IOException, ConfigurationException {
-    setUpBank();
+    assertEquals(0, animationHandler.getMyBloonsInGame().size());
+    myBloons.add(new Bloon(new BloonsType(chain, "RED", 1, 1, Specials.None), 10,10,5,5));
+    animationHandler.addBloonstoGame();
     myProjectiles.add(new SingleTargetProjectile(ProjectileType.SingleTargetProjectile, 1, 1,1,1,30));
     animationHandler.addProjectilestoGame();
     animationHandler.animate();
@@ -79,10 +90,16 @@ class AnimationHandlerTest extends DukeApplicationTest {
 
   @Test
   void addTower() throws IOException, ConfigurationException {
-    setUpBank();
+    Bloon testBloon = new Bloon(new BloonsType(chain, "RED", 1, 1, Specials.None), 10,10,5,5);
+    myBloons.add(testBloon);
+    animationHandler.addBloonstoGame();
     Tower testTower = new SingleProjectileShooter(0,0,0,0,0);
     TowerNode testTowerNode = new TowerNode(TowerType.SingleProjectileShooter, 0,0,0);
+    Map<Tower, Bloon> myShootingTargets = new HashMap<>();
+    myShootingTargets.put(testTower, testBloon);
+    animationHandler.setShootingTargets(myShootingTargets);
     animationHandler.addTower(testTower,testTowerNode);
+    animationHandler.animate();
     assertEquals(1, animationHandler.getTowers().size());
     assertEquals(1, animationHandler.getMyTowersInGame().size());
     assertTrue(animationHandler.getMyTowersInGame().containsKey(testTower));
@@ -93,10 +110,13 @@ class AnimationHandlerTest extends DukeApplicationTest {
 
   @Test
   void addRoadItem() throws IOException, ConfigurationException {
-    setUpBank();
+    assertEquals(0, animationHandler.getMyBloonsInGame().size());
+    myBloons.add(new Bloon(new BloonsType(chain, "RED", 1, 1, Specials.None), 10,10,5,5));
+    animationHandler.addBloonstoGame();
     RoadItem item = new PopBloonsItem(0,0);
     RoadItemNode itemNode = new RoadItemNode(RoadItemType.PopBloonsItem, 0,0,0);
     animationHandler.addRoadItem(item, itemNode);
+    animationHandler.animate();
     assertEquals(1, animationHandler.getRoadItems().size());
     assertEquals(1, animationHandler.getMyRoadItemsInGame().size());
     assertTrue(animationHandler.getMyRoadItemsInGame().containsKey(item));
@@ -104,8 +124,49 @@ class AnimationHandlerTest extends DukeApplicationTest {
   }
 
   @Test
+  void testCollisionForSingleTargetProjectile() throws IOException, ConfigurationException {
+    Bloon testBloon = new Bloon(new BloonsType(chain, "RED", 1, 1, Specials.None), 10,10,0,0);
+    myBloons.add(testBloon);
+    animationHandler.addBloonstoGame();
+    myProjectiles.add(new SingleTargetProjectile(ProjectileType.SingleTargetProjectile, 10, 10,1,1,30));
+    animationHandler.addProjectilestoGame();
+    animationHandler.animate();
+    assertEquals(0, animationHandler.getMyBloonsInGame().size());
+    assertEquals(0, animationHandler.getMyProjectilesInGame().size());
+  }
+
+  @Test
+  void testCollisionForSpreadProjectile() throws IOException, ConfigurationException {
+    Bloon testBloon = new Bloon(new BloonsType(chain, "RED", 1, 1, Specials.None), 10,10,0,0);
+    Bloon testBloon2 = new Bloon(new BloonsType(chain, "RED", 1, 1, Specials.None), 11,10,0,0);
+    myBloons.add(testBloon);
+    myBloons.add(testBloon2);
+    animationHandler.addBloonstoGame();
+    myProjectiles.add(new SpreadProjectile(ProjectileType.SpreadProjectile, 10, 10,0,0,30));
+    animationHandler.addProjectilestoGame();
+    animationHandler.animate();
+    assertEquals(0, animationHandler.getMyBloonsInGame().size());
+    assertEquals(0, animationHandler.getMyProjectilesInGame().size());
+  }
+
+  @Test
+  void removeExpiredRoadItems(){
+    Bloon testBloon = new Bloon(new BloonsType(chain, "RED", 1, 1, Specials.None), 10,10,0,0);
+    Bloon testBloon2 = new Bloon(new BloonsType(chain, "RED", 1, 1, Specials.None), 11,10,0,0);
+    myBloons.add(testBloon);
+    myBloons.add(testBloon2);
+    animationHandler.addBloonstoGame();
+    RoadItem item = new ExplodeBloonsItem(0,0);
+    RoadItemNode itemNode = new RoadItemNode(RoadItemType.ExplodeBloonsItem, 0,0,0);
+    animationHandler.addRoadItem(item, itemNode);
+    for(int i = 0; i < 180; i++){
+      animationHandler.animate();
+    }
+    assertEquals(0, animationHandler.getMyRoadItemsInGame().size());
+  }
+
+  @Test
   void removeTower() throws IOException, ConfigurationException {
-    setUpBank();
     Tower testTower = new SingleProjectileShooter(0,0,0,0,0);
     TowerNode testTowerNode = new TowerNode(TowerType.SingleProjectileShooter, 0,0,0);
     animationHandler.addTower(testTower,testTowerNode);
