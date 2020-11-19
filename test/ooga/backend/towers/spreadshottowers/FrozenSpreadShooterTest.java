@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 class FrozenSpreadShooterTest {
 
   TowerFactory towerFactory = new SingleTowerFactory();
-  Tower testTower = towerFactory.createTower(TowerType.FrozenSpreadShooter, 0, 0);
+  FrozenSpreadShooter testTower = (FrozenSpreadShooter) towerFactory.createTower(TowerType.FrozenSpreadShooter, 0, 0);
 
   private BloonsTypeChain chain;
 
@@ -35,6 +35,17 @@ class FrozenSpreadShooterTest {
   @Test
   void testGetTowerType() {
     assertEquals(TowerType.FrozenSpreadShooter, testTower.getTowerType());
+  }
+
+  @Test
+  void testCheckBalloonInRange(){
+    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 0.4,0.4,5,5);
+    List<Bloon> bloonsList = new ArrayList<>();
+    bloonsList.add(target);
+    BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
+    assertTrue(testTower.checkBalloonInRange(bloonsCollection));
+    target.freeze();
+    assertFalse(testTower.checkBalloonInRange(bloonsCollection));
   }
 
   @Test
