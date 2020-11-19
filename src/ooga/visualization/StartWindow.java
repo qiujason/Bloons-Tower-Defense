@@ -54,8 +54,7 @@ public class StartWindow implements Window{
 
   @Override
   public void setupWindowButtons() {
-    myStartButton = new Button(myMenuButtonNames.getString("Start"));
-    // myStartButton.setOnAction(e -> displayLevelSelectScreen()); TODO: Move into BloonsApplication
+    myStartButton.setText(myMenuButtonNames.getString("Start"));
     myStartButton.setId("Start");
     myButtonGroup.getChildren().add(myStartButton);
 
@@ -120,6 +119,22 @@ public class StartWindow implements Window{
         }
     );
     buttonGroup.getChildren().add(styleOptions);
+  }
+
+  public ResourceBundle getMenuButtonNames(){
+    return myMenuButtonNames;
+  }
+
+  public ResourceBundle getApplicationMessages(){
+    return myApplicationMessages;
+  }
+
+  public String getCurrentLanguage() {
+    return myCurrentLanguage;
+  }
+
+  public String getMyCurrentStylesheet() {
+    return myCurrentStylesheet;
   }
 
 }

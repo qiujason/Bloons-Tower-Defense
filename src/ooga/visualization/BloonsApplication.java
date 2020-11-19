@@ -4,6 +4,8 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.animation.Timeline;
 import javafx.geometry.Pos;
@@ -88,6 +90,7 @@ public class BloonsApplication {
   private Text myMoneyText;
   private Text myRoundText;
   private Text myHealthText;
+  private StartWindow myStartWindow;
   private Window myWindow;
   private Enum<?> myGameMode;
 
@@ -106,6 +109,14 @@ public class BloonsApplication {
             + myCurrentLanguage);
   }
 
+  private void restartApplication() {
+    myMenuButtonNames = myStartWindow.getMenuButtonNames();
+    myApplicationMessages = myStartWindow.getApplicationMessages();
+    myCurrentLanguage = myStartWindow.getCurrentLanguage();
+    myCurrentStylesheet = myStartWindow.getMyCurrentStylesheet();
+    startApplication(myStage);
+  }
+
   public void startApplication(Stage mainStage) {
     myStage = mainStage;
     BorderPane menuLayout = new BorderPane();
@@ -113,103 +124,103 @@ public class BloonsApplication {
     myScene.getStylesheets()
         .add(getClass().getResource("/" + STYLESHEETS + myCurrentStylesheet).toExternalForm());
     menuLayout.getStyleClass().add("start-menu");
-    myWindow = new StartWindow(myScene, myMenuButtonNames, myApplicationMessages, myCurrentLanguage,
+    myStartWindow = new StartWindow(myScene, myMenuButtonNames, myApplicationMessages, myCurrentLanguage,
         myCurrentStylesheet);
-//    Button startButton = new Button();
-//    startButton.setOnAction(event -> switchWindows(new SelectionWindow()));
-//    Button resetButton = new Button();
-//    resetButton.setOnAction(event -> startApplication(myStage));
-//    List<Button> windowChangeButtons = new ArrayList<>();
-//    windowChangeButtons.add(startButton);
-//    windowChangeButtons.add(resetButton);
-//    myWindow.displayWindow(windowChangeButtons);
-    displayStartMenu(menuLayout);
+    Button startButton = new Button();
+    startButton.setOnAction(event -> switchWindows(new SelectionWindow()));
+    Button resetButton = new Button();
+    resetButton.setOnAction(event -> restartApplication());
+    List<Button> windowChangeButtons = new ArrayList<>();
+    windowChangeButtons.add(startButton);
+    windowChangeButtons.add(resetButton);
+    myStartWindow.displayWindow(windowChangeButtons);
     myStage.setScene(myScene);
     myStage.show();
   }
 
-//  private void switchWindows(Window newWindow) {
-//    myWindow = newWindow;
-//    myWindow.displayWindow();
-//    myStage.setScene(myScene);
-//    myStage.show();
+  private void switchWindows(Window newWindow) {
+    myWindow = newWindow;
+    //myWindow.displayWindow();
+    myStage.setScene(myScene);
+    myStage.show();
+    displayLevelSelectScreen();
+  }
+
+//  // TODO: Refactor, this is getting a bit long
+//  private void displayStartMenu(BorderPane menu) {
+//    HBox buttonGroup = new HBox();
+//    buttonGroup.setAlignment(Pos.CENTER);
+//
+//    Button startButton = new Button(myMenuButtonNames.getString("Start"));
+//    startButton.setOnAction(e -> displayLevelSelectScreen());
+//    startButton.setId("Start");
+//    buttonGroup.getChildren().add(startButton);
+//
+//    setupLanguageOptions(buttonGroup);
+//
+//    Button newGameWindowButton = new Button(myMenuButtonNames.getString("NewGameWindow"));
+//    newGameWindowButton.setId("NewGameWindowButton");
+//    newGameWindowButton.setOnAction(e -> {
+//      Controller newWindow = new Controller();
+//      newWindow.start(new Stage());
+//    });
+//    buttonGroup.getChildren().add(newGameWindowButton);
+//
+//    setupStyleOptions(buttonGroup);
+//
+//    BorderPane.setAlignment(buttonGroup, Pos.CENTER);
+//    menu.setBottom(buttonGroup);
 //  }
-
-  // TODO: Refactor, this is getting a bit long
-  private void displayStartMenu(BorderPane menu) {
-    HBox buttonGroup = new HBox();
-    buttonGroup.setAlignment(Pos.CENTER);
-
-    Button startButton = new Button(myMenuButtonNames.getString("Start"));
-    startButton.setOnAction(e -> displayLevelSelectScreen());
-    startButton.setId("Start");
-    buttonGroup.getChildren().add(startButton);
-
-    setupLanguageOptions(buttonGroup);
-
-    Button newGameWindowButton = new Button(myMenuButtonNames.getString("NewGameWindow"));
-    newGameWindowButton.setId("NewGameWindowButton");
-    newGameWindowButton.setOnAction(e -> {
-      Controller newWindow = new Controller();
-      newWindow.start(new Stage());
-    });
-    buttonGroup.getChildren().add(newGameWindowButton);
-
-    setupStyleOptions(buttonGroup);
-
-    BorderPane.setAlignment(buttonGroup, Pos.CENTER);
-    menu.setBottom(buttonGroup);
-  }
-
-  private void setupLanguageOptions(HBox buttonGroup) {
-    ComboBox<String> languageOptions = new ComboBox<>();
-    languageOptions.setPromptText(myMenuButtonNames.getString("SetLanguage"));
-    for (String language : LANGUAGES.keySet()) {
-      languageOptions.getItems().add(language);
-    }
-    languageOptions.setId("LanguageOptions");
-    languageOptions.setOnAction(e -> changeLanguage(languageOptions.getValue()));
-    buttonGroup.getChildren().add(languageOptions);
-  }
-
-  private void changeLanguage(String language) {
-    myCurrentLanguage = language;
-    myMenuButtonNames = ResourceBundle
-        .getBundle(
-            getClass().getPackageName() + ".resources.languages." + myCurrentLanguage
-                + ".startMenuButtonNames"
-                + myCurrentLanguage);
-    myApplicationMessages = ResourceBundle
-        .getBundle(
-            getClass().getPackageName() + ".resources.languages." + myCurrentLanguage
-                + ".applicationMessages"
-                + myCurrentLanguage);
-    startApplication(myStage);
-  }
-
-  private void setupStyleOptions(HBox buttonGroup) {
-    ComboBox<String> styleOptions = new ComboBox<>();
-    styleOptions.setId("StyleOptions");
-    styleOptions.setPromptText(myMenuButtonNames.getString("SetStyle"));
-    Path styles = null;
-    try {
-      styles = Paths.get(getClass().getClassLoader().getResource(STYLESHEETS).toURI());
-    } catch (URISyntaxException e) {
-      new AlertHandler(myApplicationMessages.getString("NoStyles"),
-          myApplicationMessages.getString("NoStyles"));
-    }
-    for (File style : styles.toFile().listFiles()) {
-      if (style.getName().contains(".")) {
-        styleOptions.getItems().add(style.getName().split("\\.")[0]);
-      }
-    }
-    styleOptions.setOnAction(e -> {
-          myCurrentStylesheet = styleOptions.getValue() + ".css";
-          startApplication(myStage);
-        }
-    );
-    buttonGroup.getChildren().add(styleOptions);
-  }
+//
+//  private void setupLanguageOptions(HBox buttonGroup) {
+//    ComboBox<String> languageOptions = new ComboBox<>();
+//    languageOptions.setPromptText(myMenuButtonNames.getString("SetLanguage"));
+//    for (String language : LANGUAGES.keySet()) {
+//      languageOptions.getItems().add(language);
+//    }
+//    languageOptions.setId("LanguageOptions");
+//    languageOptions.setOnAction(e -> changeLanguage(languageOptions.getValue()));
+//    buttonGroup.getChildren().add(languageOptions);
+//  }
+//
+//  private void changeLanguage(String language) {
+//    myCurrentLanguage = language;
+//    myMenuButtonNames = ResourceBundle
+//        .getBundle(
+//            getClass().getPackageName() + ".resources.languages." + myCurrentLanguage
+//                + ".startMenuButtonNames"
+//                + myCurrentLanguage);
+//    myApplicationMessages = ResourceBundle
+//        .getBundle(
+//            getClass().getPackageName() + ".resources.languages." + myCurrentLanguage
+//                + ".applicationMessages"
+//                + myCurrentLanguage);
+//    startApplication(myStage);
+//  }
+//
+//  private void setupStyleOptions(HBox buttonGroup) {
+//    ComboBox<String> styleOptions = new ComboBox<>();
+//    styleOptions.setId("StyleOptions");
+//    styleOptions.setPromptText(myMenuButtonNames.getString("SetStyle"));
+//    Path styles = null;
+//    try {
+//      styles = Paths.get(getClass().getClassLoader().getResource(STYLESHEETS).toURI());
+//    } catch (URISyntaxException e) {
+//      new AlertHandler(myApplicationMessages.getString("NoStyles"),
+//          myApplicationMessages.getString("NoStyles"));
+//    }
+//    for (File style : styles.toFile().listFiles()) {
+//      if (style.getName().contains(".")) {
+//        styleOptions.getItems().add(style.getName().split("\\.")[0]);
+//      }
+//    }
+//    styleOptions.setOnAction(e -> {
+//          myCurrentStylesheet = styleOptions.getValue() + ".css";
+//          startApplication(myStage);
+//        }
+//    );
+//    buttonGroup.getChildren().add(styleOptions);
+//  }
 
   private void displayLevelSelectScreen() {
     BorderPane levelSelectScreen = new BorderPane();
