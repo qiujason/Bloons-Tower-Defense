@@ -73,6 +73,7 @@ public class Bank implements BankAPI {
 
   public void advanceOneLevel() {
     currentMoney += roundBonus.get(currentLevel);
+    System.out.println(roundBonus.get(currentLevel));
     currentLevel++;
   }
 
