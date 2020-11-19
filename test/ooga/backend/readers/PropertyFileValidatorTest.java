@@ -16,7 +16,7 @@ class PropertyFileValidatorTest {
     requiredKeys.add("SpreadProjectileShooter");
     requiredKeys.add("UnlimitedRangeProjectileShooter");
     requiredKeys.add("SuperSpeedProjectileShooter");
-    requiredKeys.add("FrozenSpreadShooter");
+    requiredKeys.add("MultiFrozenShooter");
     requiredKeys.add("CamoProjectileShooter");
     PropertyFileValidator validator = new PropertyFileValidator("btd_towers/TowerMonkey.properties",
         requiredKeys);
