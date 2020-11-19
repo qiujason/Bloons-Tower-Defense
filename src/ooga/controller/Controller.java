@@ -19,7 +19,6 @@ import ooga.backend.gameengine.GameEngine;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bank.Bank;
 import ooga.backend.bloons.types.BloonsTypeChain;
-import ooga.backend.gameengine.GameMode;
 import ooga.backend.layout.Layout;
 import ooga.backend.readers.BloonReader;
 import ooga.backend.readers.LayoutReader;
@@ -56,11 +55,11 @@ public class Controller extends Application {
   private GameEngineAPI gameEngine;
   private Layout layout;
   private List<BloonsCollection> allBloonWaves;
-  private GameMenuInterface gameController;
+  private GameMenuInterface gameMenuController;
   private Map<TowerType, Integer> towerBuyMap;
   private Map<TowerType, Integer> towerSellMap;
   private Map<RoadItemType, Integer> roadItemBuyMap;
-  private WeaponBankInterface towerController;
+  private WeaponBankInterface weaponBankController;
   private Bank bank;
 
   @Override
@@ -87,12 +86,13 @@ public class Controller extends Application {
     startGameEngine();
 
 
-    gameController = new GameMenuController(myAnimation, gameEngine, e -> bloonsApplication.switchToSelectionWindow());
-    towerController = new WeaponBankController(bank);
+    gameMenuController = new GameMenuController(myAnimation, gameEngine, bloonsApplication);
+    weaponBankController = new WeaponBankController(bank);
     bloonsApplication
         .initializeGameObjects(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
-            gameEngine.getProjectiles(), gameEngine.getRoadItems(), bank, myAnimation, gameController,
-            towerController);
+            gameEngine.getProjectiles(), gameEngine.getRoadItems(), bank, myAnimation,
+            gameMenuController,
+            weaponBankController);
   }
 
   private void checkTowerPropertyFiles() {
@@ -110,7 +110,7 @@ public class Controller extends Application {
         new HashSet<>(Arrays.asList("SingleProjectileShooter", "MultiProjectileShooter",
             "SpreadProjectileShooter", "UnlimitedRangeProjectileShooter",
             "SuperSpeedProjectileShooter",
-            "FrozenSpreadShooter", "CamoProjectileShooter", "PopBloonsItem", "SlowBloonsItem",
+            "MultiFrozenShooter", "CamoProjectileShooter", "PopBloonsItem", "SlowBloonsItem",
             "ExplodeBloonsItem")));
     if (!towerPicsValidator.containsNeededKeys()) {
        new AlertHandler(errorResource.getString("InvalidPropertyFile"),

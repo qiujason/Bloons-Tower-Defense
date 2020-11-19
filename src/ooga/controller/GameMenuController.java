@@ -7,6 +7,7 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import ooga.backend.API.GameEngineAPI;
+import ooga.visualization.BloonsApplication;
 import ooga.visualization.menu.GameButtonType;
 
 
@@ -23,7 +24,7 @@ public class GameMenuController implements GameMenuInterface {
 
   private double currentRate;
 
-  public GameMenuController(Timeline timeline, GameEngineAPI gameEngine, EventHandler<ActionEvent> quitter){
+  public GameMenuController(Timeline timeline, GameEngineAPI gameEngine, BloonsApplication bloonsApp){
     myTimeline = timeline;
     myGameEngine = gameEngine;
     currentRate = DEFAULT_RATE;
@@ -32,7 +33,7 @@ public class GameMenuController implements GameMenuInterface {
     buttonHandleMap.put(GameButtonType.PauseButton, event -> this.pause());
     buttonHandleMap.put(GameButtonType.SpeedUpButton, event -> this.speedUp());
     buttonHandleMap.put(GameButtonType.SlowDownButton, event -> this.slowDown());
-    buttonHandleMap.put(GameButtonType.QuitButton, quitter);
+    buttonHandleMap.put(GameButtonType.QuitButton, event -> bloonsApp.switchToSelectionWindow());
   }
 
   @Override
