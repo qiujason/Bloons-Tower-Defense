@@ -62,6 +62,7 @@ public class Controller extends Application {
   private Map<RoadItemType, Integer> roadItemBuyMap;
   private WeaponBankInterface towerController;
   private Bank bank;
+  private KeyFrame oldKeyFrame;
 
   @Override
   public void start(Stage primaryStage) { //TODO: refactor into helpers
@@ -79,12 +80,13 @@ public class Controller extends Application {
   }
 
   private void startLevel() {
+    setUpBank();
     initializeLayout();
     initializeBloonTypes();
     initializeBloonWaves();
     startGameEngine();
 
-    gameController = new GameMenuController(myAnimation, gameEngine, e -> bloonsApplication.switchToSelectionWindow());
+    gameController = new GameMenuController(myAnimation, gameEngine, e -> {bloonsApplication.switchToSelectionWindow(); myAnimation.stop();});
     towerController = new WeaponBankController(bank);
 
     bloonsApplication
@@ -94,8 +96,9 @@ public class Controller extends Application {
 
     myAnimation.setCycleCount(Timeline.INDEFINITE);
 
-    KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> step());
-    myAnimation.getKeyFrames().add(movement);
+    myAnimation.getKeyFrames().remove(oldKeyFrame);
+    oldKeyFrame = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> step());
+    myAnimation.getKeyFrames().add(oldKeyFrame);
   }
 
   private void checkTowerPropertyFiles() {
