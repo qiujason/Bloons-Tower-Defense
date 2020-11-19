@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
+import ooga.backend.ConfigurationException;
 
 public abstract class Reader {
 
@@ -32,7 +33,7 @@ public abstract class Reader {
     return fileData;
   }
 
-  public abstract List<List<String>> getDataFromFile(String fileName);
+  public abstract List<List<String>> getDataFromFile(String fileName) throws ConfigurationException;
 
 
 }

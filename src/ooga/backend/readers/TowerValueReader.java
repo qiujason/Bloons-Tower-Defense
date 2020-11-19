@@ -11,9 +11,9 @@ import ooga.backend.towers.TowerType;
 
 public class TowerValueReader {
 
-  private Map<TowerType, Integer> towerValueMap;
+  private final Map<TowerType, Integer> towerValueMap;
 
-  public TowerValueReader(String propertiesFilename) throws IOException {
+  public TowerValueReader(String propertiesFilename) throws IOException, ConfigurationException {
     Properties properties = new Properties();
     InputStream input = getClass().getClassLoader().getResourceAsStream(propertiesFilename);
     properties.load(input);
@@ -23,7 +23,7 @@ public class TowerValueReader {
     }
     ResourceBundle towerMonkeys = ResourceBundle.getBundle("btd_towers/TowerMonkey");
     if(!properties.keySet().equals(towerMonkeys.keySet())){
-      throw new ConfigurationException("Missing tower value from properties file");
+      throw new ConfigurationException("MissingTowerValue");
     }
   }
 
@@ -33,9 +33,9 @@ public class TowerValueReader {
 
 
   // Map property file key to TowerType enum
-  public TowerType getTowerType(String key){
+  public TowerType getTowerType(String key) throws ConfigurationException {
     if(!TowerType.isEnumName(key)){
-      throw new ConfigurationException("Properties file includes invalid tower type name");
+      throw new ConfigurationException("InvalidTowerName");
     }
     return TowerType.fromString(key);
   }

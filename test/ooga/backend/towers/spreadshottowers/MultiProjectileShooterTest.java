@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import ooga.backend.ConfigurationException;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.types.BloonsType;
@@ -29,7 +30,7 @@ class MultiProjectileShooterTest {
   }
 
   @Test
-  void testShootBalloonInRange() {
+  void testShootBalloonInRange() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     Tower testTower = towerFactory.createTower(TowerType.MultiProjectileShooter, 0,0);
     Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 0.3,0.4,5,5);
@@ -89,7 +90,7 @@ class MultiProjectileShooterTest {
   }
 
   @Test
-  void testShootNoBalloonInRange() {
+  void testShootNoBalloonInRange() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     Tower testTower = towerFactory.createTower(TowerType.MultiProjectileShooter, 0,0);
     Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 300,400,5,5);

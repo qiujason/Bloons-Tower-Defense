@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import ooga.backend.ConfigurationException;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.factory.CamoBloonsFactory;
@@ -29,7 +30,7 @@ class CamoProjectileShooterTest {
   }
 
   @Test
-  void testShootAt(){
+  void testShootAt() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     CamoProjectileShooter testTower = (CamoProjectileShooter)
         towerFactory.createTower(TowerType.CamoProjectileShooter, 10,20);
@@ -48,7 +49,7 @@ class CamoProjectileShooterTest {
   }
 
   @Test
-  void testCheckBalloonInRangeWithCamo() {
+  void testCheckBalloonInRangeWithCamo() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     CamoProjectileShooter testTower = (CamoProjectileShooter)
         towerFactory.createTower(TowerType.CamoProjectileShooter, 10,20);
@@ -60,7 +61,7 @@ class CamoProjectileShooterTest {
   }
 
   @Test
-  void testGetProjectileType() {
+  void testGetProjectileType() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     CamoProjectileShooter testTower = (CamoProjectileShooter)
         towerFactory.createTower(TowerType.CamoProjectileShooter, 10,20);
@@ -68,7 +69,7 @@ class CamoProjectileShooterTest {
   }
 
   @Test
-  void testGetTowerType() {
+  void testGetTowerType() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     CamoProjectileShooter testTower = (CamoProjectileShooter)
         towerFactory.createTower(TowerType.CamoProjectileShooter, 10,20);
@@ -76,7 +77,7 @@ class CamoProjectileShooterTest {
   }
 
   @org.junit.jupiter.api.Test
-  void testPerformUpgrade() {
+  void testPerformUpgrade() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower)
         towerFactory.createTower(TowerType.CamoProjectileShooter, 0,0);
