@@ -10,6 +10,10 @@
   -fx-fill: White;
 }
 
+.label{
+  -fx-text-fill: White;
+}
+
 .button {
   -fx-font-size: 14 pt;
   -fx-font-family: "Arial";

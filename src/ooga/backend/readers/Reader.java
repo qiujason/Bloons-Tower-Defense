@@ -18,7 +18,6 @@ public abstract class Reader {
           .requireNonNull(LayoutReader.class.getClassLoader().getResource(dataSource))
           .openStream();
     } catch (IOException e) {
-      e.printStackTrace();
     }
     return textFile;
   }
@@ -29,7 +28,6 @@ public abstract class Reader {
     try (CSVReader csvReader = new CSVReader(new InputStreamReader(dataStream))) {
       fileData = csvReader.readAll();
     } catch (CsvException | IOException e) {
-      e.printStackTrace();
       return fileData;
     }
     return fileData;

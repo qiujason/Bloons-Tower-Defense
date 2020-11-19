@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -27,7 +28,8 @@ public class StartWindow implements Window {
   String myCurrentStylesheet;
   HBox myButtonGroup;
 
-  public StartWindow(Scene scene, ResourceBundle menuButtonNames, ResourceBundle applicationMessages, String currentLanguage, String currentStylesheet){
+  public StartWindow(Scene scene, ResourceBundle menuButtonNames,
+      ResourceBundle applicationMessages, String currentLanguage, String currentStylesheet) {
     myScene = scene;
     myMenuButtonNames = menuButtonNames;
     myApplicationMessages = applicationMessages;
@@ -101,14 +103,25 @@ public class StartWindow implements Window {
     ComboBox<String> styleOptions = new ComboBox<>();
     styleOptions.setId("StyleOptions");
     styleOptions.setPromptText(myMenuButtonNames.getString("SetStyle"));
+    Path styles = getStyles();
+    setupStyleHBox(buttonGroup, styleOptions, styles);
+  }
+
+  private Path getStyles() {
     Path styles = null;
     try {
-      styles = Paths.get(getClass().getClassLoader().getResource(BloonsApplication.STYLESHEETS).toURI());
+      styles = Paths.get(Objects
+          .requireNonNull(getClass().getClassLoader().getResource(BloonsApplication.STYLESHEETS))
+          .toURI());
     } catch (URISyntaxException e) {
       new AlertHandler(myApplicationMessages.getString("NoStyles"),
           myApplicationMessages.getString("NoStyles"));
     }
-    for (File style : styles.toFile().listFiles()) {
+    return styles;
+  }
+
+  private void setupStyleHBox(HBox buttonGroup, ComboBox<String> styleOptions, Path styles) {
+    for (File style : Objects.requireNonNull(styles.toFile().listFiles())) {
       if (style.getName().contains(".")) {
         styleOptions.getItems().add(style.getName().split("\\.")[0]);
       }
@@ -121,11 +134,11 @@ public class StartWindow implements Window {
     buttonGroup.getChildren().add(styleOptions);
   }
 
-  public ResourceBundle getMenuButtonNames(){
+  public ResourceBundle getMenuButtonNames() {
     return myMenuButtonNames;
   }
 
-  public ResourceBundle getApplicationMessages(){
+  public ResourceBundle getApplicationMessages() {
     return myApplicationMessages;
   }
 

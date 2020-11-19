@@ -1,6 +1,9 @@
-package ooga.backend.roaditems;
+package ooga.backend.roaditems.types;
 
-public class SlowBloonsItem extends RoadItem{
+import ooga.backend.roaditems.RoadItem;
+import ooga.backend.roaditems.RoadItemType;
+
+public class SlowBloonsItem extends RoadItem {
 
   public static int defaultGlueLeft = 10;
   private int bloonsGlueLeft;
