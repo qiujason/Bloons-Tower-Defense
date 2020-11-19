@@ -97,14 +97,14 @@ public class BloonsApplicationGameTest extends DukeApplicationTest {
     assertNotNull(startLevelButton);
   }
 
-//  @Test
-//  public void testTowerPlacement() {
-//    startRandomLevel();
-//    clickOn(myPlayButton);
-//    Button towerButton = lookup("#singleshottowers.SingleProjectileShooterButton").query();
-//    clickOn(towerButton);
-//    clickOn(myLevel, 50, 50);
-//    assertTrue(myController.getGameEngine().getTowers().size() > 0);
-//  }
+  @Test
+  public void testTowerPlacement() {
+    startRandomLevel();
+    clickOn(myPlayButton);
+    Button towerButton = lookup("#singleshottowers.SingleProjectileShooterButton").query();
+    clickOn(towerButton);
+    clickOn(myLevel, 50, 50);
+    assertTrue(myController.getGameEngine().getTowers().size() > 0);
+  }
 
 }

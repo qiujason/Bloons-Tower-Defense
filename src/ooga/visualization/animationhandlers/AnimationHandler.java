@@ -369,6 +369,10 @@ public class AnimationHandler {
     return myProjectiles;
   }
 
+  public Timeline getAnimation() {
+    return myAnimation;
+  }
+
   public void setShootingTargets(
       Map<Tower, Bloon> shootingTargets) {
     this.myShootingTargets = shootingTargets;
