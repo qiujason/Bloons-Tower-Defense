@@ -34,7 +34,7 @@ public class BloonReader extends Reader{
   }
 
   public List<BloonsCollection> generateBloonsCollectionMap(BloonsTypeChain chain, String fileName, Layout layout)
-      throws ConfigurationException { //TODO: create test for seeing if bloon is in right position (negative x)
+      throws ConfigurationException {
     List<BloonsCollection> listOfBloons = new ArrayList<>();
     List<List<String>> bloonWaves = getDataFromFile(fileName);
     BloonsCollection currentCollection = new BloonsCollection();

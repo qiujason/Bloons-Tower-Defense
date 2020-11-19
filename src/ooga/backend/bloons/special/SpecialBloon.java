@@ -18,7 +18,6 @@ public abstract class SpecialBloon extends Bloon {
   @Override
   public Bloon[] shootBloon() throws ConfigurationException {
     int numBloonsToProduce = getBloonsType().chain().getNumNextBloons(super.getBloonsType());
-    System.out.println(numBloonsToProduce);
     Bloon[] bloons = new Bloon[numBloonsToProduce];
     for (int i = 0; i < numBloonsToProduce; i++) {
       try {

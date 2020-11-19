@@ -64,7 +64,7 @@ public class Controller extends Application {
   private Bank bank;
 
   @Override
-  public void start(Stage primaryStage) { //TODO: refactor into helpers
+  public void start(Stage primaryStage) {
     errorResource = ResourceBundle.getBundle("ErrorResource");
     checkTowerPropertyFiles();
     myAnimation = new Timeline();

@@ -116,9 +116,7 @@ public class GameEngine implements GameEngineAPI {
     while (bloonsIterator.hasNext()) {
       Bloon bloon = bloonsIterator.next();
       if(bloon.isDead()){
-        System.out.println("DEAD");
         currentBloonWave.remove(bloon);
-        System.out.println(currentBloonWave.size());
       }
     }
   }
@@ -129,11 +127,9 @@ public class GameEngine implements GameEngineAPI {
   }
 
   public void nextWaveInfinite() throws ConfigurationException {
-    System.out.println("here");
     round++;
     Random rand = new Random();
     int randomRound = rand.nextInt(allBloonWaves.size());
-    System.out.println(randomRound);
     queuedBloons = allBloonWaves.get(randomRound).copyOf(allBloonWaves.get(randomRound));
   }
 
