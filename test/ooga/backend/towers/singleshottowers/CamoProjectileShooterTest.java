@@ -13,6 +13,7 @@ import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
 import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.towers.TowerType;
+import ooga.backend.towers.UpgradeChoice;
 import ooga.backend.towers.factory.SingleTowerFactory;
 import ooga.backend.towers.factory.TowerFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -72,5 +73,18 @@ class CamoProjectileShooterTest {
     CamoProjectileShooter testTower = (CamoProjectileShooter)
         towerFactory.createTower(TowerType.CamoProjectileShooter, 10,20);
     assertEquals(TowerType.CamoProjectileShooter, testTower.getTowerType());
+  }
+
+  @org.junit.jupiter.api.Test
+  void testPerformUpgrade() {
+    TowerFactory towerFactory = new SingleTowerFactory();
+    SingleShotTower testTower = (SingleShotTower)
+        towerFactory.createTower(TowerType.CamoProjectileShooter, 0,0);
+    testTower.performUpgrade(UpgradeChoice.RadiusUpgrade);
+    assertEquals(3*1.05, testTower.getRadius());
+    testTower.performUpgrade(UpgradeChoice.ShootingSpeedUpgrade);
+    assertEquals(5*1.05, testTower.getShootingSpeed());
+    testTower.performUpgrade(UpgradeChoice.ShootingRestRateUpgrade);
+    assertEquals(60*2/1.05, testTower.getShootingRestRate());
   }
 }

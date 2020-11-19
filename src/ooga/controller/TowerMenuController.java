@@ -34,6 +34,9 @@ public class TowerMenuController implements TowerMenuInterface {
 
   @Override
   public void upgradeRange(Tower tower){
+    if(!tower.canPerformUpgrade()){
+      return;
+    }
     if (bank.buyUpgrade(UpgradeChoice.RadiusUpgrade, tower)) {
       tower.performUpgrade(UpgradeChoice.RadiusUpgrade);
     }
@@ -45,6 +48,9 @@ public class TowerMenuController implements TowerMenuInterface {
 
   @Override
   public void upgradeRate(Tower tower){
+    if(!tower.canPerformUpgrade()){
+      return;
+    }
     if (bank.buyUpgrade(UpgradeChoice.ShootingRestRateUpgrade, tower)) {
       tower.performUpgrade(UpgradeChoice.ShootingRestRateUpgrade);
     }

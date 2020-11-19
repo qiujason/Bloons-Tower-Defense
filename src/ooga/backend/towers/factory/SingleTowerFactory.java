@@ -17,14 +17,14 @@ public class SingleTowerFactory implements TowerFactory {
     double shootingRestRate = type.getShootingRestRate();
     try{
       ResourceBundle bundle = ResourceBundle.getBundle("towers/" + type.name());
-      if(bundle.containsKey("radius")){
-        radius = Integer.valueOf(bundle.getString("radius"));
+      if(bundle.containsKey("Radius")){
+        radius = Integer.parseInt(bundle.getString("Radius"));
       }
-      if(bundle.containsKey("shootingSpeed")){
-        shootingSpeed = Integer.valueOf(bundle.getString("shootingSpeed"));
+      if(bundle.containsKey("ShootingSpeed")){
+        shootingSpeed = Integer.parseInt(bundle.getString("ShootingSpeed"));
       }
-      if(bundle.containsKey("shootingRestRate")){
-        shootingRestRate = Integer.valueOf(bundle.getString("shootingRestRate"));
+      if(bundle.containsKey("ShootingRestRate")){
+        shootingRestRate = Integer.parseInt(bundle.getString("ShootingRestRate"));
       }
     } catch(Exception e){
     }
