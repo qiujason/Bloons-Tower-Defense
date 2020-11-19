@@ -15,7 +15,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -28,8 +27,10 @@ import ooga.backend.towers.TowersCollection;
 import ooga.controller.Controller;
 import ooga.controller.GameMenuInterface;
 import ooga.controller.WeaponBankInterface;
+import ooga.controller.WeaponNodeInterface;
 import ooga.visualization.menu.GameMenu;
 import ooga.controller.WeaponNodeHandler;
+import ooga.visualization.menu.MenuPane;
 import ooga.visualization.menu.WeaponButtonsMenu;
 
 public class BloonsApplication {
@@ -55,11 +56,10 @@ public class BloonsApplication {
   private TowersCollection myTowers;
   private ProjectilesCollection myProjectiles;
   private Group myLevelLayout;
-  private GameMenu myMenu;
-  private VBox myMenuPane;
+  private MenuPane myMenuPane;
   private GameMenuInterface myGameMenuController;
-  private WeaponBankInterface myTowerMenuController;
-  private WeaponNodeHandler weaponNodeHandler;
+  private WeaponBankInterface myWeaponBankController;
+  private WeaponNodeInterface weaponNodeHandler;
   private AnimationHandler myAnimationHandler;
   private double myBlockSize;
   //  private final ResourceBundle myBlockMappings = ResourceBundle
@@ -273,14 +273,14 @@ public class BloonsApplication {
   public void initializeGameObjects(Layout layout, BloonsCollection bloons,
       TowersCollection towers,
       ProjectilesCollection projectiles, Timeline animation, GameMenuInterface gameMenuController,
-      WeaponBankInterface towerMenuController) {
+      WeaponBankInterface weaponBankController) {
     myLayout = layout;
     myBloons = bloons;
     myTowers = towers;
     myProjectiles = projectiles;
     myAnimation = animation;
     myGameMenuController = gameMenuController;
-    myTowerMenuController = towerMenuController;
+    myWeaponBankController = weaponBankController;
   }
 
   private void loadLevel(String levelName) {
@@ -293,13 +293,12 @@ public class BloonsApplication {
     myLevelStartButton.fire();
     myLevel = new Pane();
     myLevel.getStyleClass().add("level-background");
-    myMenuPane = new VBox();
+    myMenuPane = new MenuPane();
     visualizeLayout(myLevel);
     myAnimationHandler = new AnimationHandler(myLevelLayout, myBloons,
         myTowers, myProjectiles, myBlockSize, myAnimation);
-
     weaponNodeHandler = new WeaponNodeHandler(myLayout, myBlockSize, myLevelLayout, myMenuPane,
-        myTowers, myTowerMenuController, myAnimationHandler);
+        myTowers, myWeaponBankController, myAnimationHandler);
     visualizePlayerGUI(myLevel);
     displayCurrentMoney(0);
     displayCurrentRound(1);
@@ -361,8 +360,7 @@ public class BloonsApplication {
   }
 
   private void visualizePlayerGUI(Pane level) {
-    myMenuPane.setSpacing(10); //magic num
-    myMenu = new GameMenu(myMenuPane, myGameMenuController, weaponNodeHandler, myCurrentLanguage);
+    myMenuPane.getChildren().add(new GameMenu(myGameMenuController, myCurrentLanguage));
     myMenuPane.getChildren().add(new WeaponButtonsMenu(weaponNodeHandler, myCurrentLanguage));
     myMenuPane.setLayoutX(GAME_WIDTH);
     level.getChildren().add(myMenuPane);

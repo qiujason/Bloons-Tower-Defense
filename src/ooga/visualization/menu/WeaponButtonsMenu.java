@@ -17,10 +17,11 @@ import javafx.scene.layout.VBox;
 import ooga.backend.roaditems.RoadItemType;
 import ooga.backend.towers.TowerType;
 import ooga.controller.WeaponNodeHandler;
+import ooga.controller.WeaponNodeInterface;
 
 public class WeaponButtonsMenu extends FlowPane {
 
-  private WeaponNodeHandler weaponNodeHandler;
+  private WeaponNodeInterface weaponNodeHandler;
   private List<TowerType> weaponTypeList = Arrays.asList(TowerType.values());
   private List<RoadItemType> roadItemTypeList = Arrays.asList(RoadItemType.values());
   private Map<Button, VBox> buttonWeaponDescription;
@@ -43,7 +44,7 @@ public class WeaponButtonsMenu extends FlowPane {
   private ResourceBundle roadItemPic = ResourceBundle.getBundle(PACKAGE + ROAD_ITEMS);
 
 
-  public WeaponButtonsMenu(WeaponNodeHandler weaponNodeHandler, String language){
+  public WeaponButtonsMenu(WeaponNodeInterface weaponNodeHandler, String language){
     this.weaponNodeHandler = weaponNodeHandler;
     currentLanguage = language;
 
