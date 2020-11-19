@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 import ooga.AlertHandler;
 import ooga.controller.Controller;
 
-public class StartWindow implements Window{
+public class StartWindow implements Window {
 
   Scene myScene;
   Button myStartButton;
@@ -36,14 +36,14 @@ public class StartWindow implements Window{
   }
 
   @Override
-  public void displayWindow(List<Button> startButton) {
+  public void displayWindow(List<Button> windowChangeButtons) {
+    myStartButton = windowChangeButtons.get(0);
+    myResetButton = windowChangeButtons.get(1);
+
     BorderPane menu = new BorderPane();
     menu.getStyleClass().add("start-menu");
     myButtonGroup = new HBox();
     myButtonGroup.setAlignment(Pos.CENTER);
-
-    myStartButton = startButton.get(0);
-    myResetButton = startButton.get(1);
 
     setupWindowButtons();
 
@@ -54,8 +54,7 @@ public class StartWindow implements Window{
 
   @Override
   public void setupWindowButtons() {
-    myStartButton = new Button(myMenuButtonNames.getString("Start"));
-    // myStartButton.setOnAction(e -> displayLevelSelectScreen()); TODO: Move into BloonsApplication
+    myStartButton.setText(myMenuButtonNames.getString("Start"));
     myStartButton.setId("Start");
     myButtonGroup.getChildren().add(myStartButton);
 
@@ -120,6 +119,22 @@ public class StartWindow implements Window{
         }
     );
     buttonGroup.getChildren().add(styleOptions);
+  }
+
+  public ResourceBundle getMenuButtonNames(){
+    return myMenuButtonNames;
+  }
+
+  public ResourceBundle getApplicationMessages(){
+    return myApplicationMessages;
+  }
+
+  public String getCurrentLanguage() {
+    return myCurrentLanguage;
+  }
+
+  public String getMyCurrentStylesheet() {
+    return myCurrentStylesheet;
   }
 
 }

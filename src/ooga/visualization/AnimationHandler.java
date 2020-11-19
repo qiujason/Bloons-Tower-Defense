@@ -183,8 +183,8 @@ public class AnimationHandler {
   private void addMoneyPerPop(BloonsCollection bloonsToRemove){
     GamePieceIterator<Bloon> iterator = bloonsToRemove.createIterator();
     while(iterator.hasNext()){
-      Bloon bloon = iterator.next();
-      bank.
+      iterator.next();
+      bank.addPoppedBloonValue();
     }
   }
 
