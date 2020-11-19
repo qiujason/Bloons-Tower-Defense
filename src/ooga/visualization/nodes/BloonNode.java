@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import ooga.AlertHandler;
 import ooga.backend.bloons.types.BloonsType;
+import ooga.backend.bloons.types.Specials;
 
 public class BloonNode extends GamePieceNode{
 
@@ -27,8 +28,12 @@ public class BloonNode extends GamePieceNode{
   public ImagePattern findImage() {
     Image towerImage = null;
     try {
+      StringBuilder imageName = new StringBuilder(bloonType.name());
+      if (bloonType.specials() != Specials.None) {
+          imageName.append("_").append(bloonType.specials().name().toUpperCase());
+      }
       towerImage = new Image(String.valueOf(getClass().getResource(myBloonImages.getString(
-          bloonType.name())).toURI()));
+          imageName.toString())).toURI()));
     } catch (
         URISyntaxException e) {
       new AlertHandler("Image Not Found", bloonType.name() + " image not found.");

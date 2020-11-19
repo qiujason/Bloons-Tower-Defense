@@ -149,21 +149,25 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   private void upgradeHelper(String key, double currUpgradeMultiplier, double currUpgradeCost) {
     switch(key){
       case "RadiusUpgradeMultiplier":
-        this.radius *= currUpgradeMultiplier; break;
+        this.radius *= currUpgradeMultiplier;
+        break;
       case "ShootingSpeedUpgradeMultiplier":
-        this.shootingSpeed *= currUpgradeMultiplier; break;
+        this.shootingSpeed *= currUpgradeMultiplier;
+        break;
       case "ShootingRestRateUpgradeMultiplier":
-        this.shootingRestRate /= currUpgradeMultiplier; break;
+        this.shootingRestRate /= currUpgradeMultiplier;
+        break;
       case "RadiusUpgradeCost":
       case "ShootingSpeedUpgradeCost":
       case "ShootingRestRateUpgradeCost":
-        this.totalUpgradeCost += currUpgradeCost; break;
+        this.totalUpgradeCost += currUpgradeCost;
+        break;
     }
   }
 
   public boolean ifCamoBloon(Bloon bloon){
-    return getTowerType() != TowerType.CamoProjectileShooter && bloon.getBloonsType().specials().contains(
-        Specials.Camo);
+    return getTowerType() != TowerType.CamoProjectileShooter && bloon.getBloonsType().specials() ==
+        Specials.Camo;
   }
 
   public void setProjectileType(ProjectileType update){
