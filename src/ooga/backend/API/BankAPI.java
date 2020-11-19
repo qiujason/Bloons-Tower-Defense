@@ -10,4 +10,5 @@ public interface BankAPI {
   boolean buyTower(TowerType buyTower);
   void sellTower(Tower sellTower);
   void addPoppedBloonValue();
+  void setSandboxValue();
 }

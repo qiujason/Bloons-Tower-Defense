@@ -4,16 +4,16 @@ import java.net.URISyntaxException;
 import java.util.ResourceBundle;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
+import ooga.AlertHandler;
 import ooga.backend.roaditems.RoadItemType;
 
 public class RoadItemNode extends GamePieceNode {
 
   private RoadItemType roadItemType;
 
-  private static final String PACKAGE = "btd_towers/";
-  private static final String ROAD_ITEMS = "RoadItems";
+  private static final String ROAD_ITEMS_IMAGES_PATH = "btd_towers/RoadItems";
 
-  private ResourceBundle roadItemPic = ResourceBundle.getBundle(PACKAGE + ROAD_ITEMS);
+  private ResourceBundle roadItemPic = ResourceBundle.getBundle(ROAD_ITEMS_IMAGES_PATH);
 
   public RoadItemNode(RoadItemType roadItemType, double xPosition, double yPosition, double radius) {
     super(xPosition, yPosition, radius);
@@ -28,7 +28,7 @@ public class RoadItemNode extends GamePieceNode {
       towerImage = new Image(String.valueOf(getClass().getResource(roadItemPic.getString(roadItemType.name())).toURI()));
     } catch (
         URISyntaxException e) {
-      e.printStackTrace();
+      new AlertHandler("Image Not Found", roadItemType.name() + " image not found.");
     }
     assert towerImage != null;
     return new ImagePattern(towerImage);

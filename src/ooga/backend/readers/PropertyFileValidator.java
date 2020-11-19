@@ -25,7 +25,7 @@ public class PropertyFileValidator {
     }
   }
 
-  public boolean checkIfValid(){
+  public boolean containsNeededKeys(){
     return ifValid;
   }
 }

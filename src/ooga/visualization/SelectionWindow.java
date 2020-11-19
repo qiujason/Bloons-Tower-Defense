@@ -19,6 +19,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import ooga.AlertHandler;
+import ooga.backend.gameengine.GameMode;
 
 public class SelectionWindow implements Window {
 
@@ -29,7 +30,7 @@ public class SelectionWindow implements Window {
   private Button myBackButton;
   private Button myLoadLevelButton;
   private String myLevelName;
-  private Enum<?> myGameMode;
+  private GameMode myGameMode;
   private ComboBox<String> myLevelOptions;
 
   public SelectionWindow(Scene scene, ResourceBundle menuButtonNames,
@@ -63,7 +64,7 @@ public class SelectionWindow implements Window {
 
   @Override
   public void setupWindowButtons() {
-    ComboBox<Enum<?>> gameModeOptions = initializeGameModeOptions();
+    ComboBox<GameMode> gameModeOptions = initializeGameModeOptions();
 
     myLevelOptions = initializeLevelButtons(myLevelSelectScreen);
 
@@ -181,8 +182,8 @@ public class SelectionWindow implements Window {
     levelImageGroup.getChildren().add(modeDescription);
   }
 
-  private ComboBox<Enum<?>> initializeGameModeOptions() {
-    ComboBox<Enum<?>> gameModes = new ComboBox<>();
+  private ComboBox<GameMode> initializeGameModeOptions() {
+    ComboBox<GameMode> gameModes = new ComboBox<>();
     gameModes.setId("GameModes");
     gameModes.setPromptText(myMenuButtonNames.getString("GameModes"));
     gameModes.setOnAction(e -> {
@@ -198,7 +199,7 @@ public class SelectionWindow implements Window {
       return gameModes;
     }
     for (Object mode : gameModesClass.getEnumConstants()) {
-      gameModes.getItems().add((Enum<?>) mode);
+      gameModes.getItems().add((GameMode) mode);
     }
     return gameModes;
   }
@@ -207,7 +208,7 @@ public class SelectionWindow implements Window {
     return myLevelOptions;
   }
 
-  public Enum<?> getGameMode() {
+  public GameMode getGameMode() {
     return myGameMode;
   }
 

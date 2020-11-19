@@ -10,7 +10,7 @@ import ooga.backend.bloons.types.Specials;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.ProjectileType;
 import ooga.backend.projectile.ProjectilesCollection;
-import ooga.visualization.AnimationHandler;
+import ooga.visualization.animationhandlers.AnimationHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
