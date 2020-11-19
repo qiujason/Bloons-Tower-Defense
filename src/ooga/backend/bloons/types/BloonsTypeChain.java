@@ -1,11 +1,14 @@
 package ooga.backend.bloons.types;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.ResourceBundle;
+import ooga.AlertHandler;
+import ooga.backend.ConfigurationException;
 
 public class BloonsTypeChain {
+
+  private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResource");
 
   private static class BloonsTypeNode {
 
@@ -25,24 +28,28 @@ public class BloonsTypeChain {
   }
 
   private final Map<String, BloonsTypeNode> bloonsTypeBloonMap;
-  private BloonsTypeNode head;
+  private final BloonsTypeNode head;
 
-  public BloonsTypeChain(String propertyFilePath) {
+  public BloonsTypeChain(String propertyFilePath) throws ConfigurationException {
     bloonsTypeBloonMap = new HashMap<>();
     ResourceBundle bundle = ResourceBundle.getBundle(propertyFilePath);
     String[] bloonTypes = bundle.getString("Order").split(",");
 
     if (bloonTypes.length <= 0) {
-      //TODO: throw exception (empty property file)
+      throw new ConfigurationException(ERROR_RESOURCES.getString("NoOrderFoundInBloonsType"));
     }
 
     if (bloonTypes[0].equals("DEAD")) {
       head = new BloonsTypeNode(new BloonsType(this, "DEAD", 0, 0, Specials.None));
-      bloonsTypeBloonMap.put("DEAD", head); // dead bloon
+      bloonsTypeBloonMap.put("DEAD", head);
     } else {
-      //TODO: throw exception (dead is not the first bloon)
+      throw new ConfigurationException(ERROR_RESOURCES.getString("DeadNotFirstBloon"));
     }
+    readPropertyFile(bundle, bloonTypes);
+  }
 
+  private void readPropertyFile(ResourceBundle bundle, String[] bloonTypes)
+      throws ConfigurationException {
     for (int i = 1; i < bloonTypes.length; i++) {
       String[] attributes = bundle.getString(bloonTypes[i]).split(",", 3);
       BloonsTypeNode currentBloon = new BloonsTypeNode(
@@ -52,25 +59,29 @@ public class BloonsTypeChain {
       if (!bloonsTypeBloonMap.containsKey(bloonTypes[i])) {
         bloonsTypeBloonMap.put(bloonTypes[i], currentBloon);
       } else {
-        // TODO: throw exception (duplicate bloon information)
+        throw new ConfigurationException(ERROR_RESOURCES.getString("ConflictingBloonsTypes"));
       }
     }
   }
 
-  private void initializeNextBloons(BloonsTypeNode node, String nextBloonsData) {
+  private void initializeNextBloons(BloonsTypeNode node, String nextBloonsData)
+      throws ConfigurationException {
     String[] nextBloonsDataArray = nextBloonsData.split(",");
     if (bloonsTypeBloonMap.containsKey(nextBloonsDataArray[0])) {
       BloonsTypeNode nextBloonType = bloonsTypeBloonMap.get(nextBloonsDataArray[0]);
       if (nextBloonType.prev == null) {
         nextBloonType.prev = node;
         node.next = nextBloonType;
-        node.numNext = Integer.parseInt(nextBloonsDataArray[1]);
-        //TODO: throw exception for non integers
+        try {
+          node.numNext = Integer.parseInt(nextBloonsDataArray[1]);
+        } catch (NumberFormatException e) {
+          throw new ConfigurationException(ERROR_RESOURCES.getString("NonIntegerNumNext"));
+        }
       } else {
-        // TODO: throw exception (conflicting previous bloons)
+        throw new ConfigurationException(ERROR_RESOURCES.getString("ConflictingBloonsTypes"));
       }
     } else {
-      //TODO: throw exception (unordered bloons list in properties file)
+      throw new ConfigurationException(ERROR_RESOURCES.getString("UnorderedBloonsTypeList"));
     }
   }
 
@@ -87,14 +98,16 @@ public class BloonsTypeChain {
 
   public BloonsType getBloonsTypeRecord(String bloonsType) {
     if (!bloonsTypeBloonMap.containsKey(bloonsType)) {
-      //TODO: throw exception invalid bloons name
+      new AlertHandler(ERROR_RESOURCES.getString("BloonsTypeError"),
+          String.format(ERROR_RESOURCES.getString("InvalidBloonsTypeName"), bloonsType));
     }
     return bloonsTypeBloonMap.get(bloonsType).getType();
   }
 
   public BloonsType getNextBloonsType(BloonsType bloonsType) {
     if (!bloonsTypeBloonMap.containsKey(bloonsType.name())) {
-      //TODO: throw exception invalid bloons name
+      new AlertHandler(ERROR_RESOURCES.getString("BloonsTypeError"),
+          String.format(ERROR_RESOURCES.getString("InvalidBloonsTypeName"), bloonsType));
     }
     if (bloonsTypeBloonMap.get(bloonsType.name()).next == null) {
       return bloonsTypeBloonMap.get(bloonsType.name()).getType();
@@ -104,7 +117,8 @@ public class BloonsTypeChain {
 
   public BloonsType getPrevBloonsType(BloonsType bloonsType) {
     if (!bloonsTypeBloonMap.containsKey(bloonsType.name())) {
-      //TODO: throw exception invalid bloons name
+      new AlertHandler(ERROR_RESOURCES.getString("BloonsTypeError"),
+          String.format(ERROR_RESOURCES.getString("InvalidBloonsTypeName"), bloonsType));
     }
     if (bloonsTypeBloonMap.get(bloonsType.name()).prev == null) {
       return null;
@@ -114,7 +128,8 @@ public class BloonsTypeChain {
 
   public int getNumNextBloons(BloonsType bloonsType) {
     if (!bloonsTypeBloonMap.containsKey(bloonsType.name())) {
-      //TODO: throw exception invalid bloons name
+      new AlertHandler(ERROR_RESOURCES.getString("BloonsTypeError"),
+          String.format(ERROR_RESOURCES.getString("InvalidBloonsTypeName"), bloonsType));
     }
     return bloonsTypeBloonMap.get(bloonsType.name()).numNext;
   }

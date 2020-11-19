@@ -8,10 +8,11 @@ public class AlertHandler {
 
   /**
    * This class makes a new alert message when there is an error.
+   *
    * @param header
    * @param message
    */
-  public AlertHandler(String header, String message){
+  public AlertHandler(String header, String message) {
     Alert a = new Alert(Alert.AlertType.NONE);
     ButtonType close = new ButtonType("OK", ButtonBar.ButtonData.CANCEL_CLOSE);
     a.getButtonTypes().addAll(close);

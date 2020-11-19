@@ -23,7 +23,7 @@ public class WeaponMenu extends FlowPane {
   private ResourceBundle menuProperties;
   private ShootingChoiceBox shootingChoiceBox = null;
 
-  public WeaponMenu(TowerNode tower, WeaponNodeHandler weaponNodeHandler, String language){
+  public WeaponMenu(TowerNode tower, WeaponNodeHandler weaponNodeHandler, String language) {
     initializeResourceBundle(language);
     this.setPrefWrapLength(200);
     makeButton(menuProperties.getString(UPGRADE_RANGE), event -> weaponNodeHandler
@@ -32,7 +32,7 @@ public class WeaponMenu extends FlowPane {
         .upgradeRate(tower));
     makeButton(menuProperties.getString(SELL_TOWER), event -> weaponNodeHandler
         .removeWeapon(tower));
-    if(!isSpreadTower(tower)) {
+    if (!isSpreadTower(tower)) {
       shootingChoiceBox = new ShootingChoiceBox(menuProperties.getString(SHOOTING_CHOICE),
           BUTTON_WIDTH);
       setComboBoxHandler(event -> weaponNodeHandler
@@ -50,16 +50,16 @@ public class WeaponMenu extends FlowPane {
     this.getChildren().add(button);
   }
 
-  private void setComboBoxHandler(EventHandler<ActionEvent> handler){
+  private void setComboBoxHandler(EventHandler<ActionEvent> handler) {
     shootingChoiceBox.setOnAction(handler);
     this.getChildren().add(shootingChoiceBox);
   }
 
-  private void initializeResourceBundle(String language){
+  private void initializeResourceBundle(String language) {
     menuProperties = ResourceBundle.getBundle(RESOURCE_DIRECTORY + language + MENU + language);
   }
 
-  private boolean isSpreadTower(TowerNode towerNode){
+  private boolean isSpreadTower(TowerNode towerNode) {
     return (towerNode.getTowerType().name().contains(MULTI_TAG));
   }
 }

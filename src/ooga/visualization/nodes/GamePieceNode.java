@@ -10,7 +10,7 @@ public abstract class GamePieceNode extends Circle {
 
   private double xPosition;
   private double yPosition;
-  private double radius;
+  private final double radius;
 
   public static String BLOON_IMAGES_PATH = "bloon_resources/BloonImages";
   public static final String PROJECTILE_IMAGES_PATH = "projectile_resources/ProjectileImages";
@@ -18,19 +18,19 @@ public abstract class GamePieceNode extends Circle {
 
   private Map<String, ResourceBundle> imageResourceMap;
 
-  public GamePieceNode(double xPosition, double yPosition, double radius){
+  public GamePieceNode(double xPosition, double yPosition, double radius) {
     super(xPosition, yPosition, radius);
     this.xPosition = xPosition;
     this.yPosition = yPosition;
     this.radius = radius;
   }
 
-  public void setXPosition(double xPos){
+  public void setXPosition(double xPos) {
     this.setCenterX(xPos);
     this.xPosition = xPos;
   }
 
-  public void setYPosition(double yPos){
+  public void setYPosition(double yPos) {
     this.setCenterY(yPos);
     this.yPosition = yPos;
   }
@@ -45,7 +45,7 @@ public abstract class GamePieceNode extends Circle {
     return yPosition;
   }
 
-  private void initializeImageResourceMap(){
+  private void initializeImageResourceMap() {
     imageResourceMap = new HashMap<>();
     imageResourceMap.put("", ResourceBundle.getBundle(BLOON_IMAGES_PATH));
     imageResourceMap.put("", ResourceBundle.getBundle(BLOON_IMAGES_PATH));

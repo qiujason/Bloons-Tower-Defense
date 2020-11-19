@@ -8,7 +8,8 @@ public class RegenBloonsFactory implements BloonsFactory {
 
   @Override
   public Bloon createBloon(Bloon bloon) {
-    Bloon newRegenBloon = createBloon(bloon.getBloonsType(), bloon.getXPosition(), bloon.getYPosition(), bloon.getXVelocity(), bloon.getYVelocity());
+    Bloon newRegenBloon = createBloon(bloon.getBloonsType(), bloon.getXPosition(),
+        bloon.getYPosition(), bloon.getXVelocity(), bloon.getYVelocity());
     newRegenBloon.setDistanceTraveled(bloon.getDistanceTraveled());
     return newRegenBloon;
   }
@@ -16,10 +17,12 @@ public class RegenBloonsFactory implements BloonsFactory {
   @Override
   public Bloon createBloon(BloonsType bloonsType, double xPosition, double yPosition,
       double xVelocity, double yVelocity) {
-    return new RegenBloon(bloonsType, xPosition, yPosition, xVelocity, yVelocity);
+    RegenBloon bloon = new RegenBloon(bloonsType, xPosition, yPosition, xVelocity, yVelocity);
+    return bloon;
   }
 
-  public Bloon createBloon(BloonsType bloonsType, BloonsType originalType, double xPosition, double yPosition,
+  public Bloon createBloon(BloonsType bloonsType, BloonsType originalType, double xPosition,
+      double yPosition,
       double xVelocity, double yVelocity) {
     return new RegenBloon(bloonsType, originalType, xPosition, yPosition, xVelocity, yVelocity);
   }

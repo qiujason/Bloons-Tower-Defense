@@ -7,9 +7,9 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
+import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
 import ooga.controller.GameMenuInterface;
-import javafx.scene.control.Button;
 
 public class GameMenu extends FlowPane {
 
@@ -31,18 +31,19 @@ public class GameMenu extends FlowPane {
     this.setOrientation(Orientation.HORIZONTAL);
   }
 
-  private void initializeResourceBundle(String language){
+  private void initializeResourceBundle(String language) {
     menuProperties = ResourceBundle.getBundle(RESOURCE_DIRECTORY + language + MENU + language);
   }
 
-  private void makeAllButtons(){
-    for (GameButtonType type : gameButtonList){
+  private void makeAllButtons() {
+    for (GameButtonType type : gameButtonList) {
       this.getChildren().add(makeButton(type));
     }
   }
 
   /**
    * From lecture
+   *
    * @author Robert Duvall
    */
   private Button makeButton(GameButtonType buttonType) {
@@ -50,11 +51,10 @@ public class GameMenu extends FlowPane {
     button.setText(menuProperties.getString(buttonType.name()));
     button.setOnAction(buttonHandleMap.get(buttonType));
     button.setId(buttonType.name());
-    if(buttonType.toString().equals("QuitButton")){
+    if (buttonType.toString().equals("QuitButton")) {
       button.setMinWidth(2 * BUTTON_WIDTH);
       button.setMaxWidth(2 * BUTTON_WIDTH);
-    }
-    else{
+    } else {
       button.setMinWidth(BUTTON_WIDTH);
       button.setMaxWidth(BUTTON_WIDTH);
     }

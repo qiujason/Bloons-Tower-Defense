@@ -5,13 +5,13 @@ import java.util.Map;
 
 public class LayoutBlock {
 
-  private String blockType;
+  private final String blockType;
   private double dx;
   private double dy;
-  private Map<String, double[]> velocityMap;
+  private final Map<String, double[]> velocityMap;
 
 
-  public LayoutBlock(String blockType){
+  public LayoutBlock(String blockType) {
     this.blockType = blockType;
     velocityMap = new HashMap<>();
     initializeVelocityMap();
@@ -19,22 +19,22 @@ public class LayoutBlock {
   }
 
   private void initializeVelocityMap() { // pathing characters in properties file
-    velocityMap.put(">", new double[]{1,0});
-    velocityMap.put("<", new double[]{-1,0});
-    velocityMap.put("v", new double[]{0,1});
-    velocityMap.put("^", new double[]{0,-1});
-    velocityMap.put("*", new double[]{1,0});
-    velocityMap.put("@", new double[]{1,0});
+    velocityMap.put(">", new double[]{1, 0});
+    velocityMap.put("<", new double[]{-1, 0});
+    velocityMap.put("v", new double[]{0, 1});
+    velocityMap.put("^", new double[]{0, -1});
+    velocityMap.put("*", new double[]{1, 0});
+    velocityMap.put("@", new double[]{1, 0});
   }
 
   private void setDxDy(String blockType) {
-    if (!blockType.equals("0")){
+    if (!blockType.equals("0")) {
       this.dx = velocityMap.get(blockType)[0];
       this.dy = velocityMap.get(blockType)[1];
     }
   }
 
-  public String toString(){
+  public String toString() {
     return "dx: " + dx + " dy: " + dy;
   }
 
@@ -51,7 +51,7 @@ public class LayoutBlock {
     return blockType;
   }
 
-  public boolean isEndBlock(){
+  public boolean isEndBlock() {
     return blockType.equals("@");
   }
 }

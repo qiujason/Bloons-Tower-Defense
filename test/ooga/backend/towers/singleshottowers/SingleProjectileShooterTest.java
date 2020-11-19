@@ -28,7 +28,7 @@ class SingleProjectileShooterTest {
   private BloonsTypeChain chain;
 
   @BeforeEach
-  void initializeBloonsTypes() {
+  void initializeBloonsTypes() throws ConfigurationException {
     chain = new BloonsTypeChain("tests/test_bloonstype_reader/ValidBloons");
   }
 

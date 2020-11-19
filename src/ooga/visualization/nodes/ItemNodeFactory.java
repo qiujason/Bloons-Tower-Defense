@@ -4,6 +4,7 @@ import ooga.backend.roaditems.RoadItemType;
 
 public interface ItemNodeFactory {
 
-  RoadItemNode createItemNode(RoadItemType roadItemType, double xPosition, double yPosition, double radius);
+  RoadItemNode createItemNode(RoadItemType roadItemType, double xPosition, double yPosition,
+      double radius);
 
 }
