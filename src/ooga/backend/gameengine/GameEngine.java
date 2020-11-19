@@ -45,10 +45,10 @@ public class GameEngine implements GameEngineAPI {
   private int round;
 
   private int lives = STARTING_LIVES;
-  private String gameMode;
+  private GameMode gameMode;
 
 
-  public GameEngine(String gameMode, Layout layout, List<BloonsCollection> allBloonWaves) {
+  public GameEngine(GameMode gameMode, Layout layout, List<BloonsCollection> allBloonWaves) {
     this.layout = layout;
     this.allBloonWaves = allBloonWaves;
     this.queuedBloons = allBloonWaves.get(STARTING_ROUND).copyOf(allBloonWaves.get(STARTING_ROUND));
@@ -238,10 +238,7 @@ public class GameEngine implements GameEngineAPI {
   }
 
   public boolean isGameEnd(){
-    if(gameMode != GameMode.Infinite.name()) {
-      return lives <= 0 || (isRoundEnd() && round >= (allBloonWaves.size() - 1));
-    }
-    return false;
+    return lives <= 0 || (gameMode != GameMode.Infinite && (isRoundEnd() && round >= (allBloonWaves.size() - 1)));
   }
 
   @Override

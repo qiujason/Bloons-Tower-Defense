@@ -181,7 +181,7 @@ public class Controller extends Application {
   }
 
   private void startGameEngine() {
-    gameEngine = new GameEngine(bloonsApplication.getMyGameMode().name(), layout, allBloonWaves);
+    gameEngine = new GameEngine(bloonsApplication.getMyGameMode(), layout, allBloonWaves);
   }
 
   private void step() {
