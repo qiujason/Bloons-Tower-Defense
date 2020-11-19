@@ -216,23 +216,26 @@ public class AnimationHandler {
           }
           continue;
         }
-        if(roadItem.getType() == RoadItemType.ExplodeBloonsItem){
-          roadItem.update();
-        }
-        if(checkBloonCollision(bloon, myRoadItemsInGame.get(roadItem))){
-          if(roadItem.getType() == RoadItemType.PopBloonsItem){
-            popBloon(bloon, null, bloonsToRemove, bloonsToAdd, null, true);
-            roadItem.update();
-          } else if(roadItem.getType() == RoadItemType.SlowBloonsItem && !bloon.isSlowDownActive()){
-            bloon.slowDown();
-            roadItem.update();
-          }
-        }
+        updatesRoadItems(roadItem, bloon, bloonsToRemove, bloonsToAdd);
       }
     }
     spawnBloons(bloonsToAdd);
     removeShotBloon(bloonsToRemove);
     removeExpiredRoadItems(itemsToRemove);
+  }
+
+  private void updatesRoadItems(RoadItem roadItem, Bloon bloon, BloonsCollection bloonsToRemove, BloonsCollection bloonsToAdd){
+    if(roadItem.getType() == RoadItemType.ExplodeBloonsItem){
+      roadItem.update();
+    } else if(checkBloonCollision(bloon, myRoadItemsInGame.get(roadItem))){
+      if(roadItem.getType() == RoadItemType.PopBloonsItem){
+        popBloon(bloon, null, bloonsToRemove, bloonsToAdd, null, true);
+        roadItem.update();
+      } else if(roadItem.getType() == RoadItemType.SlowBloonsItem && !bloon.isSlowDownActive()){
+        bloon.slowDown();
+        roadItem.update();
+      }
+    }
   }
 
   private boolean shouldExplode(Projectile projectile, Bloon bloon){

@@ -1,6 +1,9 @@
-package ooga.backend.roaditems;
+package ooga.backend.roaditems.types;
 
-public class PopBloonsItem extends RoadItem{
+import ooga.backend.roaditems.RoadItem;
+import ooga.backend.roaditems.RoadItemType;
+
+public class PopBloonsItem extends RoadItem {
 
   public static int defaultSpikes = 10;
   private int spikesLeft;

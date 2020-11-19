@@ -1,8 +1,10 @@
-package ooga.backend.roaditems;
+package ooga.backend.roaditems.types;
 
+import ooga.backend.roaditems.RoadItem;
+import ooga.backend.roaditems.RoadItemType;
 import ooga.visualization.AnimationHandler;
 
-public class ExplodeBloonsItem extends RoadItem{
+public class ExplodeBloonsItem extends RoadItem {
 
   public static int defaultSecondsLeft = 3;
 
