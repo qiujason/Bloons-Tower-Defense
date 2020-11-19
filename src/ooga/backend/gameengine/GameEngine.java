@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import ooga.AlertHandler;
 import ooga.backend.API.GameEngineAPI;
 import ooga.backend.ConfigurationException;
 import ooga.backend.bloons.Bloon;
@@ -18,7 +19,7 @@ import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.roaditems.RoadItemsCollection;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowersCollection;
-import ooga.visualization.AnimationHandler;
+import ooga.visualization.animationhandlers.AnimationHandler;
 
 public class GameEngine implements GameEngineAPI {
 
@@ -127,11 +128,9 @@ public class GameEngine implements GameEngineAPI {
   }
 
   public void nextWaveInfinite() {
-    System.out.println("here");
     round++;
     Random rand = new Random();
     int randomRound = rand.nextInt(allBloonWaves.size());
-    System.out.println(randomRound);
     queuedBloons = allBloonWaves.get(randomRound).copyOf(allBloonWaves.get(randomRound));
   }
 
@@ -142,7 +141,6 @@ public class GameEngine implements GameEngineAPI {
   public void resetGame() {
     round = STARTING_ROUND;
     queuedBloons = allBloonWaves.get(STARTING_ROUND);
-
   }
 
   private void shootBloons() throws ConfigurationException {
@@ -182,7 +180,7 @@ public class GameEngine implements GameEngineAPI {
           .getDeclaredMethod("nextWave" + this.gameMode);
       method.invoke(this);
     } catch (SecurityException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-      e.printStackTrace();
+      new AlertHandler("Missing Functionality", "No nextWave method for this game type found");
     }
   }
 

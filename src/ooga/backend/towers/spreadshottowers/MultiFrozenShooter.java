@@ -6,10 +6,10 @@ import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.ProjectileType;
 import ooga.backend.towers.TowerType;
 
-public class FrozenSpreadShooter extends SpreadShotTower {
+public class MultiFrozenShooter extends SpreadShotTower {
 
   // Ice monkey
-  public FrozenSpreadShooter(double myXPosition, double myYPosition, double myRadius,
+  public MultiFrozenShooter(double myXPosition, double myYPosition, double myRadius,
       double myShootingSpeed, double myShootingRestRate) {
     super(myXPosition, myYPosition, myRadius, myShootingSpeed, myShootingRestRate);
     setProjectileType(ProjectileType.FreezeTargetProjectile);
@@ -17,7 +17,7 @@ public class FrozenSpreadShooter extends SpreadShotTower {
 
   @Override
   public TowerType getTowerType() {
-    return TowerType.FrozenSpreadShooter;
+    return TowerType.MultiFrozenShooter;
   }
 
   @Override

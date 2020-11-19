@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import ooga.backend.ConfigurationException;
+import ooga.backend.gameengine.GameMode;
 import ooga.backend.readers.RoadItemValueReader;
 import ooga.backend.readers.RoundBonusReader;
 import ooga.backend.readers.TowerValueReader;
@@ -93,13 +94,13 @@ class BankTest {
     int rounds = Integer.parseInt(roundBonuses.get(0).get(0));
     if(roundBonuses.size() == 1) {
       if (roundBonuses.get(0).size() == 1) {
-        bank = new Bank(towerBuyMap, towerSellMap, roadItemMap, rounds);
+        bank = new Bank(towerBuyMap, towerSellMap, roadItemMap, rounds, GameMode.Normal);
       } else {
         int starting_bonus = Integer.parseInt(roundBonuses.get(0).get(1));
-        bank = new Bank(towerBuyMap, towerSellMap, roadItemMap, rounds, starting_bonus);
+        bank = new Bank(towerBuyMap, towerSellMap, roadItemMap, starting_bonus, GameMode.Normal);
       }
     } else{
-      bank = new Bank(towerBuyMap, towerSellMap, roadItemMap, roundBonuses.get(1));
+      bank = new Bank(towerBuyMap, towerSellMap, roadItemMap, roundBonuses.get(1), GameMode.Normal);
     }
   }
 
