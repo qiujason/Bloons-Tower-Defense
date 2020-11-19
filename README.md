@@ -16,11 +16,11 @@ Hours Spent: 60-70
 
 ### Primary Roles
 
-Jack: Front-end menus and visualization
-Jason: Bloons and other back-end components
-Franklin: Controller and integration between model and view
-Annshine: Towers, Projectiles, and Bank
-Eddie: Front-end in-game buttons, tower placement, and other game objects
+* Jack: Front-end menus and visualization
+* Jason: Bloons and other back-end components
+* Franklin: Controller and integration between model and view
+* Annshine: Towers, Projectiles, and Bank
+* Eddie: Front-end in-game buttons, tower placement, and other game objects
 
 ### Resources Used
 
