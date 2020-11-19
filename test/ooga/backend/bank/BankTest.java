@@ -28,43 +28,43 @@ class BankTest {
 
   @Test
   void advanceToLevel() {
-    assertEquals(0, bank.getCurrentMoney());
+    assertEquals(1000, bank.getCurrentMoney());
     bank.advanceToLevel(3);
-    assertEquals(303, bank.getCurrentMoney());
+    assertEquals(1303, bank.getCurrentMoney());
   }
 
   @Test
   void advanceOneLevel() {
-    assertEquals(0, bank.getCurrentMoney());
+    assertEquals(1000, bank.getCurrentMoney());
     bank.advanceOneLevel();
-    assertEquals(100, bank.getCurrentMoney());
+    assertEquals(1100, bank.getCurrentMoney());
   }
 
   @Test
   void testBuyTower() throws ConfigurationException {
     bank.advanceToLevel(3);
-    assertEquals(303, bank.getCurrentMoney());
+    assertEquals(1303, bank.getCurrentMoney());
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
     bank.buyTower(testTower.getTowerType());
-    assertEquals(53, bank.getCurrentMoney());
+    assertEquals(1053, bank.getCurrentMoney());
   }
 
   @Test
   void sellTower() throws ConfigurationException {
     bank.advanceToLevel(3);
-    assertEquals(303, bank.getCurrentMoney());
+    assertEquals(1303, bank.getCurrentMoney());
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
     bank.sellTower(testTower);
-    assertEquals(503, bank.getCurrentMoney());
+    assertEquals(1503, bank.getCurrentMoney());
   }
 
   @Test
   void addPoppedBloonValue() {
-    assertEquals(0, bank.getCurrentMoney());
+    assertEquals(1000, bank.getCurrentMoney());
     bank.addPoppedBloonValue();
-    assertEquals(1, bank.getCurrentMoney());
+    assertEquals(1001, bank.getCurrentMoney());
   }
 
   @BeforeEach

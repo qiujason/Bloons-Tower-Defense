@@ -11,7 +11,7 @@ class SingleRoadItemFactoryTest {
 
   @Test
   void createRoadItem() throws ConfigurationException {
-    RoadItem testRoadItem = new SingleRoadItemFactory().createTower(RoadItemType.PopBloonsItem, 0,0);
+    RoadItem testRoadItem = new SingleRoadItemFactory().createRoadItem(RoadItemType.PopBloonsItem, 0,0);
     assertEquals(RoadItemType.PopBloonsItem, testRoadItem.getType());
   }
 }

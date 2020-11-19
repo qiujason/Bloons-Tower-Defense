@@ -2,6 +2,7 @@ package ooga.backend.projectile;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import ooga.backend.projectile.types.SpreadProjectile;
 import org.junit.jupiter.api.Test;
 
 class SpreadProjectileTest {
@@ -15,6 +16,6 @@ class SpreadProjectileTest {
   @Test
   void testGetRadius() {
     Projectile dart = new SpreadProjectile(ProjectileType.SpreadProjectile, 10,15,-5,5,0);
-    assertEquals(10, dart.getRadius());
+    assertEquals(3, dart.getRadius());
   }
 }

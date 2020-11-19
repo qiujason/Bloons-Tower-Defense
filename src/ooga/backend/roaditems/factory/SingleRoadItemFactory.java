@@ -7,10 +7,10 @@ import ooga.backend.roaditems.RoadItemType;
 
 public class SingleRoadItemFactory implements RoadItemFactory {
 
-  private final static String ROADITEM_PATH = "ooga.backend.roaditems.";
+  private final static String ROADITEM_PATH = "ooga.backend.roaditems.types.";
 
   @Override
-  public RoadItem createTower(RoadItemType type, double xPosition, double yPosition)
+  public RoadItem createRoadItem(RoadItemType type, double xPosition, double yPosition)
       throws ConfigurationException {
     try{
       Class<?> towerClass = Class.forName(ROADITEM_PATH + type.toString());
