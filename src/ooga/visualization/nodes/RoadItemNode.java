@@ -16,6 +16,8 @@ public class RoadItemNode extends GamePieceNode {
   private static final String PACKAGE = "btd_towers/";
   private static final String NAMES = "TowerMonkey";
   private static final String PICTURES = "MonkeyPics";
+  private static final String IMAGE_ERROR = "Image Not Found";
+  private static final String NOT_FOUND = " image not found";
 
   public RoadItemNode(RoadItemType roadItemType, double xPosition, double yPosition, double radius) {
     super(xPosition, yPosition, radius);
@@ -31,7 +33,7 @@ public class RoadItemNode extends GamePieceNode {
       towerImage = new Image(String.valueOf(getClass().getResource(nameToPicture.getString(typeToName.getString(roadItemType.name()))).toURI()));
     } catch (
         URISyntaxException e) {
-      new AlertHandler("Image Not Found", roadItemType.name() + " image not found.");
+      new AlertHandler(IMAGE_ERROR, roadItemType.name() + NOT_FOUND);
     }
     assert towerImage != null;
     return new ImagePattern(towerImage);
