@@ -13,55 +13,69 @@ import ooga.backend.bloons.factory.BasicBloonsFactory;
 import ooga.backend.bloons.factory.BloonsFactory;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.BloonsTypeChain;
-import ooga.backend.bloons.types.Specials;
 import ooga.backend.layout.Layout;
 
-public class BloonReader extends Reader{
+public class BloonReader extends Reader {
 
-  private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResource");
   private static final String FACTORY_FILE_PATH = "ooga.backend.bloons.factory.";
   private static final String RESOURCE_BUNDLE_PATH = "bloon_resources/BloonReaderKey";
-  private static final ResourceBundle BLOON_READER_KEY = ResourceBundle.getBundle(RESOURCE_BUNDLE_PATH);
+  private static final ResourceBundle BLOON_READER_KEY = ResourceBundle
+      .getBundle(RESOURCE_BUNDLE_PATH);
 
   @Override
   public List<List<String>> getDataFromFile(String fileName) {
     List<String[]> csvData = readFile(fileName);
     List<List<String>> bloonWave = new ArrayList<>();
-    for(String[] row : csvData){
+    for (String[] row : csvData) {
       bloonWave.add(Arrays.asList(row));
     }
     return bloonWave;
   }
 
-  public List<BloonsCollection> generateBloonsCollectionMap(BloonsTypeChain chain, String fileName, Layout layout)
-      throws ConfigurationException { //TODO: create test for seeing if bloon is in right position (negative x)
+  public List<BloonsCollection> generateBloonsCollectionMap(BloonsTypeChain chain, String fileName,
+      Layout layout)
+      throws ConfigurationException {
     List<BloonsCollection> listOfBloons = new ArrayList<>();
     List<List<String>> bloonWaves = getDataFromFile(fileName);
     BloonsCollection currentCollection = new BloonsCollection();
     List<String> specialKeys = getSpecials();
-    for (List<String> row : bloonWaves){
-      if (row.get(0).equals(BLOON_READER_KEY.getString("NextWave"))){
-        listOfBloons.add(currentCollection);
-        currentCollection = new BloonsCollection();
-      }
-      else{
-        for (String bloonInfo : row){
-          Bloon bloon = null;
-          if (bloonInfo.length() > 1) {
-            for (String specialKey: specialKeys) {
-              if (bloonInfo.contains(BLOON_READER_KEY.getString(specialKey))) {
-                bloon = createSpecialBloon(chain, bloonInfo.replaceAll("[^0-9]", ""), layout, specialKey);
-              }
-            }
-          } else {
-            bloon = createBloon(chain, bloonInfo, layout);
-          }
-          currentCollection.add(bloon);
-        }
-      }
+    for (List<String> row : bloonWaves) {
+      currentCollection = getBloonsCollection(chain, layout, listOfBloons, currentCollection,
+          specialKeys,
+          row);
     }
     listOfBloons.add(currentCollection);
     return listOfBloons;
+  }
+
+  private BloonsCollection getBloonsCollection(BloonsTypeChain chain, Layout layout,
+      List<BloonsCollection> listOfBloons, BloonsCollection currentCollection,
+      List<String> specialKeys, List<String> row) throws ConfigurationException {
+    if (row.get(0).equals(BLOON_READER_KEY.getString("NextWave"))) {
+      listOfBloons.add(currentCollection);
+      currentCollection = new BloonsCollection();
+    } else {
+      makeBloons(chain, layout, currentCollection, specialKeys, row);
+    }
+    return currentCollection;
+  }
+
+  private void makeBloons(BloonsTypeChain chain, Layout layout, BloonsCollection currentCollection,
+      List<String> specialKeys, List<String> row) throws ConfigurationException {
+    for (String bloonInfo : row) {
+      Bloon bloon = null;
+      if (bloonInfo.length() > 1) {
+        for (String specialKey : specialKeys) {
+          if (bloonInfo.contains(BLOON_READER_KEY.getString(specialKey))) {
+            bloon = createSpecialBloon(chain, bloonInfo.replaceAll("[^0-9]", ""), layout,
+                specialKey);
+          }
+        }
+      } else {
+        bloon = createBloon(chain, bloonInfo, layout);
+      }
+      currentCollection.add(bloon);
+    }
   }
 
   private List<String> getSpecials() {
@@ -82,10 +96,12 @@ public class BloonReader extends Reader{
 
     double dx = layout.getStartBlock().getDx() * bloonType.relativeSpeed();
     double dy = layout.getStartBlock().getDx() * bloonType.relativeSpeed();
-    return new BasicBloonsFactory().createBloon(bloonType, layout.getStartCoordinates()[1] + 0.5, layout.getStartCoordinates()[0] + 0.5, dx, dy);
+    return new BasicBloonsFactory().createBloon(bloonType, layout.getStartCoordinates()[1] + 0.5,
+        layout.getStartCoordinates()[0] + 0.5, dx, dy);
   }
 
-  private Bloon createSpecialBloon(BloonsTypeChain chain, String bloon, Layout layout, String special) throws ConfigurationException {
+  private Bloon createSpecialBloon(BloonsTypeChain chain, String bloon, Layout layout,
+      String special) throws ConfigurationException {
     Bloon specialBloon = createBloon(chain, bloon, layout);
 
     BloonsFactory specialFactory;

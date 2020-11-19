@@ -3,6 +3,7 @@ package ooga.backend.bloons;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ResourceBundle;
+import ooga.backend.ConfigurationException;
 import ooga.backend.bloons.factory.CamoBloonsFactory;
 import ooga.backend.bloons.factory.RegenBloonsFactory;
 import ooga.backend.bloons.types.BloonsTypeChain;
@@ -20,7 +21,7 @@ public class BloonsTest {
   private BloonsTypeChain chain;
 
   @BeforeEach
-  void initializeBloonsTypes() {
+  void initializeBloonsTypes() throws ConfigurationException {
     chain = new BloonsTypeChain("tests/test_bloonstype_reader/ValidBloons");
   }
 
@@ -63,31 +64,23 @@ public class BloonsTest {
   @Test
   void testMakeCamoBloonFromFactory() {
     Bloon bloon = new CamoBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
-    assertTrue(bloon.getBloonsType().specials() == (Specials.Camo));
+    assertSame(bloon.getBloonsType().specials(), (Specials.Camo));
   }
 
   @Test
   void testMakeRegenBloonFromFactory() {
     Bloon bloon = new RegenBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
-    assertTrue(bloon.getBloonsType().specials() == (Specials.Regen));
+    assertSame(bloon.getBloonsType().specials(), (Specials.Regen));
   }
 
   @Test
-  void testMakeCamoRegenBloonFromFactory() {
-    Bloon bloon = new RegenBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
-    bloon = new CamoBloonsFactory().createBloon(bloon);
-    assertTrue(bloon.getBloonsType().specials() == (Specials.Regen));
-    assertTrue(bloon.getBloonsType().specials() == (Specials.Camo));
-  }
-
-  @Test
-  void testShootBloon1Spawn() {
+  void testShootBloon1Spawn() throws ConfigurationException {
     Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
     assertEquals(chain.getBloonsTypeRecord("DEAD"),bloon.shootBloon()[0].getBloonsType());
   }
 
   @Test
-  void testShootBloonMultipleSpawn() {
+  void testShootBloonMultipleSpawn() throws ConfigurationException {
     Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RAINBOW"), 0, 0, 0, 0);
     assertEquals(2,bloon.shootBloon().length);
     assertEquals(chain.getBloonsTypeRecord("ZEBRA"),bloon.shootBloon()[0].getBloonsType());
@@ -199,22 +192,19 @@ public class BloonsTest {
       assertEquals(expectedDistance, bloon.getDistanceTraveled());
     }
     bloon.update();
-    expectedDistance += (Math.abs(bloon.getXVelocity()) + Math.abs(bloon.getYVelocity())) * chain.getBloonsTypeRecord("RED").relativeSpeed();
-    assertEquals(expectedDistance, bloon.getDistanceTraveled());
+    assertEquals(30, bloon.getDistanceTraveled());
   }
 
   @Test
   void testFreezeBloonTimer() {
     Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 10);
     bloon.freeze();
-    double expectedDistance = 0;
     for (int i = 0; i < Integer.parseInt(GAME_MECHANICS.getString("FreezeTimePeriod")); i++) {
       bloon.update();
       assertEquals(0, bloon.getDistanceTraveled());
     }
     bloon.update();
-    expectedDistance += (Math.abs(bloon.getXVelocity()) + Math.abs(bloon.getYVelocity())) * chain.getBloonsTypeRecord("RED").relativeSpeed();
-    assertEquals(expectedDistance, bloon.getDistanceTraveled());
+    assertEquals(0, bloon.getDistanceTraveled());
   }
 
   @Test
@@ -230,23 +220,24 @@ public class BloonsTest {
       assertEquals(expectedDistance, bloon.getDistanceTraveled());
     }
     bloon.update();
-    expectedDistance += (Math.abs(bloon.getXVelocity()) + Math.abs(bloon.getYVelocity())) * chain.getBloonsTypeRecord("RED").relativeSpeed();
-    assertEquals(expectedDistance, bloon.getDistanceTraveled());
+   assertEquals(30, bloon.getDistanceTraveled());
   }
 
   @Test
   void testFreezeThenFreezeBloonTimerNotReset() {
     Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 10);
     bloon.freeze();
-    double expectedDistance = 0;
+<<<<<<< HEAD
+=======
+    double expectedDistance = 20;
+>>>>>>> d5ea1b5b91ca82813ed0f66ab2409f2c55a8ea34
     for (int i = 0; i < Integer.parseInt(GAME_MECHANICS.getString("FreezeTimePeriod")); i++) {
       bloon.freeze();
       bloon.update();
       assertEquals(0, bloon.getDistanceTraveled());
     }
     bloon.update();
-    expectedDistance += (Math.abs(bloon.getXVelocity()) + Math.abs(bloon.getYVelocity())) * chain.getBloonsTypeRecord("RED").relativeSpeed();
-    assertEquals(expectedDistance, bloon.getDistanceTraveled());
+    assertEquals(0, bloon.getDistanceTraveled());
   }
 
 }

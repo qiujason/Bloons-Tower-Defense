@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
+import ooga.backend.ConfigurationException;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.types.BloonsTypeChain;
@@ -15,7 +17,7 @@ public class CollectionsTest {
   private BloonsTypeChain chain;
 
   @BeforeEach
-  void initializeBloonsTypes() {
+  void initializeBloonsTypes() throws ConfigurationException {
     chain = new BloonsTypeChain("tests/test_bloonstype_reader/ValidBloons");
   }
 

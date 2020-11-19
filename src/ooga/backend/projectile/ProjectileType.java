@@ -8,11 +8,11 @@ public enum ProjectileType {
 
   private final double radius;
 
-  ProjectileType(double radius){
+  ProjectileType(double radius) {
     this.radius = radius;
   }
 
-  public double getRadius(){
+  public double getRadius() {
     return radius;
   }
 }

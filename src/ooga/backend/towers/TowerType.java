@@ -14,10 +14,10 @@ public enum TowerType {
   MultiFrozenShooter(1.5, 3.5, 3, false),
   CamoProjectileShooter(3, 2, 5, true);
 
-  private double radius;
-  private double shootingRestRate;
-  private double shootingSpeed;
-  private boolean ifSingleShot;
+  private final double radius;
+  private final double shootingRestRate;
+  private final double shootingSpeed;
+  private final boolean ifSingleShot;
 
   TowerType(double radius, double shootingRestRate, double shootingSpeed, boolean ifSingleShot) {
     this.radius = radius;
@@ -29,40 +29,43 @@ public enum TowerType {
   public double getRadius() {
     return radius;
   }
-  public double getShootingRestRate(){
+
+  public double getShootingRestRate() {
     return shootingRestRate;
   }
-  public double getShootingSpeed(){
+
+  public double getShootingSpeed() {
     return shootingSpeed;
   }
 
 
   @Override
   public String toString() {
-    if(ifSingleShot){
+    if (ifSingleShot) {
       return "singleshottowers." + super.toString();
-    } else{
+    } else {
       return "spreadshottowers." + super.toString();
     }
   }
 
   private static final Map<String, TowerType> stringToEnum = new ConcurrentHashMap<>();
+
   static {
-    for (TowerType type: values()){
+    for (TowerType type : values()) {
       stringToEnum.put(type.name(), type);
     }
   }
 
-  public static boolean isEnumName(String key){
-    for (TowerType type: values()){
-      if(key.equals(type.name())){
+  public static boolean isEnumName(String key) {
+    for (TowerType type : values()) {
+      if (key.equals(type.name())) {
         return true;
       }
     }
     return false;
   }
 
-  public static TowerType fromString(String name){
+  public static TowerType fromString(String name) {
     return stringToEnum.get(name);
   }
 }

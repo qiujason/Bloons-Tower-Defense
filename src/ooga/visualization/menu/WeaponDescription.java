@@ -29,32 +29,31 @@ public class WeaponDescription extends VBox {
     descriptionText(weaponType);
   }
 
-  private void nameText(String weaponType){
+  private void nameText(String weaponType) {
     Text name = new Text(descriptionResource.getString(weaponType));
     name.setFont(NAME_FONT);
     this.getChildren().add(name);
   }
 
-  private void costText(String weaponType){
+  private void costText(String weaponType) {
     Text cost;
-    if(TowerType.isEnumName(weaponType)){
+    if (TowerType.isEnumName(weaponType)) {
       cost = new Text(COST_TAG + towerCosts.getString(weaponType));
-    }
-    else {
+    } else {
       cost = new Text(COST_TAG + itemCosts.getString(weaponType));
     }
     cost.setFont(DESCRIPTOR_FONT);
     this.getChildren().add(cost);
   }
 
-  private void descriptionText(String weaponType){
+  private void descriptionText(String weaponType) {
     Text description = new Text(descriptionResource.getString(weaponType + DESCRIBE_TAG));
     description.setFont(DESCRIPTOR_FONT);
     description.setWrappingWidth(WRAP_WIDTH);
     this.getChildren().add(description);
   }
 
-  private void initializeResourceBundle(String language){
+  private void initializeResourceBundle(String language) {
     descriptionResource = ResourceBundle.getBundle(DIRECTORY + language + DESCRIPTION + language);
   }
 }

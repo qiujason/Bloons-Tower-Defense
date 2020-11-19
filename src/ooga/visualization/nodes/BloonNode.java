@@ -1,7 +1,5 @@
 package ooga.visualization.nodes;
 
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.ResourceBundle;
 import javafx.scene.image.Image;
@@ -10,15 +8,15 @@ import ooga.AlertHandler;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.Specials;
 
-public class BloonNode extends GamePieceNode{
+public class BloonNode extends GamePieceNode {
 
-  private BloonsType bloonType;
+  private final BloonsType bloonType;
   public static String BLOON_IMAGES_PATH = "bloon_resources/BloonImages";
 
-  private ResourceBundle myBloonImages = ResourceBundle
+  private final ResourceBundle myBloonImages = ResourceBundle
       .getBundle(BLOON_IMAGES_PATH);
 
-  public BloonNode(BloonsType bloonType, double xPosition, double yPosition, double radius){
+  public BloonNode(BloonsType bloonType, double xPosition, double yPosition, double radius) {
     super(xPosition, yPosition, radius);
     this.bloonType = bloonType;
     this.setFill(findImage());
@@ -29,8 +27,8 @@ public class BloonNode extends GamePieceNode{
     Image towerImage = null;
     try {
       StringBuilder imageName = new StringBuilder(bloonType.name());
-      if (bloonType.specials() != Specials.None) {
-          imageName.append("_").append(bloonType.specials().name().toUpperCase());
+      if (bloonType.specials() != Specials.None && !bloonType.name().equals("DEAD")) {
+        imageName.append("_").append(bloonType.specials().name().toUpperCase());
       }
       towerImage = new Image(String.valueOf(getClass().getResource(myBloonImages.getString(
           imageName.toString())).toURI()));

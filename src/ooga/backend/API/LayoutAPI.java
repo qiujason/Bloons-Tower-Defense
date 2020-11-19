@@ -11,5 +11,4 @@ public interface LayoutAPI {
   double getBlockDy(int row, int col);
 
 
-
 }

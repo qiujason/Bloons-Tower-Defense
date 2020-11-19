@@ -1,12 +1,12 @@
 package ooga.backend.readers;
 
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Objects;
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvException;
 import ooga.backend.ConfigurationException;
 
 public abstract class Reader {

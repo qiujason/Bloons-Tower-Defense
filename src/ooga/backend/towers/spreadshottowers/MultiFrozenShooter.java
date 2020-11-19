@@ -21,15 +21,15 @@ public class MultiFrozenShooter extends SpreadShotTower {
   }
 
   @Override
-  public boolean checkBalloonInRange(BloonsCollection bloonsCollection){
+  public boolean checkBalloonInRange(BloonsCollection bloonsCollection) {
     GamePieceIterator<Bloon> iterator = bloonsCollection.createIterator();
-    while(iterator.hasNext()){
+    while (iterator.hasNext()) {
       Bloon bloon = iterator.next();
-      if(ifCamoBloon(bloon) || bloon.isDead() || bloon.isFreezeActive()){
+      if (ifCamoBloon(bloon) || bloon.isDead() || bloon.isFreezeActive()) {
         continue;
       }
       double distance = getDistance(bloon);
-      if(distance <= getRadius()){
+      if (distance <= getRadius()) {
         return true;
       }
     }

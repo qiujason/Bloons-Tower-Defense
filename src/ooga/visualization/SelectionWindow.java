@@ -170,7 +170,7 @@ public class SelectionWindow implements Window {
 
   private void getModeDescription(VBox levelImageGroup) {
     Text modeDescription = new Text();
-    if(myGameMode != null){
+    if (myGameMode != null) {
       modeDescription.setText(myApplicationMessages.getString(myGameMode.toString()));
     }
     modeDescription.setId("ModeDescription");

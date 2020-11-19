@@ -9,7 +9,7 @@ import ooga.backend.towers.TowerType;
 import ooga.controller.WeaponNodeHandler;
 import ooga.visualization.menu.WeaponMenu;
 
-public class TowerNode extends GamePieceNode{
+public class TowerNode extends GamePieceNode {
 
   private final TowerType towerType;
   private final WeaponRange rangeDisplay;
@@ -22,7 +22,7 @@ public class TowerNode extends GamePieceNode{
   private static final String NAMES = "TowerMonkey";
   private static final String PICTURES = "MonkeyPics";
 
-  public TowerNode(TowerType towerType, double xPosition, double yPosition, double radius){
+  public TowerNode(TowerType towerType, double xPosition, double yPosition, double radius) {
     super(xPosition, yPosition, radius);
     this.towerType = towerType;
     this.setFill(findImage());
@@ -32,22 +32,24 @@ public class TowerNode extends GamePieceNode{
   }
 
   @Override
-  public void setXPosition(double xPos){
+  public void setXPosition(double xPos) {
     super.setXPosition(xPos);
     rangeDisplay.setCenterX(xPos);
   }
 
   @Override
-  public void setYPosition(double yPos){
+  public void setYPosition(double yPos) {
     super.setYPosition(yPos);
     rangeDisplay.setCenterY(yPos);
   }
 
   @Override
-  public ImagePattern findImage(){
+  public ImagePattern findImage() {
     Image towerImage = null;
     try {
-      towerImage = new Image(String.valueOf(getClass().getResource(nameToPicture.getString(typeToName.getString(towerType.name()))).toURI()));
+      towerImage = new Image(String.valueOf(
+          getClass().getResource(nameToPicture.getString(typeToName.getString(towerType.name())))
+              .toURI()));
     } catch (
         URISyntaxException e) {
       new AlertHandler("Image Not Found", towerType.name() + " image not found.");
@@ -56,31 +58,31 @@ public class TowerNode extends GamePieceNode{
     return new ImagePattern(towerImage);
   }
 
-  public void setWeaponRange(double gridRadius, double blockSize){
+  public void setWeaponRange(double gridRadius, double blockSize) {
     rangeDisplay.setRadius(gridRadius * blockSize);
   }
 
-  public void makeTowerMenu(WeaponNodeHandler weaponNodeHandler, String language){
+  public void makeTowerMenu(WeaponNodeHandler weaponNodeHandler, String language) {
     towerMenu = new WeaponMenu(this, weaponNodeHandler, language);
   }
 
-  public WeaponMenu getTowerMenu(){
+  public WeaponMenu getTowerMenu() {
     return towerMenu;
   }
 
-  public WeaponRange getRangeDisplay(){
+  public WeaponRange getRangeDisplay() {
     return rangeDisplay;
   }
 
-  public TowerType getTowerType(){
+  public TowerType getTowerType() {
     return towerType;
   }
 
-  public void hideRangeDisplay(){
+  public void hideRangeDisplay() {
     rangeDisplay.makeInvisible();
   }
 
-  public void showRangeDisplay(){
+  public void showRangeDisplay() {
     rangeDisplay.makeVisible();
   }
 

@@ -24,7 +24,7 @@ class GameEngineTest {
   private GameEngine gameEngine;
 
   @BeforeEach
-  void initialize(){
+  void initialize() throws ConfigurationException {
     LayoutReader layoutReader = new LayoutReader();
     BloonReader bloonReader = new BloonReader();
     Layout layout = layoutReader.generateLayout(LAYOUTS_PATH +"level1.csv");
