@@ -41,8 +41,7 @@ public class Controller extends Application {
   public static final String TOWER_BUY_VALUES_PATH = "towervalues/TowerBuyValues.properties";
   public static final String TOWER_SELL_VALUES_PATH = "towervalues/TowerSellValues.properties";
   public static final String ROAD_ITEM_VALUES_PATH = "towervalues/roadItemBuyValues.properties";
-
-  public static String ROUND_BONUSES_PATH = "roundBonuses/BTD5_default_level1_to_10.csv";
+  public static final String ROUND_BONUSES_PATH = "roundBonuses/BTD5_default_level1_to_10.csv";
 
   private ResourceBundle errorResource;
   private Timeline myAnimation;
@@ -62,14 +61,16 @@ public class Controller extends Application {
   private Bank bank;
 
   @Override
-  public void start(Stage primaryStage) { //TODO: refactor into helpers
+  public void start(Stage primaryStage) {
     errorResource = ResourceBundle.getBundle("ErrorResource");
     checkTowerPropertyFiles();
     myAnimation = new Timeline();
+    myAnimation.setCycleCount(Timeline.INDEFINITE);
+    KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> step());
+    myAnimation.getKeyFrames().add(movement);
     layoutReader = new LayoutReader();
     bloonReader = new BloonReader();
     setUpBank();
-
     Button startLevelButton = new Button();
     startLevelButton.setOnAction(e -> startLevel());
     bloonsApplication = new BloonsApplication(startLevelButton);
@@ -81,19 +82,12 @@ public class Controller extends Application {
     initializeBloonTypes();
     initializeBloonWaves();
     startGameEngine();
-
     gameController = new GameMenuController(myAnimation, gameEngine);
     towerController = new WeaponBankController(bank);
-
     bloonsApplication
         .initializeGameObjects(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
             gameEngine.getProjectiles(), gameEngine.getRoadItems(), bank, myAnimation, gameController,
             towerController);
-
-    myAnimation.setCycleCount(Timeline.INDEFINITE);
-
-    KeyFrame movement = new KeyFrame(Duration.seconds(ANIMATION_DELAY), e -> step());
-    myAnimation.getKeyFrames().add(movement);
   }
 
   private void checkTowerPropertyFiles() {
@@ -110,12 +104,12 @@ public class Controller extends Application {
         new HashSet<>(Arrays.asList("SingleProjectileShooter", "MultiProjectileShooter",
             "SpreadProjectileShooter", "UnlimitedRangeProjectileShooter",
             "SuperSpeedProjectileShooter",
-            "FrozenSpreadShooter", "CamoProjectileShooter")));
-    if (!towerPicsValidator.checkIfValid()) {
+            "MultiFrozenShooter", "CamoProjectileShooter")));
+    if (!towerPicsValidator.containsNeededKeys()) {
        new AlertHandler(errorResource.getString("InvalidPropertyFile"),
           errorResource.getString("RequiredKeysMissingPics"));
     }
-    if (!towerNameValidator.checkIfValid()) {
+    if (!towerNameValidator.containsNeededKeys()) {
        new AlertHandler(errorResource.getString("InvalidPropertyFile"),
           errorResource.getString("RequiredKeysMissingTowerNames"));
     }
@@ -136,7 +130,7 @@ public class Controller extends Application {
       roundBonuses = roundBonusReader.getDataFromFile(ROUND_BONUSES_PATH);
       createBank(roundBonuses);
     } catch (ConfigurationException e) {
-      AlertHandler alert = new AlertHandler(errorResource.getString("InvalidPropertyFile"),
+      new AlertHandler(errorResource.getString("InvalidPropertyFile"),
           errorResource.getString(e.getMessage()));
     }
   }
@@ -174,27 +168,32 @@ public class Controller extends Application {
 
   private void step() {
     animationHandler = bloonsApplication.getMyAnimationHandler();
-
-    gameEngine.setProjectiles(animationHandler.getProjectiles());
-    gameEngine.setTowers(animationHandler.getTowers());
-    gameEngine.setRoadItems(animationHandler.getRoadItems());
+    updateGameEngineInfo();
     gameEngine.update();
+    updateAnimationData();
+    animationHandler.animate();
+    updateDisplays();
+    checkGameStatus();
+  }
 
+  private void updateDisplays() {
+    bloonsApplication.displayCurrentMoney(bank.getCurrentMoney());
+    bloonsApplication.displayCurrentRound(gameEngine.getRound() + 1);
+    bloonsApplication.displayCurrentHealth(gameEngine.getLives());
+  }
+
+  private void updateAnimationData() {
     animationHandler.setBloonWave(gameEngine.getCurrentBloonWave());
-
     animationHandler.setShootingTargets(gameEngine.getShootingTargets());
     animationHandler.setTowers(gameEngine.getTowers());
     animationHandler.setProjectiles(gameEngine.getProjectiles());
     animationHandler.setRoadItems(gameEngine.getRoadItems());
+  }
 
-
-    animationHandler.animate();
-
-    bloonsApplication.displayCurrentMoney(bank.getCurrentMoney());
-    bloonsApplication.displayCurrentRound(gameEngine.getRound() + 1);
-    bloonsApplication.displayCurrentHealth(gameEngine.getLives());
-
-    checkGameStatus();
+  private void updateGameEngineInfo() {
+    gameEngine.setProjectiles(animationHandler.getProjectiles());
+    gameEngine.setTowers(animationHandler.getTowers());
+    gameEngine.setRoadItems(animationHandler.getRoadItems());
   }
 
   private void checkGameStatus() {

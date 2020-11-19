@@ -171,7 +171,7 @@ public class SelectionWindow implements Window {
       myGameMode = gameModes.getValue();
       displayLevelPhotoAndDescription(myLevelName, myLevelSelectScreen);
     });
-    Class<?> gameModesClass = null;
+    Class<?> gameModesClass;
     try {
       gameModesClass = Class.forName("ooga.backend.gameengine.GameMode");
     } catch (ClassNotFoundException e) {

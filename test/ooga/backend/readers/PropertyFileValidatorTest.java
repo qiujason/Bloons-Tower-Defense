@@ -2,7 +2,6 @@ package ooga.backend.readers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import org.junit.jupiter.api.Test;
 
@@ -20,11 +19,11 @@ class PropertyFileValidatorTest {
     requiredKeys.add("CamoProjectileShooter");
     PropertyFileValidator validator = new PropertyFileValidator("btd_towers/TowerMonkey.properties",
         requiredKeys);
-    assertTrue(validator.checkIfValid());
+    assertTrue(validator.containsNeededKeys());
     requiredKeys.add("impossibleKey");
     validator = new PropertyFileValidator("btd_towers/TowerMonkey.properties",
         requiredKeys);
-    assertFalse(validator.checkIfValid());
+    assertFalse(validator.containsNeededKeys());
   }
 
   @Test
@@ -40,6 +39,6 @@ class PropertyFileValidatorTest {
     requiredKeys.add("impossibleKey");
     PropertyFileValidator validator = new PropertyFileValidator("btd_towers/TowerMonkey.properties",
         requiredKeys);
-    assertFalse(validator.checkIfValid());
+    assertFalse(validator.containsNeededKeys());
   }
 }

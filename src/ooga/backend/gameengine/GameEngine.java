@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import ooga.AlertHandler;
 import ooga.backend.API.GameEngineAPI;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
@@ -181,7 +182,7 @@ public class GameEngine implements GameEngineAPI {
           .getDeclaredMethod("nextWave" + this.gameMode);
       method.invoke(this);
     } catch (SecurityException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-      e.printStackTrace();
+      new AlertHandler("Missing Functionality", "No nextWave method for this game type found");
     }
   }
 

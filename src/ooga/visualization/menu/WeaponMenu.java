@@ -36,8 +36,12 @@ public class WeaponMenu extends FlowPane {
         .upgradeRate(tower));
     sellTowerButton = makeButton(menuProperties.getString(SELL_TOWER_TEXT), event -> weaponNodeHandler
         .removeWeapon(tower));
-    shootingChoiceBox = new ShootingChoiceBox(BUTTON_WIDTH);
-    setComboBoxHandler(event -> weaponNodeHandler.setTargetingOption(tower, (ShootingChoice) shootingChoiceBox.getValue()));
+    System.out.println(tower.getTowerType().name());
+    System.out.println(isSpreadTower(tower));
+    if(!isSpreadTower(tower)){
+      shootingChoiceBox = new ShootingChoiceBox(BUTTON_WIDTH);
+      setComboBoxHandler(event -> weaponNodeHandler.setTargetingOption(tower, (ShootingChoice) shootingChoiceBox.getValue()));
+    }
   }
 
   private Button makeButton(String name, EventHandler<ActionEvent> handler) {
@@ -54,6 +58,10 @@ public class WeaponMenu extends FlowPane {
   private void setComboBoxHandler(EventHandler<ActionEvent> handler){
     shootingChoiceBox.setOnAction(handler);
     this.getChildren().add(shootingChoiceBox);
+  }
+
+  private boolean isSpreadTower(TowerNode towerNode){
+    return (towerNode.getTowerType().name().contains("Multi"));
   }
 
 }
