@@ -1,4 +1,4 @@
-package ooga.visualization.windows;
+package ooga.visualization;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -15,9 +15,8 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import ooga.AlertHandler;
 import ooga.controller.Controller;
-import ooga.visualization.BloonsApplication;
 
-public class StartWindow implements Window{
+public class StartWindow implements Window {
 
   Scene myScene;
   Button myStartButton;

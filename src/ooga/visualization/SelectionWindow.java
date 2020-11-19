@@ -1,4 +1,4 @@
-package ooga.visualization.windows;
+package ooga.visualization;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -18,7 +18,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import ooga.AlertHandler;
-import ooga.visualization.BloonsApplication;
 
 public class SelectionWindow implements Window {
 

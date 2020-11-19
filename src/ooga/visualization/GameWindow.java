@@ -1,4 +1,4 @@
-package ooga.visualization.windows;
+package ooga.visualization;
 
 import java.util.List;
 import javafx.scene.control.Button;
