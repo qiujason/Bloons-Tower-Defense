@@ -13,6 +13,7 @@ import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.types.Specials;
 import ooga.backend.collections.GamePieceIterator;
+import ooga.backend.gameengine.GameMode;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
 import ooga.backend.projectile.ProjectilesCollection;
@@ -23,6 +24,7 @@ import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowersCollection;
 import ooga.visualization.BloonsApplication;
 import ooga.visualization.nodes.BloonNode;
+import ooga.visualization.nodes.GamePieceNode;
 import ooga.visualization.nodes.ProjectileNode;
 import ooga.visualization.nodes.RoadItemNode;
 import ooga.visualization.nodes.TowerNode;
@@ -34,6 +36,7 @@ public class AnimationHandler {
   private Timeline myAnimation;
   private Group myLevelLayout;
   private double myBlockSize;
+  private GameMode myGameMode;
 
   private BloonsCollection myBloons;
   private TowersCollection myTowers;
@@ -49,7 +52,7 @@ public class AnimationHandler {
 
   public AnimationHandler(Group levelLayout, BloonsCollection bloons,
       TowersCollection towers, ProjectilesCollection projectiles, RoadItemsCollection roadItems,
-      Bank bank, double blockSize, Timeline animation) {
+      Bank bank, GameMode gameMode, double blockSize, Timeline animation) {
     myAnimation = animation;
     myAnimation.setCycleCount(Timeline.INDEFINITE);
     myLevelLayout = levelLayout;
@@ -62,6 +65,7 @@ public class AnimationHandler {
     myProjectilesInGame = new HashMap<>();
     myRoadItemsInGame = new HashMap<>();
     myBlockSize = blockSize;
+    myGameMode = gameMode;
     this.bank = bank;
   }
 
@@ -178,7 +182,7 @@ public class AnimationHandler {
 
   private void addMoneyPerPop(BloonsCollection bloonsToRemove){
     GamePieceIterator<Bloon> iterator = bloonsToRemove.createIterator();
-    while(iterator.hasNext()){
+    while(iterator.hasNext() && myGameMode != GameMode.Sandbox){
       iterator.next();
       bank.addPoppedBloonValue();
     }
@@ -212,7 +216,7 @@ public class AnimationHandler {
           }
           continue;
         }
-        updatesRoadItems(roadItem, bloon, bloonsToRemove, bloonsToAdd);
+        updateRoadItems(roadItem, bloon, bloonsToRemove, bloonsToAdd);
       }
     }
     spawnBloons(bloonsToAdd);
@@ -220,7 +224,7 @@ public class AnimationHandler {
     removeExpiredRoadItems(itemsToRemove);
   }
 
-  private void updatesRoadItems(RoadItem roadItem, Bloon bloon, BloonsCollection bloonsToRemove, BloonsCollection bloonsToAdd){
+  private void updateRoadItems(RoadItem roadItem, Bloon bloon, BloonsCollection bloonsToRemove, BloonsCollection bloonsToAdd){
     if(roadItem.getType() == RoadItemType.ExplodeBloonsItem){
       roadItem.update();
     } else if(checkBloonCollision(bloon, myRoadItemsInGame.get(roadItem))){
@@ -302,13 +306,13 @@ public class AnimationHandler {
     }
   }
 
-  private boolean checkBloonCollision(Bloon bloon, Circle weapon){
-    Circle bloonInGame = myBloonsInGame.get(bloon);
+  private boolean checkBloonCollision(Bloon bloon, GamePieceNode weapon){
+    GamePieceNode bloonInGame = myBloonsInGame.get(bloon);
     return weapon.getBoundsInParent().intersects(bloonInGame.getBoundsInParent());
   }
 
-  private boolean checkSpreadProjectileCollision(Bloon bloon, Circle weapon, double radius){
-    Circle bloonInGame = myBloonsInGame.get(bloon);
+  private boolean checkSpreadProjectileCollision(Bloon bloon, GamePieceNode weapon, double radius){
+    GamePieceNode bloonInGame = myBloonsInGame.get(bloon);
     BoundingBox bounds = new BoundingBox(weapon.getBoundsInParent().getMinX()-radius,
         weapon.getBoundsInParent().getMinY()-radius,
         weapon.getBoundsInParent().getWidth() + 2 * radius,

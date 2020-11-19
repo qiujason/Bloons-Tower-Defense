@@ -128,11 +128,9 @@ public class GameEngine implements GameEngineAPI {
   }
 
   public void nextWaveInfinite() {
-    System.out.println("here");
     round++;
     Random rand = new Random();
     int randomRound = rand.nextInt(allBloonWaves.size());
-    System.out.println(randomRound);
     queuedBloons = allBloonWaves.get(randomRound).copyOf(allBloonWaves.get(randomRound));
   }
 
@@ -143,7 +141,6 @@ public class GameEngine implements GameEngineAPI {
   public void resetGame() {
     round = STARTING_ROUND;
     queuedBloons = allBloonWaves.get(STARTING_ROUND);
-
   }
 
   private void shootBloons() throws ConfigurationException {

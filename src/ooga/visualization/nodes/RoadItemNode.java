@@ -11,10 +11,9 @@ public class RoadItemNode extends GamePieceNode {
 
   private RoadItemType roadItemType;
 
-  private static final String PACKAGE = "btd_towers/";
-  private static final String ROAD_ITEMS = "RoadItems";
+  private static final String ROAD_ITEMS_IMAGES_PATH = "btd_towers/RoadItems";
 
-  private ResourceBundle roadItemPic = ResourceBundle.getBundle(PACKAGE + ROAD_ITEMS);
+  private ResourceBundle roadItemPic = ResourceBundle.getBundle(ROAD_ITEMS_IMAGES_PATH);
 
   public RoadItemNode(RoadItemType roadItemType, double xPosition, double yPosition, double radius) {
     super(xPosition, yPosition, radius);
