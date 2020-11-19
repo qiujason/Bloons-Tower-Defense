@@ -19,13 +19,5 @@ public class AlertHandler {
     a.setContentText(message);
     a.show();
   }
-  /**
-   * This class makes a new alert message when there is an error.
-   * @param header
-   * @param message
-   */
-  public void makeAlert(String header, String message) {
-
-  }
 
 }

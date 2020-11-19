@@ -38,6 +38,8 @@ public class GameEngine implements GameEngineAPI {
   private Map<Bloon, Double> myBloonSidesY;
 
   private int round;
+
+
   private int lives = STARTING_LIVES;
 
 
@@ -209,7 +211,7 @@ public class GameEngine implements GameEngineAPI {
   }
 
   public boolean isGameEnd(){
-    return isRoundEnd() && round >= (allBloonWaves.size() - 1);
+    return lives <= 0 || (isRoundEnd() && round >= (allBloonWaves.size() - 1));
   }
 
   @Override
@@ -229,6 +231,11 @@ public class GameEngine implements GameEngineAPI {
 
   public void setRoadItems(RoadItemsCollection update){
     roadItems = update;
+  }
+
+  @Override
+  public int getLives() {
+    return lives;
   }
 
 }

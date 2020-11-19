@@ -118,11 +118,11 @@ public class Controller extends Application {
             "SuperSpeedProjectileShooter",
             "FrozenSpreadShooter", "CamoProjectileShooter")));
     if (!towerPicsValidator.checkIfValid()) {
-      AlertHandler alert = new AlertHandler(errorResource.getString("InvalidPropertyFile"),
+       new AlertHandler(errorResource.getString("InvalidPropertyFile"),
           errorResource.getString("RequiredKeysMissingPics"));
     }
     if (!towerNameValidator.checkIfValid()) {
-      AlertHandler alert = new AlertHandler(errorResource.getString("InvalidPropertyFile"),
+       new AlertHandler(errorResource.getString("InvalidPropertyFile"),
           errorResource.getString("RequiredKeysMissingTowerNames"));
     }
   }
@@ -133,7 +133,7 @@ public class Controller extends Application {
       towerSellMap = new TowerValueReader(TOWER_SELL_VALUES_PATH).getMap();
       roadItemBuyMap = new RoadItemValueReader(ROAD_ITEM_VALUES_PATH).getMap();
     } catch (Exception e) {
-      AlertHandler alert = new AlertHandler(errorResource.getString("InvalidPropertyFile"),
+      new AlertHandler(errorResource.getString("InvalidPropertyFile"),
           errorResource.getString("InvalidPropertyFormat"));
     }
     RoundBonusReader roundBonusReader = new RoundBonusReader();
@@ -198,20 +198,22 @@ public class Controller extends Application {
 
     bloonsApplication.displayCurrentMoney(bank.getCurrentMoney());
     bloonsApplication.displayCurrentRound(gameEngine.getRound() + 1);
+    bloonsApplication.displayCurrentHealth(gameEngine.getLives());
 
     if (gameEngine.isGameEnd()) {
-      System.out.println("rip");
-      bloonsApplication.endLevel();
+      if(gameEngine.getLives() <= 0){
+        bloonsApplication.loseGame();
+      }
+      else{
+        bloonsApplication.winGame();
+        myAnimation.stop();
+      }
       myAnimation.stop();
     } else if (gameEngine.isRoundEnd()) {
-      System.out.println("frontend detected round end");
-      bloonsApplication.endRound();
-      if (gameEngine.isRoundEnd() || gameEngine.isGameEnd()) {
+        bloonsApplication.endRound();
         bank.advanceOneLevel();
         myAnimation.stop();
       }
-
-    }
   }
 
   public BloonsApplication getMyBloonsApplication() {

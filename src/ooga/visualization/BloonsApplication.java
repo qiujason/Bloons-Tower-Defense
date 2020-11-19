@@ -407,7 +407,6 @@ public class BloonsApplication {
       for (int j = 0; j < numberOfColumns; j++) {
         Rectangle newBlock = createBlock(myLayout.getBlock(i, j).getBlockType(), currentBlockX,
             currentBlockY, myBlockSize);
-        newBlock.setId("LayoutBlock" + blockNumberX + blockNumberY);
         myLevelLayout.getChildren().add(newBlock);
         currentBlockX += myBlockSize;
         blockNumberX++;
@@ -424,8 +423,11 @@ public class BloonsApplication {
     Rectangle blockRectangle = new Rectangle(currentBlockX, currentBlockY, blockSize, blockSize);
     if (block.equals("0")) {
       blockRectangle.getStyleClass().add("non-path-block");
+      blockRectangle.setId("LayoutBlock" + currentBlockX + currentBlockY);
+
     } else {
       blockRectangle.getStyleClass().add("path-block");
+      blockRectangle.setId("PathLayoutBlock" + currentBlockX + currentBlockY);
     }
     return blockRectangle;
   }
@@ -479,9 +481,14 @@ public class BloonsApplication {
         myApplicationMessages.getString("RoundEndMessage"));
   }
 
-  public void endLevel() {
+  public void winGame() {
     new AlertHandler(myApplicationMessages.getString("GameEndHeader"),
         myApplicationMessages.getString("GameEndMessage"));
+  }
+
+  public void loseGame(){
+    new AlertHandler(myApplicationMessages.getString("GameLossHeader"),
+        myApplicationMessages.getString("GameLossMessage"));
   }
 
   public Enum<?> getMyGameMode() {
