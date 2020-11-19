@@ -6,6 +6,7 @@ import ooga.backend.API.BloonsAPI;
 import ooga.backend.GamePiece;
 import ooga.backend.bloons.factory.BasicBloonsFactory;
 import ooga.backend.bloons.types.BloonsType;
+import ooga.backend.bloons.types.Specials;
 import ooga.visualization.AnimationHandler;
 
 public class Bloon extends GamePiece implements BloonsAPI {

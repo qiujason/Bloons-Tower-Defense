@@ -3,6 +3,7 @@ package ooga.backend.bloons.factory;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.special.RegenBloon;
 import ooga.backend.bloons.types.BloonsType;
+import ooga.backend.bloons.types.Specials;
 
 public class RegenBloonsFactory implements BloonsFactory {
 
@@ -16,7 +17,8 @@ public class RegenBloonsFactory implements BloonsFactory {
   @Override
   public Bloon createBloon(BloonsType bloonsType, double xPosition, double yPosition,
       double xVelocity, double yVelocity) {
-    return new RegenBloon(bloonsType, xPosition, yPosition, xVelocity, yVelocity);
+    RegenBloon bloon = new RegenBloon(bloonsType, xPosition, yPosition, xVelocity, yVelocity);
+    return bloon;
   }
 
   public Bloon createBloon(BloonsType bloonsType, BloonsType originalType, double xPosition, double yPosition,

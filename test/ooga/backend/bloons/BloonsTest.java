@@ -63,21 +63,13 @@ public class BloonsTest {
   @Test
   void testMakeCamoBloonFromFactory() {
     Bloon bloon = new CamoBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
-    assertTrue(bloon.getBloonsType().specials() == (Specials.Camo));
+    assertSame(bloon.getBloonsType().specials(), (Specials.Camo));
   }
 
   @Test
   void testMakeRegenBloonFromFactory() {
     Bloon bloon = new RegenBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
-    assertTrue(bloon.getBloonsType().specials() == (Specials.Regen));
-  }
-
-  @Test
-  void testMakeCamoRegenBloonFromFactory() {
-    Bloon bloon = new RegenBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
-    bloon = new CamoBloonsFactory().createBloon(bloon);
-    assertTrue(bloon.getBloonsType().specials() == (Specials.Regen));
-    assertTrue(bloon.getBloonsType().specials() == (Specials.Camo));
+    assertSame(bloon.getBloonsType().specials(), (Specials.Regen));
   }
 
   @Test
@@ -199,7 +191,6 @@ public class BloonsTest {
       assertEquals(expectedDistance, bloon.getDistanceTraveled());
     }
     bloon.update();
-    expectedDistance += (Math.abs(bloon.getXVelocity()) + Math.abs(bloon.getYVelocity())) * chain.getBloonsTypeRecord("RED").relativeSpeed();
     assertEquals(expectedDistance, bloon.getDistanceTraveled());
   }
 

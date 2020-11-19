@@ -24,14 +24,12 @@ public abstract class SpecialBloon extends Bloon {
         Class<?> specialBloonClass = Class.forName(FACTORY_FILE_PATH + specialName + "BloonsFactory");
         Constructor<?> specialBloonConstructor = specialBloonClass.getConstructor();
         BloonsFactory specialFactory = (BloonsFactory)specialBloonConstructor.newInstance();
-        if (bloons[i] != null) {
-          bloons[i] = specialFactory.createBloon(bloons[i]);
-        } else {
-          bloons[i] = specialFactory.createNextBloon(this);
-        }
+        bloons[i] = specialFactory.createNextBloon(this);
       } catch (ClassNotFoundException e) {
+        e.printStackTrace();
         //TODO: handle
       } catch (Exception e) {
+        e.printStackTrace();
         //TODO: handle
       }
     }

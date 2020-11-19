@@ -2,6 +2,7 @@ package ooga.backend.bloons;
 
 import java.util.ArrayList;
 import java.util.List;
+import ooga.backend.bloons.factory.BasicBloonsFactory;
 import ooga.backend.collections.GamePieceCollection;
 import ooga.backend.collections.GamePieceIterator;
 
@@ -87,7 +88,7 @@ public class BloonsCollection implements GamePieceCollection<Bloon> {
   }
 
   private Bloon createCopy(Bloon bloon){
-    return new Bloon(bloon.getBloonsType(), bloon.getXPosition(), bloon.getYPosition(), bloon.getXVelocity(), bloon.getYVelocity());
+    return new BasicBloonsFactory().createBloon(bloon.getBloonsType(), bloon.getXPosition(), bloon.getYPosition(), bloon.getXVelocity(), bloon.getYVelocity());
   }
 
 

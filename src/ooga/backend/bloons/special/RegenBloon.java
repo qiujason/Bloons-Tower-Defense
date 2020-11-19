@@ -28,7 +28,10 @@ public class RegenBloon extends SpecialBloon {
   public void update() {
     if (!getBloonsType().equals(originalType)) {
       if (timer <= 0) {
-        setBloonsType(getBloonsType().chain().getPrevBloonsType(getBloonsType()));
+        BloonsType prevType = getBloonsType().chain().getPrevBloonsType(getBloonsType());
+        prevType = new BloonsType(prevType.chain(), prevType.name(), prevType.RBE(),
+            prevType.relativeSpeed(), Specials.Regen);
+        setBloonsType(prevType);
         timer = fullTimer;
       } else {
         timer--;
