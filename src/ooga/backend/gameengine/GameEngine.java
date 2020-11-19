@@ -65,7 +65,7 @@ public class GameEngine implements GameEngineAPI {
 
   }
 
-  public void addQueuedBloon(){
+  private void addQueuedBloon(){
     GamePieceIterator<Bloon> queueIterator = queuedBloons.createIterator();
     if (queueIterator.hasNext()){
       Bloon queuedBloon = queueIterator.next();
