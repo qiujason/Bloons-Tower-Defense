@@ -7,12 +7,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
+import ooga.backend.bloons.special.RegenBloon;
 import ooga.backend.bloons.types.BloonsTypeChain;
+import ooga.backend.bloons.types.Specials;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.layout.Layout;
-import ooga.backend.readers.BloonReader;
-import ooga.backend.readers.LayoutReader;
-import ooga.backend.readers.Reader;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -61,4 +60,31 @@ public class BloonReaderTest {
     }
     return true;
   }
+
+  @Test
+  void generateBloonsCollectionMapWithSpecialsTest(){
+    LayoutReader layoutReader = new LayoutReader();
+    BloonReader reader = new BloonReader();
+    Layout layout = layoutReader.generateLayout("layouts/level1.csv");
+    BloonsTypeChain chain = new BloonsTypeChain("tests/test_bloonstype_reader/ValidBloons");
+    List<BloonsCollection> list = reader.generateBloonsCollectionMap(chain, "tests/test_bloon_waves/specials.csv", layout);
+    String[][] expectedWaves =
+        {{"RED","RED","RED","RED","RED","RED","RED","RED","RED","RED","RED","RED"},
+            {"BLUE","BLUE","BLUE","BLUE","BLUE","BLUE","BLUE","BLUE","BLUE","BLUE","BLUE","BLUE"}};
+    assertTrue(generateBloonsCollectionMapTestHelper(expectedWaves,list));
+    GamePieceIterator<Bloon> iterate = list.get(0).createIterator();
+    for (int i = 0; i < expectedWaves.length; i++) {
+      Bloon bloon = iterate.next();
+      assertTrue(bloon.getBloonsType().specials().contains(Specials.Camo));
+    }
+    iterate = list.get(1).createIterator();
+    for (int i = 0; i < expectedWaves.length; i++) {
+      Bloon bloon = iterate.next();
+      assertTrue(bloon instanceof RegenBloon);
+      assertTrue(bloon.getBloonsType().specials().contains(Specials.Regen));
+    }
+  }
+
+
+
 }
