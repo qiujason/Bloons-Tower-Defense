@@ -59,6 +59,8 @@ public class WeaponButtonsMenu extends FlowPane {
   private void makeAllWeaponButtons(){
     for(TowerType type : weaponTypeList){
       Button weaponButton = makeWeaponButton(type, event -> weaponNodeHandler.makeWeapon(type));
+      weaponButton.setId(type.toString() + "Button");
+      System.out.println(weaponButton.getId());
       buttonWeaponDescription.put(weaponButton, new TowerDescription(type, currentLanguage));
       showButtonDescription(weaponButton);
       this.getChildren().add(weaponButton);
@@ -68,6 +70,7 @@ public class WeaponButtonsMenu extends FlowPane {
   private void makeAllRoadItemButtons(){
     for(RoadItemType type : roadItemTypeList){
       Button itemButton = makeRoadItemButton(type, event -> weaponNodeHandler.makeRoadWeapon(type));
+      itemButton.setId(type.toString() + "Button");
       buttonWeaponDescription.put(itemButton, new RoadItemDescription(type, currentLanguage));
       showButtonDescription(itemButton);
       this.getChildren().add(itemButton);
@@ -107,7 +110,7 @@ public class WeaponButtonsMenu extends FlowPane {
     try {
       towerImage = new Image(String.valueOf(getClass().getResource(directory).toURI()));
     } catch (URISyntaxException e) {
-      e.printStackTrace();  //duvall no like
+      e.printStackTrace();
     }
     assert towerImage != null;
     return towerImage;

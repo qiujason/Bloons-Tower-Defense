@@ -39,6 +39,8 @@ public class BloonsApplicationMenusTest extends DukeApplicationTest {
     clickOn(myStartButton);
     ComboBox<String> levelOptions = lookup("#LevelOptions").query();
     select(levelOptions, levelOptions.getItems().get(0));
+    ComboBox<Enum<?>> modeOptions = lookup("#GameModes").query();
+    selectEnum(modeOptions, modeOptions.getItems().get(0));
     Button startLevelButton = lookup("#StartLevelButton").query();
     clickOn(startLevelButton);
   }
@@ -126,21 +128,16 @@ public class BloonsApplicationMenusTest extends DukeApplicationTest {
   @Test
   public void testLoadLevelButton() {
     startRandomLevel();
-    Button myPlayButton = lookup("#Play").query();
-    Button myPauseButton = lookup("#Pause").query();
-    Button mySpeedUpButton = lookup("#SpeedUp").query();
-    Button mySlowDownButton = lookup("#SlowDown").query();
+    Button myPlayButton = lookup("#PlayButton").query();
+    Button myPauseButton = lookup("#PauseButton").query();
+    Button mySpeedUpButton = lookup("#SpeedUpButton").query();
+    Button mySlowDownButton = lookup("#SlowDownButton").query();
+    Button myQuitButton = lookup("#QuitButton").query();
     assertEquals("Play", myPlayButton.getText());
     assertEquals("Pause", myPauseButton.getText());
     assertEquals("SpeedUp", mySpeedUpButton.getText());
     assertEquals("SlowDown", mySlowDownButton.getText());
-  }
-
-  @Test
-  public void testLayoutDisplay() {
-    startRandomLevel();
-    Rectangle myRectangle = lookup("#LayoutBlock00").query();
-    assertNotNull(myRectangle);
+    assertEquals("Quit", myQuitButton.getText());
   }
 
 }

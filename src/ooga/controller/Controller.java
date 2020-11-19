@@ -232,4 +232,8 @@ public class Controller extends Application {
     return bloonsApplication;
   }
 
+  public GameEngineAPI getGameEngine() {
+    return gameEngine;
+  }
+
 }

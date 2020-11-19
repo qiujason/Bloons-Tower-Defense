@@ -334,6 +334,10 @@ public class BloonsApplication {
     return myMenuButtonNames;
   }
 
+  public Pane getLevel() {
+    return myLevel;
+  }
+
   public AnimationHandler getMyAnimationHandler() {
     return myAnimationHandler;
   }
