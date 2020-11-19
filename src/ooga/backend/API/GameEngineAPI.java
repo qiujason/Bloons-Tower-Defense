@@ -33,4 +33,6 @@ public interface GameEngineAPI {
   void setProjectiles(ProjectilesCollection projectiles);
 
   void setRoadItems(RoadItemsCollection roadItems);
+
+  int getLives();
 }

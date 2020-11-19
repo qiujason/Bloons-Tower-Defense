@@ -81,7 +81,7 @@ public class TowerNodeHandler {
         Tower tower = towerFactory
             .createTower(towerType, towerDefaultPosition, towerDefaultPosition);
         TowerNode towerNode = towerNodeFactory.createTowerNode(towerType, gameWidth / 2,
-            gameHeight / 2, blockSize / 2);
+            gameHeight / 2, blockSize / 2.5);
         towerNode.makeTowerMenu(this);
         towerNode.setWeaponRange(tower.getRadius(), blockSize);
         WeaponRange towerRange = towerNode.getRangeDisplay();

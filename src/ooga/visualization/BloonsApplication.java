@@ -468,9 +468,14 @@ public class BloonsApplication {
         myApplicationMessages.getString("RoundEndMessage"));
   }
 
-  public void endLevel() {
+  public void winGame() {
     new AlertHandler(myApplicationMessages.getString("GameEndHeader"),
         myApplicationMessages.getString("GameEndMessage"));
+  }
+
+  public void loseGame(){
+    new AlertHandler(myApplicationMessages.getString("GameLossHeader"),
+        myApplicationMessages.getString("GameLossMessage"));
   }
 
   public Enum<?> getMyGameMode() {
