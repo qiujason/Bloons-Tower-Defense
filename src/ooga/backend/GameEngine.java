@@ -19,7 +19,7 @@ import ooga.visualization.AnimationHandler;
 public class GameEngine implements GameEngineAPI {
 
   private static final int STARTING_ROUND = 0;
-  private static final int STARTING_LIVES = 100;
+  public static final int STARTING_LIVES = 100;
   private static final int SPAWN_DELAY = (int) (1 * AnimationHandler.FRAMES_PER_SECOND);
   private static final int SPEED_ADJUSTER = 50;
 

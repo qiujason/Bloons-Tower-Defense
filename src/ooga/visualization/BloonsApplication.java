@@ -14,6 +14,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ooga.AlertHandler;
+import ooga.backend.GameEngine;
+import ooga.backend.bank.Bank;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.layout.Layout;
 import ooga.backend.projectile.ProjectilesCollection;
@@ -117,6 +119,7 @@ public class BloonsApplication {
     myApplicationMessages = myStartWindow.getApplicationMessages();
     myCurrentLanguage = myStartWindow.getCurrentLanguage();
     myCurrentStylesheet = myStartWindow.getMyCurrentStylesheet();
+    System.out.println(myCurrentStylesheet);
     myScene.getStylesheets()
         .add(getClass().getResource("/" + STYLESHEETS + myCurrentStylesheet).toExternalForm());
     myScene.getRoot().getStylesheets().add("start-menu");
@@ -153,6 +156,7 @@ public class BloonsApplication {
   }
 
   private void switchToGameWindow() {
+    myGameMode = mySelectionWindow.getGameMode();
     loadLevel(mySelectionWindow.getLevelOptions().getValue() + ".csv");
   }
 
@@ -192,9 +196,9 @@ public class BloonsApplication {
     towerNodeHandler = new TowerNodeHandler(myLayout, GAME_WIDTH, GAME_HEIGHT, myBlockSize,
         myLevelLayout, myMenuPane, myTowers, myTowerMenuController, myAnimationHandler);
     visualizePlayerGUI(myLevel);
-    displayCurrentMoney(0);
+    displayCurrentMoney(Bank.STARTING_MONEY);
     displayCurrentRound(1);
-    displayCurrentHealth(100); // change this to actual health
+    displayCurrentHealth(GameEngine.STARTING_LIVES);
     myScene.setRoot(myLevel);
     myStage.setScene(myScene);
   }

@@ -182,4 +182,8 @@ public class SelectionWindow implements Window {
     return myLevelOptions;
   }
 
+  public Enum<?> getGameMode(){
+    return myGameMode;
+  }
+
 }
