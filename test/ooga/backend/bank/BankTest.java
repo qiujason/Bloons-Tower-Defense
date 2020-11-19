@@ -52,7 +52,7 @@ class BankTest {
     setUp();
     assertEquals(1000, bank.getCurrentMoney());
     bank.advanceOneLevel();
-    assertEquals(1100, bank.getCurrentMoney());
+    assertEquals(1030, bank.getCurrentMoney());
   }
 
   @Test
