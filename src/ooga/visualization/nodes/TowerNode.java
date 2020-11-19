@@ -10,16 +10,16 @@ import ooga.visualization.menu.WeaponMenu;
 
 public class TowerNode extends GamePieceNode{
 
-  private TowerType towerType;
-  private WeaponRange rangeDisplay;
+  private final TowerType towerType;
+  private final WeaponRange rangeDisplay;
+  private final ResourceBundle typeToName = ResourceBundle.getBundle(PACKAGE + NAMES);
+  private final ResourceBundle nameToPicture = ResourceBundle.getBundle(PACKAGE + PICTURES);
+
   private WeaponMenu towerMenu;
 
   private static final String PACKAGE = "btd_towers/";
   private static final String NAMES = "TowerMonkey";
   private static final String PICTURES = "MonkeyPics";
-
-  private ResourceBundle typeToName = ResourceBundle.getBundle(PACKAGE + NAMES);
-  private ResourceBundle nameToPicture = ResourceBundle.getBundle(PACKAGE + PICTURES);
 
   public TowerNode(TowerType towerType, double xPosition, double yPosition, double radius){
     super(xPosition, yPosition, radius);
