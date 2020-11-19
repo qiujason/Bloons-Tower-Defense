@@ -1,8 +1,11 @@
 package ooga.controller;
 
+import java.util.ResourceBundle;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
+import ooga.AlertHandler;
+import ooga.backend.ConfigurationException;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.layout.Layout;
 import ooga.backend.roaditems.RoadItem;
@@ -27,6 +30,8 @@ import ooga.visualization.nodes.WeaponNodeFactory;
 import ooga.visualization.nodes.WeaponRange;
 
 public class WeaponNodeHandler implements WeaponNodeInterface {
+
+  private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResource");
 
   private Layout layout;
   private double gameWidth;
@@ -75,16 +80,21 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
     if (canMakeTower) {
       if (menuController.buyTower(towerType)) {
         canMakeTower = false;
-        Tower tower = towerFactory
-            .createTower(towerType, towerDefaultPosition, towerDefaultPosition);
-        TowerNode towerNode = towerNodeFactory.createTowerNode(towerType, gameWidth / 2,
-            gameHeight / 2, blockSize / 2.5);
-        towerNode.makeTowerMenu(this);
-        towerNode.setWeaponRange(tower.getRadius(), blockSize);
-        WeaponRange towerRange = towerNode.getRangeDisplay();
-        layoutRoot.getChildren().add(towerRange);
-        layoutRoot.getChildren().add(towerNode);
-        placeTower(tower, towerNode);
+        try {
+          Tower tower = towerFactory
+              .createTower(towerType, towerDefaultPosition, towerDefaultPosition);
+          TowerNode towerNode = towerNodeFactory.createTowerNode(towerType, gameWidth / 2,
+              gameHeight / 2, blockSize / 2.5);
+          towerNode.makeTowerMenu(this);
+          towerNode.setWeaponRange(tower.getRadius(), blockSize);
+          WeaponRange towerRange = towerNode.getRangeDisplay();
+          layoutRoot.getChildren().add(towerRange);
+          layoutRoot.getChildren().add(towerNode);
+          placeTower(tower, towerNode);
+        } catch (ConfigurationException e) {
+          new AlertHandler(ERROR_RESOURCES.getString("TowerError"), ERROR_RESOURCES.getString(e.getMessage()));
+        }
+
       }
 
     }
@@ -95,12 +105,16 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
     if (canMakeRoadItem) {
       if (menuController.buyRoadItem(roadItemType)) {
         canMakeRoadItem = false;
-        RoadItem roadItem = roadItemFactory
-            .createRoadItem(roadItemType, towerDefaultPosition, towerDefaultPosition);
-        RoadItemNode itemNode = itemNodeFactory.createItemNode(roadItemType, gameWidth / 2,
-            gameHeight / 2, blockSize / 2);
-        layoutRoot.getChildren().add(itemNode);
-        placeRoadItem(roadItem, itemNode);
+        try {
+          RoadItem roadItem = roadItemFactory
+              .createTower(roadItemType, towerDefaultPosition, towerDefaultPosition);
+          RoadItemNode itemNode = itemNodeFactory.createItemNode(roadItemType, gameWidth / 2,
+              gameHeight / 2, blockSize / 2);
+          layoutRoot.getChildren().add(itemNode);
+          placeRoadItem(roadItem, itemNode);
+        } catch (ConfigurationException e) {
+          new AlertHandler(ERROR_RESOURCES.getString("RoadItemError"),ERROR_RESOURCES.getString(e.getMessage()));
+        }
       }
     }
   }

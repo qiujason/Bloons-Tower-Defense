@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import ooga.backend.ConfigurationException;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.factory.CamoBloonsFactory;
@@ -31,7 +32,7 @@ class SingleProjectileShooterTest {
   }
 
   @org.junit.jupiter.api.Test
-  void testCheckBalloonInRangeReturnsTrue() {
+  void testCheckBalloonInRangeReturnsTrue() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     Tower testTower = towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
     List<Bloon> bloonsList = new ArrayList<>();
@@ -43,7 +44,7 @@ class SingleProjectileShooterTest {
   }
 
   @org.junit.jupiter.api.Test
-  void testCheckBalloonInRangeReturnsFalse() {
+  void testCheckBalloonInRangeReturnsFalse() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     Tower testTower = towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
     List<Bloon> bloonsList = new ArrayList<>();
@@ -54,7 +55,7 @@ class SingleProjectileShooterTest {
   }
 
   @org.junit.jupiter.api.Test
-  void testFindClosestBloon() {
+  void testFindClosestBloon() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
     List<Bloon> bloonsList = new ArrayList<>();
@@ -68,7 +69,7 @@ class SingleProjectileShooterTest {
   }
 
   @org.junit.jupiter.api.Test
-  void testFindStrongestBloon() {
+  void testFindStrongestBloon() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
     List<Bloon> bloonsList = new ArrayList<>();
@@ -81,7 +82,7 @@ class SingleProjectileShooterTest {
   }
 
   @org.junit.jupiter.api.Test
-  void testFindFirstBloon() {
+  void testFindFirstBloon() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
     List<Bloon> bloonsList = new ArrayList<>();
@@ -94,7 +95,7 @@ class SingleProjectileShooterTest {
   }
 
   @org.junit.jupiter.api.Test
-  void testFindLastBloon() {
+  void testFindLastBloon() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 10,20);
     List<Bloon> bloonsList = new ArrayList<>();
@@ -108,7 +109,7 @@ class SingleProjectileShooterTest {
 
 
   @org.junit.jupiter.api.Test
-  void testGetDistance() {
+  void testGetDistance() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
     Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 3,4,5,5);
@@ -116,7 +117,7 @@ class SingleProjectileShooterTest {
   }
 
   @org.junit.jupiter.api.Test
-  void testFindShootXVelocity() {
+  void testFindShootXVelocity() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
     Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 3,4,5,5);
@@ -124,7 +125,7 @@ class SingleProjectileShooterTest {
   }
 
   @org.junit.jupiter.api.Test
-  void testFindShootYVelocity() {
+  void testFindShootYVelocity() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower) towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
     Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 3,4,5,5);
@@ -132,7 +133,7 @@ class SingleProjectileShooterTest {
   }
 
   @org.junit.jupiter.api.Test
-  void testShootAtBloon() {
+  void testShootAtBloon() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower)
         towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
@@ -151,7 +152,7 @@ class SingleProjectileShooterTest {
   }
 
   @org.junit.jupiter.api.Test
-  void testGetTargetAndUpdatingShootingChoice() {
+  void testGetTargetAndUpdatingShootingChoice() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower)
         towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
@@ -172,7 +173,7 @@ class SingleProjectileShooterTest {
   }
 
   @org.junit.jupiter.api.Test
-  void testGetCostOfUpgrade() {
+  void testGetCostOfUpgrade() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower)
         towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);
@@ -182,7 +183,7 @@ class SingleProjectileShooterTest {
   }
 
   @org.junit.jupiter.api.Test
-  void testPerformUpgrade() {
+  void testPerformUpgrade() throws ConfigurationException {
     TowerFactory towerFactory = new SingleTowerFactory();
     SingleShotTower testTower = (SingleShotTower)
         towerFactory.createTower(TowerType.SingleProjectileShooter, 0,0);

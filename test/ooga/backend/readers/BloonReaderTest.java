@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import ooga.backend.ConfigurationException;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.special.RegenBloon;
@@ -19,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class BloonReaderTest {
 
   @Test
-  void getFromFileTest(){
+  void getFromFileTest() throws ConfigurationException {
     Reader reader = new BloonReader();
     List<List<String>> layout = reader.getDataFromFile("tests/test_bloon_waves/level1_test.csv");
     String[][] expectedLayout =
@@ -35,7 +36,7 @@ public class BloonReaderTest {
   }
 
   @Test
-  void generateBloonsCollectionMapTest(){
+  void generateBloonsCollectionMapTest() throws ConfigurationException {
     LayoutReader layoutReader = new LayoutReader();
     BloonReader reader = new BloonReader();
     Layout layout = layoutReader.generateLayout("layouts/level1.csv");
@@ -62,7 +63,7 @@ public class BloonReaderTest {
   }
 
   @Test
-  void generateBloonsCollectionMapWithSpecialsTest(){
+  void generateBloonsCollectionMapWithSpecialsTest() throws ConfigurationException {
     LayoutReader layoutReader = new LayoutReader();
     BloonReader reader = new BloonReader();
     Layout layout = layoutReader.generateLayout("layouts/level1.csv");

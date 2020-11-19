@@ -84,7 +84,6 @@ public class BloonsApplication {
   private Text myHealthText;
   private StartWindow myStartWindow;
   private SelectionWindow mySelectionWindow;
-  private GameWindow myGameWindow;
   private Enum<?> myGameMode;
   private Bank myBank;
 
@@ -121,11 +120,19 @@ public class BloonsApplication {
     myApplicationMessages = myStartWindow.getApplicationMessages();
     myCurrentLanguage = myStartWindow.getCurrentLanguage();
     myCurrentStylesheet = myStartWindow.getMyCurrentStylesheet();
-    System.out.println(myCurrentStylesheet);
+    myScene.getStylesheets().clear();
     myScene.getStylesheets()
         .add(getClass().getResource("/" + STYLESHEETS + myCurrentStylesheet).toExternalForm());
     myScene.getRoot().getStylesheets().add("start-menu");
 
+    List<Button> windowChangeButtons = setupStartWindowSwitchingButtons();
+
+    myStartWindow.displayWindow(windowChangeButtons);
+    myStage.setScene(myScene);
+    myStage.show();
+  }
+
+  private List<Button> setupStartWindowSwitchingButtons() {
     Button toStartWindow = new Button();
     Button toSelectionWindow = new Button();
     toStartWindow.setOnAction(event -> switchToStartWindow());
@@ -135,17 +142,13 @@ public class BloonsApplication {
     List<Button> windowChangeButtons = new ArrayList<>();
     windowChangeButtons.add(toSelectionWindow);
     windowChangeButtons.add(toStartWindow);
-
-    myStartWindow.displayWindow(windowChangeButtons);
-    myStage.setScene(myScene);
-    myStage.show();
+    return windowChangeButtons;
   }
 
-  private void switchToSelectionWindow() {
+  public void switchToSelectionWindow() {
     Button toStartWindow = new Button();
     Button toGameWindow = new Button();
     toStartWindow.setOnAction(event -> switchToStartWindow());
-    myGameWindow = new GameWindow();
     toGameWindow.setOnAction(event -> switchToGameWindow());
 
     List<Button> windowChangeButtons = new ArrayList<>();
@@ -163,7 +166,8 @@ public class BloonsApplication {
   }
 
   public void initializeGameObjects(Layout layout, BloonsCollection bloons,
-      TowersCollection towers, ProjectilesCollection projectiles, RoadItemsCollection roadItems, Bank bank,
+      TowersCollection towers, ProjectilesCollection projectiles, RoadItemsCollection roadItems,
+      Bank bank,
       Timeline animation, GameMenuInterface gameMenuController,
       WeaponBankInterface weaponBankController) {
     myLayout = layout;
@@ -178,13 +182,7 @@ public class BloonsApplication {
   }
 
   private void loadLevel(String levelName) {
-    if (levelName == null) {
-      new AlertHandler(myApplicationMessages.getString("NoLevelSelected"),
-          myApplicationMessages.getString("NoLevelSelected"));
-    }
-    if (levelName.equals("null.csv")) {
-      new AlertHandler(myApplicationMessages.getString("NoLevelSelected"),
-          myApplicationMessages.getString("NoLevelSelected"));
+    if (checkNullModeOrLevel(levelName)) {
       return;
     }
     myCurrentLevel = levelName;
@@ -205,7 +203,20 @@ public class BloonsApplication {
     myStage.setScene(myScene);
   }
 
-  // TODO: Refactor
+  private boolean checkNullModeOrLevel(String levelName) {
+    if (myGameMode == null) {
+      new AlertHandler(myApplicationMessages.getString("NoGameMode"),
+          myApplicationMessages.getString("NoGameMode"));
+      return true;
+    }
+    if (levelName.equals("null.csv")) {
+      new AlertHandler(myApplicationMessages.getString("NoLevelSelected"),
+          myApplicationMessages.getString("NoLevelSelected"));
+      return true;
+    }
+    return false;
+  }
+
   private void visualizeLayout(Pane level) {
     myLevelLayout = new Group();
     level.getChildren().add(myLevelLayout);
@@ -270,21 +281,21 @@ public class BloonsApplication {
 
   public void displayCurrentHealth(int currentHealth) {
     myLevel.getChildren().remove(myHealthText);
-    myHealthText = new Text("Health: " + currentHealth);
+    myHealthText = new Text(myMenuButtonNames.getString("Health") + currentHealth);
     myHealthText.setX(WIDTH * HEALTH_TEXT_X_SCALE);
     setupGameStat(myHealthText);
   }
 
   public void displayCurrentMoney(int currentMoney) {
     myLevel.getChildren().remove(myMoneyText);
-    myMoneyText = new Text("Money: $" + currentMoney);
+    myMoneyText = new Text(myMenuButtonNames.getString("Money") + currentMoney);
     myMoneyText.setX(WIDTH * MONEY_TEXT_X_SCALE);
     setupGameStat(myMoneyText);
   }
 
   public void displayCurrentRound(int currentRound) {
     myLevel.getChildren().remove(myRoundText);
-    myRoundText = new Text("Round: " + currentRound);
+    myRoundText = new Text(myMenuButtonNames.getString("Round") + currentRound);
     myRoundText.setX(WIDTH * ROUND_TEXT_X_SCALE);
     setupGameStat(myRoundText);
   }
@@ -307,7 +318,7 @@ public class BloonsApplication {
         myApplicationMessages.getString("GameEndMessage"));
   }
 
-  public void loseGame(){
+  public void loseGame() {
     new AlertHandler(myApplicationMessages.getString("GameLossHeader"),
         myApplicationMessages.getString("GameLossMessage"));
   }

@@ -1,5 +1,6 @@
 package ooga.controller;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -32,6 +33,7 @@ import ooga.visualization.BloonsApplication;
 
 public class Controller extends Application {
 
+  private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResource");
   public static final double FRAMES_PER_SECOND = 60;
   public static final double ANIMATION_DELAY = 1 / FRAMES_PER_SECOND;
 
@@ -82,7 +84,8 @@ public class Controller extends Application {
     initializeBloonTypes();
     initializeBloonWaves();
     startGameEngine();
-    gameController = new GameMenuController(myAnimation, gameEngine);
+
+    gameController = new GameMenuController(myAnimation, gameEngine, e -> bloonsApplication.switchToSelectionWindow());
     towerController = new WeaponBankController(bank);
     bloonsApplication
         .initializeGameObjects(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
@@ -120,9 +123,11 @@ public class Controller extends Application {
       towerBuyMap = new TowerValueReader(TOWER_BUY_VALUES_PATH).getMap();
       towerSellMap = new TowerValueReader(TOWER_SELL_VALUES_PATH).getMap();
       roadItemBuyMap = new RoadItemValueReader(ROAD_ITEM_VALUES_PATH).getMap();
-    } catch (Exception e) {
+    } catch (IOException e) {
       new AlertHandler(errorResource.getString("InvalidPropertyFile"),
           errorResource.getString("InvalidPropertyFormat"));
+    } catch(ConfigurationException e) {
+      new AlertHandler(errorResource.getString("TowerError"), errorResource.getString(e.getMessage()));
     }
     RoundBonusReader roundBonusReader = new RoundBonusReader();
     List<List<String>> roundBonuses;
@@ -158,8 +163,12 @@ public class Controller extends Application {
   }
 
   private void initializeBloonWaves() {
-    allBloonWaves = bloonReader.generateBloonsCollectionMap(bloonsTypeChain,
-        BLOON_WAVES_PATH + bloonsApplication.getCurrentLevel(), layout);
+    try {
+      allBloonWaves = bloonReader.generateBloonsCollectionMap(bloonsTypeChain,
+          BLOON_WAVES_PATH + bloonsApplication.getCurrentLevel(), layout);
+    } catch (ConfigurationException e) {
+      new AlertHandler(errorResource.getString("SpecialBloonError"), errorResource.getString(e.getMessage()));
+    }
   }
 
   private void startGameEngine() {
@@ -175,6 +184,7 @@ public class Controller extends Application {
     updateDisplays();
     checkGameStatus();
   }
+
 
   private void updateDisplays() {
     bloonsApplication.displayCurrentMoney(bank.getCurrentMoney());
