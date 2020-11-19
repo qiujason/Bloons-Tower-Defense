@@ -349,6 +349,22 @@ public class AnimationHandler {
     myTowersInGame.remove(tower, towerInGame);
   }
 
+  public Map<Bloon, BloonNode> getMyBloonsInGame(){
+    return myBloonsInGame;
+  }
+
+  public Map<Projectile, ProjectileNode> getMyProjectilesInGame(){
+    return myProjectilesInGame;
+  }
+
+  public Map<Tower, TowerNode> getMyTowersInGame(){
+    return myTowersInGame;
+  }
+
+  public Map<RoadItem, RoadItemNode> getMyRoadItemsInGame(){
+    return myRoadItemsInGame;
+  }
+
   public void setBloonWave(BloonsCollection bloonWave) {
     myBloons = bloonWave;
   }
