@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import ooga.backend.bloons.types.BloonsType;
+import ooga.backend.bloons.types.Specials;
 
 public class BloonNode extends GamePieceNode{
 
@@ -26,8 +27,14 @@ public class BloonNode extends GamePieceNode{
   public ImagePattern findImage() {
     Image towerImage = null;
     try {
+      StringBuilder imageName = new StringBuilder(bloonType.name());
+      if (bloonType.specials().size() > 0) {
+        for (Specials special : bloonType.specials()) {
+          imageName.append("_").append(special.name().toUpperCase());
+        }
+      }
       towerImage = new Image(String.valueOf(getClass().getResource(myBloonImages.getString(
-          bloonType.name())).toURI()));
+          imageName.toString())).toURI()));
     } catch (
         URISyntaxException e) {
       e.printStackTrace();
