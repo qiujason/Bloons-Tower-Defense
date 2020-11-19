@@ -192,21 +192,19 @@ public class BloonsTest {
       assertEquals(expectedDistance, bloon.getDistanceTraveled());
     }
     bloon.update();
-    assertEquals(expectedDistance, bloon.getDistanceTraveled());
+    assertEquals(30, bloon.getDistanceTraveled());
   }
 
   @Test
   void testFreezeBloonTimer() {
     Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 10);
     bloon.freeze();
-    double expectedDistance = 0;
     for (int i = 0; i < Integer.parseInt(GAME_MECHANICS.getString("FreezeTimePeriod")); i++) {
       bloon.update();
       assertEquals(0, bloon.getDistanceTraveled());
     }
     bloon.update();
-    expectedDistance += (Math.abs(bloon.getXVelocity()) + Math.abs(bloon.getYVelocity())) * chain.getBloonsTypeRecord("RED").relativeSpeed();
-    assertEquals(expectedDistance, bloon.getDistanceTraveled());
+    assertEquals(0, bloon.getDistanceTraveled());
   }
 
   @Test
@@ -222,23 +220,20 @@ public class BloonsTest {
       assertEquals(expectedDistance, bloon.getDistanceTraveled());
     }
     bloon.update();
-    expectedDistance += (Math.abs(bloon.getXVelocity()) + Math.abs(bloon.getYVelocity())) * chain.getBloonsTypeRecord("RED").relativeSpeed();
-    assertEquals(expectedDistance, bloon.getDistanceTraveled());
+   assertEquals(30, bloon.getDistanceTraveled());
   }
 
   @Test
   void testFreezeThenFreezeBloonTimerNotReset() {
     Bloon bloon = new BasicBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 10, 10);
     bloon.freeze();
-    double expectedDistance = 0;
     for (int i = 0; i < Integer.parseInt(GAME_MECHANICS.getString("FreezeTimePeriod")); i++) {
       bloon.freeze();
       bloon.update();
       assertEquals(0, bloon.getDistanceTraveled());
     }
     bloon.update();
-    expectedDistance += (Math.abs(bloon.getXVelocity()) + Math.abs(bloon.getYVelocity())) * chain.getBloonsTypeRecord("RED").relativeSpeed();
-    assertEquals(expectedDistance, bloon.getDistanceTraveled());
+    assertEquals(0, bloon.getDistanceTraveled());
   }
 
 }
