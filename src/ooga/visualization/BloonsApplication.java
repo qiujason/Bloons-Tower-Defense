@@ -19,6 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import ooga.AlertHandler;
 import ooga.backend.bloons.BloonsCollection;
@@ -37,24 +38,24 @@ import ooga.visualization.menu.WeaponButtonsMenu;
 
 public class BloonsApplication {
 
-  public static final ResourceBundle MENU_SIZING = ResourceBundle
-      .getBundle(BloonsApplication.class.getPackageName() + ".resources.gameMenuNumbers");
-  public static final double WIDTH = Double.parseDouble(MENU_SIZING.getString("Width"));
-  public static final double HEIGHT = Double.parseDouble(MENU_SIZING.getString("Height"));
+  public static final ResourceBundle MENU_RESOURCES = ResourceBundle
+      .getBundle(BloonsApplication.class.getPackageName() + ".resources.gameMenu");
+  public static final double WIDTH = Double.parseDouble(MENU_RESOURCES.getString("Width"));
+  public static final double HEIGHT = Double.parseDouble(MENU_RESOURCES.getString("Height"));
   public static final double GAME_WIDTH =
-      WIDTH * Double.parseDouble(MENU_SIZING.getString("GameWidthMultiplier"));
+      WIDTH * Double.parseDouble(MENU_RESOURCES.getString("GameWidthMultiplier"));
   public static final double GAME_HEIGHT =
-      HEIGHT * Double.parseDouble(MENU_SIZING.getString("GameHeightMultiplier"));
+      HEIGHT * Double.parseDouble(MENU_RESOURCES.getString("GameHeightMultiplier"));
   public static final double GAME_STATS_HEIGHT_TEXT = Double
-      .parseDouble(MENU_SIZING.getString("GameStatsTextHeight"));
+      .parseDouble(MENU_RESOURCES.getString("GameStatsTextHeight"));
   public static final double GAME_STATS_HEIGHT_SIZE = Double
-      .parseDouble(MENU_SIZING.getString("GameStatsTextSize"));
+      .parseDouble(MENU_RESOURCES.getString("GameStatsTextSize"));
   public static final double HEALTH_TEXT_X_SCALE = Double
-      .parseDouble(MENU_SIZING.getString("HealthTextXScale"));
+      .parseDouble(MENU_RESOURCES.getString("HealthTextXScale"));
   public static final double MONEY_TEXT_X_SCALE = Double
-      .parseDouble(MENU_SIZING.getString("MoneyTextXScale"));
+      .parseDouble(MENU_RESOURCES.getString("MoneyTextXScale"));
   public static final double ROUND_TEXT_X_SCALE = Double
-      .parseDouble(MENU_SIZING.getString("RoundTextXScale"));
+      .parseDouble(MENU_RESOURCES.getString("RoundTextXScale"));
 
   public static final String LAYOUTS_PATH = "layouts/";
   public static final ResourceBundle LANGUAGES = ResourceBundle
@@ -93,8 +94,8 @@ public class BloonsApplication {
 
   public BloonsApplication(Button startLevelButton) {
     myLevelStartButton = startLevelButton;
-    myCurrentLanguage = MENU_SIZING.getString("DefaultLanguage");
-    myCurrentStylesheet = MENU_SIZING.getString("DefaultStylesheet");
+    myCurrentLanguage = MENU_RESOURCES.getString("DefaultLanguage");
+    myCurrentStylesheet = MENU_RESOURCES.getString("DefaultStylesheet");
     myMenuButtonNames = ResourceBundle
         .getBundle(
             getClass().getPackageName() + ".resources.languages." + myCurrentLanguage
@@ -216,8 +217,8 @@ public class BloonsApplication {
     levelSelectScreen.getStyleClass().add("level-background");
     Text levelSelectText = new Text("Select Level");
     levelSelectText.getStyleClass().add("menu-text");
-    levelSelectText.setScaleX(3);
-    levelSelectText.setScaleY(3);
+    levelSelectText.setScaleX(Double.parseDouble(MENU_RESOURCES.getString("SelectLevelPromptSize")));
+    levelSelectText.setScaleY(Double.parseDouble(MENU_RESOURCES.getString("SelectLevelPromptSize")));
     levelSelectScreen.setCenter(levelSelectText);
 
     BorderPane.setAlignment(levelSelectText, Pos.CENTER);
@@ -291,7 +292,8 @@ public class BloonsApplication {
       new AlertHandler(myApplicationMessages.getString("NoLevelImage"),
           myApplicationMessages.getString("NoLevelImage"));
     }
-    Group levelImageGroup = new Group();
+    VBox levelImageGroup = new VBox();
+    levelImageGroup.setAlignment(Pos.CENTER);
     for (File levelImageFile : levelImages.toFile().listFiles()) {
       if (levelImageFile.getName().split("\\.")[0].equals(levelName)) {
         ImagePattern levelImage = new ImagePattern(
@@ -305,12 +307,23 @@ public class BloonsApplication {
             .add(imageRectangle);
       }
     }
+    getLevelDescription(levelImageGroup, levelName);
     levelSelectScreen.setCenter(levelImageGroup);
+  }
+
+  private void getLevelDescription(VBox levelImageGroup, String levelName) {
+    Text levelDescription = new Text(myApplicationMessages.getString(levelName));
+    levelDescription.setId("LevelDescription");
+    levelDescription.getStyleClass().add("menu-text");
+    levelDescription.setScaleX(Double.parseDouble(MENU_RESOURCES.getString("LevelDescriptionSize")));
+    levelDescription.setScaleY(Double.parseDouble(MENU_RESOURCES.getString("LevelDescriptionSize")));
+    levelImageGroup.getChildren().add(levelDescription);
   }
 
   private ComboBox<Enum<?>> initializeGameModeOptions() {
     ComboBox<Enum<?>> gameModes = new ComboBox<>();
-    gameModes.setPromptText("Game Modes");
+    gameModes.setId("GameModes");
+    gameModes.setPromptText(myMenuButtonNames.getString("GameModes"));
     gameModes.setOnAction(e -> myGameMode = gameModes.getValue());
     Class<?> gameModesClass;
     try {
