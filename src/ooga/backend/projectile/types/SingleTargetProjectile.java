@@ -1,4 +1,7 @@
-package ooga.backend.projectile;
+package ooga.backend.projectile.types;
+
+import ooga.backend.projectile.Projectile;
+import ooga.backend.projectile.ProjectileType;
 
 public class SingleTargetProjectile extends Projectile {
 
