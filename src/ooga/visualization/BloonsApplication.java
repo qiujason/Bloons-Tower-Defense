@@ -13,7 +13,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ooga.AlertHandler;
-
 import ooga.backend.gameengine.GameEngine;
 import ooga.backend.bank.Bank;
 import ooga.backend.bloons.BloonsCollection;
@@ -195,7 +194,7 @@ public class BloonsApplication {
     myAnimationHandler = new AnimationHandler(myLevelLayout, myBloons,
         myTowers, myProjectiles, myRoadItems, myBank, myGameMode, myBlockSize, myAnimation);
     weaponNodeHandler = new WeaponNodeHandler(myLayout, myBlockSize, myLevelLayout, myMenuPane,
-        myTowers, myWeaponBankController, myAnimationHandler);
+        myTowers, myWeaponBankController, myAnimationHandler, myCurrentLanguage);
     visualizePlayerGUI(myLevel);
     displayCurrentMoney(myBank.getCurrentMoney());
 

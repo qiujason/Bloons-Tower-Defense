@@ -1,7 +1,6 @@
 package ooga.visualization.menu;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -14,22 +13,20 @@ import javafx.scene.control.Button;
 
 public class GameMenu extends FlowPane {
 
-  private static final String RESOURCE_DIRECTORY = "ooga.visualization.resources.languages.";
-  private static final String MENU = ".menu";
-
-  private static final Double BUTTON_WIDTH = 100.0;
-  private static final Double PREF_WRAP_LENGTH = 200.0;
+  private final List<GameButtonType> gameButtonList = Arrays.asList(GameButtonType.values());
+  private final Map<GameButtonType, EventHandler<ActionEvent>> buttonHandleMap;
 
   private ResourceBundle menuProperties;
-  private List<GameButtonType> gameButtonList = Arrays.asList(GameButtonType.values());
-  private Map<GameButtonType, EventHandler<ActionEvent>> buttonHandleMap;
+
+  private static final String RESOURCE_DIRECTORY = "ooga.visualization.resources.languages.";
+  private static final String MENU = ".menu";
+  private static final Double BUTTON_WIDTH = 100.0;
+  private static final Double PREF_WRAP_LENGTH = 200.0;
 
   public GameMenu(GameMenuInterface menuController, String language) {
     initializeResourceBundle(language);
     buttonHandleMap = menuController.getButtonHandleMap();
-
     makeAllButtons();
-
     this.setPrefWrapLength(PREF_WRAP_LENGTH);
     this.setOrientation(Orientation.HORIZONTAL);
   }

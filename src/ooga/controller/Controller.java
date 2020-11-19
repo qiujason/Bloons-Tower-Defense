@@ -44,7 +44,7 @@ public class Controller extends Application {
   public static final String TOWER_BUY_VALUES_PATH = "towervalues/TowerBuyValues.properties";
   public static final String TOWER_SELL_VALUES_PATH = "towervalues/TowerSellValues.properties";
   public static final String ROAD_ITEM_VALUES_PATH = "towervalues/roadItemBuyValues.properties";
-  public static final String ROUND_BONUSES_PATH = "roundBonuses/BTD5_default_level1_to_10.csv";
+  public static final String ROUND_BONUSES_PATH = "roundBonuses/1000Rounds_defaultStartingBonus.csv";
 
   private ResourceBundle errorResource;
   private Timeline myAnimation;
@@ -103,13 +103,15 @@ public class Controller extends Application {
                 "BombShooter", "BombShooterButton", "SniperMonkey", "SniperMonkeyButton",
                 "SuperMonkey",
                 "SuperMonkeyButton", "IceMonkey", "IceMonkeyButton", "NinjaMonkey",
-                "NinjaMonkeyButton")));
+                "NinjaMonkeyButton", "RoadSpikes", "RoadSpikesButton", "MonkeyGlue",
+                "MonkeyGlueButton", "ExplodingPineapple", "ExplodingPineappleButton")));
     PropertyFileValidator towerNameValidator = new PropertyFileValidator(
         "btd_towers/TowerMonkey.properties",
         new HashSet<>(Arrays.asList("SingleProjectileShooter", "MultiProjectileShooter",
             "SpreadProjectileShooter", "UnlimitedRangeProjectileShooter",
             "SuperSpeedProjectileShooter",
-            "MultiFrozenShooter", "CamoProjectileShooter")));
+            "FrozenSpreadShooter", "CamoProjectileShooter", "PopBloonsItem", "SlowBloonsItem",
+            "ExplodeBloonsItem")));
     if (!towerPicsValidator.containsNeededKeys()) {
        new AlertHandler(errorResource.getString("InvalidPropertyFile"),
           errorResource.getString("RequiredKeysMissingPics"));

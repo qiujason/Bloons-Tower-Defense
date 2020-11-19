@@ -9,23 +9,26 @@ import ooga.backend.roaditems.RoadItemType;
 
 public class RoadItemNode extends GamePieceNode {
 
-  private RoadItemType roadItemType;
+  private final RoadItemType roadItemType;
+  private final ResourceBundle typeToName = ResourceBundle.getBundle(PACKAGE + NAMES);
+  private final ResourceBundle nameToPicture = ResourceBundle.getBundle(PACKAGE + PICTURES);
 
-  private static final String ROAD_ITEMS_IMAGES_PATH = "btd_towers/RoadItems";
-
-  private ResourceBundle roadItemPic = ResourceBundle.getBundle(ROAD_ITEMS_IMAGES_PATH);
+  private static final String PACKAGE = "btd_towers/";
+  private static final String NAMES = "TowerMonkey";
+  private static final String PICTURES = "MonkeyPics";
 
   public RoadItemNode(RoadItemType roadItemType, double xPosition, double yPosition, double radius) {
     super(xPosition, yPosition, radius);
     this.roadItemType = roadItemType;
     this.setFill(findImage());
+    this.setId(roadItemType.name());
   }
 
   @Override
   public ImagePattern findImage(){
     Image towerImage = null;
     try {
-      towerImage = new Image(String.valueOf(getClass().getResource(roadItemPic.getString(roadItemType.name())).toURI()));
+      towerImage = new Image(String.valueOf(getClass().getResource(nameToPicture.getString(typeToName.getString(roadItemType.name()))).toURI()));
     } catch (
         URISyntaxException e) {
       new AlertHandler("Image Not Found", roadItemType.name() + " image not found.");

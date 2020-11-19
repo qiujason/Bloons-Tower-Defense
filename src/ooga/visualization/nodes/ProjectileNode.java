@@ -3,7 +3,6 @@ package ooga.visualization.nodes;
 import java.net.URISyntaxException;
 import java.util.ResourceBundle;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import ooga.AlertHandler;
 import ooga.backend.projectile.ProjectileType;

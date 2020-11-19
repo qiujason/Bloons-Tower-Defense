@@ -21,10 +21,10 @@ public class TowerValueReader {
     for(Object key : properties.keySet()){
       towerValueMap.put(getTowerType((String) key), Integer.valueOf((String)properties.get(key)));
     }
-    ResourceBundle towerMonkeys = ResourceBundle.getBundle("btd_towers/TowerMonkey");
-    if(!properties.keySet().equals(towerMonkeys.keySet())){
-      throw new ConfigurationException("MissingTowerValue");
-    }
+//    ResourceBundle towerMonkeys = ResourceBundle.getBundle("btd_towers/TowerMonkey");
+//    if(!properties.keySet().equals(towerMonkeys.keySet())){
+//      throw new ConfigurationException("Missing tower value from properties file");
+//    }
   }
 
   public Map<TowerType, Integer> getMap(){
