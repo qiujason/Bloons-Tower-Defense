@@ -6,6 +6,7 @@ import ooga.backend.API.BloonsAPI;
 import ooga.backend.GamePiece;
 import ooga.backend.bloons.factory.BasicBloonsFactory;
 import ooga.backend.bloons.types.BloonsType;
+import ooga.visualization.AnimationHandler;
 
 public class Bloon extends GamePiece implements BloonsAPI {
 
@@ -34,24 +35,19 @@ public class Bloon extends GamePiece implements BloonsAPI {
     this.distanceTraveled = 0;
     this.relativeSpeed = bloonsType.relativeSpeed();
 
-    this.freezeTimePeriod = Integer.parseInt(GAME_MECHANICS.getString("FreezeTimePeriod"))*60;
+    this.freezeTimePeriod = Integer.parseInt(GAME_MECHANICS.getString("FreezeTimePeriod")) * (int)AnimationHandler.FRAMES_PER_SECOND;
     this.freezeTimer = 0;
     this.freezeActive = false;
-    this.slowDownTimePeriod = Integer.parseInt(GAME_MECHANICS.getString("SlowDownTimePeriod"))*60;
+    this.slowDownTimePeriod = Integer.parseInt(GAME_MECHANICS.getString("SlowDownTimePeriod")) * (int)AnimationHandler.FRAMES_PER_SECOND;
     this.slowDownTimer = 0;
     this.slowDownActive = false;
     this.speedEffectFactor = 1;
   }
 
-  public BloonsType getBloonsType(){
-    return bloonsType;
-  }
-
   @Override
   public void update() {
     updatePosition();
-    updateSlowDownEffect();
-    updateFreezeEffect();
+    updateEffects();
   }
 
   @Override
@@ -110,12 +106,24 @@ public class Bloon extends GamePiece implements BloonsAPI {
     return bloonsType.name();
   }
 
+  public double getDistanceTraveled() {
+    return distanceTraveled;
+  }
+
   public void setDistanceTraveled(double distanceTraveled) {
     this.distanceTraveled = distanceTraveled;
   }
 
-  public double getDistanceTraveled() {
-    return distanceTraveled;
+  public BloonsType getBloonsType(){
+    return bloonsType;
+  }
+
+  public boolean isFreezeActive(){
+    return freezeActive;
+  }
+
+  public boolean isSlowDownActive(){
+    return slowDownActive;
   }
 
   protected void setBloonsType(BloonsType type) {
@@ -132,6 +140,11 @@ public class Bloon extends GamePiece implements BloonsAPI {
     updateDistanceTraveled();
   }
 
+  private void updateEffects() {
+    updateSlowDownEffect();
+    updateFreezeEffect();
+  }
+
   private void updateSlowDownEffect() {
     if (slowDownActive) {
       slowDownTimer++;
@@ -141,14 +154,6 @@ public class Bloon extends GamePiece implements BloonsAPI {
         speedEffectFactor = 1;
       }
     }
-  }
-
-  public boolean isFreezeActive(){
-    return freezeActive;
-  }
-
-  public boolean isSlowDownActive(){
-    return slowDownActive;
   }
 
   private void updateFreezeEffect() {
