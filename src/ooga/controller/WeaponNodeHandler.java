@@ -45,6 +45,8 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
   private static final double defaultPositionDivisor = 2;
   private static final double nodeSizeDivisor = 2.5;
 
+  private final String currentLanguage;
+
   private boolean canMakeTower;
   private boolean canMakeRoadItem;
 
@@ -55,7 +57,7 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
 
   public WeaponNodeHandler(Layout layout, double blockSize,
       Group layoutRoot, VBox menuPane, TowersCollection towersCollection,
-      WeaponBankInterface menuController, AnimationHandler animationHandler) {
+      WeaponBankInterface menuController, AnimationHandler animationHandler, String language) {
     this.layout = layout;
     gameHeight = layout.getHeight() * blockSize;
     gameWidth = layout.getWidth() * blockSize;
@@ -67,6 +69,7 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
     this.animationHandler = animationHandler;
     canMakeTower = true;
     canMakeRoadItem = true;
+    currentLanguage = language;
     initializeFactories();
   }
 
@@ -80,7 +83,7 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
         TowerNode towerNode = towerNodeFactory.createTowerNode(towerType,
             gameWidth / defaultPositionDivisor,gameHeight / defaultPositionDivisor,
             blockSize / nodeSizeDivisor);
-        towerNode.makeTowerMenu(this);
+        towerNode.makeTowerMenu(this, currentLanguage);
         towerNode.setWeaponRange(tower.getRadius(), blockSize);
         WeaponRange towerRange = towerNode.getRangeDisplay();
         layoutRoot.getChildren().add(towerRange);

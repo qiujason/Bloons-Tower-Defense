@@ -21,6 +21,7 @@ public class RoadItemNode extends GamePieceNode {
     super(xPosition, yPosition, radius);
     this.roadItemType = roadItemType;
     this.setFill(findImage());
+    this.setId(roadItemType.name());
   }
 
 

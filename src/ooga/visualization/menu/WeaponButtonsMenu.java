@@ -3,18 +3,12 @@ package ooga.visualization.menu;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.VBox;
 import ooga.AlertHandler;
 import ooga.backend.roaditems.RoadItemType;
 import ooga.backend.towers.TowerType;
@@ -51,7 +45,6 @@ public class WeaponButtonsMenu extends FlowPane {
     currentLanguage = language;
     combineTypeLists();
     initializeAlertProperties(language);
-
     makeAllWeaponButtons();
     this.setPrefWrapLength(PREF_WRAP_LENGTH);
     this.setOrientation(Orientation.HORIZONTAL);
@@ -70,7 +63,7 @@ public class WeaponButtonsMenu extends FlowPane {
     String imageDirectory = nameToPicture.getString(weaponName + BUTTON_TAG);
     WeaponButton button = addImageToButton(imageDirectory, weaponType);
     setButtonHandler(button, weaponType);
-    button.setId(weaponName);
+    button.setId(weaponName + BUTTON_TAG);
     return button;
   }
 
@@ -79,8 +72,7 @@ public class WeaponButtonsMenu extends FlowPane {
     ImageView imageView = new ImageView(weaponImage);
     imageView.setFitWidth(IMAGE_SIZE);
     imageView.setFitHeight(IMAGE_SIZE);
-    WeaponButton button = new WeaponButton("", imageView, weaponType, weaponNodeHandler, currentLanguage);
-    return button;
+    return new WeaponButton("", imageView, weaponType, weaponNodeHandler, currentLanguage);
   }
 
   private Image makeImage(String directory){

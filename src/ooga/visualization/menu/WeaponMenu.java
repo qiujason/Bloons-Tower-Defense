@@ -12,35 +12,32 @@ import ooga.visualization.nodes.TowerNode;
 
 public class WeaponMenu extends FlowPane {
 
-  private static final String LANGUAGE = "English";
-  private final ResourceBundle menuProperties =
-      ResourceBundle.getBundle("ooga.visualization.resources.languages." + LANGUAGE + ".menu" + LANGUAGE);
+  private static final String RESOURCE_DIRECTORY = "ooga.visualization.resources.languages.";
+  private static final String MENU = ".menu";
 
-  private static final String UPGRADE_RANGE_TEXT = "RangeUpgradeButton";
-  private static final String UPGRADE_RATE_TEXT = "RateUpgradeButton";
-  private static final String SELL_TOWER_TEXT = "SellTowerButton";
-  private static final String CLOSE_MENU_TEXT = "CloseMenuButton";
+  private static final String UPGRADE_RANGE = "RangeUpgradeButton";
+  private static final String UPGRADE_RATE = "RateUpgradeButton";
+  private static final String SELL_TOWER = "SellTowerButton";
+  private static final String SHOOTING_CHOICE = "ShootingChoiceBox";
   private static final Double BUTTON_WIDTH = 100.0;
 
-  private Button upgradeRangeButton;
-  private Button upgradeRateButton;
-  private Button sellTowerButton;
-  private Button closeMenuButton;
-  private ComboBox shootingChoiceBox;
+  private ResourceBundle menuProperties;
+  private final ComboBox shootingChoiceBox;
 
-  public WeaponMenu(TowerNode tower, WeaponNodeHandler weaponNodeHandler){
+  public WeaponMenu(TowerNode tower, WeaponNodeHandler weaponNodeHandler, String language){
+    initializeResourceBundle(language);
     this.setPrefWrapLength(200);
-    upgradeRangeButton = makeButton(menuProperties.getString(UPGRADE_RANGE_TEXT), event -> weaponNodeHandler
+    makeButton(menuProperties.getString(UPGRADE_RANGE), event -> weaponNodeHandler
         .upgradeRange(tower));
-    upgradeRateButton = makeButton(menuProperties.getString(UPGRADE_RATE_TEXT), event -> weaponNodeHandler
+    makeButton(menuProperties.getString(UPGRADE_RATE), event -> weaponNodeHandler
         .upgradeRate(tower));
-    sellTowerButton = makeButton(menuProperties.getString(SELL_TOWER_TEXT), event -> weaponNodeHandler
+    makeButton(menuProperties.getString(SELL_TOWER), event -> weaponNodeHandler
         .removeWeapon(tower));
-    shootingChoiceBox = new ShootingChoiceBox(BUTTON_WIDTH);
+    shootingChoiceBox = new ShootingChoiceBox(menuProperties.getString(SHOOTING_CHOICE), BUTTON_WIDTH);
     setComboBoxHandler(event -> weaponNodeHandler.setTargetingOption(tower, (ShootingChoice) shootingChoiceBox.getValue()));
   }
 
-  private Button makeButton(String name, EventHandler<ActionEvent> handler) {
+  private void makeButton(String name, EventHandler<ActionEvent> handler) {
     Button button = new Button();
     button.setText(name);
     button.setOnAction(handler);
@@ -48,12 +45,15 @@ public class WeaponMenu extends FlowPane {
     button.setMinWidth(BUTTON_WIDTH);
     button.setMaxWidth(BUTTON_WIDTH);
     this.getChildren().add(button);
-    return button;
   }
 
   private void setComboBoxHandler(EventHandler<ActionEvent> handler){
     shootingChoiceBox.setOnAction(handler);
     this.getChildren().add(shootingChoiceBox);
+  }
+
+  private void initializeResourceBundle(String language){
+    menuProperties = ResourceBundle.getBundle(RESOURCE_DIRECTORY + language + MENU + language);
   }
 
 }
