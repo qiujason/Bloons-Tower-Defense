@@ -36,14 +36,14 @@ public class StartWindow implements Window{
   }
 
   @Override
-  public void displayWindow(List<Button> startButton) {
+  public void displayWindow(List<Button> windowChangeButtons) {
+    myStartButton = windowChangeButtons.get(0);
+    myResetButton = windowChangeButtons.get(1);
+
     BorderPane menu = new BorderPane();
     menu.getStyleClass().add("start-menu");
     myButtonGroup = new HBox();
     myButtonGroup.setAlignment(Pos.CENTER);
-
-    myStartButton = startButton.get(0);
-    myResetButton = startButton.get(1);
 
     setupWindowButtons();
 

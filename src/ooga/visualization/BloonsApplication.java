@@ -11,7 +11,6 @@ import javafx.animation.Timeline;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.chart.ScatterChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
@@ -29,7 +28,6 @@ import ooga.backend.layout.Layout;
 import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.roaditems.RoadItemsCollection;
 import ooga.backend.towers.TowersCollection;
-import ooga.controller.Controller;
 import ooga.controller.GameMenuInterface;
 import ooga.controller.TowerMenuInterface;
 import ooga.visualization.menu.GameMenu;
@@ -91,7 +89,8 @@ public class BloonsApplication {
   private Text myRoundText;
   private Text myHealthText;
   private StartWindow myStartWindow;
-  private Window myWindow;
+  private SelectionWindow mySelectionWindow;
+  private GameWindow myGameWindow;
   private Enum<?> myGameMode;
 
   public BloonsApplication(Button startLevelButton) {
@@ -109,252 +108,60 @@ public class BloonsApplication {
             + myCurrentLanguage);
   }
 
-  private void restartApplication() {
-    myMenuButtonNames = myStartWindow.getMenuButtonNames();
-    myApplicationMessages = myStartWindow.getApplicationMessages();
-    myCurrentLanguage = myStartWindow.getCurrentLanguage();
-    myCurrentStylesheet = myStartWindow.getMyCurrentStylesheet();
-    startApplication(myStage);
-  }
-
   public void startApplication(Stage mainStage) {
     myStage = mainStage;
     BorderPane menuLayout = new BorderPane();
     myScene = new Scene(menuLayout, WIDTH, HEIGHT);
     myScene.getStylesheets()
         .add(getClass().getResource("/" + STYLESHEETS + myCurrentStylesheet).toExternalForm());
-    menuLayout.getStyleClass().add("start-menu");
+    myScene.getRoot().getStylesheets().add("start-menu");
     myStartWindow = new StartWindow(myScene, myMenuButtonNames, myApplicationMessages, myCurrentLanguage,
         myCurrentStylesheet);
-    Button startButton = new Button();
-    startButton.setOnAction(event -> switchWindows(new SelectionWindow()));
-    Button resetButton = new Button();
-    resetButton.setOnAction(event -> restartApplication());
+    switchToStartWindow();
+  }
+
+  private void switchToStartWindow() {
+    myMenuButtonNames = myStartWindow.getMenuButtonNames();
+    myApplicationMessages = myStartWindow.getApplicationMessages();
+    myCurrentLanguage = myStartWindow.getCurrentLanguage();
+    myCurrentStylesheet = myStartWindow.getMyCurrentStylesheet();
+    myScene.getStylesheets()
+        .add(getClass().getResource("/" + STYLESHEETS + myCurrentStylesheet).toExternalForm());
+    myScene.getRoot().getStylesheets().add("start-menu");
+
+    Button toStartWindow = new Button();
+    Button toSelectionWindow = new Button();
+    toStartWindow.setOnAction(event -> switchToStartWindow());
+    mySelectionWindow = new SelectionWindow(myScene, myMenuButtonNames, myApplicationMessages);
+    toSelectionWindow.setOnAction(event -> switchToSelectionWindow());
+
     List<Button> windowChangeButtons = new ArrayList<>();
-    windowChangeButtons.add(startButton);
-    windowChangeButtons.add(resetButton);
+    windowChangeButtons.add(toSelectionWindow);
+    windowChangeButtons.add(toStartWindow);
+
     myStartWindow.displayWindow(windowChangeButtons);
     myStage.setScene(myScene);
     myStage.show();
   }
 
-  private void switchWindows(Window newWindow) {
-    myWindow = newWindow;
-    //myWindow.displayWindow();
+  private void switchToSelectionWindow() {
+    Button toStartWindow = new Button();
+    Button toGameWindow = new Button();
+    toStartWindow.setOnAction(event -> switchToStartWindow());
+    myGameWindow = new GameWindow();
+    toGameWindow.setOnAction(event -> switchToGameWindow());
+
+    List<Button> windowChangeButtons = new ArrayList<>();
+    windowChangeButtons.add(toStartWindow);
+    windowChangeButtons.add(toGameWindow);
+
+    mySelectionWindow.displayWindow(windowChangeButtons);
     myStage.setScene(myScene);
     myStage.show();
-    displayLevelSelectScreen();
   }
 
-//  // TODO: Refactor, this is getting a bit long
-//  private void displayStartMenu(BorderPane menu) {
-//    HBox buttonGroup = new HBox();
-//    buttonGroup.setAlignment(Pos.CENTER);
-//
-//    Button startButton = new Button(myMenuButtonNames.getString("Start"));
-//    startButton.setOnAction(e -> displayLevelSelectScreen());
-//    startButton.setId("Start");
-//    buttonGroup.getChildren().add(startButton);
-//
-//    setupLanguageOptions(buttonGroup);
-//
-//    Button newGameWindowButton = new Button(myMenuButtonNames.getString("NewGameWindow"));
-//    newGameWindowButton.setId("NewGameWindowButton");
-//    newGameWindowButton.setOnAction(e -> {
-//      Controller newWindow = new Controller();
-//      newWindow.start(new Stage());
-//    });
-//    buttonGroup.getChildren().add(newGameWindowButton);
-//
-//    setupStyleOptions(buttonGroup);
-//
-//    BorderPane.setAlignment(buttonGroup, Pos.CENTER);
-//    menu.setBottom(buttonGroup);
-//  }
-//
-//  private void setupLanguageOptions(HBox buttonGroup) {
-//    ComboBox<String> languageOptions = new ComboBox<>();
-//    languageOptions.setPromptText(myMenuButtonNames.getString("SetLanguage"));
-//    for (String language : LANGUAGES.keySet()) {
-//      languageOptions.getItems().add(language);
-//    }
-//    languageOptions.setId("LanguageOptions");
-//    languageOptions.setOnAction(e -> changeLanguage(languageOptions.getValue()));
-//    buttonGroup.getChildren().add(languageOptions);
-//  }
-//
-//  private void changeLanguage(String language) {
-//    myCurrentLanguage = language;
-//    myMenuButtonNames = ResourceBundle
-//        .getBundle(
-//            getClass().getPackageName() + ".resources.languages." + myCurrentLanguage
-//                + ".startMenuButtonNames"
-//                + myCurrentLanguage);
-//    myApplicationMessages = ResourceBundle
-//        .getBundle(
-//            getClass().getPackageName() + ".resources.languages." + myCurrentLanguage
-//                + ".applicationMessages"
-//                + myCurrentLanguage);
-//    startApplication(myStage);
-//  }
-//
-//  private void setupStyleOptions(HBox buttonGroup) {
-//    ComboBox<String> styleOptions = new ComboBox<>();
-//    styleOptions.setId("StyleOptions");
-//    styleOptions.setPromptText(myMenuButtonNames.getString("SetStyle"));
-//    Path styles = null;
-//    try {
-//      styles = Paths.get(getClass().getClassLoader().getResource(STYLESHEETS).toURI());
-//    } catch (URISyntaxException e) {
-//      new AlertHandler(myApplicationMessages.getString("NoStyles"),
-//          myApplicationMessages.getString("NoStyles"));
-//    }
-//    for (File style : styles.toFile().listFiles()) {
-//      if (style.getName().contains(".")) {
-//        styleOptions.getItems().add(style.getName().split("\\.")[0]);
-//      }
-//    }
-//    styleOptions.setOnAction(e -> {
-//          myCurrentStylesheet = styleOptions.getValue() + ".css";
-//          startApplication(myStage);
-//        }
-//    );
-//    buttonGroup.getChildren().add(styleOptions);
-//  }
-
-  private void displayLevelSelectScreen() {
-    BorderPane levelSelectScreen = new BorderPane();
-    levelSelectScreen.getStyleClass().add("level-background");
-    Text levelSelectText = new Text("Select Level");
-    levelSelectText.getStyleClass().add("menu-text");
-    levelSelectText.setScaleX(Double.parseDouble(MENU_RESOURCES.getString("SelectLevelPromptSize")));
-    levelSelectText.setScaleY(Double.parseDouble(MENU_RESOURCES.getString("SelectLevelPromptSize")));
-    levelSelectScreen.setCenter(levelSelectText);
-
-    BorderPane.setAlignment(levelSelectText, Pos.CENTER);
-
-    ComboBox<Enum<?>> gameModeOptions = initializeGameModeOptions();
-
-    ComboBox<String> levelOptions = initializeLevelButtons(levelSelectScreen);
-
-    Button backButton = new Button(myMenuButtonNames.getString("ReturnToStart"));
-    backButton.setOnAction(e -> startApplication(myStage));
-    backButton.setId("BackButton");
-
-    Button startLevelButton = new Button(myMenuButtonNames.getString("StartGame"));
-    startLevelButton.setOnAction(e -> loadLevel(levelOptions.getValue() + ".csv"));
-    startLevelButton.setId("StartLevelButton");
-
-    HBox levelSelectButtons = new HBox();
-    levelSelectButtons.setAlignment(Pos.CENTER);
-    levelSelectButtons.getChildren().add(levelOptions);
-    levelSelectButtons.getChildren().add(gameModeOptions);
-    levelSelectButtons.getChildren().add(startLevelButton);
-    levelSelectButtons.getChildren().add(backButton);
-
-    levelSelectScreen.setBottom(levelSelectButtons);
-
-    myScene.setRoot(levelSelectScreen);
-    myStage.setScene(myScene);
-  }
-
-  private ComboBox<String> initializeLevelButtons(BorderPane levelSelectScreen) {
-    ComboBox<String> levelOptions = new ComboBox<>();
-    levelOptions.setId("LevelOptions");
-    levelOptions.setPromptText(myMenuButtonNames.getString("SelectLevel"));
-    Path levels = getLevels();
-    if (levels == null || levels.toFile().listFiles() == null) {
-      return levelOptions;
-    }
-    for (File level : levels.toFile().listFiles()) {
-      levelOptions.getItems().add(level.getName().split("\\.")[0]);
-    }
-    levelOptions.setOnAction(
-        e -> displayLevelPhotoAndDescription(levelOptions.getValue(), levelSelectScreen));
-    return levelOptions;
-  }
-
-  private Path getLevels() {
-    Path levels = null;
-    try {
-      if (getClass().getClassLoader().getResource(LAYOUTS_PATH) == null) {
-        new AlertHandler(myApplicationMessages.getString("NoLevels"),
-            myApplicationMessages.getString("NoLevels"));
-        return null;
-      }
-      levels = Paths.get(getClass().getClassLoader().getResource(LAYOUTS_PATH).toURI());
-    } catch (URISyntaxException e) {
-      new AlertHandler(myApplicationMessages.getString("NoLevels"),
-          myApplicationMessages.getString("NoLevels"));
-    }
-    return levels;
-  }
-
-  private void displayLevelPhotoAndDescription(String levelName, BorderPane levelSelectScreen) {
-    Path levelImages = null;
-    try {
-      if (getClass().getClassLoader().getResource(LEVEL_IMAGES) == null) {
-        new AlertHandler(myApplicationMessages.getString("NoLevelImage"),
-            myApplicationMessages.getString("NoLevelImage"));
-        return;
-      }
-      levelImages = Paths.get(getClass().getClassLoader().getResource(LEVEL_IMAGES).toURI());
-    } catch (URISyntaxException e) {
-      new AlertHandler(myApplicationMessages.getString("NoLevelImage"),
-          myApplicationMessages.getString("NoLevelImage"));
-    }
-    VBox levelImageGroup = new VBox();
-    levelImageGroup.setAlignment(Pos.CENTER);
-    for (File levelImageFile : levelImages.toFile().listFiles()) {
-      if (levelImageFile.getName().split("\\.")[0].equals(levelName)) {
-        ImagePattern levelImage = new ImagePattern(
-            new Image(String.valueOf(levelImageFile.toURI())));
-        double heightToWidthRatio =
-            levelImage.getImage().getHeight() / levelImage.getImage().getWidth();
-        Rectangle imageRectangle = new Rectangle(WIDTH / 2, WIDTH / 2 * heightToWidthRatio,
-            levelImage);
-        imageRectangle.setId("ImageRectangle");
-        levelImageGroup.getChildren()
-            .add(imageRectangle);
-      }
-    }
-    getModeDescription(levelImageGroup);
-    levelSelectScreen.setCenter(levelImageGroup);
-  }
-
-  private void getModeDescription(VBox levelImageGroup) {
-    Text modeDescription = new Text();
-    try{
-      modeDescription.setText(myApplicationMessages.getString(myGameMode.toString()));
-    }
-    catch (NullPointerException e)
-    {
-      new AlertHandler(myApplicationMessages.getString("NoGameMode"), myApplicationMessages.getString("NoGameMode"));
-    }
-    modeDescription.setId("ModeDescription");
-    modeDescription.getStyleClass().add("menu-text");
-    modeDescription.setScaleX(Double.parseDouble(MENU_RESOURCES.getString("ModeDescriptionSize")));
-    modeDescription.setScaleY(Double.parseDouble(MENU_RESOURCES.getString("ModeDescriptionSize")));
-    levelImageGroup.getChildren().add(modeDescription);
-  }
-
-  private ComboBox<Enum<?>> initializeGameModeOptions() {
-    ComboBox<Enum<?>> gameModes = new ComboBox<>();
-    gameModes.setId("GameModes");
-    gameModes.setPromptText(myMenuButtonNames.getString("GameModes"));
-    gameModes.setOnAction(e -> myGameMode = gameModes.getValue());
-    Class<?> gameModesClass = null;
-    try {
-      gameModesClass = Class.forName("something");
-    } catch (ClassNotFoundException e) {
-      new AlertHandler(myApplicationMessages.getString("NoGameModes"),
-          myApplicationMessages.getString("NoGameModes"));
-      return gameModes;
-    }
-    for (Object mode : gameModesClass.getEnumConstants()) {
-      gameModes.getItems().add((Enum<?>) mode);
-    }
-    return gameModes;
+  private void switchToGameWindow() {
+    loadLevel(mySelectionWindow.getLevelOptions().getValue() + ".csv");
   }
 
   public void initializeGameObjects(Layout layout, BloonsCollection bloons,
