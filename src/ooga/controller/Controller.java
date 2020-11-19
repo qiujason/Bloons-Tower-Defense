@@ -83,8 +83,6 @@ public class Controller extends Application {
     initializeBloonTypes();
     initializeBloonWaves();
     startGameEngine();
-    gameController = new GameMenuController(myAnimation, gameEngine, e -> {bloonsApplication.switchToSelectionWindow(); myAnimation.stop();});
-    towerController = new WeaponBankController(bank);
     GameMenuInterface gameMenuController = new GameMenuController(myAnimation, gameEngine,
         bloonsApplication);
     WeaponBankInterface weaponBankController = new WeaponBankController(bank);
