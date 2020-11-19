@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -21,9 +22,9 @@ import ooga.AlertHandler;
 
 public class SelectionWindow implements Window {
 
-  private Scene myScene;
-  private ResourceBundle myMenuButtonNames;
-  private ResourceBundle myApplicationMessages;
+  private final Scene myScene;
+  private final ResourceBundle myMenuButtonNames;
+  private final ResourceBundle myApplicationMessages;
   private BorderPane myLevelSelectScreen;
   private Button myBackButton;
   private Button myLoadLevelButton;
@@ -31,7 +32,8 @@ public class SelectionWindow implements Window {
   private Enum<?> myGameMode;
   private ComboBox<String> myLevelOptions;
 
-  public SelectionWindow(Scene scene, ResourceBundle menuButtonNames, ResourceBundle applicationMessages){
+  public SelectionWindow(Scene scene, ResourceBundle menuButtonNames,
+      ResourceBundle applicationMessages) {
     myScene = scene;
     myMenuButtonNames = menuButtonNames;
     myApplicationMessages = applicationMessages;
@@ -46,8 +48,10 @@ public class SelectionWindow implements Window {
     myLevelSelectScreen.getStyleClass().add("level-background");
     Text levelSelectText = new Text("Select Level");
     levelSelectText.getStyleClass().add("menu-text");
-    levelSelectText.setScaleX(Double.parseDouble(BloonsApplication.MENU_RESOURCES.getString("SelectLevelPromptSize")));
-    levelSelectText.setScaleY(Double.parseDouble(BloonsApplication.MENU_RESOURCES.getString("SelectLevelPromptSize")));
+    levelSelectText.setScaleX(
+        Double.parseDouble(BloonsApplication.MENU_RESOURCES.getString("SelectLevelPromptSize")));
+    levelSelectText.setScaleY(
+        Double.parseDouble(BloonsApplication.MENU_RESOURCES.getString("SelectLevelPromptSize")));
     myLevelSelectScreen.setCenter(levelSelectText);
 
     BorderPane.setAlignment(levelSelectText, Pos.CENTER);
@@ -65,15 +69,13 @@ public class SelectionWindow implements Window {
 
     myBackButton.setText(myMenuButtonNames.getString("ReturnToStart"));
     myBackButton.setId("BackButton");
-
     myLoadLevelButton.setText(myMenuButtonNames.getString("StartGame"));
-    //myLoadLevelButton.setOnAction(e -> loadLevel(levelOptions.getValue() + ".csv"));
     myLoadLevelButton.setId("StartLevelButton");
 
     HBox levelSelectButtons = new HBox();
     levelSelectButtons.setAlignment(Pos.CENTER);
-    levelSelectButtons.getChildren().add(myLevelOptions);
     levelSelectButtons.getChildren().add(gameModeOptions);
+    levelSelectButtons.getChildren().add(myLevelOptions);
     levelSelectButtons.getChildren().add(myLoadLevelButton);
     levelSelectButtons.getChildren().add(myBackButton);
 
@@ -88,7 +90,7 @@ public class SelectionWindow implements Window {
     if (levels == null || levels.toFile().listFiles() == null) {
       return levelOptions;
     }
-    for (File level : levels.toFile().listFiles()) {
+    for (File level : Objects.requireNonNull(levels.toFile().listFiles())) {
       levelOptions.getItems().add(level.getName().split("\\.")[0]);
     }
     levelOptions.setOnAction(e ->
@@ -107,7 +109,9 @@ public class SelectionWindow implements Window {
             myApplicationMessages.getString("NoLevels"));
         return null;
       }
-      levels = Paths.get(getClass().getClassLoader().getResource(BloonsApplication.LAYOUTS_PATH).toURI());
+      levels = Paths
+          .get(Objects.requireNonNull(
+              getClass().getClassLoader().getResource(BloonsApplication.LAYOUTS_PATH)).toURI());
     } catch (URISyntaxException e) {
       new AlertHandler(myApplicationMessages.getString("NoLevels"),
           myApplicationMessages.getString("NoLevels"));
@@ -116,50 +120,64 @@ public class SelectionWindow implements Window {
   }
 
   private void displayLevelPhotoAndDescription(String levelName, BorderPane levelSelectScreen) {
+    Path levelImages = getLevelImages();
+    if (levelImages == null) {
+      return;
+    }
+    VBox levelImageGroup = setImage(levelName, levelImages);
+    getModeDescription(levelImageGroup);
+    levelSelectScreen.setCenter(levelImageGroup);
+  }
+
+  private Path getLevelImages() {
     Path levelImages = null;
     try {
       if (getClass().getClassLoader().getResource(BloonsApplication.LEVEL_IMAGES) == null) {
         new AlertHandler(myApplicationMessages.getString("NoLevelImage"),
             myApplicationMessages.getString("NoLevelImage"));
-        return;
+        return null;
       }
-      levelImages = Paths.get(getClass().getClassLoader().getResource(BloonsApplication.LEVEL_IMAGES).toURI());
+      levelImages = Paths
+          .get(Objects.requireNonNull(
+              getClass().getClassLoader().getResource(BloonsApplication.LEVEL_IMAGES)).toURI());
     } catch (URISyntaxException e) {
       new AlertHandler(myApplicationMessages.getString("NoLevelImage"),
           myApplicationMessages.getString("NoLevelImage"));
     }
+    return levelImages;
+  }
+
+  private VBox setImage(String levelName, Path levelImages) {
     VBox levelImageGroup = new VBox();
     levelImageGroup.setAlignment(Pos.CENTER);
-    for (File levelImageFile : levelImages.toFile().listFiles()) {
+    for (File levelImageFile : Objects.requireNonNull(levelImages.toFile().listFiles())) {
       if (levelImageFile.getName().split("\\.")[0].equals(levelName)) {
         ImagePattern levelImage = new ImagePattern(
             new Image(String.valueOf(levelImageFile.toURI())));
         double heightToWidthRatio =
             levelImage.getImage().getHeight() / levelImage.getImage().getWidth();
-        Rectangle imageRectangle = new Rectangle(BloonsApplication.WIDTH / 2, BloonsApplication.WIDTH / 2 * heightToWidthRatio,
+        Rectangle imageRectangle = new Rectangle(BloonsApplication.WIDTH / 2,
+            BloonsApplication.WIDTH / 2 * heightToWidthRatio,
             levelImage);
         imageRectangle.setId("ImageRectangle");
         levelImageGroup.getChildren()
             .add(imageRectangle);
       }
     }
-    getModeDescription(levelImageGroup);
-    levelSelectScreen.setCenter(levelImageGroup);
+    return levelImageGroup;
   }
 
   private void getModeDescription(VBox levelImageGroup) {
     Text modeDescription = new Text();
-    try{
+    if(myGameMode != null){
       modeDescription.setText(myApplicationMessages.getString(myGameMode.toString()));
-    }
-    catch (NullPointerException e)
-    {
-      new AlertHandler(myApplicationMessages.getString("NoGameMode"), myApplicationMessages.getString("NoGameMode"));
     }
     modeDescription.setId("ModeDescription");
     modeDescription.getStyleClass().add("menu-text");
-    modeDescription.setScaleX(Double.parseDouble(BloonsApplication.MENU_RESOURCES.getString("ModeDescriptionSize")));
-    modeDescription.setScaleY(Double.parseDouble(BloonsApplication.MENU_RESOURCES.getString("ModeDescriptionSize")));
+    modeDescription.setScaleX(
+        Double.parseDouble(BloonsApplication.MENU_RESOURCES.getString("ModeDescriptionSize")));
+    modeDescription.setScaleY(
+        Double.parseDouble(BloonsApplication.MENU_RESOURCES.getString("ModeDescriptionSize")));
     levelImageGroup.getChildren().add(modeDescription);
   }
 
@@ -171,7 +189,7 @@ public class SelectionWindow implements Window {
       myGameMode = gameModes.getValue();
       displayLevelPhotoAndDescription(myLevelName, myLevelSelectScreen);
     });
-    Class<?> gameModesClass = null;
+    Class<?> gameModesClass;
     try {
       gameModesClass = Class.forName("ooga.backend.gameengine.GameMode");
     } catch (ClassNotFoundException e) {
@@ -189,7 +207,7 @@ public class SelectionWindow implements Window {
     return myLevelOptions;
   }
 
-  public Enum<?> getGameMode(){
+  public Enum<?> getGameMode() {
     return myGameMode;
   }
 
