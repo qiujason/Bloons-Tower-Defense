@@ -97,7 +97,7 @@ class BankTest {
         bank = new Bank(towerBuyMap, towerSellMap, roadItemMap, rounds, GameMode.Normal);
       } else {
         int starting_bonus = Integer.parseInt(roundBonuses.get(0).get(1));
-        bank = new Bank(towerBuyMap, towerSellMap, roadItemMap, starting_bonus, GameMode.Normal);
+        bank = new Bank(towerBuyMap, towerSellMap, roadItemMap, rounds, starting_bonus, GameMode.Normal);
       }
     } else{
       bank = new Bank(towerBuyMap, towerSellMap, roadItemMap, roundBonuses.get(1), GameMode.Normal);
