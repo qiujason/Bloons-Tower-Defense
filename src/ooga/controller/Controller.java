@@ -1,7 +1,6 @@
 package ooga.controller;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -15,13 +14,11 @@ import javafx.util.Duration;
 import ooga.AlertHandler;
 import ooga.backend.API.GameEngineAPI;
 import ooga.backend.ConfigurationException;
-import ooga.backend.GameEngine;
-import ooga.backend.bloons.Bloon;
+import ooga.backend.gameengine.GameEngine;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bank.Bank;
 import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.layout.Layout;
-import ooga.backend.projectile.ProjectilesCollection;
 import ooga.backend.readers.BloonReader;
 import ooga.backend.readers.LayoutReader;
 import ooga.backend.readers.PropertyFileValidator;
@@ -29,10 +26,7 @@ import ooga.backend.readers.RoadItemValueReader;
 import ooga.backend.readers.RoundBonusReader;
 import ooga.backend.readers.TowerValueReader;
 import ooga.backend.roaditems.RoadItemType;
-import ooga.backend.roaditems.RoadItemsCollection;
-import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
-import ooga.backend.towers.TowersCollection;
 import ooga.visualization.AnimationHandler;
 import ooga.visualization.BloonsApplication;
 
@@ -175,7 +169,7 @@ public class Controller extends Application {
   }
 
   private void startGameEngine() {
-    gameEngine = new GameEngine(layout, allBloonWaves);
+    gameEngine = new GameEngine(bloonsApplication.getMyGameMode().name(), layout, allBloonWaves);
   }
 
   private void step() {
@@ -200,13 +194,16 @@ public class Controller extends Application {
     bloonsApplication.displayCurrentRound(gameEngine.getRound() + 1);
     bloonsApplication.displayCurrentHealth(gameEngine.getLives());
 
+    checkGameStatus();
+  }
+
+  private void checkGameStatus() {
     if (gameEngine.isGameEnd()) {
       if(gameEngine.getLives() <= 0){
         bloonsApplication.loseGame();
       }
       else{
         bloonsApplication.winGame();
-        myAnimation.stop();
       }
       myAnimation.stop();
     } else if (gameEngine.isRoundEnd()) {
