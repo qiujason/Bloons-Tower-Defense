@@ -3,8 +3,6 @@ package ooga.controller;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
-import ooga.AlertHandler;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.layout.Layout;
 import ooga.backend.roaditems.RoadItem;
@@ -20,7 +18,6 @@ import ooga.backend.towers.factory.TowerFactory;
 import ooga.backend.towers.singleshottowers.SingleShotTower;
 import ooga.visualization.AnimationHandler;
 import ooga.visualization.menu.WeaponMenu;
-import ooga.visualization.nodes.GamePieceNode;
 import ooga.visualization.nodes.ItemNodeFactory;
 import ooga.visualization.nodes.RoadItemNode;
 import ooga.visualization.nodes.RoadItemNodeFactory;
@@ -99,7 +96,7 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
       if (menuController.buyRoadItem(roadItemType)) {
         canMakeRoadItem = false;
         RoadItem roadItem = roadItemFactory
-            .createTower(roadItemType, towerDefaultPosition, towerDefaultPosition);
+            .createRoadItem(roadItemType, towerDefaultPosition, towerDefaultPosition);
         RoadItemNode itemNode = itemNodeFactory.createItemNode(roadItemType, gameWidth / 2,
             gameHeight / 2, blockSize / 2);
         layoutRoot.getChildren().add(itemNode);
