@@ -1,11 +1,20 @@
 package ooga.controller;
 
+import java.util.HashMap;
+import java.util.Map;
 import javafx.animation.Animation.Status;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import ooga.backend.API.GameEngineAPI;
+import ooga.visualization.menu.GameButtonType;
+
 
 public class GameMenuController implements GameMenuInterface {
 
   private Timeline myTimeline;
+  private GameEngineAPI myGameEngine;
+  private Map<GameButtonType, EventHandler<ActionEvent>> buttonHandleMap;
 
   private static final double MAX_RATE = 2.5;
   private static final double MIN_RATE = 0.5;
@@ -14,14 +23,25 @@ public class GameMenuController implements GameMenuInterface {
 
   private double currentRate;
 
-  public GameMenuController(Timeline timeline){
+  public GameMenuController(Timeline timeline, GameEngineAPI gameEngine){
     myTimeline = timeline;
+    myGameEngine = gameEngine;
     currentRate = DEFAULT_RATE;
+    buttonHandleMap = new HashMap<>();
+    buttonHandleMap.put(GameButtonType.PlayButton, event -> this.play());
+    buttonHandleMap.put(GameButtonType.PauseButton, event -> this.pause());
+    buttonHandleMap.put(GameButtonType.SpeedUpButton, event -> this.speedUp());
+    buttonHandleMap.put(GameButtonType.SlowDownButton, event -> this.slowDown());
+  }
+
+  @Override
+  public Map<GameButtonType, EventHandler<ActionEvent>> getButtonHandleMap() {
+    return buttonHandleMap;
   }
 
   @Override
   public void play() {
-    if (myTimeline.getStatus() != Status.RUNNING) {
+    if (myTimeline.getStatus() != Status.RUNNING && !myGameEngine.isGameEnd()) {
       myTimeline.play();
     }
   }

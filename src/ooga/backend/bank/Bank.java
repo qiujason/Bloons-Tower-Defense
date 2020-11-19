@@ -109,7 +109,7 @@ public class Bank implements BankAPI {
     return false;
   }
 
-  public boolean buyRoadItem(RoadItem buyRoadItem){
+  public boolean buyRoadItem(RoadItemType buyRoadItem){
     if (canBuyRoadItem(buyRoadItem)) {
       currentMoney -= roadItemBuyMap.get(buyRoadItem);
       return true;
@@ -117,7 +117,7 @@ public class Bank implements BankAPI {
     return false;
   }
 
-  private boolean canBuyRoadItem(RoadItem buyRoadItem){
+  private boolean canBuyRoadItem(RoadItemType buyRoadItem){
     return currentMoney >= roadItemBuyMap.get(buyRoadItem);
   }
 

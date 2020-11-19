@@ -1,59 +1,58 @@
 package ooga.visualization.menu;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.geometry.Orientation;
+import javafx.scene.layout.FlowPane;
 import ooga.controller.GameMenuInterface;
 import javafx.scene.control.Button;
 
-public class GameMenu {
+public class GameMenu extends FlowPane {
 
-  private static final String LANGUAGE = "English";
-  private final ResourceBundle menuProperties =
-      ResourceBundle.getBundle("ooga.visualization.resources.languages." + LANGUAGE + ".menu" + LANGUAGE);
+  private static final String RESOURCE_DIRECTORY = "ooga.visualization.resources.languages.";
+  private static final String MENU = ".menu";
 
-  private static final String PLAY_TEXT = "PlayButton";
-  private static final String PAUSE_TEXT = "PauseButton";
-  private static final String SPEEDUP_TEXT = "SpeedUpButton";
-  private static final String SLOWDOWN_TEXT = "SlowDownButton";
   private static final Double BUTTON_WIDTH = 100.0;
+  private static final Double PREF_WRAP_LENGTH = 200.0;
 
-  private VBox myMenuPane;
+  private ResourceBundle menuProperties;
+  private List<GameButtonType> gameButtonList = Arrays.asList(GameButtonType.values());
+  private Map<GameButtonType, EventHandler<ActionEvent>> buttonHandleMap;
 
-  private Button playButton;
-  private Button pauseButton;
-  private Button speedUpButton;
-  private Button slowDownButton;
+  public GameMenu(GameMenuInterface menuController, String language) {
+    initializeResourceBundle(language);
+    buttonHandleMap = menuController.getButtonHandleMap();
 
-  public GameMenu(VBox MenuPane, GameMenuInterface gameController) {
-    myMenuPane = MenuPane;
+    makeAllButtons();
 
-    playButton = makeButton(menuProperties.getString(PLAY_TEXT), event -> gameController.play());
-    pauseButton = makeButton(menuProperties.getString(PAUSE_TEXT), event -> gameController.pause());
-    makeButtonRow(playButton, pauseButton);
-
-    speedUpButton = makeButton(menuProperties.getString(SPEEDUP_TEXT), event -> gameController.speedUp());
-    slowDownButton = makeButton(menuProperties.getString(SLOWDOWN_TEXT), event -> gameController.slowDown());
-    makeButtonRow(speedUpButton, slowDownButton);
+    this.setPrefWrapLength(PREF_WRAP_LENGTH);
+    this.setOrientation(Orientation.HORIZONTAL);
   }
 
-  private void makeButtonRow(Button first, Button second){
-    HBox buttonRow = new HBox();
-    buttonRow.getChildren().addAll(first, second);
-    myMenuPane.getChildren().add(buttonRow);
+  private void initializeResourceBundle(String language){
+    menuProperties = ResourceBundle.getBundle(RESOURCE_DIRECTORY + language + MENU + language);
+  }
+
+  private void makeAllButtons(){
+    for (GameButtonType type : gameButtonList){
+      this.getChildren().add(makeButton(type));
+    }
   }
 
   /**
    * From lecture
    * @author Robert Duvall
    */
-  private Button makeButton(String name, EventHandler<ActionEvent> handler) {
+  private Button makeButton(GameButtonType buttonType) {
     Button button = new Button();
-    button.setText(name);
-    button.setOnAction(handler);
-    button.setId(name);
+    button.setText(menuProperties.getString(buttonType.name()));
+    button.setOnAction(buttonHandleMap.get(buttonType));
+    button.setId(buttonType.name());
     button.setMinWidth(BUTTON_WIDTH);
     button.setMaxWidth(BUTTON_WIDTH);
     return button;

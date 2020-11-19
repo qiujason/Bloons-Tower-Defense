@@ -2,7 +2,9 @@ package ooga.visualization.menu;
 
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,16 +13,18 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import ooga.backend.roaditems.RoadItemType;
 import ooga.backend.towers.TowerType;
-import ooga.controller.TowerMenuInterface;
-import ooga.controller.TowerNodeHandler;
+import ooga.controller.WeaponNodeHandler;
+import ooga.controller.WeaponNodeInterface;
 
 public class WeaponButtonsMenu extends FlowPane {
 
-  private TowerNodeHandler towerNodeHandler;
+  private WeaponNodeInterface weaponNodeHandler;
   private List<TowerType> weaponTypeList = Arrays.asList(TowerType.values());
   private List<RoadItemType> roadItemTypeList = Arrays.asList(RoadItemType.values());
+  private Map<Button, VBox> buttonWeaponDescription;
 
   //later make this read in what package from a overall game properties file
   private static final String PACKAGE = "btd_towers/";
@@ -28,64 +32,73 @@ public class WeaponButtonsMenu extends FlowPane {
   private static final String PICTURES = "MonkeyPics";
   private static final String BUTTON_TAG = "Button";
   private static final String ROAD_ITEMS = "RoadItems";
-  private static final String TOWER_COST_DIRECTORY = "towervalues/TowerBuyValues";
 
-  private static final Double BUTTON_MAX_WIDTH = 50.0;
+  private static final Double BUTTON_HEIGHT = 25.0;
+  private static final Double BUTTON_WIDTH = 50.0;
+  private static final Double PREF_WRAP_LENGTH = 200.0;
+
+  private String currentLanguage;
 
   private ResourceBundle typeToName = ResourceBundle.getBundle(PACKAGE + NAMES);
   private ResourceBundle nameToPicture = ResourceBundle.getBundle(PACKAGE + PICTURES);
-  private ResourceBundle towerCost = ResourceBundle.getBundle(TOWER_COST_DIRECTORY);
-
   private ResourceBundle roadItemPic = ResourceBundle.getBundle(PACKAGE + ROAD_ITEMS);
 
-  public WeaponButtonsMenu(TowerNodeHandler towerNodeHandler){
-    this.towerNodeHandler = towerNodeHandler;
+
+  public WeaponButtonsMenu(WeaponNodeInterface weaponNodeHandler, String language){
+    this.weaponNodeHandler = weaponNodeHandler;
+    currentLanguage = language;
+
+    buttonWeaponDescription = new HashMap<>();
+
     makeAllWeaponButtons();
     makeAllRoadItemButtons();
-    this.setPrefWrapLength(200);
+    this.setPrefWrapLength(PREF_WRAP_LENGTH);
     this.setOrientation(Orientation.HORIZONTAL);
   }
 
   private void makeAllWeaponButtons(){
     for(TowerType type : weaponTypeList){
-      this.getChildren().add(makeWeaponButton(type,
-          event -> towerNodeHandler.makeWeapon(type)));
+      Button weaponButton = makeWeaponButton(type, event -> weaponNodeHandler.makeWeapon(type));
+      buttonWeaponDescription.put(weaponButton, new TowerDescription(type, currentLanguage));
+      showButtonDescription(weaponButton);
+      this.getChildren().add(weaponButton);
     }
   }
 
   private void makeAllRoadItemButtons(){
     for(RoadItemType type : roadItemTypeList){
-      this.getChildren().add(makeRoadItemButton(type,
-          event -> towerNodeHandler.makeRoadWeapon(type)));
+      Button itemButton = makeRoadItemButton(type, event -> weaponNodeHandler.makeRoadWeapon(type));
+      buttonWeaponDescription.put(itemButton, new RoadItemDescription(type, currentLanguage));
+      showButtonDescription(itemButton);
+      this.getChildren().add(itemButton);
     }
   }
 
   private Button makeWeaponButton(TowerType type, EventHandler<ActionEvent> handler){
     String towerName = typeToName.getString(type.name());
     String imageDirectory = nameToPicture.getString(towerName + BUTTON_TAG);
-    Image towerImage = makeImage(imageDirectory);
-    ImageView imageView = new ImageView(towerImage);
-    imageView.setFitWidth(25);
-    imageView.setFitHeight(25);
-    Button button = new Button("",imageView);
+    Button button = addImageToButton(imageDirectory);
     button.setOnAction(handler);
     button.setId(towerName);
-    button.setMinHeight(25);
-    button.setMinWidth(50);
     return button;
   }
 
   private Button makeRoadItemButton(RoadItemType type, EventHandler<ActionEvent> handler){
     String imageDirectory = roadItemPic.getString(type.name());
-    Image towerImage = makeImage(imageDirectory);
-    ImageView imageView = new ImageView(towerImage);
-    imageView.setFitWidth(25);
-    imageView.setFitHeight(25);
-    Button button = new Button("", imageView);
+    Button button = addImageToButton(imageDirectory);
     button.setOnAction(handler);
     button.setId(type.name());
-    button.setMinHeight(25);
-    button.setMinWidth(50);
+    return button;
+  }
+
+  private Button addImageToButton(String imageDirectory) {
+    Image weaponImage = makeImage(imageDirectory);
+    ImageView imageView = new ImageView(weaponImage);
+    imageView.setFitWidth(BUTTON_HEIGHT);
+    imageView.setFitHeight(BUTTON_HEIGHT);
+    Button button = new Button("", imageView);
+    button.setMinHeight(BUTTON_HEIGHT);
+    button.setMinWidth(BUTTON_WIDTH);
     return button;
   }
 
@@ -98,5 +111,14 @@ public class WeaponButtonsMenu extends FlowPane {
     }
     assert towerImage != null;
     return towerImage;
+  }
+
+  private void showButtonDescription(Button button){
+    button.setOnMouseEntered(e -> {
+      this.getChildren().add(buttonWeaponDescription.get(button));
+      button.setOnMouseExited(event -> {
+        this.getChildren().remove(buttonWeaponDescription.get(button));
+      });
+    });
   }
 }

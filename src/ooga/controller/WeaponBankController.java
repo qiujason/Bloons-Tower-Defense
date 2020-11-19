@@ -3,16 +3,17 @@ package ooga.controller;
 import java.util.ResourceBundle;
 import ooga.AlertHandler;
 import ooga.backend.bank.Bank;
+import ooga.backend.roaditems.RoadItemType;
 import ooga.backend.towers.Tower;
 import ooga.backend.towers.TowerType;
 import ooga.backend.towers.UpgradeChoice;
 
-public class TowerMenuController implements TowerMenuInterface {
+public class WeaponBankController implements WeaponBankInterface {
 
   private Bank bank;
   private ResourceBundle inGameMessage = ResourceBundle.getBundle("InGameMessages");
 
-  public TowerMenuController(Bank bank){
+  public WeaponBankController(Bank bank){
     this.bank = bank;
   }
 
@@ -26,6 +27,12 @@ public class TowerMenuController implements TowerMenuInterface {
       return false;
     }
   }
+
+  @Override
+  public boolean buyRoadItem(RoadItemType itemType) {
+    return bank.buyRoadItem(itemType);
+  }
+
 
   @Override
   public void sellTower(Tower tower) {
