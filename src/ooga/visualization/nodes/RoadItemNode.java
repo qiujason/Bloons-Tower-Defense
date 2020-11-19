@@ -8,14 +8,13 @@ import ooga.backend.roaditems.RoadItemType;
 
 public class RoadItemNode extends GamePieceNode {
 
-  private RoadItemType roadItemType;
+  private final RoadItemType roadItemType;
+  private final ResourceBundle typeToName = ResourceBundle.getBundle(PACKAGE + NAMES);
+  private final ResourceBundle nameToPicture = ResourceBundle.getBundle(PACKAGE + PICTURES);
 
   private static final String PACKAGE = "btd_towers/";
   private static final String NAMES = "TowerMonkey";
   private static final String PICTURES = "MonkeyPics";
-
-  private ResourceBundle typeToName = ResourceBundle.getBundle(PACKAGE + NAMES);
-  private ResourceBundle nameToPicture = ResourceBundle.getBundle(PACKAGE + PICTURES);
 
   public RoadItemNode(RoadItemType roadItemType, double xPosition, double yPosition, double radius) {
     super(xPosition, yPosition, radius);
