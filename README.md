@@ -19,7 +19,7 @@ Hours Spent: 60-70
 * Jack: Front-end menus and visualization
 * Jason: Bloons and other back-end components
 * Franklin: Controller and integration between model and view
-* Annshine: Towers, Projectiles, and Bank
+* Annshine: Towers, Projectiles, Road Items, Shooting Interactions, and Bank
 * Eddie: Front-end in-game buttons, tower placement, and other game objects
 
 ### Resources Used
