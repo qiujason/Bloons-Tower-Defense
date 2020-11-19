@@ -55,11 +55,9 @@ public class Controller extends Application {
   private GameEngineAPI gameEngine;
   private Layout layout;
   private List<BloonsCollection> allBloonWaves;
-  private GameMenuInterface gameMenuController;
   private Map<TowerType, Integer> towerBuyMap;
   private Map<TowerType, Integer> towerSellMap;
   private Map<RoadItemType, Integer> roadItemBuyMap;
-  private WeaponBankInterface weaponBankController;
   private Bank bank;
 
   @Override
@@ -84,10 +82,10 @@ public class Controller extends Application {
     initializeBloonTypes();
     initializeBloonWaves();
     startGameEngine();
+    GameMenuInterface gameMenuController = new GameMenuController(myAnimation, gameEngine,
+        bloonsApplication);
+    WeaponBankInterface weaponBankController = new WeaponBankController(bank);
 
-
-    gameMenuController = new GameMenuController(myAnimation, gameEngine, bloonsApplication);
-    weaponBankController = new WeaponBankController(bank);
     bloonsApplication
         .initializeGameObjects(layout, gameEngine.getCurrentBloonWave(), gameEngine.getTowers(),
             gameEngine.getProjectiles(), gameEngine.getRoadItems(), bank, myAnimation,
