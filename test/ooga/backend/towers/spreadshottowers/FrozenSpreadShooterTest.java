@@ -10,6 +10,7 @@ import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.BloonsTypeChain;
+import ooga.backend.bloons.types.Specials;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.projectile.Projectile;
 import ooga.backend.projectile.ProjectileType;
@@ -43,7 +44,7 @@ class FrozenSpreadShooterTest {
 
   @Test
   void testCheckBalloonInRange(){
-    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 0.4,0.4,5,5);
+    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, Specials.None), 0.4,0.4,5,5);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);
@@ -54,7 +55,7 @@ class FrozenSpreadShooterTest {
 
   @Test
   void shoot() throws ConfigurationException {
-    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, new HashSet<>()), 0.4,0.4,5,5);
+    Bloon target = new Bloon(new BloonsType(chain, "RED", 1, 1, Specials.None), 0.4,0.4,5,5);
     List<Bloon> bloonsList = new ArrayList<>();
     bloonsList.add(target);
     BloonsCollection bloonsCollection = new BloonsCollection(bloonsList);

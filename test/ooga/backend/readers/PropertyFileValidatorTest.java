@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import ooga.backend.bloons.types.Specials;
 import org.junit.jupiter.api.Test;
 
 class PropertyFileValidatorTest {
