@@ -1,7 +1,6 @@
 package ooga.visualization;
 
 import java.util.List;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 
 public class GameWindow implements Window {
@@ -15,4 +14,5 @@ public class GameWindow implements Window {
   public void setupWindowButtons() {
 
   }
+
 }
