@@ -110,7 +110,7 @@ public class Controller extends Application {
         new HashSet<>(Arrays.asList("SingleProjectileShooter", "MultiProjectileShooter",
             "SpreadProjectileShooter", "UnlimitedRangeProjectileShooter",
             "SuperSpeedProjectileShooter",
-            "FrozenSpreadShooter", "CamoProjectileShooter", "PopBloonsItem", "SlowBloonsItem",
+            "MultiFrozenShooter", "CamoProjectileShooter", "PopBloonsItem", "SlowBloonsItem",
             "ExplodeBloonsItem")));
     if (!towerPicsValidator.containsNeededKeys()) {
        new AlertHandler(errorResource.getString("InvalidPropertyFile"),
