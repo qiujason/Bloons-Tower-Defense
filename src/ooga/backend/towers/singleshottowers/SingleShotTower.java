@@ -1,5 +1,6 @@
 package ooga.backend.towers.singleshottowers;
 
+import ooga.backend.ConfigurationException;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.collections.GamePieceIterator;
@@ -125,7 +126,8 @@ public abstract class SingleShotTower extends Tower {
   }
 
   @Override
-  public Bloon shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection) {
+  public Bloon shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection)
+      throws ConfigurationException {
     if(checkBalloonInRange(bloonsCollection)){
       Bloon target = getTarget(bloonsCollection);
       ProjectileFactory projectileFactory = new SingleProjectileFactory();

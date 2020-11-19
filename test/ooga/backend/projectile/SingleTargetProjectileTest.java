@@ -2,6 +2,7 @@ package ooga.backend.projectile;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import ooga.backend.projectile.types.SingleTargetProjectile;
 import org.junit.jupiter.api.Test;
 
 class SingleTargetProjectileTest {

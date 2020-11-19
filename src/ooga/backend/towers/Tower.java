@@ -2,6 +2,7 @@ package ooga.backend.towers;
 
 import java.util.ResourceBundle;
 import ooga.backend.API.TowersAPI;
+import ooga.backend.ConfigurationException;
 import ooga.backend.GamePiece;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
@@ -91,7 +92,8 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     return false;
   }
 
-  public abstract Bloon shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection);
+  public abstract Bloon shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection)
+      throws ConfigurationException;
 
   public double getDistance(GamePiece target){
     return Math.sqrt(Math.pow(getXPosition()-target.getXPosition(), 2) + Math.pow(getYPosition()-target.getYPosition(), 2));
@@ -160,8 +162,8 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   }
 
   public boolean ifCamoBloon(Bloon bloon){
-    return getTowerType() != TowerType.CamoProjectileShooter && bloon.getBloonsType().specials().contains(
-        Specials.Camo);
+    return getTowerType() != TowerType.CamoProjectileShooter && bloon.getBloonsType().specials() ==
+        Specials.Camo;
   }
 
   public void setProjectileType(ProjectileType update){

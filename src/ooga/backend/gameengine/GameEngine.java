@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import ooga.backend.API.GameEngineAPI;
+import ooga.backend.ConfigurationException;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.collections.GamePieceIterator;
@@ -22,7 +23,7 @@ import ooga.visualization.AnimationHandler;
 public class GameEngine implements GameEngineAPI {
 
   private static final int STARTING_ROUND = 0;
-  private static final int STARTING_LIVES = 100;
+  public static final int STARTING_LIVES = 100;
   private static final int SPAWN_DELAY = (int) (1 * AnimationHandler.FRAMES_PER_SECOND);
   private static final int SPEED_ADJUSTER = 50;
 
@@ -144,7 +145,7 @@ public class GameEngine implements GameEngineAPI {
 
   }
 
-  private void shootBloons(){
+  private void shootBloons() throws ConfigurationException {
     GamePieceIterator<Tower> towerIterator = towers.createIterator();
     while(towerIterator.hasNext()){
       Tower currentTower = towerIterator.next();
@@ -211,7 +212,7 @@ public class GameEngine implements GameEngineAPI {
   }
 
   @Override
-  public void update(){
+  public void update() throws ConfigurationException {
     checkRoundStatus();
     spawnBloons();
     moveBloons();

@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.ResourceBundle;
+import ooga.backend.ConfigurationException;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.factory.BasicBloonsFactory;
@@ -14,10 +15,10 @@ import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.bloons.types.Specials;
 import ooga.backend.layout.Layout;
-import ooga.visualization.AnimationHandler;
 
 public class BloonReader extends Reader{
 
+  private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResource");
   private static final String FACTORY_FILE_PATH = "ooga.backend.bloons.factory.";
   private static final String RESOURCE_BUNDLE_PATH = "bloon_resources/BloonReaderKey";
   private static final ResourceBundle BLOON_READER_KEY = ResourceBundle.getBundle(RESOURCE_BUNDLE_PATH);
@@ -32,7 +33,8 @@ public class BloonReader extends Reader{
     return bloonWave;
   }
 
-  public List<BloonsCollection> generateBloonsCollectionMap(BloonsTypeChain chain, String fileName, Layout layout){ //TODO: create test for seeing if bloon is in right position (negative x)
+  public List<BloonsCollection> generateBloonsCollectionMap(BloonsTypeChain chain, String fileName, Layout layout)
+      throws ConfigurationException { //TODO: create test for seeing if bloon is in right position (negative x)
     List<BloonsCollection> listOfBloons = new ArrayList<>();
     List<List<String>> bloonWaves = getDataFromFile(fileName);
     BloonsCollection currentCollection = new BloonsCollection();
@@ -83,26 +85,19 @@ public class BloonReader extends Reader{
     return new BasicBloonsFactory().createBloon(bloonType, layout.getStartCoordinates()[1] + 0.5, layout.getStartCoordinates()[0] + 0.5, dx, dy);
   }
 
-  private Bloon createSpecialBloon(BloonsTypeChain chain, String bloon, Layout layout, String special) {
+  private Bloon createSpecialBloon(BloonsTypeChain chain, String bloon, Layout layout, String special) throws ConfigurationException {
     Bloon specialBloon = createBloon(chain, bloon, layout);
 
-    BloonsFactory specialFactory = null;
+    BloonsFactory specialFactory;
     try {
       Class<?> specialBloonClass = Class.forName(FACTORY_FILE_PATH + special + "BloonsFactory");
       Constructor<?> specialBloonConstructor = specialBloonClass.getConstructor();
       specialFactory = (BloonsFactory) specialBloonConstructor.newInstance();
     } catch (ClassNotFoundException e) {
-      e.printStackTrace();
+      throw new ConfigurationException("SpecialNotFound");
     } catch (Exception e) {
-      e.printStackTrace();
+      throw new ConfigurationException("OtherSpecialBloonErrors");
     }
-
-    if (specialFactory == null) {
-      //TODO: throw exception!!!!!!!!!!!!!!!
-      return null;
-    } else {
-      return specialFactory.createBloon(specialBloon);
-    }
+    return specialFactory.createBloon(specialBloon);
   }
-
 }

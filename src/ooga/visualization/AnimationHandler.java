@@ -10,6 +10,7 @@ import javafx.geometry.BoundingBox;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.shape.Circle;
+import ooga.backend.bank.Bank;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.types.Specials;
@@ -40,6 +41,7 @@ public class AnimationHandler {
   private TowersCollection myTowers;
   private ProjectilesCollection myProjectiles;
   private RoadItemsCollection myRoadItems;
+  private Bank bank;
 
   private Map<Bloon, BloonNode> myBloonsInGame;
   private Map<Tower, TowerNode> myTowersInGame;
@@ -51,7 +53,7 @@ public class AnimationHandler {
   public final Properties bloonImagesProperties = new Properties();
 
   public AnimationHandler(Group levelLayout, BloonsCollection bloons,
-      TowersCollection towers, ProjectilesCollection projectiles, RoadItemsCollection roadItems, double blockSize, Timeline animation) {
+      TowersCollection towers, ProjectilesCollection projectiles, RoadItemsCollection roadItems, Bank bank, double blockSize, Timeline animation) {
     myAnimation = animation;
     myAnimation.setCycleCount(Timeline.INDEFINITE);
     myLevelLayout = levelLayout;
@@ -64,8 +66,7 @@ public class AnimationHandler {
     myProjectilesInGame = new HashMap<>();
     myRoadItemsInGame = new HashMap<>();
     myBlockSize = blockSize;
-//    bloonImagesProperties.load(AnimationHandler.class.getClassLoader()
-//        .getResourceAsStream(BLOON_IMAGES_PATH));
+    this.bank = bank;
   }
 
   public void addBloonstoGame(){
@@ -92,7 +93,6 @@ public class AnimationHandler {
         projectileNode.setRotate(projectileToSpawn.getAngle());
         myProjectilesInGame.put(projectileToSpawn, projectileNode);
         myLevelLayout.getChildren().add(projectileNode);
-
       }
     }
   }
@@ -115,12 +115,6 @@ public class AnimationHandler {
       }
       bloonNode.setXPosition(bloon.getXPosition() * myBlockSize);
       bloonNode.setYPosition(bloon.getYPosition() * myBlockSize);
-    }
-  }
-
-  public void changeBloonImage(File file){
-    for(BloonNode bloonNode : myBloonsInGame.values()){
-      bloonNode.setImage(file);
     }
   }
 
@@ -177,21 +171,35 @@ public class AnimationHandler {
     BloonsCollection bloonsToAdd = new BloonsCollection();
     for(Projectile projectile : myProjectilesInGame.keySet()){
       for(Bloon bloon : myBloonsInGame.keySet()){
-        if(shouldExplode(projectile, bloon)){
-          popBloon(bloon, projectile, bloonsToRemove, bloonsToAdd, projectilesToRemove, false);
-        } else if(checkBloonCollision(bloon, myProjectilesInGame.get(projectile))){
-          if(shouldPop(projectile, bloon)){
-              popBloon(bloon, projectile, bloonsToRemove, bloonsToAdd, projectilesToRemove, false);
-          } else if(shouldFreeze(projectile, bloon)){
-              bloon.freeze();
-              projectilesToRemove.add(projectile);
-          }
+        collisionHandler(projectile, bloon, bloonsToRemove, bloonsToAdd, projectilesToRemove);
         }
       }
-    }
     spawnBloons(bloonsToAdd);
+    addMoneyPerPop(bloonsToRemove);
     removeShotBloon(bloonsToRemove);
     removeShotProjectiles(projectilesToRemove);
+  }
+
+  private void addMoneyPerPop(BloonsCollection bloonsToRemove){
+    GamePieceIterator<Bloon> iterator = bloonsToRemove.createIterator();
+    while(iterator.hasNext()){
+      iterator.next();
+      bank.addPoppedBloonValue();
+    }
+  }
+
+
+  private void collisionHandler(Projectile projectile, Bloon bloon, BloonsCollection bloonsToRemove, BloonsCollection bloonsToAdd, ProjectilesCollection projectilesToRemove) {
+    if (shouldExplode(projectile, bloon)) {
+      popBloon(bloon, projectile, bloonsToRemove, bloonsToAdd, projectilesToRemove, false);
+    } else if (checkBloonCollision(bloon, myProjectilesInGame.get(projectile))) {
+      if (shouldPop(projectile, bloon)) {
+        popBloon(bloon, projectile, bloonsToRemove, bloonsToAdd, projectilesToRemove, false);
+      } else if (shouldFreeze(projectile, bloon)) {
+        bloon.freeze();
+        projectilesToRemove.add(projectile);
+      }
+    }
   }
 
   private void animateRoadItemCollisions(){
@@ -208,23 +216,26 @@ public class AnimationHandler {
           }
           continue;
         }
-        if(roadItem.getType() == RoadItemType.ExplodeBloonsItem){
-          roadItem.update();
-        }
-        if(checkBloonCollision(bloon, myRoadItemsInGame.get(roadItem))){
-          if(roadItem.getType() == RoadItemType.PopBloonsItem){
-            popBloon(bloon, null, bloonsToRemove, bloonsToAdd, null, true);
-            roadItem.update();
-          } else if(roadItem.getType() == RoadItemType.SlowBloonsItem && !bloon.isSlowDownActive()){
-            bloon.slowDown();
-            roadItem.update();
-          }
-        }
+        updatesRoadItems(roadItem, bloon, bloonsToRemove, bloonsToAdd);
       }
     }
     spawnBloons(bloonsToAdd);
     removeShotBloon(bloonsToRemove);
     removeExpiredRoadItems(itemsToRemove);
+  }
+
+  private void updatesRoadItems(RoadItem roadItem, Bloon bloon, BloonsCollection bloonsToRemove, BloonsCollection bloonsToAdd){
+    if(roadItem.getType() == RoadItemType.ExplodeBloonsItem){
+      roadItem.update();
+    } else if(checkBloonCollision(bloon, myRoadItemsInGame.get(roadItem))){
+      if(roadItem.getType() == RoadItemType.PopBloonsItem){
+        popBloon(bloon, null, bloonsToRemove, bloonsToAdd, null, true);
+        roadItem.update();
+      } else if(roadItem.getType() == RoadItemType.SlowBloonsItem && !bloon.isSlowDownActive()){
+        bloon.slowDown();
+        roadItem.update();
+      }
+    }
   }
 
   private boolean shouldExplode(Projectile projectile, Bloon bloon){
@@ -235,7 +246,7 @@ public class AnimationHandler {
 
   private boolean shouldPop(Projectile projectile, Bloon bloon){
     return (projectile.getType() == ProjectileType.SingleTargetProjectile &&
-        !bloon.getBloonsType().specials().contains(Specials.Camo))
+        bloon.getBloonsType().specials() != (Specials.Camo))
         || projectile.getType() == ProjectileType.CamoTargetProjectile;
   }
 

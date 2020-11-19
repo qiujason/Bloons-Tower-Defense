@@ -21,6 +21,7 @@ import ooga.backend.towers.UpgradeChoice;
 public class Bank implements BankAPI {
 
   public static int STARTING_ROUND_BONUS = 100;
+  public static int STARTING_MONEY = 1000;
 
   private int currentMoney = 1000;
   private int currentLevel = 0;
@@ -72,6 +73,7 @@ public class Bank implements BankAPI {
 
   public void advanceOneLevel() {
     currentMoney += roundBonus.get(currentLevel);
+    System.out.println(roundBonus.get(currentLevel));
     currentLevel++;
   }
 

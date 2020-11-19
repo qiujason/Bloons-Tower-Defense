@@ -1,8 +1,11 @@
 package ooga.controller;
 
+import java.util.ResourceBundle;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
+import ooga.AlertHandler;
+import ooga.backend.ConfigurationException;
 import ooga.backend.GamePiece;
 import ooga.backend.collections.GamePieceIterator;
 import ooga.backend.layout.Layout;
@@ -39,17 +42,18 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
   private final WeaponBankInterface menuController;
   private final AnimationHandler animationHandler;
   private final TowersCollection towersCollection;
+  private final String currentLanguage;
 
+  private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResource");
   private static final String PATH_ID = "Path";
+  private static final String TOWER_ERROR = "TowerError";
+  private static final String ITEM_ERROR = "RoadItemError";
   private static final double towerDefaultPosition = -1;
   private static final double defaultPositionDivisor = 2;
   private static final double nodeSizeDivisor = 2.5;
 
-  private final String currentLanguage;
-
   private boolean canMakeTower;
   private boolean canMakeRoadItem;
-
   private TowerFactory towerFactory;
   private WeaponNodeFactory towerNodeFactory;
   private RoadItemFactory roadItemFactory;
@@ -78,17 +82,21 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
     if (canMakeTower) {
       if (menuController.buyTower(towerType)) {
         canMakeTower = false;
-        Tower tower = towerFactory
-            .createTower(towerType, towerDefaultPosition, towerDefaultPosition);
-        TowerNode towerNode = towerNodeFactory.createTowerNode(towerType,
-            gameWidth / defaultPositionDivisor,gameHeight / defaultPositionDivisor,
-            blockSize / nodeSizeDivisor);
-        towerNode.makeTowerMenu(this, currentLanguage);
-        towerNode.setWeaponRange(tower.getRadius(), blockSize);
-        WeaponRange towerRange = towerNode.getRangeDisplay();
-        layoutRoot.getChildren().add(towerRange);
-        layoutRoot.getChildren().add(towerNode);
-        placeTower(tower, towerNode);
+        try {
+          Tower tower = towerFactory
+              .createTower(towerType, towerDefaultPosition, towerDefaultPosition);
+          TowerNode towerNode = towerNodeFactory.createTowerNode(towerType,
+              gameWidth / defaultPositionDivisor, gameHeight / defaultPositionDivisor,
+              blockSize / nodeSizeDivisor);
+          towerNode.makeTowerMenu(this, currentLanguage);
+          towerNode.setWeaponRange(tower.getRadius(), blockSize);
+          WeaponRange towerRange = towerNode.getRangeDisplay();
+          layoutRoot.getChildren().add(towerRange);
+          layoutRoot.getChildren().add(towerNode);
+          placeTower(tower, towerNode);
+        } catch (ConfigurationException e) {
+          new AlertHandler(ERROR_RESOURCES.getString(TOWER_ERROR), ERROR_RESOURCES.getString(e.getMessage()));
+        }
       }
     }
   }
@@ -98,13 +106,17 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
     if (canMakeRoadItem) {
       if (menuController.buyRoadItem(roadItemType)) {
         canMakeRoadItem = false;
-        RoadItem roadItem = roadItemFactory
-            .createTower(roadItemType, towerDefaultPosition, towerDefaultPosition);
-        RoadItemNode itemNode = itemNodeFactory.createItemNode(roadItemType,
-            gameWidth / defaultPositionDivisor,gameHeight / defaultPositionDivisor,
-            blockSize / nodeSizeDivisor);
-        layoutRoot.getChildren().add(itemNode);
-        placeRoadItem(roadItem, itemNode);
+        try {
+          RoadItem roadItem = roadItemFactory
+              .createRoadItem(roadItemType, towerDefaultPosition, towerDefaultPosition);
+          RoadItemNode itemNode = itemNodeFactory.createItemNode(roadItemType,
+              gameWidth / defaultPositionDivisor,
+              gameHeight / defaultPositionDivisor, blockSize / nodeSizeDivisor);
+          layoutRoot.getChildren().add(itemNode);
+          placeRoadItem(roadItem, itemNode);
+        } catch (ConfigurationException e) {
+          new AlertHandler(ERROR_RESOURCES.getString(ITEM_ERROR),ERROR_RESOURCES.getString(e.getMessage()));
+        }
       }
     }
   }

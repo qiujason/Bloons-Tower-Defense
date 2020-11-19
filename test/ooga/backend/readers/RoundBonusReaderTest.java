@@ -3,12 +3,13 @@ package ooga.backend.readers;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
+import ooga.backend.ConfigurationException;
 import org.junit.jupiter.api.Test;
 
 class RoundBonusReaderTest {
 
   @Test
-  void testGetDataFromFile() {
+  void testGetDataFromFile() throws ConfigurationException {
     RoundBonusReader roundBonusReader = new RoundBonusReader();
     List<List<String>> bonus = roundBonusReader.getDataFromFile("roundBonuses/BTD5_default_level1_to_10.csv");
     assertEquals("10", bonus.get(0).get(0));

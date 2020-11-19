@@ -23,7 +23,7 @@ public class GameMenuController implements GameMenuInterface {
 
   private double currentRate;
 
-  public GameMenuController(Timeline timeline, GameEngineAPI gameEngine){
+  public GameMenuController(Timeline timeline, GameEngineAPI gameEngine, EventHandler<ActionEvent> quitter){
     myTimeline = timeline;
     myGameEngine = gameEngine;
     currentRate = DEFAULT_RATE;
@@ -32,6 +32,7 @@ public class GameMenuController implements GameMenuInterface {
     buttonHandleMap.put(GameButtonType.PauseButton, event -> this.pause());
     buttonHandleMap.put(GameButtonType.SpeedUpButton, event -> this.speedUp());
     buttonHandleMap.put(GameButtonType.SlowDownButton, event -> this.slowDown());
+    buttonHandleMap.put(GameButtonType.QuitButton, quitter);
   }
 
   @Override
@@ -68,4 +69,5 @@ public class GameMenuController implements GameMenuInterface {
     }
     myTimeline.setRate(currentRate);
   }
+
 }

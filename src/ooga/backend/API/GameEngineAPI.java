@@ -1,6 +1,7 @@
 package ooga.backend.API;
 
 import java.util.Map;
+import ooga.backend.ConfigurationException;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.projectile.ProjectilesCollection;
@@ -10,7 +11,7 @@ import ooga.backend.towers.TowersCollection;
 
 public interface GameEngineAPI {
 
-  void update();
+  void update() throws ConfigurationException;
 
   BloonsCollection getCurrentBloonWave();
 
