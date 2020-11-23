@@ -72,7 +72,7 @@ public class WeaponButtonsMenu extends FlowPane {
     ImageView imageView = new ImageView(weaponImage);
     imageView.setFitWidth(IMAGE_SIZE);
     imageView.setFitHeight(IMAGE_SIZE);
-    return new WeaponButton("", imageView, weaponType, weaponNodeHandler, currentLanguage);
+    return new WeaponButton("", imageView, weaponType, currentLanguage);
   }
 
   private Image makeImage(String directory) {

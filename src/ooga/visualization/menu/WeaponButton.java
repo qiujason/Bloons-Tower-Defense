@@ -2,11 +2,8 @@ package ooga.visualization.menu;
 
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
-import ooga.controller.WeaponNodeInterface;
 
 public class WeaponButton extends Button implements Describable {
-
-  private final WeaponNodeInterface weaponNodeHandler;
 
   private final String currentLanguage;
   private WeaponDescription weaponDescription;
@@ -14,9 +11,8 @@ public class WeaponButton extends Button implements Describable {
   private static final double BUTTON_WIDTH = 50.0;
 
   public WeaponButton(String text, ImageView imageView, String weaponType,
-      WeaponNodeInterface weaponNodeHandler, String language) {
+      String language) {
     super(text, imageView);
-    this.weaponNodeHandler = weaponNodeHandler;
     currentLanguage = language;
     setWeaponDescription(weaponType);
     this.setMinHeight(BUTTON_HEIGHT);
