@@ -32,6 +32,13 @@ import ooga.visualization.nodes.ProjectileNode;
 import ooga.visualization.nodes.RoadItemNode;
 import ooga.visualization.nodes.TowerNode;
 
+/**
+ * This class manages the various in-game animations for Bloons, Towers, and Projectiles. It
+ * includes methods for visualizing changes in Animation and detecting collisions between game
+ * objects.  In general, this class includes a Map for each type of object that maps the "backend"
+ * versions of objects used to perform calculations with their corresponding "frontend" object used
+ * for visualization/collision handling.
+ */
 public class AnimationHandler {
 
   public static final double FRAMES_PER_SECOND = 60;
@@ -54,6 +61,20 @@ public class AnimationHandler {
   private final Map<RoadItem, RoadItemNode> myRoadItemsInGame;
   private Map<Tower, Bloon> myShootingTargets;
 
+  /**
+   * Constructor for an AnimationHandler. Initializes the various game objects to be animated and
+   * other factors necessary for performing animations.
+   *
+   * @param levelLayout the JavaFX Group representing the current level
+   * @param bloons      the collection of Bloons to be displayed
+   * @param towers      the collection of Towers currently on screen
+   * @param projectiles the collection of Projectiles currently on screen
+   * @param roadItems   the collection of RoadItems currently on screen
+   * @param bank        the bank used to manage money for the game
+   * @param gameMode    the current GameMode
+   * @param blockSize   the size of a level block in JavaFX
+   * @param animation   the animation used to animate the objects, passed in from the Controller
+   */
   public AnimationHandler(Group levelLayout, BloonsCollection bloons,
       TowersCollection towers, ProjectilesCollection projectiles, RoadItemsCollection roadItems,
       Bank bank, GameMode gameMode, double blockSize, Timeline animation) {
@@ -73,6 +94,9 @@ public class AnimationHandler {
     this.bank = bank;
   }
 
+  /**
+   * Used to add BloonNodes into the game from the current BloonsCollection, myBloons
+   */
   public void addBloonstoGame() {
     GamePieceIterator<Bloon> iterator = myBloons.createIterator();
     while (iterator.hasNext()) {
@@ -87,6 +111,9 @@ public class AnimationHandler {
     }
   }
 
+  /**
+   * Used to add ProjectileNodes into the game from the current ProjectileCollection, myProjectiles
+   */
   public void addProjectilestoGame() {
     GamePieceIterator<Projectile> iterator = myProjectiles.createIterator();
     while (iterator.hasNext()) {
@@ -103,6 +130,10 @@ public class AnimationHandler {
     }
   }
 
+  /**
+   * Performs a frame of animation by calling the animate functions for each type of object and
+   * interaction
+   */
   public void animate() {
     animateTowers();
     animateProjectiles();
@@ -334,20 +365,43 @@ public class AnimationHandler {
     return bounds.intersects(bloonInGame.getBoundsInParent());
   }
 
+  /**
+   * Adds a tower and corresponding TowerNode into the game
+   *
+   * @param tower       the backend tower object to be added
+   * @param towerInGame the frontend TowerNode to be added
+   */
   public void addTower(Tower tower, TowerNode towerInGame) {
     myTowers.add(tower);
     myTowersInGame.put(tower, towerInGame);
   }
 
+  /**
+   * Adds a RoadItem and corresponding RoadItemNode into the game
+   *
+   * @param item       the backend RoadItem object to be added
+   * @param roadInGame the frontend RoadItemNode to be added
+   */
   public void addRoadItem(RoadItem item, RoadItemNode roadInGame) {
     myRoadItems.add(item);
     myRoadItemsInGame.put(item, roadInGame);
   }
 
+  /**
+   * Gets the corresponding frontend TowerNode associated with a backend Tower object
+   *
+   * @param tower the Tower of interest
+   * @return the corresponding TowerNode
+   */
   public TowerNode getNodeFromTower(Tower tower) {
     return myTowersInGame.get(tower);
   }
 
+  /**
+   * Gets the corresponding backend Tower object associated with a frontend TowerNode
+   * @param towerInGame the TowerNode of interest
+   * @return the corresponding Tower
+   */
   public Tower getTowerFromNode(TowerNode towerInGame) {
     Tower tower = null;
     for (Entry<Tower, TowerNode> entry : myTowersInGame.entrySet()) {
@@ -358,60 +412,126 @@ public class AnimationHandler {
     return tower;
   }
 
+  /**
+   * Removes a Tower and its TowerNode from the game
+   * @param tower the tower to be removed
+   * @param towerInGame the TowerNode to be removed
+   */
   public void removeTower(Tower tower, TowerNode towerInGame) {
     myTowers.remove(tower);
     myTowersInGame.remove(tower, towerInGame);
   }
 
+  /**
+   * Gets the Map of Bloons and their BloonNodes currently in the game
+   * @return the current mapping of Bloons to BloonNodes
+   */
   public Map<Bloon, BloonNode> getMyBloonsInGame() {
     return myBloonsInGame;
   }
 
+  /**
+   * Gets the Map of Projectiles and their ProjectileNodes currently in the game
+   * @return the current mapping of Projectiles to ProjectileNodes
+   */
   public Map<Projectile, ProjectileNode> getMyProjectilesInGame() {
     return myProjectilesInGame;
   }
 
+  /**
+   * Gets the Map of Towers and their TowerNodes currently in the game
+   * @return the current mapping of Towers to TowerNodes
+   */
   public Map<Tower, TowerNode> getMyTowersInGame() {
     return myTowersInGame;
   }
 
+  /**
+   * Gets the Map of RoadItems and their RoadItemNodes currently in the game
+   * @return the current mapping of RoadItems to RoadItemNodes
+   */
   public Map<RoadItem, RoadItemNode> getMyRoadItemsInGame() {
     return myRoadItemsInGame;
   }
 
+  /**
+   * Sets the AnimationHandler's BloonsCollection to the given collection
+   *
+   * @param bloonWave the new BloonsCollection
+   */
   public void setBloonWave(BloonsCollection bloonWave) {
     myBloons = bloonWave;
   }
 
+  /**
+   * Sets the AnimationHandler's TowersCollection to the given collection
+   *
+   * @param towers the new TowersCollection
+   */
   public void setTowers(TowersCollection towers) {
     this.myTowers = towers;
   }
 
+  /**
+   * Sets the AnimationHandler's ProjectilesCollection to the given collection
+   *
+   * @param projectiles the new ProjectilesCollection
+   */
   public void setProjectiles(ProjectilesCollection projectiles) {
     this.myProjectiles = projectiles;
   }
 
+  /**
+   * Gets the current towers in game
+   *
+   * @return the current TowersCollection
+   */
   public TowersCollection getTowers() {
     return myTowers;
   }
 
+  /**
+   * Gets the current projectiles in game
+   *
+   * @return the current ProjectilesCollection
+   */
   public ProjectilesCollection getProjectiles() {
     return myProjectiles;
   }
 
+  /**
+   * Gets the current animation used for animating game objects
+   *
+   * @return the current animation
+   */
   public Timeline getAnimation() {
     return myAnimation;
   }
 
+  /**
+   * Sets the map of Towers to their current Bloon target
+   *
+   * @param shootingTargets the new targets for each Tower
+   */
   public void setShootingTargets(
       Map<Tower, Bloon> shootingTargets) {
     this.myShootingTargets = shootingTargets;
   }
 
+  /**
+   * Gets the current RoadTimes in game
+   *
+   * @return the current RoadItemsCollection
+   */
   public RoadItemsCollection getRoadItems() {
     return myRoadItems;
   }
 
+  /**
+   * Sets the AnimationHandler's RoadItemsCollection to the given collection
+   *
+   * @param roadItems the new RoadItemsCollection
+   */
   public void setRoadItems(RoadItemsCollection roadItems) {
     myRoadItems = roadItems;
   }

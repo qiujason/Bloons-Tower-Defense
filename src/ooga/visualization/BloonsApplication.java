@@ -31,6 +31,11 @@ import ooga.visualization.menu.GameMenu;
 import ooga.visualization.menu.MenuPane;
 import ooga.visualization.menu.WeaponButtonsMenu;
 
+/**
+ * BloonsApplication is used to manage the visualization of the various menus in the game.  In
+ * particular it manages different Windows classes and switches between them when necessary. This
+ * class also visualizes a Layout, or map, for a given level.
+ */
 public class BloonsApplication {
 
   public static final ResourceBundle MENU_RESOURCES = ResourceBundle
@@ -88,6 +93,13 @@ public class BloonsApplication {
   private GameMode myGameMode;
   private Bank myBank;
 
+  /**
+   * BloonsApplication constructor which initializes the level start button, language, and
+   * stylesheet with which to start the level
+   *
+   * @param startLevelButton Passed in by a controller in order to signal to the controller when a
+   *                         level has begun
+   */
   public BloonsApplication(Button startLevelButton) {
     myLevelStartButton = startLevelButton;
     myCurrentLanguage = MENU_RESOURCES.getString("DefaultLanguage");
@@ -103,6 +115,11 @@ public class BloonsApplication {
             + myCurrentLanguage);
   }
 
+  /**
+   * Starts the BloonsApplication by setting up and showing a scene and initializing a start window
+   *
+   * @param mainStage the stage passed in by the Controller for the BloonsApplication to display.
+   */
   public void startApplication(Stage mainStage) {
     myStage = mainStage;
     BorderPane menuLayout = new BorderPane();
@@ -146,6 +163,10 @@ public class BloonsApplication {
     return windowChangeButtons;
   }
 
+  /**
+   * This method switches to the game type and level selection window. This method can be called
+   * upon when quitting from a game, or when clicking the start button on the main menu
+   */
   public void switchToSelectionWindow() {
     Button toStartWindow = new Button();
     Button toGameWindow = new Button();
@@ -166,6 +187,20 @@ public class BloonsApplication {
     loadLevel(mySelectionWindow.getLevelOptions().getValue() + ".csv");
   }
 
+  /**
+   * This method is used to pass in various game objects from the Controller to BloonsApplication.
+   *
+   * @param layout               the current level layout
+   * @param bloons               a list of bloons for this level
+   * @param towers               the list of purchasable towers
+   * @param projectiles          a list of projectiles used in the level
+   * @param roadItems            a list of purchasable road items
+   * @param bank                 the bank used for managing funds during the game
+   * @param animation            the animation managing bloon, tower, and projectile movement
+   * @param gameMenuController   the object used to represent the game control menu (pause, play,
+   *                             quit buttons, etc.)
+   * @param weaponBankController the object used to represent the tower-selection menu
+   */
   public void initializeGameObjects(Layout layout, BloonsCollection bloons,
       TowersCollection towers, ProjectilesCollection projectiles, RoadItemsCollection roadItems,
       Bank bank,
@@ -276,11 +311,18 @@ public class BloonsApplication {
     level.getChildren().add(myMenuPane);
   }
 
+  /**
+   * Used to set the game window to full screen
+   */
   public void fullScreen() {
     myStage.setFullScreen(true);
     myStage.show();
   }
 
+  /**
+   * Displays the player's current health
+   * @param currentHealth the current health obtained from the Controller
+   */
   public void displayCurrentHealth(int currentHealth) {
     myLevel.getChildren().remove(myHealthText);
     myHealthText = new Text(myMenuButtonNames.getString("Health") + currentHealth);
@@ -288,6 +330,10 @@ public class BloonsApplication {
     setupGameStat(myHealthText);
   }
 
+  /**
+   * Displays the player's current money
+   * @param currentMoney the current money obtained from the Controller
+   */
   public void displayCurrentMoney(int currentMoney) {
     myLevel.getChildren().remove(myMoneyText);
     myMoneyText = new Text(myMenuButtonNames.getString("Money") + currentMoney);
@@ -295,6 +341,10 @@ public class BloonsApplication {
     setupGameStat(myMoneyText);
   }
 
+  /**
+   * Displays the game's current round
+   * @param currentRound the game's current round obtained from the Controller
+   */
   public void displayCurrentRound(int currentRound) {
     myLevel.getChildren().remove(myRoundText);
     myRoundText = new Text(myMenuButtonNames.getString("Round") + currentRound);
@@ -310,37 +360,71 @@ public class BloonsApplication {
     myLevel.getChildren().add(gameStat);
   }
 
+  /**
+   * Displays the end-of-round message
+   */
   public void endRound() {
     new AlertHandler(myApplicationMessages.getString("RoundEndHeader"),
         myApplicationMessages.getString("RoundEndMessage"));
   }
 
+  /**
+   * Displays a message when the current game and all its rounds have been completed successfully
+   */
   public void winGame() {
     new AlertHandler(myApplicationMessages.getString("GameEndHeader"),
         myApplicationMessages.getString("GameEndMessage"));
   }
 
+  /**
+   * Displays a message when the game is lost
+   */
   public void loseGame() {
     new AlertHandler(myApplicationMessages.getString("GameLossHeader"),
         myApplicationMessages.getString("GameLossMessage"));
   }
 
+  /**
+   * Gets the current game mode, which can be one of any of the GameMode enums
+   *
+   * @return the current game mode
+   */
   public GameMode getMyGameMode() {
     return myGameMode;
   }
 
+  /**
+   * Gets the name of the csv file of the current level
+   *
+   * @return the current level
+   */
   public String getCurrentLevel() {
     return myCurrentLevel;
   }
 
+  /**
+   * Returns a ResourceBundle with the names for the game's menu buttons
+   *
+   * @return the current menu button names
+   */
   public ResourceBundle getMenuButtonNames() {
     return myMenuButtonNames;
   }
 
+  /**
+   * Gives a JavaFX Pane for which includes the blocks for a current level
+   *
+   * @return the current level as a Pane
+   */
   public Pane getLevel() {
     return myLevel;
   }
 
+  /**
+   * Gives the AnimationHandler object currently used for managing the level's animations
+   *
+   * @return the current AnimationHandler
+   */
   public AnimationHandler getMyAnimationHandler() {
     return myAnimationHandler;
   }

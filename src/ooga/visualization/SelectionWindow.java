@@ -21,6 +21,12 @@ import javafx.scene.text.Text;
 import ooga.AlertHandler;
 import ooga.backend.gameengine.GameMode;
 
+/**
+ * This class implements a SelectionWindow, which is the Window between the startup screen
+ * (StartWindow) and the actual game. This Window allows a user to select their desired game mode
+ * and level, see a photo and description of the level, and start the game or return to the start
+ * screen.
+ */
 public class SelectionWindow implements Window {
 
   private final Scene myScene;
@@ -33,6 +39,14 @@ public class SelectionWindow implements Window {
   private GameMode myGameMode;
   private ComboBox<String> myLevelOptions;
 
+  /**
+   * Constructor for SelectionWindow.  Initializes the Scene and ResourceBundles needed to visualize
+   * the Window.
+   *
+   * @param scene the Scene object of the calling application
+   * @param menuButtonNames     ResourceBundle with the current names for menu buttons
+   * @param applicationMessages ResourceBundle including error messages for the application
+   */
   public SelectionWindow(Scene scene, ResourceBundle menuButtonNames,
       ResourceBundle applicationMessages) {
     myScene = scene;
@@ -40,6 +54,9 @@ public class SelectionWindow implements Window {
     myApplicationMessages = applicationMessages;
   }
 
+  /**
+   * @see Window#displayWindow(List)
+   */
   @Override
   public void displayWindow(List<Button> windowChangeButtons) {
     myBackButton = windowChangeButtons.get(0);
@@ -62,6 +79,9 @@ public class SelectionWindow implements Window {
     myScene.setRoot(myLevelSelectScreen);
   }
 
+  /**
+   * @see Window#setupWindowButtons()
+   */
   @Override
   public void setupWindowButtons() {
     ComboBox<GameMode> gameModeOptions = initializeGameModeOptions();
@@ -204,10 +224,20 @@ public class SelectionWindow implements Window {
     return gameModes;
   }
 
+  /**
+   * Gets the level options for the application as a ComboBox
+   *
+   * @return the ComboBox of level options for the game
+   */
   public ComboBox<String> getLevelOptions() {
     return myLevelOptions;
   }
 
+  /**
+   * Gets the current selected GameMode before a level is loaded, which can be any of the enumerated types in GameMode
+   *
+   * @return the GameMode currently selected in the Window
+   */
   public GameMode getGameMode() {
     return myGameMode;
   }

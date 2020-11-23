@@ -17,6 +17,11 @@ import javafx.stage.Stage;
 import ooga.AlertHandler;
 import ooga.controller.Controller;
 
+/**
+ * This class implements a StartWindow, which is first window seen when the application is started.
+ * This window includes buttons to set language, style, start a game in a new window, or proceed to
+ * the level select screen (SelectionWindow)
+ */
 public class StartWindow implements Window {
 
   Scene myScene;
@@ -28,6 +33,16 @@ public class StartWindow implements Window {
   String myCurrentStylesheet;
   HBox myButtonGroup;
 
+  /**
+   * Constructor for a StartWindow. Initializes the Scene, ResourcesBundles, and current
+   * language/style necessary to properly visualize the Window.
+   *
+   * @param scene               the Scene object of the calling application
+   * @param menuButtonNames     ResourceBundle with the current names for menu buttons
+   * @param applicationMessages ResourceBundle including error messages for the application
+   * @param currentLanguage     the current language of the game
+   * @param currentStylesheet   the current style for the game
+   */
   public StartWindow(Scene scene, ResourceBundle menuButtonNames,
       ResourceBundle applicationMessages, String currentLanguage, String currentStylesheet) {
     myScene = scene;
@@ -37,6 +52,9 @@ public class StartWindow implements Window {
     myCurrentStylesheet = currentStylesheet;
   }
 
+  /**
+   * @see Window#displayWindow(List)
+   */
   @Override
   public void displayWindow(List<Button> windowChangeButtons) {
     myStartButton = windowChangeButtons.get(0);
@@ -54,6 +72,9 @@ public class StartWindow implements Window {
     myScene.setRoot(menu);
   }
 
+  /**
+   * @see Window#setupWindowButtons()
+   */
   @Override
   public void setupWindowButtons() {
     myStartButton.setText(myMenuButtonNames.getString("Start"));
@@ -134,18 +155,38 @@ public class StartWindow implements Window {
     buttonGroup.getChildren().add(styleOptions);
   }
 
+  /**
+   * Gets the current menu button names for the Window
+   *
+   * @return ResourceBundle for the current menu button names
+   */
   public ResourceBundle getMenuButtonNames() {
     return myMenuButtonNames;
   }
 
+  /**
+   * Gets the current application error messages for the Window
+   *
+   * @return ResourceBundle for the current application errors
+   */
   public ResourceBundle getApplicationMessages() {
     return myApplicationMessages;
   }
 
+  /**
+   * Gets the current language of the Window
+   *
+   * @return the current language
+   */
   public String getCurrentLanguage() {
     return myCurrentLanguage;
   }
 
+  /**
+   * Gets the current style of the Window
+   *
+   * @return the current style
+   */
   public String getMyCurrentStylesheet() {
     return myCurrentStylesheet;
   }
