@@ -12,6 +12,11 @@ import ooga.backend.bloons.special.CamoBloon;
 import ooga.backend.bloons.special.RegenBloon;
 import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.bloons.types.Specials;
+import ooga.backend.towers.Tower;
+import ooga.backend.towers.TowerType;
+import ooga.backend.towers.singleshottowers.SingleProjectileShooter;
+import ooga.visualization.animationhandlers.AnimationHandler;
+import ooga.visualization.nodes.TowerNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -141,6 +146,13 @@ public class SpecialBloonsTest {
       spawnedBloons[0].update();
     }
     assertEquals(chain.getBloonsTypeRecord("PINK"), (spawnedBloons[0]).getBloonsType());
+  }
+
+  @Test
+  void testSpecialBloonsBugTest() throws ConfigurationException {
+    Bloon camoBloon = new CamoBloonsFactory().createBloon(chain.getBloonsTypeRecord("RED"), 0, 0, 0, 0);
+    Bloon[] bloons = camoBloon.shootBloon();
+    assertTrue(bloons[0].isDead());
   }
 
 }

@@ -27,7 +27,7 @@ public class BloonNode extends GamePieceNode {
     Image towerImage = null;
     try {
       StringBuilder imageName = new StringBuilder(bloonType.name());
-      if (bloonType.specials() != Specials.None && !bloonType.name().equals("DEAD")) {
+      if (bloonType.specials() != Specials.None) {
         imageName.append("_").append(bloonType.specials().name().toUpperCase());
       }
       towerImage = new Image(String.valueOf(getClass().getResource(myBloonImages.getString(
