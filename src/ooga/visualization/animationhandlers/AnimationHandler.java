@@ -116,6 +116,7 @@ public class AnimationHandler {
     addBloonstoGame();
     for (Bloon bloon : myBloonsInGame.keySet()) {
       BloonNode bloonNode = myBloonsInGame.get(bloon);
+      bloonNode.updateBloonType(bloon.getBloonsType());
       if (bloon.isDead()) {
         myLevelLayout.getChildren().remove(bloonNode);
       }
