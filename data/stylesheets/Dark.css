@@ -29,14 +29,15 @@
 
 .list-cell{
   -fx-text-fill: White;
+  -fx-background-color: #3b3232;
 }
 
 .path-block{
-  -fx-fill: Purple;
-  -fx-stroke: Purple;
+  -fx-fill: #654321;
+  -fx-stroke: #654321;
 }
 
 .non-path-block{
-  -fx-fill: Blue;
-  -fx-stroke: Blue
+  -fx-fill: DarkGreen;
+  -fx-stroke: DarkGreen;
 }
