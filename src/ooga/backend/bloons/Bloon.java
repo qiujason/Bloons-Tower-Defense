@@ -92,7 +92,7 @@ public class Bloon extends GamePiece implements BloonsAPI {
 
   @Override
   public boolean isDead() {
-    return bloonsType == bloonsType.chain().getBloonsTypeRecord("DEAD");
+    return bloonsType.name().equals("DEAD");
   }
 
   public void slowDown() {
