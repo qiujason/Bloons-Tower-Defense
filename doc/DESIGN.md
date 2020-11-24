@@ -8,9 +8,10 @@ then moved to front-end. Created Controller class with Jack and Jason via pair-p
 created GameEngine class, visualized bloon movement on front end and connected it back-end data 
 structures, implemented multiple game modes and Bank in GameEngine.   
 Ann-shine Wu
-Eddie - Implemented menu and in-game buttons, as well as their functionalities. Implemented player 
+Eddie - Implemented in-game buttons, as well as their functionalities. Implemented player 
 GUI side menu for towers, implemented individual submenus for each individual tower + provided
 description of each tower, implemented drag + drop of towers onto screen.
+Jack - Front-end visualization, particularly menus and level layouts.
 
 
 ## Design goals
@@ -25,8 +26,8 @@ property file.
 * Adding new buttons
 * levels 
 * bloonwaves
-* languages
-* styles
+* languages - add the corresponding properties files in the languages folder
+* styles - add a new css document in the stylesheets folder
 * images
 * numeric values related to game mechanics
 
@@ -76,6 +77,11 @@ public methods.
     divide rounds.
 * languages
 * styles
+* levels 
+* bloonwaves
+* languages - add a new folder inside of the languages folder in visualization.resources and add the 4 necessary properties files for that language.  Also make sure to add the language
+to the languageList properties file.  Doing this will successfully implement the new language and allow you to select it on the start screen.
+* styles - just add a new css file in the stylesheets folder in data and the new style will be immediately selectable on startup
 * images
     * To add a new image, put the image into the appropriate gamePhotos subdirectory. Then, 
     in the associated properties file, change the image directory to the new image. 
