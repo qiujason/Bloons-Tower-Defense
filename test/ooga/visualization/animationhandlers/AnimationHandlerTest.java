@@ -217,7 +217,7 @@ class AnimationHandlerTest extends DukeApplicationTest {
       Set<Bloon> currentBloons = animationHandler.getMyBloonsInGame().keySet();
       for (Bloon bloon : currentBloons) {
         assertEquals(new Image(String
-                .valueOf(getClass().getResource("/gamePhotos/bloonPhotos/BLUE_REGROWTH.png").toURI()))
+                .valueOf(getClass().getResource("/gamePhotos/bloonPhotos/RED_REGROWTH.png").toURI()))
                 .getUrl(),
             animationHandler.getMyBloonsInGame().get(bloon).findImage().getImage().getUrl());
       }

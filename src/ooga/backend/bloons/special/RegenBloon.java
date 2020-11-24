@@ -24,8 +24,9 @@ public class RegenBloon extends SpecialBloon {
     setBloonsType(newRegenType);
     this.originalType = originalType;
     ResourceBundle gameMechanics = ResourceBundle.getBundle(RESOURCE_BUNDLE_PATH);
-    this.fullTimer = Integer.parseInt(gameMechanics.getString("RegrowthTimer"));
-    this.timer = fullTimer * (int)AnimationHandler.FRAMES_PER_SECOND;
+    this.fullTimer = Integer.parseInt(gameMechanics.getString("RegrowthTimer"))
+        * (int)AnimationHandler.FRAMES_PER_SECOND;
+    this.timer = fullTimer;
   }
 
   @Override
