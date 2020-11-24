@@ -3,7 +3,13 @@
 
 ## Team Roles and Responsibilities
 
-Jason -
+Jason - Implemented all Bloon related classes, APIs, and design patterns. I designed the APIs for all game pieces
+and bloons. I used record class and property files to represent all bloon types in the game. I also
+created the ability to make special bloons, made the regen and camo special bloons, and allowed users to input
+special bloons by creating a bloon reader key and helping write part of the bloon reader class to read in
+special bloons. I created the design patterns used by my teammates, namely the collection and iterator
+classes and APIs in addition to the factory classes. Finally, I helped write part of the controller class
+when connecting the backend to the front end.
 
 Franklin - Implemented Reader class + its corresponding hierarchy; LayoutBlock, Layout in backend,
 then moved to front-end. Created Controller class with Jack and Jason via pair-programming,
@@ -64,7 +70,17 @@ public methods.
 
 #### Easy to Add Features
 * Adding new bloons 
+    * To add a new bloon, you have to add the name to the Order found within Bloon property file. 
+    Additionally, you have to add the bloon as a key and write in its Red Bloon Equivalent (RBE strength),
+    its relative speed, its next bloon spawn after killed, and the number of bloons to be spawned after
+    killed. The order has to make sense or else the program will throw an error. Finally, you have to
+    add in an image for the bloon within Bloon images property file.
 * Adding new special bloons
+    * To add a special bloon, you have to create a class that extends SpecialBloon class. This class
+    when extended, will ensure your special bloon will be incorporated within the game. Then, you
+    can override any methods needed in the bloons class to make the special bloon functionality.
+    Finally, you should add in special bloon images for all bloon colors within Bloon images properties
+    file.
 * Adding new towers
 * Adding new buttons
     * If there are additional weapon types (i.e additional towers and road items), to add their
