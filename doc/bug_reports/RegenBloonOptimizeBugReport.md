@@ -22,3 +22,5 @@ None (animation bug)
 
 Run the same tests as the Regen Bloon bug report except overload it with a lot of bloons
 and test to see that the runtime of it is less than a certain number of milliseconds.
+The likely fix is to only update bloons node whenever bloons type changes as opposed to every
+time it is called.
