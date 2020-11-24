@@ -28,11 +28,8 @@ Jack - Front-end visualization, particularly menus and level layouts.
 ## Design goals
 
 #### What Features are Easy to Add
-* Adding new bloons - bloon types can be easily added in through the Bloons property file. To add
-a new bloon, 
-* Adding new special bloons - special bloon types can be easily added in by creating a class that extends
-the special bloon class and is denoted by a symbol that is represented in the Bloon Reader Key
-property file. 
+* Adding new bloons
+* Adding new special bloons
 * Adding new towers
 * Adding new buttons
 * levels 
