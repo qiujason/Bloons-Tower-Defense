@@ -6,6 +6,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import ooga.backend.towers.TowerType;
 
+/**
+ * This class extends a VBox which contains the description of a button. The name, cost, and short
+ * description of the proper button.
+ */
 public class WeaponDescription extends VBox {
 
   private static final String TOWER_COSTS = "towervalues/TowerBuyValues";
@@ -22,6 +26,13 @@ public class WeaponDescription extends VBox {
   private final ResourceBundle itemCosts = ResourceBundle.getBundle(ITEM_COSTS);
   private ResourceBundle descriptionResource;
 
+  /**
+   * Constructor that takes the type of weapon and language to create and add the name, cost,
+   * and short description based on the information in the properties files
+   *
+   * @param weaponType the type of weapon that is being described
+   * @param language the language that the game is set in
+   */
   public WeaponDescription(String weaponType, String language) {
     initializeResourceBundle(language);
     nameText(weaponType);
