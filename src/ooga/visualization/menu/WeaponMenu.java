@@ -6,9 +6,12 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
 import ooga.backend.towers.ShootingChoice;
-import ooga.controller.WeaponNodeHandler;
+import ooga.controller.WeaponNodeInterface;
 import ooga.visualization.nodes.TowerNode;
 
+/**
+ * This class holds the menu for individual towers for upgrades, shooting choices, and selling
+ */
 public class WeaponMenu extends FlowPane {
 
   private static final String RESOURCE_DIRECTORY = "ooga.visualization.resources.languages.";
@@ -23,7 +26,16 @@ public class WeaponMenu extends FlowPane {
   private ResourceBundle menuProperties;
   private ShootingChoiceBox shootingChoiceBox = null;
 
-  public WeaponMenu(TowerNode tower, WeaponNodeHandler weaponNodeHandler, String language) {
+  /**
+   * Constructor that creates the WeaponMenu for the TowerNode it should be connected to. Makes
+   * all of the buttons and connects the functionality from the WeaponNodeInterface.
+   *
+   * @param tower the selected TowerNode that the WeaponMenu should be connected to
+   * @param weaponNodeHandler the WeaponNodeInterface holding the functionality the WeaponMenu buttons
+   *                          should perform
+   * @param language the language that the game is set in
+   */
+  public WeaponMenu(TowerNode tower, WeaponNodeInterface weaponNodeHandler, String language) {
     initializeResourceBundle(language);
     this.setPrefWrapLength(200);
     makeButton(menuProperties.getString(UPGRADE_RANGE), event -> weaponNodeHandler
