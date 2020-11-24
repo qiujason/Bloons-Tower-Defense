@@ -14,7 +14,7 @@ public class PropertyFileValidator {
   private boolean ifValid;
 
   /**
-   * Creatse an instance of the class based on a properties file and a Set of required keys
+   * Creates an instance of the class based on a properties file and a Set of required keys
    * @param propertyFile
    * @param requiredKeys
    */

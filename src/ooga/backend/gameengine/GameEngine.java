@@ -71,6 +71,9 @@ public class GameEngine implements GameEngineAPI {
     this.gameMode = gameMode;
   }
 
+  /**
+   * Adds a queued bloon onto the map.
+   */
   private void addQueuedBloon(){
     GamePieceIterator<Bloon> queueIterator = queuedBloons.createIterator();
     if (queueIterator.hasNext()) {
@@ -114,11 +117,19 @@ public class GameEngine implements GameEngineAPI {
     currentBloonWave.updateAll();
   }
 
+  /**
+   * Helper method that helps to ensure that a bloon only changes direction in the middle of the block
+   * @param bloon the bloon that is being moved
+   * @param block the block that the bloon is currently on
+   */
   private void setBloonSides(Bloon bloon, LayoutBlock block) {
     myBloonSidesX.put(bloon, -0.5 * block.getDx());
     myBloonSidesY.put(bloon, -0.5 * block.getDy());
   }
 
+  /**
+   * helper method to remove dead bloons from the current BloonsCollection
+   */
   private void removeDeadBloons() {
     GamePieceIterator<Bloon> bloonsIterator = currentBloonWave.createIterator();
     while (bloonsIterator.hasNext()) {
@@ -129,11 +140,19 @@ public class GameEngine implements GameEngineAPI {
     }
   }
 
+  /**
+   * The nextwave method for the Normal game mode
+   * @throws ConfigurationException
+   */
   private void nextWaveNormal() throws ConfigurationException {
     round++;
     queuedBloons = allBloonWaves.get(round).copyOf(allBloonWaves.get(round));
   }
 
+  /**
+   * Nextwave method for the Infinite game mode
+   * @throws ConfigurationException if the new bloon wave round cannot be found and loaded in
+   */
   private void nextWaveInfinite() throws ConfigurationException {
     round++;
     Random rand = new Random();
@@ -141,6 +160,10 @@ public class GameEngine implements GameEngineAPI {
     queuedBloons = allBloonWaves.get(randomRound).copyOf(allBloonWaves.get(randomRound));
   }
 
+  /**
+   * Next wave method for the Sandbox game mode
+   * @throws ConfigurationException
+   */
   private void nextWaveSandbox() throws ConfigurationException {
     nextWaveNormal();
   }
@@ -150,6 +173,11 @@ public class GameEngine implements GameEngineAPI {
     queuedBloons = allBloonWaves.get(STARTING_ROUND);
   }
 
+  /**
+   * Helper method to iterate through the TowersCollections and have each tower shoot at a bloon
+   * if it can.
+   * @throws ConfigurationException if, when shooting, the correct dart type is not found.
+   */
   private void shootBloons() throws ConfigurationException {
     GamePieceIterator<Tower> towerIterator = towers.createIterator();
     while (towerIterator.hasNext()) {
@@ -162,13 +190,15 @@ public class GameEngine implements GameEngineAPI {
   }
 
   /**
-   * assumes all projectiles on screen should be moved
+   * Moves all of the current on-screen projectiles.
+   * Assumes all projectiles on screen should be moved
    */
   private void moveProjectiles() {
     removeOffScreenProjectiles();
     projectiles.updateAll();
   }
 
+  //removes projectiles that have gone beyond the boundaries of the layout
   private void removeOffScreenProjectiles() {
     GamePieceIterator<Projectile> projectileIterator = projectiles.createIterator();
     while (projectileIterator.hasNext()) {
@@ -183,6 +213,7 @@ public class GameEngine implements GameEngineAPI {
     }
   }
 
+  //calls the corrent next wave method based on the game mode
   private void nextWave() {
     try {
       Method method = this.getClass()
@@ -196,7 +227,7 @@ public class GameEngine implements GameEngineAPI {
   /**
    * Returns a BloonsCollection object containing the current bloons that exist on the map.
    * Does not include not spawned bloons or dead bloons.
-   * @return BloonsCollection
+   * @return the current bloons on screen as a BloonsCollection
    *
    * Part of the GameEngine API
    */
@@ -207,7 +238,7 @@ public class GameEngine implements GameEngineAPI {
 
   /**
    * Returns a TowersCollection object containing the current existing towers on the map.
-   * @return TowersCollection
+   * @return the current TowersCollection
    *
    * Part of the GameEngine API
    */
@@ -219,7 +250,7 @@ public class GameEngine implements GameEngineAPI {
   /**
    * Returns a ProjectilesCollection containing the current existing projectiles on the map.
    * Does not include Projectiles that have gone off the game window screen
-   * @return Projectiles Collection
+   * @return the current on screen projectiles as a ProjectilesCollection
    *
    * Part of the GameEngine API
    */
@@ -230,7 +261,7 @@ public class GameEngine implements GameEngineAPI {
 
   /**
    * Updates the current TowersCollection to the passed through TowersCollection object.
-   * @param towers
+   * @param towers the updated TowersCollection to be set as the current one
    *
    * Part of the GameEngine API
    */
@@ -241,7 +272,7 @@ public class GameEngine implements GameEngineAPI {
 
   /**
    * Updates the current ProjectilesCollection to the passed through ProjectilesCollection object.
-   * @param projectiles
+   * @param projectiles the updated ProjectilesCollection to be set as the current one
    *
    * Part of the GameEngine API
    */
@@ -254,7 +285,7 @@ public class GameEngine implements GameEngineAPI {
    * Updates all existing game objects on-screen and checks for the game status.
    * This includes moving objects, shooting objects, removing objects, and checking for
    * round-over/win/loss.
-   * @throws ConfigurationException
+   * @throws ConfigurationException if the current dart type is not found when a tower shoots at a bloon
    *
    * Part of the GameEngine API
    */
@@ -267,12 +298,14 @@ public class GameEngine implements GameEngineAPI {
     shootBloons();
   }
 
+  //if the round has ended, the next wave of bloons is loaded in
   private void checkRoundStatus() {
     if (isRoundEnd()) {
       nextWave();
     }
   }
 
+  //spawns queued bloons once every second
   private void spawnBloons() {
     if (spawnTimer == SPAWN_DELAY) {
       addQueuedBloon();
@@ -299,7 +332,7 @@ public class GameEngine implements GameEngineAPI {
    * Specific conditions for round ending are that either lives drops below 0 or all
    * of the rounds have been run through and ended.
    * Will always return false for infinite mode.
-   * @return
+   * @return true if the game has ended.
    *
    * Part of the GameEngine API
    */
@@ -311,7 +344,7 @@ public class GameEngine implements GameEngineAPI {
 
   /**
    * Returns the current round number
-   * @return
+   * @return the current round
    *
    * Part of the GameEngine API
    */
@@ -322,7 +355,7 @@ public class GameEngine implements GameEngineAPI {
 
   /**
    * Returns a Map mapping the tower to the bloon it is targeting.
-   * @return
+   * @return the current Map of shooting targets
    *
    * Part of the GameEngine API
    */
@@ -333,7 +366,7 @@ public class GameEngine implements GameEngineAPI {
 
   /**
    * Returns a RoadItemsCollection containing the existing RoadItems on the screen
-   * @return
+   * @return the current RoadItemsCollection
    *
    * Part of the GameEngine API
    */
@@ -344,7 +377,7 @@ public class GameEngine implements GameEngineAPI {
 
   /**
    * Updates the current RoadItemsCollection to the passed through RoadItemsCollection object.
-   * @param update
+   * @param update the updated RoadItemsCollection to be set as the current oen
    *
    * Part of the GameEngine API
    */
@@ -355,7 +388,7 @@ public class GameEngine implements GameEngineAPI {
 
   /**
    * Returns the current number of lives remaining.
-   * @return
+   * @return the current number of lives
    *
    * Part of the GameEngine API
    */
