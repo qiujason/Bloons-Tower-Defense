@@ -5,6 +5,7 @@
 Jason -
 Franklin - 
 Ann-shine Wu
+Jack - Front-end visualization, particularly menus and level layouts.
 
 
 ## Design goals
@@ -17,8 +18,8 @@ property file.
 * Adding new towers
 * levels 
 * bloonwaves
-* languages
-* styles
+* languages - add the corresponding properties files in the languages folder
+* styles - add a new css document in the stylesheets folder
 * images
 * numeric values related to game mechanics
 
@@ -52,8 +53,9 @@ public methods.
 * Adding new towers
 * levels 
 * bloonwaves
-* languages
-* styles
+* languages - add a new folder inside of the languages folder in visualization.resources and add the 4 necessary properties files for that language.  Also make sure to add the language
+to the languageList properties file.  Doing this will successfully implement the new language and allow you to select it on the start screen.
+* styles - just add a new css file in the stylesheets folder in data and the new style will be immediately selectable on startup
 * images
 * numeric values related to game mechanics
 
