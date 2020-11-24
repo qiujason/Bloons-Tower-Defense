@@ -31,6 +31,11 @@ import ooga.backend.towers.TowerType;
 import ooga.visualization.BloonsApplication;
 import ooga.visualization.animationhandlers.AnimationHandler;
 
+/**
+ * The Controller class facilitates all interactions between the front-end and back-end classes.
+ * This class starts the program and initializes the GameEngine and the BloonsApplication classes,
+ * which are the primary hub for the back-end and front-end, respectively.
+ */
 public class Controller extends Application {
 
   private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResource");
@@ -61,6 +66,11 @@ public class Controller extends Application {
   private Bank bank;
   private KeyFrame oldKeyFrame;
 
+  /**
+   * The start method of the program, during which data file validation occurs and the program
+   * is initialized.
+   * @param primaryStage the stage on which the program will be displayed
+   */
   @Override
   public void start(Stage primaryStage) {
     errorResource = ResourceBundle.getBundle("ErrorResource");
@@ -77,6 +87,9 @@ public class Controller extends Application {
     bloonsApplication.startApplication(primaryStage);
   }
 
+  /**
+   * Initializes the level, including the bank, layout, bloon waves, game engine, and menues.
+   */
   private void startLevel() {
     setUpBank();
     initializeLayout();
@@ -100,6 +113,9 @@ public class Controller extends Application {
     myAnimation.getKeyFrames().add(oldKeyFrame);
   }
 
+  /**
+   * Helper method to validate tower property files
+   */
   private void checkTowerPropertyFiles() {
     PropertyFileValidator towerPicsValidator = new PropertyFileValidator(
         "btd_towers/MonkeyPics.properties",
@@ -127,6 +143,9 @@ public class Controller extends Application {
     }
   }
 
+  /**
+   * Helper method that initializes the bank, which takes care of teh economy in the game.
+   */
   public void setUpBank() {
     try {
       towerBuyMap = new TowerValueReader(TOWER_BUY_VALUES_PATH).getMap();
@@ -150,6 +169,10 @@ public class Controller extends Application {
     }
   }
 
+  /**
+   * Helper method that creates the bank
+   * @param roundBonuses the round bonuses for the level, read in via the RoundBonusReader
+   */
   private void createBank(List<List<String>> roundBonuses) {
     int rounds = Integer.parseInt(roundBonuses.get(0).get(0));
     if (roundBonuses.size() == 1) {
@@ -167,10 +190,16 @@ public class Controller extends Application {
     }
   }
 
+  /**
+   * Helper method to initialize the Layout of the level
+   */
   private void initializeLayout() {
     layout = layoutReader.generateLayout(LAYOUTS_PATH + bloonsApplication.getCurrentLevel());
   }
 
+  /**
+   * Helper method that initializes the bloon types
+   */
   private void initializeBloonTypes() {
     try {
       bloonsTypeChain = new BloonsTypeChain(BLOONS_TYPE_PATH);
@@ -180,6 +209,9 @@ public class Controller extends Application {
     }
   }
 
+  /**
+   * Helper method that initializes all of the bloon waves of the level
+   */
   private void initializeBloonWaves() {
     try {
       allBloonWaves = bloonReader.generateBloonsCollectionMap(bloonsTypeChain,
@@ -190,6 +222,9 @@ public class Controller extends Application {
     }
   }
 
+  /**
+   * Initializes the GameEngine for the level
+   */
   private void startGameEngine() {
     try {
       gameEngine = new GameEngine(bloonsApplication.getMyGameMode(), layout, allBloonWaves);
@@ -199,6 +234,10 @@ public class Controller extends Application {
     }
   }
 
+  /**
+   * The step method, which updates both the backend and frontend and facilitates communication
+   * between them.
+   */
   private void step() {
     animationHandler = bloonsApplication.getMyAnimationHandler();
     updateGameEngineInfo();
@@ -215,12 +254,19 @@ public class Controller extends Application {
   }
 
 
+  /**
+   * Helper method that updates the game displays based on the backend values.
+   * Updates Bank display, Round display, and Health display
+   */
   private void updateDisplays() {
     bloonsApplication.displayCurrentMoney(bank.getCurrentMoney());
     bloonsApplication.displayCurrentRound(gameEngine.getRound() + 1);
     bloonsApplication.displayCurrentHealth(gameEngine.getLives());
   }
 
+  /**
+   * Passes information from backend to front end
+   */
   private void updateAnimationHandlerInfo() {
     animationHandler.setBloonWave(gameEngine.getCurrentBloonWave());
     animationHandler.setShootingTargets(gameEngine.getShootingTargets());
@@ -229,12 +275,18 @@ public class Controller extends Application {
     animationHandler.setRoadItems(gameEngine.getRoadItems());
   }
 
+  /**
+   * Passes information from frontend to backend
+   */
   private void updateGameEngineInfo() {
     gameEngine.setProjectiles(animationHandler.getProjectiles());
     gameEngine.setTowers(animationHandler.getTowers());
     gameEngine.setRoadItems(animationHandler.getRoadItems());
   }
 
+  /**
+   * Checks to see if the game has been won, lost, or if the round has ended.
+   */
   private void checkGameStatus() {
     if (gameEngine.isGameEnd()) {
       if (gameEngine.getLives() <= 0) {
@@ -250,10 +302,18 @@ public class Controller extends Application {
     }
   }
 
+  /**
+   * Returns the BloonsApplication instance created in this class
+   * @return the current BloonsApplication
+   */
   public BloonsApplication getMyBloonsApplication() {
     return bloonsApplication;
   }
 
+  /**
+   * Returns the GameEngine instance created in this class
+   * @return the current GameEngine
+   */
   public GameEngineAPI getGameEngine() {
     return gameEngine;
   }
