@@ -67,32 +67,15 @@ public methods.
 
 #### Easy to Add Features
 * Adding new bloons 
-    * To add a new bloon, you have to add the name to the Order found within Bloon property file. 
-    Additionally, you have to add the bloon as a key and write in its Red Bloon Equivalent (RBE strength),
-    its relative speed, its next bloon spawn after killed, and the number of bloons to be spawned after
-    killed. The order has to make sense or else the program will throw an error. Finally, you have to
-    add in an image for the bloon within Bloon images property file.
+    * To add a new bloon, you have to add the name to the Order found within Bloon property file. Additionally, you have to add the bloon as a key and write in its Red Bloon Equivalent (RBE strength),its relative speed, its next bloon spawn after killed, and the number of bloons to be spawned after killed. The order has to make sense or else the program will throw an error. Finally, you have to add in an image for the bloon within Bloon images property file.
 * Adding new special bloons
-    * To add a special bloon, you have to create a class that extends SpecialBloon class. This class
-    when extended, will ensure your special bloon will be incorporated within the game. Then, you
-    can override any methods needed in the bloons class to make the special bloon functionality.
-    Finally, you should add in special bloon images for all bloon colors within Bloon images properties
-    file.
+    * To add a special bloon, you have to create a class that extends SpecialBloon class. This class when extended, will ensure your special bloon will be incorporated within the game. Then, you can override any methods needed in the bloons class to make the special bloon functionality. Finally, you should add in special bloon images for all bloon colors within Bloon images properties file.
 * Adding new towers
+    * To add new types towers, you need to add to the TowerType enum and fill out it's radius, shooting speed, shooting rest rate, and whether it is a single shot tower. Then, you can create the functionalities of the tower by extending the Tower abstract class and only override methods you wish to update + override the getTowerType method to return your new enum. To add the tower in the front end, you would need to add corresponding images to the property files.
 * Adding new buttons
-    * If there are additional weapon types (i.e additional towers and road items), to add their
-    button, the only extra data needed by the program is a image for the tower in-game and
-    an image for the tower in the button, and then the button will be created accordingly and all
-    other buttons will be repositioned to accomodate the new button.
+    * If there are additional weapon types (i.e additional towers and road items), to add their button, the only extra data needed by the program is a image for the tower in-game and an image for the tower in the button, and then the button will be created accordingly and all other buttons will be repositioned to accomodate the new button.
 * levels/bloonwaves
-    * To add a new level, create a new level.csv file in the layouts folder in the data folder. Follow
-    the conventions of designing a bloon path (using 0 for non-path blocks, arrows for path blocks to 
-    indicate direction). Note that the game will not work as intended if the path is not constructed
-    so that a bloon will reacn the end of the level. Also note that the level must have a start and end
-    block indicated by * and @, respectively. Then, add the corresponding bloon wave in the bloon_waves
-    file. The two files must be named identically and the new bloon wave should be written according
-    to convention as well, using the appropriate numbers to represent bloons and using ='s to 
-    divide rounds.
+    * To add a new level, create a new level.csv file in the layouts folder in the data folder. Follow the conventions of designing a bloon path (using 0 for non-path blocks, arrows for path blocks to indicate direction). Note that the game will not work as intended if the path is not constructed so that a bloon will reacn the end of the level. Also note that the level must have a start and end block indicated by * and @, respectively. Then, add the corresponding bloon wave in the bloon_waves file. The two files must be named identically and the new bloon wave should be written according to convention as well, using the appropriate numbers to represent bloons and using ='s to  divide rounds.
 * languages
 * styles
 * levels 
@@ -101,8 +84,7 @@ public methods.
 to the languageList properties file.  Doing this will successfully implement the new language and allow you to select it on the start screen.
 * styles - just add a new css file in the stylesheets folder in data and the new style will be immediately selectable on startup
 * images
-    * To add a new image, put the image into the appropriate gamePhotos subdirectory. Then, 
-    in the associated properties file, change the image directory to the new image. 
+    * To add a new image, put the image into the appropriate gamePhotos subdirectory. Then, in the associated properties file, change the image directory to the new image. 
 * numeric values related to game mechanics
 
 #### Other Features not yet Done
