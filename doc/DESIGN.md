@@ -1,5 +1,5 @@
 # Design Final
-### Names - Jason Qiu jq39 Franklin Wu fyw4 Ann-shine Wu aw378 Jack Ellwood jce22 Eddie Kong dk255
+### Names - Jason Qiu jq39 Franklin Wu fyw4 Ann-Shine Wu aw378 Jack Ellwood jce22 Eddie Kong dk255
 
 ## Team Roles and Responsibilities
 
@@ -10,7 +10,7 @@ then moved to front-end. Created Controller class with Jack and Jason via pair-p
 created GameEngine class, visualized bloon movement on front end and connected it back-end data 
 structures, implemented multiple game modes and Bank in GameEngine.   
 
-Ann-shine Wu - Implemented all Towers (5 types of single shot towers, 2 spread shot towers) + corresponding hierarchy + creating 4 different Shooting Choices + Upgrades for Range and Shooting Rest Rate, all Road Items (3 types), all projectiles (4 types), set up Bank, as well constructed APIs for Tower, RoadItems, Bank. Implemented front-end interactions with projectiles, road items, and bloons to detect any collisions and animate popped bloons. Created PropertyFileValidator to validate property files, RoadItemValueReader to read in values for road items, RoundBonusReader to read in various formats of round bonuses, TowerValueReader to read in buy and sell values for towers.
+Ann-Shine Wu - Implemented all Towers (5 types of single shot towers, 2 spread shot towers) + corresponding hierarchy + creating 4 different Shooting Choices + Upgrades for Range and Shooting Rest Rate, all Road Items (3 types), all projectiles (4 types), set up Bank, as well constructed APIs for Tower, RoadItems, Bank. Implemented front-end interactions with projectiles, road items, and bloons to detect any collisions and animate popped bloons. Created PropertyFileValidator to validate property files, RoadItemValueReader to read in values for road items, RoundBonusReader to read in various formats of round bonuses, TowerValueReader to read in buy and sell values for towers.
 
 Eddie - Implemented in-game buttons, as well as their functionalities. Implemented player 
 GUI side menu for towers, implemented individual submenus for each individual tower + provided
