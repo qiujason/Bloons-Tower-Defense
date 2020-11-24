@@ -15,6 +15,11 @@ import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.layout.Layout;
 
+/**
+ * Reader class to read in a bloon waves data file and initializes List of BloonsCollections based
+ * on the data
+ */
+
 public class BloonReader extends Reader {
 
   private static final String FACTORY_FILE_PATH = "ooga.backend.bloons.factory.";
@@ -22,6 +27,11 @@ public class BloonReader extends Reader {
   private static final ResourceBundle BLOON_READER_KEY = ResourceBundle
       .getBundle(RESOURCE_BUNDLE_PATH);
 
+  /**
+   * Returns a List of List of Strings that represent the data read in from the given CSV file
+   * @param fileName the directory of the CSV file to be read
+   * @return a List of List of Strings of the data in the CSV file
+   */
   @Override
   public List<List<String>> getDataFromFile(String fileName) {
     List<String[]> csvData = readFile(fileName);
@@ -32,6 +42,15 @@ public class BloonReader extends Reader {
     return bloonWave;
   }
 
+  /**
+   * Generates a List of BloonCollections that contains all of the rounds of bloon waves for a
+   * given layout
+   * @param chain BloonsTypeChain object to help initialize bloons
+   * @param fileName the directory of the CSV to be read
+   * @param layout the Layout associated with the bloon wave file
+   * @return a List of BloonCollections
+   * @throws ConfigurationException if the data read in does not map to an existing bloon type
+   */
   public List<BloonsCollection> generateBloonsCollectionMap(BloonsTypeChain chain, String fileName,
       Layout layout)
       throws ConfigurationException {
@@ -48,6 +67,7 @@ public class BloonReader extends Reader {
     return listOfBloons;
   }
 
+  //helper method to make the individual BloonsCollection objects
   private BloonsCollection getBloonsCollection(BloonsTypeChain chain, Layout layout,
       List<BloonsCollection> listOfBloons, BloonsCollection currentCollection,
       List<String> specialKeys, List<String> row) throws ConfigurationException {
@@ -60,6 +80,8 @@ public class BloonReader extends Reader {
     return currentCollection;
   }
 
+  //helper method to make the individual Bloons objects (accounting for special bloon types) and
+  //adds it to the BloonsCollection object.
   private void makeBloons(BloonsTypeChain chain, Layout layout, BloonsCollection currentCollection,
       List<String> specialKeys, List<String> row) throws ConfigurationException {
     for (String bloonInfo : row) {
@@ -90,6 +112,7 @@ public class BloonReader extends Reader {
     return specialKeys;
   }
 
+  //helper method to make a normal Bloon object
   private Bloon createBloon(BloonsTypeChain chain, String bloon, Layout layout) {
     int bloonLives = Integer.parseInt(bloon);
     BloonsType bloonType = chain.getBloonsTypeRecord(bloonLives);
@@ -100,6 +123,7 @@ public class BloonReader extends Reader {
         layout.getStartCoordinates()[0] + 0.5, dx, dy);
   }
 
+  //helper method to make a special Bloon object
   private Bloon createSpecialBloon(BloonsTypeChain chain, String bloon, Layout layout,
       String special) throws ConfigurationException {
     Bloon specialBloon = createBloon(chain, bloon, layout);
