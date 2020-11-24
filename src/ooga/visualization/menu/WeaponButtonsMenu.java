@@ -14,9 +14,6 @@ import ooga.backend.roaditems.RoadItemType;
 import ooga.backend.towers.TowerType;
 import ooga.controller.WeaponNodeInterface;
 
-/**
- * This class extends a FlowPane and contains all of the weapon buttons for Towers and RoadItems
- */
 public class WeaponButtonsMenu extends FlowPane {
 
   private final WeaponNodeInterface weaponNodeHandler;
@@ -42,13 +39,7 @@ public class WeaponButtonsMenu extends FlowPane {
   private ResourceBundle alertMessages;
   private List<String> allTypeList;
 
-  /**
-   * Constructor that creates all the WeaponButtons and adds it into this menu.
-   *
-   * @param weaponNodeHandler WeaponNodeInterface that holds the functionality that the WeaponButtons
-   *                          should perform
-   * @param language the language the current game is set in
-   */
+
   public WeaponButtonsMenu(WeaponNodeInterface weaponNodeHandler, String language) {
     this.weaponNodeHandler = weaponNodeHandler;
     currentLanguage = language;
