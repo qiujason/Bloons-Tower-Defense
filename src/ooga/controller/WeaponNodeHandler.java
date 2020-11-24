@@ -31,10 +31,6 @@ import ooga.visualization.nodes.TowerNodeFactory;
 import ooga.visualization.nodes.WeaponNodeFactory;
 import ooga.visualization.nodes.WeaponRange;
 
-/**
- * This class implements the WeaponNodeInterface and contains functionality for most of the in game
- * user inputs.
- */
 public class WeaponNodeHandler implements WeaponNodeInterface {
 
   private final Layout layout;
@@ -63,18 +59,6 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
   private RoadItemFactory roadItemFactory;
   private ItemNodeFactory itemNodeFactory;
 
-  /**
-   * Constructor that initializes the necessary objects to perform the functionality for necessary
-   * user inputs.
-   * @param layout the game Layout
-   * @param blockSize the front end size of each LayoutBlock in the Layout
-   * @param layoutRoot the Group containing all the nodes in the game map
-   * @param menuPane the VBox with all of the in game buttons
-   * @param towersCollection collection of all the Towers in the game
-   * @param menuController the WeaponBankInterface that connects all of user inputs to the Bank
-   * @param animationHandler the AnimationHandler that actually animates all of the in game Nodes
-   * @param language the language selected for the current game.
-   */
   public WeaponNodeHandler(Layout layout, double blockSize,
       Group layoutRoot, VBox menuPane, TowersCollection towersCollection,
       WeaponBankInterface menuController, AnimationHandler animationHandler, String language) {
@@ -93,15 +77,6 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
     initializeFactories();
   }
 
-  /**
-   * Functionality for the user input where the player purchases and places the Tower into the game.
-   * Checks for if the Tower can be made and purchased and then creates the Tower in the backend
-   * and then initializes the corresponding frontend TowerNode with its weapon range and tower menu.
-   * Performs the drag and drop functionality where the tower follows the user's cursor before being
-   * clicked and placed.
-   *
-   * @param towerType the TowerType that has been selected to be made in game
-   */
   @Override
   public void makeWeapon(TowerType towerType) {
     if (canMakeTower) {
@@ -127,14 +102,6 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
     }
   }
 
-  /**
-   * Functionality for the user input where the player purchases and places the road item into the game.
-   * Checks for if the road item can be made and purchased and then creates both the road item in the backend
-   * and the corresponding frontend road item node. Performs the drag and drop functionality where the
-   * road item follows the user's cursor before being clicked and placed.
-   *
-   * @param roadItemType the RoadItemType that has been selected to be made in game
-   */
   @Override
   public void makeRoadWeapon(RoadItemType roadItemType) {
     if (canMakeRoadItem) {
@@ -156,13 +123,6 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
     }
   }
 
-  /**
-   * This method contains the functionality to remove the tower from the game. When the user
-   * clicks on the SellTower button, it removes the Tower from both the backend and front end as well
-   * as performing the proper functionality with the Bank.
-   *
-   * @param towerNode the TowerNode of the Tower being sold.
-   */
   @Override
   public void removeWeapon(TowerNode towerNode) {
     Tower tower = animationHandler.getTowerFromNode(towerNode);
@@ -173,24 +133,12 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
     animationHandler.removeTower(tower, towerNode);
   }
 
-  /**
-   * Method that takes in the TowerNode that has been selected for a shooting rate upgrade and
-   * performs it.
-   *
-   * @param towerNode the TowerNode that has been selected for a shooting rate upgrade
-   */
   @Override
   public void upgradeRate(TowerNode towerNode) {
     Tower tower = animationHandler.getTowerFromNode(towerNode);
     menuController.upgradeRate(tower);
   }
 
-  /**
-   * Method that takes in the TowerNode that has been selected for a range upgrade and
-   * performs it.
-   *
-   * @param towerNode the TowerNode that has been selected for a range upgrade
-   */
   @Override
   public void upgradeRange(TowerNode towerNode) {
     Tower tower = animationHandler.getTowerFromNode(towerNode);
@@ -198,13 +146,6 @@ public class WeaponNodeHandler implements WeaponNodeInterface {
     towerNode.setWeaponRange(tower.getRadius(), blockSize);
   }
 
-  /**
-   * Takes in the TowerNode and the shooting choice that the Player selects and changes the Tower's
-   * shooting priority.
-   *
-   * @param towerNode the selected TowerNode
-   * @param shootingChoice the ShootingChoice that the Player select
-   */
   @Override
   public void setTargetingOption(TowerNode towerNode, ShootingChoice shootingChoice) {
     Tower tower = animationHandler.getTowerFromNode(towerNode);
