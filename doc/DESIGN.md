@@ -34,7 +34,6 @@ a new bloon,
 the special bloon class and is denoted by a symbol that is represented in the Bloon Reader Key
 property file. 
 * Adding new towers
-    * To add new types towers, you need to add to the TowerType enum and fill out it's radius, shooting speed, shooting rest rate, and whether it is a single shot tower. Then, you can create the functionalities of the tower by extending the Tower abstract class and only override methods you wish to update + override the getTowerType method to return your new enum. To add the tower in the front end, you would need to add corresponding images to the property files.
 * Adding new buttons
 * levels 
 * bloonwaves
@@ -75,6 +74,7 @@ public methods.
 * Adding new special bloons
     * To add a special bloon, you have to create a class that extends SpecialBloon class. This class when extended, will ensure your special bloon will be incorporated within the game. Then, you can override any methods needed in the bloons class to make the special bloon functionality. Finally, you should add in special bloon images for all bloon colors within Bloon images properties file.
 * Adding new towers
+    * To add new types towers, you need to add to the TowerType enum and fill out it's radius, shooting speed, shooting rest rate, and whether it is a single shot tower. Then, you can create the functionalities of the tower by extending the Tower abstract class and only override methods you wish to update + override the getTowerType method to return your new enum. To add the tower in the front end, you would need to add corresponding images to the property files.
 * Adding new buttons
     * If there are additional weapon types (i.e additional towers and road items), to add their button, the only extra data needed by the program is a image for the tower in-game and an image for the tower in the button, and then the button will be created accordingly and all other buttons will be repositioned to accomodate the new button.
 * levels/bloonwaves
