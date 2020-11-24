@@ -42,9 +42,11 @@ public class BloonNode extends GamePieceNode {
   }
 
   public void updateBloonType(BloonsType bloonsType) {
-    bloonType = bloonsType;
-    if (!bloonType.name().equals("DEAD")) {
-      setImage();
+    if (bloonsType != bloonType) {
+      bloonType = bloonsType;
+      if (!bloonType.name().equals("DEAD")) {
+        setImage();
+      }
     }
   }
 
