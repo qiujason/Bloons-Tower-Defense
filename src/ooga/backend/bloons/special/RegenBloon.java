@@ -3,6 +3,7 @@ package ooga.backend.bloons.special;
 import java.util.ResourceBundle;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.Specials;
+import ooga.visualization.animationhandlers.AnimationHandler;
 
 public class RegenBloon extends SpecialBloon {
 
@@ -24,7 +25,7 @@ public class RegenBloon extends SpecialBloon {
     this.originalType = originalType;
     ResourceBundle gameMechanics = ResourceBundle.getBundle(RESOURCE_BUNDLE_PATH);
     this.fullTimer = Integer.parseInt(gameMechanics.getString("RegrowthTimer"));
-    this.timer = fullTimer;
+    this.timer = fullTimer * (int)AnimationHandler.FRAMES_PER_SECOND;
   }
 
   @Override
