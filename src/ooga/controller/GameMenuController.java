@@ -12,7 +12,7 @@ import ooga.visualization.menu.GameButtonType;
 
 /**
  * This class implements the GameMenuInterface and codes the functionalities for core in-game menu
- * button functionality such as Play, Pause, and changing the speed or quitting.
+ * button functionality such as Play, Pause, changing the speed and quitting.
  */
 public class GameMenuController implements GameMenuInterface {
 
@@ -41,10 +41,10 @@ public class GameMenuController implements GameMenuInterface {
     myGameEngine = gameEngine;
     currentRate = DEFAULT_RATE;
     buttonHandleMap = new HashMap<>();
-    buttonHandleMap.put(GameButtonType.PlayButton, event -> this.play());
-    buttonHandleMap.put(GameButtonType.PauseButton, event -> this.pause());
-    buttonHandleMap.put(GameButtonType.SpeedUpButton, event -> this.speedUp());
-    buttonHandleMap.put(GameButtonType.SlowDownButton, event -> this.slowDown());
+    buttonHandleMap.put(GameButtonType.PlayButton, event -> play());
+    buttonHandleMap.put(GameButtonType.PauseButton, event -> pause());
+    buttonHandleMap.put(GameButtonType.SpeedUpButton, event -> speedUp());
+    buttonHandleMap.put(GameButtonType.SlowDownButton, event -> slowDown());
     buttonHandleMap.put(GameButtonType.QuitButton, event -> bloonsApp.switchToSelectionWindow());
   }
 
@@ -79,7 +79,7 @@ public class GameMenuController implements GameMenuInterface {
   }
 
   /**
-   * Speeds up the game by the set Delta rate until the Max rate.
+   * Speeds up the game by the set Delta rate until the maximum rate.
    */
   @Override
   public void speedUp() {
@@ -90,7 +90,7 @@ public class GameMenuController implements GameMenuInterface {
   }
 
   /**
-   * Slows down the game by the set Delta rate until the Min rate.
+   * Slows down the game by the set Delta rate until the minimum rate.
    */
   @Override
   public void slowDown() {
