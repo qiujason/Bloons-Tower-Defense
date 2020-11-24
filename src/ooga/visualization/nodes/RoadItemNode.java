@@ -7,9 +7,6 @@ import javafx.scene.paint.ImagePattern;
 import ooga.AlertHandler;
 import ooga.backend.roaditems.RoadItemType;
 
-/**
- * This class is the front end node for Road Items.
- */
 public class RoadItemNode extends GamePieceNode {
 
   private final RoadItemType roadItemType;
@@ -22,13 +19,6 @@ public class RoadItemNode extends GamePieceNode {
   private static final String IMAGE_ERROR = "Image Not Found";
   private static final String NOT_FOUND = " image not found";
 
-  /**
-   * Constructor which creates the front end RoadItemNode and fills it with the appropriate image
-   * @param roadItemType the type of RoadItem being made
-   * @param xPosition the x position
-   * @param yPosition the y position
-   * @param radius the radius of the node
-   */
   public RoadItemNode(RoadItemType roadItemType, double xPosition, double yPosition,
       double radius) {
     super(xPosition, yPosition, radius);
@@ -37,10 +27,6 @@ public class RoadItemNode extends GamePieceNode {
     this.setId(roadItemType.name());
   }
 
-  /**
-   * Finds the appropriate image for the RoadItemNode based on its type.
-   * @return ImagePattern that is used to fill the node
-   */
   @Override
   public ImagePattern findImage() {
     Image towerImage = null;

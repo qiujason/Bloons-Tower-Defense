@@ -11,9 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
 import ooga.controller.GameMenuInterface;
 
-/**
- * The GameMenu holding all of the core in-game buttons.
- */
 public class GameMenu extends FlowPane {
 
   private final List<GameButtonType> gameButtonList = Arrays.asList(GameButtonType.values());
@@ -26,13 +23,6 @@ public class GameMenu extends FlowPane {
   private static final Double BUTTON_WIDTH = 100.0;
   private static final Double PREF_WRAP_LENGTH = 200.0;
 
-  /**
-   * Constructor for the GameMenu that initializes the GameMenuInterface which holds all of the
-   * methods for the buttons' functionalities and the language that the current game is set to.
-   *
-   * @param menuController the GameMenuInterface holding the functionality of the buttons
-   * @param language the language that the game is set to
-   */
   public GameMenu(GameMenuInterface menuController, String language) {
     initializeResourceBundle(language);
     buttonHandleMap = menuController.getButtonHandleMap();
