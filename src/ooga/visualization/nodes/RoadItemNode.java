@@ -19,7 +19,8 @@ public class RoadItemNode extends GamePieceNode {
   private static final String IMAGE_ERROR = "Image Not Found";
   private static final String NOT_FOUND = " image not found";
 
-  public RoadItemNode(RoadItemType roadItemType, double xPosition, double yPosition, double radius) {
+  public RoadItemNode(RoadItemType roadItemType, double xPosition, double yPosition,
+      double radius) {
     super(xPosition, yPosition, radius);
     this.roadItemType = roadItemType;
     this.setFill(findImage());
@@ -27,10 +28,12 @@ public class RoadItemNode extends GamePieceNode {
   }
 
   @Override
-  public ImagePattern findImage(){
+  public ImagePattern findImage() {
     Image towerImage = null;
     try {
-      towerImage = new Image(String.valueOf(getClass().getResource(nameToPicture.getString(typeToName.getString(roadItemType.name()))).toURI()));
+      towerImage = new Image(String.valueOf(
+          getClass().getResource(nameToPicture.getString(typeToName.getString(roadItemType.name())))
+              .toURI()));
     } catch (
         URISyntaxException e) {
       new AlertHandler(IMAGE_ERROR, roadItemType.name() + NOT_FOUND);

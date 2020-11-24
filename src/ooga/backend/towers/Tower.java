@@ -32,7 +32,7 @@ public abstract class Tower extends GamePiece implements TowersAPI {
   // if canShoot = true, step function can call shoot method, if not, do not call shoot method
 
   public Tower(double myXPosition, double myYPosition, double myRadius, double myShootingSpeed,
-      double myShootingRestRate){
+      double myShootingRestRate) {
     super(myXPosition, myYPosition);
     radius = myRadius;
     shootingSpeed = myShootingSpeed;
@@ -45,66 +45,68 @@ public abstract class Tower extends GamePiece implements TowersAPI {
 
   public abstract TowerType getTowerType();
 
-  public double getShootingRestRate(){
+  public double getShootingRestRate() {
     return shootingRestRate;
   }
 
-  public double getRadius(){
+  public double getRadius() {
     return radius;
   }
 
   // update canShoot to true after resting period has elapsed
   @Override
   public void update() {
-    if(ifRestPeriod) {
+    if (ifRestPeriod) {
       countRestPeriod++;
-      if(countRestPeriod >= shootingRestRate){
+      if (countRestPeriod >= shootingRestRate) {
         countRestPeriod = 0;
         ifRestPeriod = false;
       }
     }
   }
 
-  public void updateIfRestPeriod(boolean update){
+  public void updateIfRestPeriod(boolean update) {
     ifRestPeriod = update;
   }
 
-  public boolean isIfRestPeriod(){
+  public boolean isIfRestPeriod() {
     return ifRestPeriod;
   }
 
-  public double getShootingSpeed(){
+  public double getShootingSpeed() {
     return shootingSpeed;
   }
 
-  public boolean checkBalloonInRange(BloonsCollection bloonsCollection){
+  public boolean checkBalloonInRange(BloonsCollection bloonsCollection) {
     GamePieceIterator<Bloon> iterator = bloonsCollection.createIterator();
-    while(iterator.hasNext()){
+    while (iterator.hasNext()) {
       Bloon bloon = iterator.next();
-      if(ifCamoBloon(bloon) || bloon.isDead()){
+      if (ifCamoBloon(bloon) || bloon.isDead()) {
         continue;
       }
       double distance = getDistance(bloon);
-      if(distance <= radius){
+      if (distance <= radius) {
         return true;
       }
     }
     return false;
   }
 
-  public abstract Bloon shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection)
+  public abstract Bloon shoot(BloonsCollection bloonsCollection,
+      ProjectilesCollection projectilesCollection)
       throws ConfigurationException;
 
-  public double getDistance(GamePiece target){
-    return Math.sqrt(Math.pow(getXPosition()-target.getXPosition(), 2) + Math.pow(getYPosition()-target.getYPosition(), 2));
+  public double getDistance(GamePiece target) {
+    return Math.sqrt(Math.pow(getXPosition() - target.getXPosition(), 2) + Math
+        .pow(getYPosition() - target.getYPosition(), 2));
   }
 
-  public int getCostOfUpgrade(UpgradeChoice choice){
+  public int getCostOfUpgrade(UpgradeChoice choice) {
     int returnedCost = defaultUpgradeCost;
     try {
       ResourceBundle bundle = ResourceBundle.getBundle("towers/" + getTowerType().name());
       String key = choice.name() + "Cost";
-      if(bundle.containsKey(key) && StringUtils.isNumeric(bundle.getString(key))){
+      if (bundle.containsKey(key) && StringUtils.isNumeric(bundle.getString(key))) {
         returnedCost = Integer.parseInt(bundle.getString(key));
       }
     } catch (Exception e) {
@@ -112,42 +114,42 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     return returnedCost;
   }
 
-  public boolean canPerformUpgrade(){
+  public boolean canPerformUpgrade() {
     return numberOfUpgrades < numberOfAllowedUpgrades;
   }
 
-  public void performUpgrade(UpgradeChoice choice){
-    if(!canPerformUpgrade()){
+  public void performUpgrade(UpgradeChoice choice) {
+    if (!canPerformUpgrade()) {
       return;
     }
     numberOfUpgrades++;
-    try{
+    try {
       ResourceBundle bundle = ResourceBundle.getBundle("towers/" + getTowerType().name());
       upgradeWithSelectedChoice(bundle, choice.name() + "Multiplier");
       upgradeWithSelectedChoice(bundle, choice.name() + "Cost");
-    } catch(Exception e){
-      if(choice == UpgradeChoice.RadiusUpgrade){
+    } catch (Exception e) {
+      if (choice == UpgradeChoice.RadiusUpgrade) {
         radius *= defaultUpgradeMultiplier;
-      } else if(choice == UpgradeChoice.ShootingSpeedUpgrade){
+      } else if (choice == UpgradeChoice.ShootingSpeedUpgrade) {
         shootingSpeed *= defaultUpgradeMultiplier;
-      } else if(choice == UpgradeChoice.ShootingRestRateUpgrade){
+      } else if (choice == UpgradeChoice.ShootingRestRateUpgrade) {
         shootingRestRate /= defaultUpgradeMultiplier;
       }
       totalUpgradeCost += defaultUpgradeCost;
     }
   }
 
-  private void upgradeWithSelectedChoice(ResourceBundle bundle, String key){
-    if(bundle.containsKey(key) && NumberUtils.isCreatable(bundle.getString(key))){
+  private void upgradeWithSelectedChoice(ResourceBundle bundle, String key) {
+    if (bundle.containsKey(key) && NumberUtils.isCreatable(bundle.getString(key))) {
       double value = Double.parseDouble(bundle.getString(key));
       upgradeHelper(key, value, value);
-    } else{
+    } else {
       upgradeHelper(key, defaultUpgradeMultiplier, defaultUpgradeCost);
     }
   }
 
   private void upgradeHelper(String key, double currUpgradeMultiplier, double currUpgradeCost) {
-    switch(key){
+    switch (key) {
       case "RadiusUpgradeMultiplier":
         this.radius *= currUpgradeMultiplier;
         break;
@@ -165,20 +167,20 @@ public abstract class Tower extends GamePiece implements TowersAPI {
     }
   }
 
-  public boolean ifCamoBloon(Bloon bloon){
+  public boolean ifCamoBloon(Bloon bloon) {
     return getTowerType() != TowerType.CamoProjectileShooter && bloon.getBloonsType().specials() ==
         Specials.Camo;
   }
 
-  public void setProjectileType(ProjectileType update){
+  public void setProjectileType(ProjectileType update) {
     projectileType = update;
   }
 
-  public ProjectileType getProjectileType(){
+  public ProjectileType getProjectileType() {
     return projectileType;
   }
 
-  public int getTotalUpgradeCost(){
+  public int getTotalUpgradeCost() {
     return totalUpgradeCost;
   }
 }

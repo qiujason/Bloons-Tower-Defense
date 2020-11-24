@@ -3,7 +3,7 @@
 }
 
 .level-background {
-  -fx-background-color: Blue;
+  -fx-background-color: Brown;
 }
 
 .menu-text {
@@ -17,27 +17,27 @@
 .button {
   -fx-font-size: 14 pt;
   -fx-font-family: "Arial";
-  -fx-background-color: #3b3232;
-  -fx-text-fill: White;
+  -fx-background-color: Gold;
+  -fx-text-fill: Black;
 }
 
 .combo-box {
   -fx-font-size: 14 pt;
   -fx-font-family: "Arial";
-  -fx-background-color: #3b3232;
+  -fx-background-color: Gold;
 }
 
 .list-cell{
-  -fx-text-fill: White;
-  -fx-background-color: #3b3232;
+  -fx-text-fill: Black;
+  -fx-background-color: Gold;
 }
 
 .path-block{
-  -fx-fill: #654321;
-  -fx-stroke: #654321;
+  -fx-fill: Orange;
+  -fx-stroke: Orange;
 }
 
 .non-path-block{
-  -fx-fill: DarkGreen;
-  -fx-stroke: DarkGreen;
+  -fx-fill: Red;
+  -fx-stroke: Red;
 }

@@ -17,20 +17,20 @@ public class RoadItemValueReader {
     InputStream input = getClass().getClassLoader().getResourceAsStream(propertiesFilename);
     properties.load(input);
     valueMap = new HashMap<>();
-    for(Object key : properties.keySet()){
-      valueMap.put(getRoadItemType((String) key), Integer.valueOf((String)properties.get(key)));
+    for (Object key : properties.keySet()) {
+      valueMap.put(getRoadItemType((String) key), Integer.valueOf((String) properties.get(key)));
     }
-    if(!RoadItemType.getEnumStrings().equals(properties.keySet())){
+    if (!RoadItemType.getEnumStrings().equals(properties.keySet())) {
       throw new ConfigurationException("Missing road item value from properties file");
     }
   }
 
-  public Map<RoadItemType, Integer> getMap(){
+  public Map<RoadItemType, Integer> getMap() {
     return valueMap;
   }
 
   public RoadItemType getRoadItemType(String key) throws ConfigurationException {
-    if(!RoadItemType.isEnumName(key)){
+    if (!RoadItemType.isEnumName(key)) {
       throw new ConfigurationException("InvalidDartName");
     }
     return RoadItemType.fromString(key);

@@ -9,7 +9,7 @@ public class RoadItemsCollection implements GamePieceCollection<RoadItem> {
 
   private List<RoadItem> roadItems;
 
-  public RoadItemsCollection(){
+  public RoadItemsCollection() {
     roadItems = new ArrayList<>();
   }
 
@@ -48,7 +48,7 @@ public class RoadItemsCollection implements GamePieceCollection<RoadItem> {
   }
 
   @Override
-  public int size(){
+  public int size() {
     return roadItems.size();
   }
 
@@ -58,7 +58,7 @@ public class RoadItemsCollection implements GamePieceCollection<RoadItem> {
   }
 
   @Override
-  public boolean isEmpty(){
+  public boolean isEmpty() {
     return roadItems.isEmpty();
   }
 }

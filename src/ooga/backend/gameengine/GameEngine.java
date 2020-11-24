@@ -31,24 +31,25 @@ public class GameEngine implements GameEngineAPI {
 
   private final Layout layout;
   private final List<BloonsCollection> allBloonWaves;
-  private BloonsCollection currentBloonWave;
+  private final BloonsCollection currentBloonWave;
   private BloonsCollection queuedBloons;
-  private Map<Tower, Bloon> shootingTargets;
+  private final Map<Tower, Bloon> shootingTargets;
   private int spawnTimer;
   private TowersCollection towers;
   private RoadItemsCollection roadItems;
 
   private ProjectilesCollection projectiles;
-  private Map<Bloon, Double > myBloonSidesX;
-  private Map<Bloon, Double> myBloonSidesY;
+  private final Map<Bloon, Double> myBloonSidesX;
+  private final Map<Bloon, Double> myBloonSidesY;
 
   private int round;
 
   private int lives = STARTING_LIVES;
-  private GameMode gameMode;
+  private final GameMode gameMode;
 
 
-  public GameEngine(GameMode gameMode, Layout layout, List<BloonsCollection> allBloonWaves) {
+  public GameEngine(GameMode gameMode, Layout layout, List<BloonsCollection> allBloonWaves)
+      throws ConfigurationException {
     this.layout = layout;
     this.allBloonWaves = allBloonWaves;
     this.queuedBloons = allBloonWaves.get(STARTING_ROUND).copyOf(allBloonWaves.get(STARTING_ROUND));
@@ -67,9 +68,9 @@ public class GameEngine implements GameEngineAPI {
 
   private void addQueuedBloon(){
     GamePieceIterator<Bloon> queueIterator = queuedBloons.createIterator();
-    if (queueIterator.hasNext()){
+    if (queueIterator.hasNext()) {
       Bloon queuedBloon = queueIterator.next();
-      if (queuedBloon.getBloonsType().name().equals("DEAD")){
+      if (queuedBloon.getBloonsType().name().equals("DEAD")) {
         queuedBloons.remove(queuedBloon);
         return;
       }
@@ -91,15 +92,17 @@ public class GameEngine implements GameEngineAPI {
 
       LayoutBlock currentBlock;
       currentBlock = layout.getBlock((int) (bloon.getYPosition() + myBloonSidesY.get(bloon))
-          ,(int) (bloon.getXPosition() + myBloonSidesX.get(bloon)));
+          , (int) (bloon.getXPosition() + myBloonSidesX.get(bloon)));
 
-      if (currentBlock.isEndBlock()){
+      if (currentBlock.isEndBlock()) {
         lives -= bloon.getBloonsType().RBE();
         bloon.setDead();
       }
 
-      bloon.setXVelocity((bloon.getBloonsType().relativeSpeed() * currentBlock.getDx())/SPEED_ADJUSTER);
-      bloon.setYVelocity((bloon.getBloonsType().relativeSpeed() * currentBlock.getDy())/SPEED_ADJUSTER);
+      bloon.setXVelocity(
+          (bloon.getBloonsType().relativeSpeed() * currentBlock.getDx()) / SPEED_ADJUSTER);
+      bloon.setYVelocity(
+          (bloon.getBloonsType().relativeSpeed() * currentBlock.getDy()) / SPEED_ADJUSTER);
 
       setBloonSides(bloon, currentBlock);
     }
@@ -108,33 +111,33 @@ public class GameEngine implements GameEngineAPI {
   }
 
   private void setBloonSides(Bloon bloon, LayoutBlock block) {
-    myBloonSidesX.put(bloon, -0.5* block.getDx());
-    myBloonSidesY.put(bloon, -0.5* block.getDy());
+    myBloonSidesX.put(bloon, -0.5 * block.getDx());
+    myBloonSidesY.put(bloon, -0.5 * block.getDy());
   }
 
-  private void removeDeadBloons(){
+  private void removeDeadBloons() {
     GamePieceIterator<Bloon> bloonsIterator = currentBloonWave.createIterator();
     while (bloonsIterator.hasNext()) {
       Bloon bloon = bloonsIterator.next();
-      if(bloon.isDead()){
+      if (bloon.isDead()) {
         currentBloonWave.remove(bloon);
       }
     }
   }
 
-  public void nextWaveNormal() {
+  public void nextWaveNormal() throws ConfigurationException {
     round++;
     queuedBloons = allBloonWaves.get(round).copyOf(allBloonWaves.get(round));
   }
 
-  public void nextWaveInfinite() {
+  public void nextWaveInfinite() throws ConfigurationException {
     round++;
     Random rand = new Random();
     int randomRound = rand.nextInt(allBloonWaves.size());
     queuedBloons = allBloonWaves.get(randomRound).copyOf(allBloonWaves.get(randomRound));
   }
 
-  public void nextWaveSandbox() {
+  public void nextWaveSandbox() throws ConfigurationException {
     nextWaveNormal();
   }
 
@@ -145,11 +148,11 @@ public class GameEngine implements GameEngineAPI {
 
   private void shootBloons() throws ConfigurationException {
     GamePieceIterator<Tower> towerIterator = towers.createIterator();
-    while(towerIterator.hasNext()){
+    while (towerIterator.hasNext()) {
       Tower currentTower = towerIterator.next();
       currentTower.update();
-      if(!currentTower.isIfRestPeriod()){
-        shootingTargets.put(currentTower,currentTower.shoot(currentBloonWave, projectiles));
+      if (!currentTower.isIfRestPeriod()) {
+        shootingTargets.put(currentTower, currentTower.shoot(currentBloonWave, projectiles));
       }
     }
   }
@@ -162,13 +165,15 @@ public class GameEngine implements GameEngineAPI {
     projectiles.updateAll();
   }
 
-  private void removeOffScreenProjectiles(){
+  private void removeOffScreenProjectiles() {
     GamePieceIterator<Projectile> projectileIterator = projectiles.createIterator();
-    while (projectileIterator.hasNext()){
+    while (projectileIterator.hasNext()) {
       Projectile currentProjectile = projectileIterator.next();
 
-      if (currentProjectile.getXPosition() < 0 || currentProjectile.getXPosition() > layout.getWidth()
-          || currentProjectile.getYPosition() < 0 || currentProjectile.getYPosition() > layout.getHeight()){
+      if (currentProjectile.getXPosition() < 0 || currentProjectile.getXPosition() > layout
+          .getWidth()
+          || currentProjectile.getYPosition() < 0 || currentProjectile.getYPosition() > layout
+          .getHeight()) {
         projectiles.remove(currentProjectile);
       }
     }
@@ -219,13 +224,13 @@ public class GameEngine implements GameEngineAPI {
   }
 
   private void checkRoundStatus() {
-    if (isRoundEnd()){
+    if (isRoundEnd()) {
       nextWave();
     }
   }
 
   private void spawnBloons() {
-    if (spawnTimer == SPAWN_DELAY){
+    if (spawnTimer == SPAWN_DELAY) {
       addQueuedBloon();
       spawnTimer = 0;
     }
@@ -233,12 +238,13 @@ public class GameEngine implements GameEngineAPI {
   }
 
 
-  public boolean isRoundEnd(){
+  public boolean isRoundEnd() {
     return queuedBloons.isEmpty() && currentBloonWave.isEmpty() && projectiles.isEmpty();
   }
 
-  public boolean isGameEnd(){
-    return lives <= 0 || (gameMode != GameMode.Infinite && (isRoundEnd() && round >= (allBloonWaves.size() - 1)));
+  public boolean isGameEnd() {
+    return lives <= 0 || (gameMode != GameMode.Infinite && (isRoundEnd() && round >= (
+        allBloonWaves.size() - 1)));
   }
 
   @Override
@@ -256,7 +262,7 @@ public class GameEngine implements GameEngineAPI {
     return roadItems;
   }
 
-  public void setRoadItems(RoadItemsCollection update){
+  public void setRoadItems(RoadItemsCollection update) {
     roadItems = update;
   }
 

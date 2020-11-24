@@ -26,15 +26,15 @@ public class Bank implements BankAPI {
   private int currentMoney = STARTING_MONEY;
   private int currentLevel = 0;
   public static int STARTING_SANDBOX_MONEY = 10000;
-  private GameMode gameMode;
-  private List<Integer> roundBonus;
-  private Map<TowerType, Integer> towerBuyMap;
-  private Map<TowerType, Integer> towerSellMap;
-  private Map<RoadItemType,Integer> roadItemBuyMap;
+  private final GameMode gameMode;
+  private final List<Integer> roundBonus;
+  private final Map<TowerType, Integer> towerBuyMap;
+  private final Map<TowerType, Integer> towerSellMap;
+  private final Map<RoadItemType, Integer> roadItemBuyMap;
 
   // Provided list of round bonuses read from csv
   public Bank(Map<TowerType, Integer> towerBuyMap, Map<TowerType, Integer> towerSellMap,
-      Map<RoadItemType,Integer> roadItemBuyMap,List<String> roundBonus, GameMode gameMode) {
+      Map<RoadItemType, Integer> roadItemBuyMap, List<String> roundBonus, GameMode gameMode) {
     this.gameMode = gameMode;
     this.currentMoney = determineStartingMoney();
     this.currentLevel = 0;
@@ -42,7 +42,7 @@ public class Bank implements BankAPI {
     this.towerSellMap = towerSellMap;
     this.roadItemBuyMap = roadItemBuyMap;
     List<Integer> integerBonus = new ArrayList<>();
-    for(String bonus : roundBonus){
+    for (String bonus : roundBonus) {
       integerBonus.add(Integer.valueOf(bonus));
     }
     this.roundBonus = integerBonus;
@@ -50,14 +50,15 @@ public class Bank implements BankAPI {
 
   // provide number of rounds and uses default starting round bonus of 100
   public Bank(Map<TowerType, Integer> towerBuyMap, Map<TowerType, Integer> towerSellMap,
-      Map<RoadItemType,Integer> roadItemBuyMap, int numberOfRounds, GameMode gameMode) {
+      Map<RoadItemType, Integer> roadItemBuyMap, int numberOfRounds, GameMode gameMode) {
     this(towerBuyMap, towerSellMap, roadItemBuyMap, numberOfRounds, STARTING_ROUND_BONUS, gameMode);
   }
 
 
   // provide number of rounds and allows user to put in starting bonus
   public Bank(Map<TowerType, Integer> towerBuyMap, Map<TowerType, Integer> towerSellMap,
-      Map<RoadItemType,Integer> roadItemBuyMap, int numberOfRounds, int starting_bonus, GameMode gameMode) {
+      Map<RoadItemType, Integer> roadItemBuyMap, int numberOfRounds, int starting_bonus,
+      GameMode gameMode) {
     this.gameMode = gameMode;
     this.currentMoney = determineStartingMoney();
     this.currentLevel = 0;
@@ -70,8 +71,8 @@ public class Bank implements BankAPI {
     }
   }
 
-  public int determineStartingMoney(){
-    if(gameMode == GameMode.Sandbox){
+  public int determineStartingMoney() {
+    if (gameMode == GameMode.Sandbox) {
       return STARTING_SANDBOX_MONEY;
     }
     return STARTING_MONEY;
@@ -86,7 +87,6 @@ public class Bank implements BankAPI {
 
   public void advanceOneLevel() {
     currentMoney += roundBonus.get(currentLevel);
-    System.out.println(roundBonus.get(currentLevel));
     currentLevel++;
   }
 
@@ -96,7 +96,7 @@ public class Bank implements BankAPI {
 
   public boolean buyTower(TowerType buyTower) {
     if (canBuyTower(buyTower)) {
-      if(gameMode != GameMode.Sandbox){
+      if (gameMode != GameMode.Sandbox) {
         currentMoney -= towerBuyMap.get(buyTower);
       }
       return true;
@@ -105,19 +105,18 @@ public class Bank implements BankAPI {
   }
 
 
-
-  private boolean canBuyTower(TowerType buyTower){
+  private boolean canBuyTower(TowerType buyTower) {
 
     return currentMoney >= towerBuyMap.get(buyTower);
   }
 
   public void sellTower(Tower sellTower) {
-    if(gameMode != GameMode.Sandbox){
+    if (gameMode != GameMode.Sandbox) {
       currentMoney += towerSellMap.get(sellTower.getTowerType()) + sellTower.getTotalUpgradeCost();
     }
   }
 
-  public void addPoppedBloonValue(){
+  public void addPoppedBloonValue() {
     currentMoney += 1;
   }
 
@@ -125,16 +124,16 @@ public class Bank implements BankAPI {
     currentMoney = STARTING_SANDBOX_MONEY;
   }
 
-  public boolean buyUpgrade(UpgradeChoice choice, Tower buyTower){
+  public boolean buyUpgrade(UpgradeChoice choice, Tower buyTower) {
     int cost = buyTower.getCostOfUpgrade(choice);
-    if (currentMoney >= cost){
+    if (currentMoney >= cost) {
       currentMoney -= cost;
       return true;
     }
     return false;
   }
 
-  public boolean buyRoadItem(RoadItemType buyRoadItem){
+  public boolean buyRoadItem(RoadItemType buyRoadItem) {
     if (canBuyRoadItem(buyRoadItem)) {
       currentMoney -= roadItemBuyMap.get(buyRoadItem);
       return true;
@@ -142,7 +141,7 @@ public class Bank implements BankAPI {
     return false;
   }
 
-  private boolean canBuyRoadItem(RoadItemType buyRoadItem){
+  private boolean canBuyRoadItem(RoadItemType buyRoadItem) {
     return currentMoney >= roadItemBuyMap.get(buyRoadItem);
   }
 

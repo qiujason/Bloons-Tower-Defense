@@ -2,7 +2,7 @@ package ooga.backend.towers.singleshottowers;
 
 import ooga.backend.towers.TowerType;
 
-public class SuperSpeedProjectileShooter extends SingleShotTower{
+public class SuperSpeedProjectileShooter extends SingleShotTower {
 
   // super monkeys
 

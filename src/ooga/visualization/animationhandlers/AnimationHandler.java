@@ -3,11 +3,14 @@ package ooga.visualization.animationhandlers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.ResourceBundle;
 import javafx.animation.Timeline;
 import javafx.geometry.BoundingBox;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.shape.Circle;
+import ooga.AlertHandler;
+import ooga.backend.ConfigurationException;
 import ooga.backend.bank.Bank;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
@@ -29,27 +32,49 @@ import ooga.visualization.nodes.ProjectileNode;
 import ooga.visualization.nodes.RoadItemNode;
 import ooga.visualization.nodes.TowerNode;
 
+/**
+ * This class manages the various in-game animations for Bloons, Towers, and Projectiles. It
+ * includes methods for visualizing changes in Animation and detecting collisions between game
+ * objects.  In general, this class includes a Map for each type of object that maps the "backend"
+ * versions of objects used to perform calculations with their corresponding "frontend" object used
+ * for visualization/collision handling.
+ */
 public class AnimationHandler {
 
   public static final double FRAMES_PER_SECOND = 60;
+  private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResource");
 
-  private Timeline myAnimation;
-  private Group myLevelLayout;
-  private double myBlockSize;
-  private GameMode myGameMode;
+  private final Timeline myAnimation;
+  private final Group myLevelLayout;
+  private final double myBlockSize;
+  private final GameMode myGameMode;
 
   private BloonsCollection myBloons;
   private TowersCollection myTowers;
   private ProjectilesCollection myProjectiles;
   private RoadItemsCollection myRoadItems;
-  private Bank bank;
+  private final Bank bank;
 
-  private Map<Bloon, BloonNode> myBloonsInGame;
-  private Map<Tower, TowerNode> myTowersInGame;
-  private Map<Projectile, ProjectileNode> myProjectilesInGame;
-  private Map<RoadItem, RoadItemNode> myRoadItemsInGame;
+  private final Map<Bloon, BloonNode> myBloonsInGame;
+  private final Map<Tower, TowerNode> myTowersInGame;
+  private final Map<Projectile, ProjectileNode> myProjectilesInGame;
+  private final Map<RoadItem, RoadItemNode> myRoadItemsInGame;
   private Map<Tower, Bloon> myShootingTargets;
 
+  /**
+   * Constructor for an AnimationHandler. Initializes the various game objects to be animated and
+   * other factors necessary for performing animations.
+   *
+   * @param levelLayout the JavaFX Group representing the current level
+   * @param bloons      the collection of Bloons to be displayed
+   * @param towers      the collection of Towers currently on screen
+   * @param projectiles the collection of Projectiles currently on screen
+   * @param roadItems   the collection of RoadItems currently on screen
+   * @param bank        the bank used to manage money for the game
+   * @param gameMode    the current GameMode
+   * @param blockSize   the size of a level block in JavaFX
+   * @param animation   the animation used to animate the objects, passed in from the Controller
+   */
   public AnimationHandler(Group levelLayout, BloonsCollection bloons,
       TowersCollection towers, ProjectilesCollection projectiles, RoadItemsCollection roadItems,
       Bank bank, GameMode gameMode, double blockSize, Timeline animation) {
@@ -69,27 +94,35 @@ public class AnimationHandler {
     this.bank = bank;
   }
 
-  public void addBloonstoGame(){
+  /**
+   * Used to add BloonNodes into the game from the current BloonsCollection, myBloons
+   */
+  public void addBloonstoGame() {
     GamePieceIterator<Bloon> iterator = myBloons.createIterator();
-    while(iterator.hasNext()) {
+    while (iterator.hasNext()) {
       Bloon bloonToSpawn = iterator.next();
       if (!myBloonsInGame.containsKey(bloonToSpawn) && !bloonToSpawn.isDead()) {
-        BloonNode bloonNode = new BloonNode(bloonToSpawn.getBloonsType(), bloonToSpawn.getXPosition()*myBlockSize, bloonToSpawn.getYPosition()*myBlockSize, myBlockSize / 2.5);
+        BloonNode bloonNode = new BloonNode(bloonToSpawn.getBloonsType(),
+            bloonToSpawn.getXPosition() * myBlockSize, bloonToSpawn.getYPosition() * myBlockSize,
+            myBlockSize / 2.5);
         myBloonsInGame.put(bloonToSpawn, bloonNode);
         myLevelLayout.getChildren().add(bloonNode);
       }
     }
   }
 
-  public void addProjectilestoGame(){
+  /**
+   * Used to add ProjectileNodes into the game from the current ProjectileCollection, myProjectiles
+   */
+  public void addProjectilestoGame() {
     GamePieceIterator<Projectile> iterator = myProjectiles.createIterator();
-    while(iterator.hasNext()) {
+    while (iterator.hasNext()) {
       Projectile projectileToSpawn = iterator.next();
       if (!myProjectilesInGame.containsKey(projectileToSpawn)) {
         ProjectileNode projectileNode = new ProjectileNode(projectileToSpawn.getType(),
-            projectileToSpawn.getXPosition()*myBlockSize,
-            projectileToSpawn.getYPosition()*myBlockSize,
-            projectileToSpawn.getRadius()*myBlockSize/5);
+            projectileToSpawn.getXPosition() * myBlockSize,
+            projectileToSpawn.getYPosition() * myBlockSize,
+            projectileToSpawn.getRadius() * myBlockSize / 5);
         projectileNode.setRotate(projectileToSpawn.getAngle());
         myProjectilesInGame.put(projectileToSpawn, projectileNode);
         myLevelLayout.getChildren().add(projectileNode);
@@ -97,6 +130,10 @@ public class AnimationHandler {
     }
   }
 
+  /**
+   * Performs a frame of animation by calling the animate functions for each type of object and
+   * interaction
+   */
   public void animate() {
     animateTowers();
     animateProjectiles();
@@ -108,9 +145,9 @@ public class AnimationHandler {
 
   private void animateBloons() {
     addBloonstoGame();
-    for(Bloon bloon : myBloonsInGame.keySet()){
+    for (Bloon bloon : myBloonsInGame.keySet()) {
       BloonNode bloonNode = myBloonsInGame.get(bloon);
-      if (bloon.isDead()){
+      if (bloon.isDead()) {
         myLevelLayout.getChildren().remove(bloonNode);
       }
       bloonNode.setXPosition(bloon.getXPosition() * myBlockSize);
@@ -123,7 +160,7 @@ public class AnimationHandler {
     GamePieceIterator<Tower> towersIterator = myTowers.createIterator();
     while (towersIterator.hasNext()) {
       Tower currentTower = towersIterator.next();
-      if (myShootingTargets.get(currentTower) != null){
+      if (myShootingTargets.get(currentTower) != null) {
         rotateTower(currentTower, myShootingTargets.get(currentTower));
       }
     }
@@ -144,11 +181,11 @@ public class AnimationHandler {
   private void animateProjectiles() {
     addProjectilestoGame();
     ProjectilesCollection projectileToRemove = new ProjectilesCollection();
-    for(Projectile projectile : myProjectilesInGame.keySet()){
+    for (Projectile projectile : myProjectilesInGame.keySet()) {
       ProjectileNode projectileNode = myProjectilesInGame.get(projectile);
-      projectileNode.setXPosition(projectile.getXPosition()*myBlockSize);
-      projectileNode.setYPosition(projectile.getYPosition()*myBlockSize);
-      if(checkOutOfBoundsProjectile(projectileNode)){
+      projectileNode.setXPosition(projectile.getXPosition() * myBlockSize);
+      projectileNode.setYPosition(projectile.getYPosition() * myBlockSize);
+      if (checkOutOfBoundsProjectile(projectileNode)) {
         myProjectiles.remove(projectile);
         projectileToRemove.add(projectile);
         myLevelLayout.getChildren().remove(projectileNode);
@@ -162,34 +199,35 @@ public class AnimationHandler {
     return projectile.getCenterX() <= 0
         || projectile.getCenterX() >= BloonsApplication.GAME_WIDTH
         || projectile.getCenterY() <= 0
-        || projectile.getCenterY() >= BloonsApplication.GAME_HEIGHT-70;
+        || projectile.getCenterY() >= BloonsApplication.GAME_HEIGHT - 70;
   }
 
-  private void animateShotBloon(){
+  private void animateShotBloon() {
     BloonsCollection bloonsToRemove = new BloonsCollection();
     ProjectilesCollection projectilesToRemove = new ProjectilesCollection();
     BloonsCollection bloonsToAdd = new BloonsCollection();
-    for(Projectile projectile : myProjectilesInGame.keySet()){
-      for(Bloon bloon : myBloonsInGame.keySet()){
+    for (Projectile projectile : myProjectilesInGame.keySet()) {
+      for (Bloon bloon : myBloonsInGame.keySet()) {
         collisionHandler(projectile, bloon, bloonsToRemove, bloonsToAdd, projectilesToRemove);
-        }
       }
+    }
     spawnBloons(bloonsToAdd);
     addMoneyPerPop(bloonsToRemove);
     removeShotBloon(bloonsToRemove);
     removeShotProjectiles(projectilesToRemove);
   }
 
-  private void addMoneyPerPop(BloonsCollection bloonsToRemove){
+  private void addMoneyPerPop(BloonsCollection bloonsToRemove) {
     GamePieceIterator<Bloon> iterator = bloonsToRemove.createIterator();
-    while(iterator.hasNext() && myGameMode != GameMode.Sandbox){
+    while (iterator.hasNext() && myGameMode != GameMode.Sandbox) {
       iterator.next();
       bank.addPoppedBloonValue();
     }
   }
 
 
-  private void collisionHandler(Projectile projectile, Bloon bloon, BloonsCollection bloonsToRemove, BloonsCollection bloonsToAdd, ProjectilesCollection projectilesToRemove) {
+  private void collisionHandler(Projectile projectile, Bloon bloon, BloonsCollection bloonsToRemove,
+      BloonsCollection bloonsToAdd, ProjectilesCollection projectilesToRemove) {
     if (shouldExplode(projectile, bloon)) {
       popBloon(bloon, projectile, bloonsToRemove, bloonsToAdd, projectilesToRemove, false);
     } else if (checkBloonCollision(bloon, myProjectilesInGame.get(projectile))) {
@@ -202,16 +240,16 @@ public class AnimationHandler {
     }
   }
 
-  private void animateRoadItemCollisions(){
+  private void animateRoadItemCollisions() {
     BloonsCollection bloonsToRemove = new BloonsCollection();
     BloonsCollection bloonsToAdd = new BloonsCollection();
     RoadItemsCollection itemsToRemove = new RoadItemsCollection();
-    for(RoadItem roadItem : myRoadItemsInGame.keySet()){
-      for(Bloon bloon : myBloonsInGame.keySet()){
-        if(roadItem.shouldRemove()){
+    for (RoadItem roadItem : myRoadItemsInGame.keySet()) {
+      for (Bloon bloon : myBloonsInGame.keySet()) {
+        if (roadItem.shouldRemove()) {
           itemsToRemove.add(roadItem);
-          if(roadItem.getType() == RoadItemType.ExplodeBloonsItem &&
-              checkSpreadProjectileCollision(bloon, myRoadItemsInGame.get(roadItem), 20)){
+          if (roadItem.getType() == RoadItemType.ExplodeBloonsItem &&
+              checkSpreadProjectileCollision(bloon, myRoadItemsInGame.get(roadItem), 20)) {
             popBloon(bloon, null, bloonsToRemove, bloonsToAdd, null, true);
           }
           continue;
@@ -224,61 +262,68 @@ public class AnimationHandler {
     removeExpiredRoadItems(itemsToRemove);
   }
 
-  private void updateRoadItems(RoadItem roadItem, Bloon bloon, BloonsCollection bloonsToRemove, BloonsCollection bloonsToAdd){
-    if(roadItem.getType() == RoadItemType.ExplodeBloonsItem){
+  private void updateRoadItems(RoadItem roadItem, Bloon bloon, BloonsCollection bloonsToRemove,
+      BloonsCollection bloonsToAdd) {
+    if (roadItem.getType() == RoadItemType.ExplodeBloonsItem) {
       roadItem.update();
-    } else if(checkBloonCollision(bloon, myRoadItemsInGame.get(roadItem))){
-      if(roadItem.getType() == RoadItemType.PopBloonsItem){
+    } else if (checkBloonCollision(bloon, myRoadItemsInGame.get(roadItem))) {
+      if (roadItem.getType() == RoadItemType.PopBloonsItem) {
         popBloon(bloon, null, bloonsToRemove, bloonsToAdd, null, true);
         roadItem.update();
-      } else if(roadItem.getType() == RoadItemType.SlowBloonsItem && !bloon.isSlowDownActive()){
+      } else if (roadItem.getType() == RoadItemType.SlowBloonsItem && !bloon.isSlowDownActive()) {
         bloon.slowDown();
         roadItem.update();
       }
     }
   }
 
-  private boolean shouldExplode(Projectile projectile, Bloon bloon){
+  private boolean shouldExplode(Projectile projectile, Bloon bloon) {
     return projectile.getType() == ProjectileType.SpreadProjectile &&
         checkSpreadProjectileCollision(bloon, myProjectilesInGame.get(projectile),
             projectile.getRadius());
   }
 
-  private boolean shouldPop(Projectile projectile, Bloon bloon){
+  private boolean shouldPop(Projectile projectile, Bloon bloon) {
     return (projectile.getType() == ProjectileType.SingleTargetProjectile &&
         bloon.getBloonsType().specials() != (Specials.Camo))
         || projectile.getType() == ProjectileType.CamoTargetProjectile;
   }
 
-  private boolean shouldFreeze(Projectile projectile, Bloon bloon){
+  private boolean shouldFreeze(Projectile projectile, Bloon bloon) {
     return projectile.getType() == ProjectileType.FreezeTargetProjectile && !bloon.isFreezeActive();
   }
 
-  private void popBloon(Bloon bloon, Projectile projectile, BloonsCollection bloonsToRemove, BloonsCollection bloonsToAdd,
-      ProjectilesCollection projectilesToRemove, boolean roadItemCheck){
-    Bloon[] spawnedBloons = bloon.shootBloon();
-    for(Bloon spawn : spawnedBloons) {
-      bloonsToAdd.add(spawn);
-    }
-    bloon.setDead();
-    bloonsToRemove.add(bloon);
-    if(!roadItemCheck){
-      projectilesToRemove.add(projectile);
+  private void popBloon(Bloon bloon, Projectile projectile, BloonsCollection bloonsToRemove,
+      BloonsCollection bloonsToAdd,
+      ProjectilesCollection projectilesToRemove, boolean roadItemCheck) {
+    try {
+      Bloon[] spawnedBloons = bloon.shootBloon();
+      for (Bloon spawn : spawnedBloons) {
+        bloonsToAdd.add(spawn);
+      }
+      bloon.setDead();
+      bloonsToRemove.add(bloon);
+      if (!roadItemCheck) {
+        projectilesToRemove.add(projectile);
+      }
+    } catch (ConfigurationException e) {
+      new AlertHandler(ERROR_RESOURCES.getString("SpecialBloonError"),
+          ERROR_RESOURCES.getString(e.getMessage()));
     }
   }
 
-  private void spawnBloons(BloonsCollection bloonsToAdd){
+  private void spawnBloons(BloonsCollection bloonsToAdd) {
     GamePieceIterator<Bloon> iterator = bloonsToAdd.createIterator();
-    while(iterator.hasNext()){
+    while (iterator.hasNext()) {
       Bloon toAdd = iterator.next();
       myBloons.add(toAdd);
     }
     addBloonstoGame();
   }
 
-  private void removeShotBloon(BloonsCollection bloonsToRemove){
+  private void removeShotBloon(BloonsCollection bloonsToRemove) {
     GamePieceIterator<Bloon> iterator = bloonsToRemove.createIterator();
-    while(iterator.hasNext()){
+    while (iterator.hasNext()) {
       Bloon toRemove = iterator.next();
       myLevelLayout.getChildren().remove(myBloonsInGame.get(toRemove));
       myBloonsInGame.remove(toRemove);
@@ -286,9 +331,9 @@ public class AnimationHandler {
     }
   }
 
-  private void removeExpiredRoadItems(RoadItemsCollection toRemove){
+  private void removeExpiredRoadItems(RoadItemsCollection toRemove) {
     GamePieceIterator<RoadItem> iterator = toRemove.createIterator();
-    while(iterator.hasNext()){
+    while (iterator.hasNext()) {
       RoadItem removed = iterator.next();
       myLevelLayout.getChildren().remove(myRoadItemsInGame.get(removed));
       myRoadItemsInGame.remove(removed);
@@ -296,9 +341,9 @@ public class AnimationHandler {
     }
   }
 
-  private void removeShotProjectiles(ProjectilesCollection projectilesToRemove){
+  private void removeShotProjectiles(ProjectilesCollection projectilesToRemove) {
     GamePieceIterator<Projectile> projectileIterator = projectilesToRemove.createIterator();
-    while(projectileIterator.hasNext()){
+    while (projectileIterator.hasNext()) {
       Projectile toRemove = projectileIterator.next();
       myLevelLayout.getChildren().remove(myProjectilesInGame.get(toRemove));
       myProjectilesInGame.remove(toRemove);
@@ -306,37 +351,60 @@ public class AnimationHandler {
     }
   }
 
-  private boolean checkBloonCollision(Bloon bloon, GamePieceNode weapon){
+  private boolean checkBloonCollision(Bloon bloon, GamePieceNode weapon) {
     GamePieceNode bloonInGame = myBloonsInGame.get(bloon);
     return weapon.getBoundsInParent().intersects(bloonInGame.getBoundsInParent());
   }
 
-  private boolean checkSpreadProjectileCollision(Bloon bloon, GamePieceNode weapon, double radius){
+  private boolean checkSpreadProjectileCollision(Bloon bloon, GamePieceNode weapon, double radius) {
     GamePieceNode bloonInGame = myBloonsInGame.get(bloon);
-    BoundingBox bounds = new BoundingBox(weapon.getBoundsInParent().getMinX()-radius,
-        weapon.getBoundsInParent().getMinY()-radius,
+    BoundingBox bounds = new BoundingBox(weapon.getBoundsInParent().getMinX() - radius,
+        weapon.getBoundsInParent().getMinY() - radius,
         weapon.getBoundsInParent().getWidth() + 2 * radius,
         weapon.getBoundsInParent().getHeight() + 2 * radius);
     return bounds.intersects(bloonInGame.getBoundsInParent());
   }
 
+  /**
+   * Adds a tower and corresponding TowerNode into the game
+   *
+   * @param tower       the backend tower object to be added
+   * @param towerInGame the frontend TowerNode to be added
+   */
   public void addTower(Tower tower, TowerNode towerInGame) {
     myTowers.add(tower);
     myTowersInGame.put(tower, towerInGame);
   }
 
+  /**
+   * Adds a RoadItem and corresponding RoadItemNode into the game
+   *
+   * @param item       the backend RoadItem object to be added
+   * @param roadInGame the frontend RoadItemNode to be added
+   */
   public void addRoadItem(RoadItem item, RoadItemNode roadInGame) {
     myRoadItems.add(item);
     myRoadItemsInGame.put(item, roadInGame);
   }
 
-  public TowerNode getNodeFromTower(Tower tower){
+  /**
+   * Gets the corresponding frontend TowerNode associated with a backend Tower object
+   *
+   * @param tower the Tower of interest
+   * @return the corresponding TowerNode
+   */
+  public TowerNode getNodeFromTower(Tower tower) {
     return myTowersInGame.get(tower);
   }
 
-  public Tower getTowerFromNode(TowerNode towerInGame){
+  /**
+   * Gets the corresponding backend Tower object associated with a frontend TowerNode
+   * @param towerInGame the TowerNode of interest
+   * @return the corresponding Tower
+   */
+  public Tower getTowerFromNode(TowerNode towerInGame) {
     Tower tower = null;
-    for(Entry<Tower, TowerNode> entry: myTowersInGame.entrySet()) {
+    for (Entry<Tower, TowerNode> entry : myTowersInGame.entrySet()) {
       if (entry.getValue().equals(towerInGame)) {
         tower = entry.getKey();
       }
@@ -344,61 +412,127 @@ public class AnimationHandler {
     return tower;
   }
 
+  /**
+   * Removes a Tower and its TowerNode from the game
+   * @param tower the tower to be removed
+   * @param towerInGame the TowerNode to be removed
+   */
   public void removeTower(Tower tower, TowerNode towerInGame) {
     myTowers.remove(tower);
     myTowersInGame.remove(tower, towerInGame);
   }
 
-  public Map<Bloon, BloonNode> getMyBloonsInGame(){
+  /**
+   * Gets the Map of Bloons and their BloonNodes currently in the game
+   * @return the current mapping of Bloons to BloonNodes
+   */
+  public Map<Bloon, BloonNode> getMyBloonsInGame() {
     return myBloonsInGame;
   }
 
-  public Map<Projectile, ProjectileNode> getMyProjectilesInGame(){
+  /**
+   * Gets the Map of Projectiles and their ProjectileNodes currently in the game
+   * @return the current mapping of Projectiles to ProjectileNodes
+   */
+  public Map<Projectile, ProjectileNode> getMyProjectilesInGame() {
     return myProjectilesInGame;
   }
 
-  public Map<Tower, TowerNode> getMyTowersInGame(){
+  /**
+   * Gets the Map of Towers and their TowerNodes currently in the game
+   * @return the current mapping of Towers to TowerNodes
+   */
+  public Map<Tower, TowerNode> getMyTowersInGame() {
     return myTowersInGame;
   }
 
-  public Map<RoadItem, RoadItemNode> getMyRoadItemsInGame(){
+  /**
+   * Gets the Map of RoadItems and their RoadItemNodes currently in the game
+   * @return the current mapping of RoadItems to RoadItemNodes
+   */
+  public Map<RoadItem, RoadItemNode> getMyRoadItemsInGame() {
     return myRoadItemsInGame;
   }
 
+  /**
+   * Sets the AnimationHandler's BloonsCollection to the given collection
+   *
+   * @param bloonWave the new BloonsCollection
+   */
   public void setBloonWave(BloonsCollection bloonWave) {
     myBloons = bloonWave;
   }
 
+  /**
+   * Sets the AnimationHandler's TowersCollection to the given collection
+   *
+   * @param towers the new TowersCollection
+   */
   public void setTowers(TowersCollection towers) {
     this.myTowers = towers;
   }
 
+  /**
+   * Sets the AnimationHandler's ProjectilesCollection to the given collection
+   *
+   * @param projectiles the new ProjectilesCollection
+   */
   public void setProjectiles(ProjectilesCollection projectiles) {
     this.myProjectiles = projectiles;
   }
 
+  /**
+   * Gets the current towers in game
+   *
+   * @return the current TowersCollection
+   */
   public TowersCollection getTowers() {
     return myTowers;
   }
 
+  /**
+   * Gets the current projectiles in game
+   *
+   * @return the current ProjectilesCollection
+   */
   public ProjectilesCollection getProjectiles() {
     return myProjectiles;
   }
 
+  /**
+   * Gets the current animation used for animating game objects
+   *
+   * @return the current animation
+   */
   public Timeline getAnimation() {
     return myAnimation;
   }
 
+  /**
+   * Sets the map of Towers to their current Bloon target
+   *
+   * @param shootingTargets the new targets for each Tower
+   */
   public void setShootingTargets(
       Map<Tower, Bloon> shootingTargets) {
     this.myShootingTargets = shootingTargets;
   }
 
-  public RoadItemsCollection getRoadItems(){
+  /**
+   * Gets the current RoadTimes in game
+   *
+   * @return the current RoadItemsCollection
+   */
+  public RoadItemsCollection getRoadItems() {
     return myRoadItems;
   }
 
-  public void setRoadItems(RoadItemsCollection roadItems){
+  /**
+   * Sets the AnimationHandler's RoadItemsCollection to the given collection
+   *
+   * @param roadItems the new RoadItemsCollection
+   */
+  public void setRoadItems(RoadItemsCollection roadItems) {
     myRoadItems = roadItems;
   }
 }

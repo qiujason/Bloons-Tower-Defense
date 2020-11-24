@@ -7,7 +7,8 @@ public interface BloonsFactory {
 
   Bloon createBloon(Bloon bloon);
 
-  Bloon createBloon(BloonsType bloonsType, double xPosition, double yPosition, double xVelocity, double yVelocity);
+  Bloon createBloon(BloonsType bloonsType, double xPosition, double yPosition, double xVelocity,
+      double yVelocity);
 
   Bloon createNextBloon(Bloon bloon);
 

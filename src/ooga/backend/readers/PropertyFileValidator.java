@@ -9,14 +9,14 @@ public class PropertyFileValidator {
 
   private boolean ifValid;
 
-  public PropertyFileValidator(String propertyFile, Set<String> requiredKeys){
+  public PropertyFileValidator(String propertyFile, Set<String> requiredKeys) {
     ifValid = true;
     Properties properties = new Properties();
     InputStream input = getClass().getClassLoader().getResourceAsStream(propertyFile);
     try {
       properties.load(input);
-      for(String requiredKey :requiredKeys){
-        if(!properties.keySet().contains(requiredKey)){
+      for (String requiredKey : requiredKeys) {
+        if (!properties.containsKey(requiredKey)) {
           ifValid = false;
         }
       }
@@ -25,7 +25,7 @@ public class PropertyFileValidator {
     }
   }
 
-  public boolean containsNeededKeys(){
+  public boolean containsNeededKeys() {
     return ifValid;
   }
 }

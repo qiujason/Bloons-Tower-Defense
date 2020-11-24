@@ -9,7 +9,7 @@ public class TowersCollection implements GamePieceCollection<Tower> {
 
   private List<Tower> towers;
 
-  public TowersCollection(){
+  public TowersCollection() {
     towers = new ArrayList<>();
   }
 
@@ -48,7 +48,7 @@ public class TowersCollection implements GamePieceCollection<Tower> {
   }
 
   @Override
-  public int size(){
+  public int size() {
     return towers.size();
   }
 
@@ -56,8 +56,9 @@ public class TowersCollection implements GamePieceCollection<Tower> {
   public boolean contains(Tower tower) {
     return towers.contains(tower);
   }
+
   @Override
-  public boolean isEmpty(){
+  public boolean isEmpty() {
     return towers.isEmpty();
   }
 

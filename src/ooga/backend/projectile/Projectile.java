@@ -1,4 +1,5 @@
 package ooga.backend.projectile;
+
 import ooga.backend.GamePiece;
 
 public abstract class Projectile extends GamePiece {
@@ -9,8 +10,8 @@ public abstract class Projectile extends GamePiece {
   private final ProjectileType type;
 
 
-
-  public Projectile(ProjectileType type, double xPosition, double yPosition, double xVelocity, double yVelocity, double angle){
+  public Projectile(ProjectileType type, double xPosition, double yPosition, double xVelocity,
+      double yVelocity, double angle) {
     super(xPosition, yPosition);
     this.xVelocity = xVelocity;
     this.yVelocity = yVelocity;
@@ -18,11 +19,11 @@ public abstract class Projectile extends GamePiece {
     this.type = type;
   }
 
-  public ProjectileType getType(){
+  public ProjectileType getType() {
     return type;
   }
 
-  public double getRadius(){
+  public double getRadius() {
     return type.getRadius();
   }
 
@@ -44,11 +45,11 @@ public abstract class Projectile extends GamePiece {
     updatePosition();
   }
 
-  public double getXVelocity(){
+  public double getXVelocity() {
     return xVelocity;
   }
 
-  public double getYVelocity(){
+  public double getYVelocity() {
     return yVelocity;
   }
 

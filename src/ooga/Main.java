@@ -5,13 +5,14 @@ import javafx.application.Application;
 import ooga.controller.Controller;
 
 /**
- * Feel free to completely change this code or delete it entirely. 
+ * This is the Main class, used to start the application
  */
 public class Main {
-    /**
-     * Start of the program.
-     */
-    public static void main (String[] args) {
-        Application.launch(Controller.class);
-    }
+
+  /**
+   * Starts the application
+   */
+  public static void main(String[] args) {
+    Application.launch(Controller.class);
+  }
 }
