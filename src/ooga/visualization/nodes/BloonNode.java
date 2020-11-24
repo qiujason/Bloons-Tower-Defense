@@ -5,12 +5,13 @@ import java.util.ResourceBundle;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import ooga.AlertHandler;
+import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.Specials;
 
 public class BloonNode extends GamePieceNode {
 
-  private final BloonsType bloonType;
+  private BloonsType bloonType;
   public static String BLOON_IMAGES_PATH = "bloon_resources/BloonImages";
 
   private final ResourceBundle myBloonImages = ResourceBundle
@@ -38,6 +39,17 @@ public class BloonNode extends GamePieceNode {
     }
     assert towerImage != null;
     return new ImagePattern(towerImage);
+  }
+
+  public void updateBloonType(BloonsType bloonsType) {
+    bloonType = bloonsType;
+    if (!bloonType.name().equals("DEAD")) {
+      setImage();
+    }
+  }
+
+  private void setImage() {
+    this.setFill(findImage());
   }
 
 }

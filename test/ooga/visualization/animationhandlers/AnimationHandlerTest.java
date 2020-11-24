@@ -3,16 +3,22 @@ package ooga.visualization.animationhandlers;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
+import javafx.scene.paint.ImagePattern;
 import ooga.backend.ConfigurationException;
 import ooga.backend.bank.Bank;
 import ooga.backend.bloons.Bloon;
 import ooga.backend.bloons.BloonsCollection;
 import ooga.backend.bloons.factory.BasicBloonsFactory;
+import ooga.backend.bloons.special.RegenBloon;
 import ooga.backend.bloons.types.BloonsType;
 import ooga.backend.bloons.types.BloonsTypeChain;
 import ooga.backend.bloons.types.Specials;
@@ -41,6 +47,10 @@ import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
 
 class AnimationHandlerTest extends DukeApplicationTest {
+
+  public static String BLOON_IMAGES_PATH = "bloon_resources/BloonImages";
+  private final ResourceBundle myBloonImages = ResourceBundle
+      .getBundle(BLOON_IMAGES_PATH);
 
   String TOWER_BUY_VALUES_PATH = "towervalues/TowerBuyValues.properties";
   String TOWER_SELL_VALUES_PATH = "towervalues/TowerSellValues.properties";
@@ -192,6 +202,25 @@ class AnimationHandlerTest extends DukeApplicationTest {
       }
     } else{
       bank = new Bank(towerBuyMap, towerSellMap, roadItemMap, roundBonuses.get(1), GameMode.Normal);
+    }
+  }
+
+  @Test
+  void changeImageRegenBugReport() throws URISyntaxException, ConfigurationException {
+    Bloon testBloon = new RegenBloon(new BloonsType(chain, "BLUE", 1, 1, Specials.Regen), 10,10,0,0);
+    myBloons.add(testBloon);
+    animationHandler.addBloonstoGame();
+    myProjectiles.add(new SingleTargetProjectile(ProjectileType.SingleTargetProjectile, 10, 10,1,1,30));
+    animationHandler.addProjectilestoGame();
+    for (int i = 0; i < 100; i++) {
+      animationHandler.animate();
+      Set<Bloon> currentBloons = animationHandler.getMyBloonsInGame().keySet();
+      for (Bloon bloon : currentBloons) {
+        assertEquals(new Image(String
+                .valueOf(getClass().getResource("/gamePhotos/bloonPhotos/RED_REGROWTH.png").toURI()))
+                .getUrl(),
+            animationHandler.getMyBloonsInGame().get(bloon).findImage().getImage().getUrl());
+      }
     }
   }
 }
