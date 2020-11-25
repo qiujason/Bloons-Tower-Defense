@@ -1,3 +1,8 @@
+/**
+ * Class should be used to create towers
+ * Implements TowerFactory interface
+ * @author Annshine
+ */
 package ooga.backend.towers.factory;
 
 import java.lang.reflect.Constructor;
@@ -10,6 +15,14 @@ public class SingleTowerFactory implements TowerFactory {
 
   private final static String TOWER_PATH = "ooga.backend.towers.";
 
+  /**
+   * Method should be used to create a tower
+   * @param type
+   * @param xPosition
+   * @param yPosition
+   * @return created tower with correct parameters
+   * @throws ConfigurationException
+   */
   @Override
   public Tower createTower(TowerType type, double xPosition, double yPosition)
       throws ConfigurationException {

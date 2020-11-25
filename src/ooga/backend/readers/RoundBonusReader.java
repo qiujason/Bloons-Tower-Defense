@@ -1,3 +1,7 @@
+/**
+ * RoundBonusReader should be able to read in round bonuses for the game and returns a list
+ * @Author annshine
+ */
 package ooga.backend.readers;
 
 import java.util.ArrayList;

@@ -1,3 +1,8 @@
+/**
+ * RoadItemsCollection to represent a collection of RoadItems
+ * Implements GamePieceCollection
+ * @author Annshine
+ */
 package ooga.backend.roaditems;
 
 import java.util.ArrayList;
@@ -9,6 +14,9 @@ public class RoadItemsCollection implements GamePieceCollection<RoadItem> {
 
   private List<RoadItem> roadItems;
 
+  /**
+   * Constructor for RoadItemsCollection
+   */
   public RoadItemsCollection() {
     roadItems = new ArrayList<>();
   }

@@ -1,3 +1,7 @@
+/**
+ * Enun class to Represent the types of projectiles
+ * @Author annshine
+ */
 package ooga.backend.projectile;
 
 public enum ProjectileType {

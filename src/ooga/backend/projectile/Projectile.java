@@ -1,3 +1,7 @@
+/**
+ * Class should be extended to represent different kinds of Projectiles
+ * @author Annshine
+ */
 package ooga.backend.projectile;
 
 import ooga.backend.GamePiece;

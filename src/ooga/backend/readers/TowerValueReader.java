@@ -1,3 +1,7 @@
+/**
+ * TowerValueReader should be used to read in the prices of towers
+ * @author Annshine
+ */
 package ooga.backend.readers;
 
 import java.io.IOException;
@@ -14,6 +18,12 @@ public class TowerValueReader {
 
   private final Map<TowerType, Integer> towerValueMap;
 
+  /**
+   * Constructor of TowerValueReader
+   * @param propertiesFilename
+   * @throws IOException
+   * @throws ConfigurationException
+   */
   public TowerValueReader(String propertiesFilename) throws IOException, ConfigurationException {
     Properties properties = new Properties();
     InputStream input = getClass().getClassLoader().getResourceAsStream(propertiesFilename);
@@ -33,12 +43,20 @@ public class TowerValueReader {
     }
   }
 
+  /**
+   *
+   * @return the price map of tower types mapped to its price
+   */
   public Map<TowerType, Integer> getMap() {
     return towerValueMap;
   }
 
-
-  // Map property file key to TowerType enum
+  /**
+   * Return the TowerType from a string
+   * @param key
+   * @return corresponding TowerType for string
+   * @throws ConfigurationException
+   */
   public TowerType getTowerType(String key) throws ConfigurationException {
     if (!TowerType.isEnumName(key)) {
       throw new ConfigurationException("InvalidTowerName");

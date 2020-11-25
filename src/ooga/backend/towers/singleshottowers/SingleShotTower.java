@@ -1,3 +1,7 @@
+/**
+ * This class is an abstract class that represents a single shot shooter that fires one projectile at a time
+ * @author Annshine
+ */
 package ooga.backend.towers.singleshottowers;
 
 import ooga.backend.ConfigurationException;
@@ -20,6 +24,14 @@ public abstract class SingleShotTower extends Tower {
 
   private ShootingChoice shootingChoice;
 
+  /**
+   * Constructor for a single shot tower
+   * @param myXPosition
+   * @param myYPosition
+   * @param myRadius
+   * @param myShootingSpeed
+   * @param myShootingRestRate
+   */
   public SingleShotTower(double myXPosition, double myYPosition, double myRadius,
       double myShootingSpeed, double myShootingRestRate) {
     super(myXPosition, myYPosition, myRadius, myShootingSpeed, myShootingRestRate);
@@ -27,15 +39,29 @@ public abstract class SingleShotTower extends Tower {
     setProjectileType(ProjectileType.SingleTargetProjectile);
   }
 
+  /**
+   * Method should be used to get the shooting choice
+   * @return shootingChoice of the tower
+   */
   public ShootingChoice getShootingChoice() {
     return shootingChoice;
   }
 
+  /**
+   * Method should be used to update shooting choice
+   * @param newChoice - the new shooting choice update
+   */
   public void updateShootingChoice(ShootingChoice newChoice) {
     shootingChoice = newChoice;
   }
 
   // should only be called IF known that there is a bloon in range OR ELSE will return null
+
+  /**
+   * Method should be used to get the target of a tower
+   * @param bloonsCollection
+   * @return Bloon - the target of the tower
+   */
   public Bloon getTarget(BloonsCollection bloonsCollection) {
     return switch (getShootingChoice()) {
       case StrongestBloon -> findStrongestBloon(bloonsCollection);
@@ -45,7 +71,13 @@ public abstract class SingleShotTower extends Tower {
     };
   }
 
-  // should only be called IF known that there is a bloon in range OR ELSE will return null
+
+  /**
+   * Assumption: should only be called IF known that there is a bloon in range OR ELSE will return null
+   * Method should be used to find the closest bloon in bloons collection within the range of the tower
+   * @param bloonsCollection the bloon collection to search for closest bloon
+   * @return the closest bloon
+   */
   public Bloon findClosestBloon(BloonsCollection bloonsCollection) {
     GamePieceIterator<Bloon> iterator = bloonsCollection.createIterator();
     Bloon closestBloon = null;
@@ -65,7 +97,12 @@ public abstract class SingleShotTower extends Tower {
     return closestBloon;
   }
 
-  // should only be called IF known that there is a bloon in range OR ELSE will return null
+  /**
+   * Assumption: should only be called IF known that there is a bloon in range OR ELSE will return null
+   * Method should be used to find the strongest bloon in bloons collection within the range of the tower
+   * @param bloonsCollection the bloon collection to search for strongest bloon
+   * @return the strongest bloon
+   */
   public Bloon findStrongestBloon(BloonsCollection bloonsCollection) {
     GamePieceIterator<Bloon> iterator = bloonsCollection.createIterator();
     Bloon strongestBloon = null;
@@ -84,7 +121,12 @@ public abstract class SingleShotTower extends Tower {
     return strongestBloon;
   }
 
-  // should only be called IF known that there is a bloon in range OR ELSE will return null
+  /**
+   * Assumption: should only be called IF known that there is a bloon in range OR ELSE will return null
+   * Method should be used to find the first bloon in bloons collection within the range of the tower
+   * @param bloonsCollection the bloon collection to search for first bloon
+   * @return the first bloon
+   */
   public Bloon findFirstBloon(BloonsCollection bloonsCollection) {
     GamePieceIterator<Bloon> iterator = bloonsCollection.createIterator();
     Bloon firstBloon = null;
@@ -101,7 +143,12 @@ public abstract class SingleShotTower extends Tower {
     return firstBloon;
   }
 
-  // should only be called IF known that there is a bloon in range OR ELSE will return null
+  /**
+   * Assumption: should only be called IF known that there is a bloon in range OR ELSE will return null
+   * Method should be used to find the last bloon in bloons collection within the range of the tower
+   * @param bloonsCollection the bloon collection to search for last bloon
+   * @return the last bloon
+   */
   public Bloon findLastBloon(BloonsCollection bloonsCollection) {
     GamePieceIterator<Bloon> iterator = bloonsCollection.createIterator();
     Bloon lastBloon = null;
@@ -117,18 +164,35 @@ public abstract class SingleShotTower extends Tower {
     return lastBloon;
   }
 
+  /**
+   * Method should return the x velocity to shoot the target
+   * @param target the bloon target
+   * @return double - x velocity
+   */
   public double findShootXVelocity(Bloon target) {
     double distance = getDistance(target);
     return (target.getXPosition() - this.getXPosition()) / distance * getShootingSpeed()
         / velocityAdjustment;
   }
 
+  /**
+   * Method should return the y velocity to shoot the target
+   * @param target the bloon target
+   * @return double - y velocity
+   */
   public double findShootYVelocity(Bloon target) {
     double distance = getDistance(target);
     return (target.getYPosition() - this.getYPosition()) / distance * getShootingSpeed()
         / velocityAdjustment;
   }
 
+  /**
+   * Purpose: Method should be used to create projectiles and add to projectilesCollection
+   * @param bloonsCollection: the collection to check if there is bloon in range
+   * @param projectilesCollection: the collection to add new created projectiles
+   * @return the Bloon to target at
+   * @throws ConfigurationException
+   */
   @Override
   public Bloon shoot(BloonsCollection bloonsCollection, ProjectilesCollection projectilesCollection)
       throws ConfigurationException {
@@ -147,6 +211,12 @@ public abstract class SingleShotTower extends Tower {
     return null;
   }
 
+  /**
+   * Purpose: Method should return the angle to position the tower to shoot the targetted bloon
+   * @param tower
+   * @param bloon
+   * @return the angle to rotate tower
+   */
   public double findAngle(Tower tower, Bloon bloon) {
     double angle = Math.toDegrees(
         Math.asin((bloon.getXPosition() - tower.getXPosition()) / tower.getDistance(bloon)));

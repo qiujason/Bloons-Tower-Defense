@@ -1,3 +1,7 @@
+/**
+ * CamoTargetProjectile should be able to hit Camo Bloons as well as all other bloons
+ * @author Annshine
+ */
 package ooga.backend.projectile.types;
 
 import ooga.backend.projectile.Projectile;

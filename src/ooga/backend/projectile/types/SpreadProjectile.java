@@ -1,3 +1,7 @@
+/**
+ * SingleTargetProjectiles should be able to pop near by bloons within a radius
+ * @author Annshine
+ */
 package ooga.backend.projectile.types;
 
 import ooga.backend.projectile.Projectile;
