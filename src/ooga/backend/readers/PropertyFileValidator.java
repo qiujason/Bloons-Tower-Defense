@@ -1,3 +1,7 @@
+/**
+ * Should be used to validate property files when passed in a property file director and required keys
+ * @author Annshine
+ */
 package ooga.backend.readers;
 
 import java.io.IOException;

@@ -1,3 +1,7 @@
+/**
+ * Implementes the RoadItemFactory to create road items
+ * @author Annshine
+ */
 package ooga.backend.roaditems.factory;
 
 import java.lang.reflect.Constructor;
@@ -9,6 +13,14 @@ public class SingleRoadItemFactory implements RoadItemFactory {
 
   private final static String ROADITEM_PATH = "ooga.backend.roaditems.types.";
 
+  /**
+   * Should be used to create road items
+   * @param type
+   * @param xPosition
+   * @param yPosition
+   * @return
+   * @throws ConfigurationException
+   */
   @Override
   public RoadItem createRoadItem(RoadItemType type, double xPosition, double yPosition)
       throws ConfigurationException {

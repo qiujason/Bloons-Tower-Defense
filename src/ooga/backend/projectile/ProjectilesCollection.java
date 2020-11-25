@@ -1,3 +1,7 @@
+/**
+ * ProjectilesCollection to represent a collection of projectiles
+ * @author Annshine
+ */
 package ooga.backend.projectile;
 
 import java.util.ArrayList;
@@ -9,6 +13,9 @@ public class ProjectilesCollection implements GamePieceCollection<Projectile> {
 
   private List<Projectile> projectiles;
 
+  /**
+   * Constructor for ProjectilesCollection
+   */
   public ProjectilesCollection() {
     projectiles = new ArrayList<>();
   }

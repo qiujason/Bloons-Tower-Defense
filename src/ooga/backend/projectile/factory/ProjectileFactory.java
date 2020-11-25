@@ -1,3 +1,7 @@
+/**
+ * @author Annshine
+ * Interface for ProjectileFactory to create projectiles
+ */
 package ooga.backend.projectile.factory;
 
 import ooga.backend.ConfigurationException;

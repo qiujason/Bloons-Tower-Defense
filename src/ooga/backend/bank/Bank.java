@@ -11,6 +11,7 @@ import ooga.backend.towers.TowerType;
 import ooga.backend.towers.UpgradeChoice;
 
 /**
+ * @author Annshine
  * Bank allocates the round bonuses received after each round and can be determined in 3 ways: 1.
  * Providing a list of round bonuses 2. Providing a total number of rounds and using 100 as the
  * default starting round bonus 3. Providing a total number of rounds and the default starting round

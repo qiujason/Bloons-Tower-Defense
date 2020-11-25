@@ -1,3 +1,7 @@
+/**
+ * FreezeTargetProjectile should be able to slow bloon
+ * @author Annshine
+ */
 package ooga.backend.projectile.types;
 
 import ooga.backend.projectile.Projectile;

@@ -1,3 +1,7 @@
+/**
+ * SingleTargetProjectiles should be able to pop all bloons except camo
+ * @author Annshine
+ */
 package ooga.backend.projectile.types;
 
 import ooga.backend.projectile.Projectile;

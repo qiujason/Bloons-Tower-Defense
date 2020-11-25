@@ -1,3 +1,7 @@
+/**
+ * @author Annshine
+ * This class should be used to represent a collection of Towers
+ */
 package ooga.backend.towers;
 
 import java.util.ArrayList;
@@ -61,6 +65,5 @@ public class TowersCollection implements GamePieceCollection<Tower> {
   public boolean isEmpty() {
     return towers.isEmpty();
   }
-
 
 }
