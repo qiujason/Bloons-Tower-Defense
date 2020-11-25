@@ -3,6 +3,11 @@ package ooga.backend.API;
 import ooga.backend.ConfigurationException;
 import ooga.backend.bloons.Bloon;
 
+/**
+ * API that allows for communication with Bloons in the backend
+ *
+ * @author Jason Qiu
+ */
 public interface BloonsAPI {
 
   /**
@@ -19,10 +24,22 @@ public interface BloonsAPI {
    */
   void setYVelocity(double newYVelocity);
 
+  /**
+   * Spawns its next bloon types when shot at
+   * @return an array of bloons that contains all the bloons to be spawned after bloon is hit
+   * @throws ConfigurationException if a special bloon type is not recognized
+   */
   Bloon[] shootBloon() throws ConfigurationException;
 
+  /**
+   * Sets the bloon to be dead
+   */
   void setDead();
 
+  /**
+   * Checks if the bloon is dead
+   * @return boolean determining if the bloon is dead
+   */
   boolean isDead();
 
 }
