@@ -28,3 +28,5 @@ None (feature bug)
 ## Hypothesis for Fixing the Bug
 
 Describe the test you think will verify this bug and the code fix you believe will solve this issue.
+The test that will verify this bug is to see if the image is updating and compare it with an expected
+image. The code fix that should solve this issue is to update BloonNode whenever the Bloonstype is updated.
