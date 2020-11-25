@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Objects;
 import ooga.backend.ConfigurationException;
 
+/**
+ * Abstract class that reads in data from a CSV file. Parent class for all Reader subclasses.
+ */
 public abstract class Reader {
 
   protected static InputStream getFileInputStream(String dataSource) {
@@ -33,6 +36,13 @@ public abstract class Reader {
     return fileData;
   }
 
+  /**
+   * Returns the data from the file in the desired format
+   * @param fileName the directory of the file to be read in
+   * @return a List of List of Strings representing the data that is read in
+   * @throws ConfigurationException if the data read in is unable to be translated and initialized into
+   * the appropriate backend object.
+   */
   public abstract List<List<String>> getDataFromFile(String fileName) throws ConfigurationException;
 
 

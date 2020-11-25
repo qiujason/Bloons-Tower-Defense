@@ -6,10 +6,19 @@ import java.util.ResourceBundle;
 import ooga.AlertHandler;
 import ooga.backend.ConfigurationException;
 
+/**
+ * Class that reads in bloon types and builds a doubly linked list style chain that allows
+ * for bloon types to easily get its next and previous bloon type
+ *
+ * @author Jason Qiu
+ */
 public class BloonsTypeChain {
 
   private static final ResourceBundle ERROR_RESOURCES = ResourceBundle.getBundle("ErrorResource");
 
+  /**
+   * private class that represents a bloon type node in the doubly linked list chain
+   */
   private static class BloonsTypeNode {
 
     private final BloonsType type;
@@ -17,10 +26,18 @@ public class BloonsTypeChain {
     private BloonsTypeNode next;
     private int numNext;
 
+    /**
+     * creates a bloonstype node
+     * @param type bloonstype of the node
+     */
     private BloonsTypeNode(BloonsType type) {
       this.type = type;
     }
 
+    /**
+     * returns the bloonstype of the node
+     * @return bloonstype of node
+     */
     private BloonsType getType() {
       return type;
     }
@@ -30,6 +47,11 @@ public class BloonsTypeChain {
   private final Map<String, BloonsTypeNode> bloonsTypeBloonMap;
   private final BloonsTypeNode head;
 
+  /**
+   * creates a bloons type chain
+   * @param propertyFilePath String containing the filepath leading to the bloons type property file
+   * @throws ConfigurationException if there are errors in the bloons type property file
+   */
   public BloonsTypeChain(String propertyFilePath) throws ConfigurationException {
     bloonsTypeBloonMap = new HashMap<>();
     ResourceBundle bundle = ResourceBundle.getBundle(propertyFilePath);
@@ -85,6 +107,11 @@ public class BloonsTypeChain {
     }
   }
 
+  /**
+   * returns bloonstype represented by an index
+   * @param index index of bloons type in doubly linked list chain
+   * @return bloonstype at that index
+   */
   public BloonsType getBloonsTypeRecord(int index) {
     BloonsTypeNode retNode = head;
     for (int i = 0; i < index; i++) {
@@ -96,6 +123,11 @@ public class BloonsTypeChain {
     return retNode.getType();
   }
 
+  /**
+   * returns bloonstype of a certain name
+   * @param bloonsType String representing the name of the bloonstype
+   * @return bloonstype represented by the bloonstype string
+   */
   public BloonsType getBloonsTypeRecord(String bloonsType) {
     if (!bloonsTypeBloonMap.containsKey(bloonsType)) {
       new AlertHandler(ERROR_RESOURCES.getString("BloonsTypeError"),
@@ -104,6 +136,11 @@ public class BloonsTypeChain {
     return bloonsTypeBloonMap.get(bloonsType).getType();
   }
 
+  /**
+   * returns next bloonstype of a bloonstype
+   * @param bloonsType Bloonstype to get the next bloonstype of
+   * @return next Bloonstype
+   */
   public BloonsType getNextBloonsType(BloonsType bloonsType) {
     if (!bloonsTypeBloonMap.containsKey(bloonsType.name())) {
       new AlertHandler(ERROR_RESOURCES.getString("BloonsTypeError"),
@@ -115,6 +152,11 @@ public class BloonsTypeChain {
     return bloonsTypeBloonMap.get(bloonsType.name()).next.getType();
   }
 
+  /**
+   * returns previous bloonstype of a bloonstype
+   * @param bloonsType Bloonstype to get the previous bloonstype of
+   * @return previous Bloonstype
+   */
   public BloonsType getPrevBloonsType(BloonsType bloonsType) {
     if (!bloonsTypeBloonMap.containsKey(bloonsType.name())) {
       new AlertHandler(ERROR_RESOURCES.getString("BloonsTypeError"),
@@ -126,6 +168,11 @@ public class BloonsTypeChain {
     return bloonsTypeBloonMap.get(bloonsType.name()).prev.getType();
   }
 
+  /**
+   * returns the number of next bloonstype of a certain bloonstype
+   * @param bloonsType Bloonstype to get the num of next bloons of
+   * @return int representing number of next bloonstype
+   */
   public int getNumNextBloons(BloonsType bloonsType) {
     if (!bloonsTypeBloonMap.containsKey(bloonsType.name())) {
       new AlertHandler(ERROR_RESOURCES.getString("BloonsTypeError"),

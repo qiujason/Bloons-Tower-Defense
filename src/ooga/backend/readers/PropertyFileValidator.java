@@ -9,14 +9,18 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.Set;
 
+/**
+ * This class is used to validate properties files based on a passed in set of required keys
+ */
+
 public class PropertyFileValidator {
 
   private boolean ifValid;
 
   /**
-   * Constructor of PropertyFileValidator
-   * @param propertyFile directory of property file
-   * @param requiredKeys required keys to check
+   * Creates an instance of the class based on a properties file and a Set of required keys
+   * @param propertyFile
+   * @param requiredKeys
    */
   public PropertyFileValidator(String propertyFile, Set<String> requiredKeys) {
     ifValid = true;
@@ -35,8 +39,8 @@ public class PropertyFileValidator {
   }
 
   /**
-   * Used to check if a property file is valid
-   * @return if the property file contains all required keys
+   * Returns true if all necessary keys are present.
+   * @return true if all necessary keys are present
    */
   public boolean containsNeededKeys() {
     return ifValid;

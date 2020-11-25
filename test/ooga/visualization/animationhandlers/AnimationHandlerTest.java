@@ -223,4 +223,26 @@ class AnimationHandlerTest extends DukeApplicationTest {
       }
     }
   }
+
+  @Test
+  void changeImageRegenBugReportOptimized() throws URISyntaxException {
+    long start = System.currentTimeMillis();
+    Bloon testBloon = new RegenBloon(new BloonsType(chain, "BLUE", 1, 1, Specials.Regen), 10,10,0,0);
+    myBloons.add(testBloon);
+    animationHandler.addBloonstoGame();
+    myProjectiles.add(new SingleTargetProjectile(ProjectileType.SingleTargetProjectile, 10, 10,1,1,30));
+    animationHandler.addProjectilestoGame();
+    for (int i = 0; i < 1000; i++) {
+      animationHandler.animate();
+      Set<Bloon> currentBloons = animationHandler.getMyBloonsInGame().keySet();
+      for (Bloon bloon : currentBloons) {
+        assertEquals(new Image(String
+                .valueOf(getClass().getResource("/gamePhotos/bloonPhotos/RED_REGROWTH.png").toURI()))
+                .getUrl(),
+            animationHandler.getMyBloonsInGame().get(bloon).findImage().getImage().getUrl());
+      }
+    }
+    long end = System.currentTimeMillis();
+    assertTrue((end-start) < 2000);
+  }
 }
